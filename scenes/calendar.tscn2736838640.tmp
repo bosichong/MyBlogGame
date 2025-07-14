@@ -1,0 +1,138 @@
+[gd_scene load_steps=10 format=3 uid="uid://dvq2wgi8h4ges"]
+
+[ext_resource type="Theme" uid="uid://sy5n06opf6op" path="res://our_theme.tres" id="1_nb4pb"]
+[ext_resource type="Script" uid="uid://nw3arwhtr5ck" path="res://scripts/calendar.gd" id="2_o53js"]
+[ext_resource type="Script" uid="uid://c4risckfcecq3" path="res://scripts/days_tab/0.gd" id="3_vrnb8"]
+[ext_resource type="Script" uid="uid://bfkg6hjht4oob" path="res://scripts/days_tab/1.gd" id="4_xnkdq"]
+[ext_resource type="Script" uid="uid://bqu1vurdlo653" path="res://scripts/days_tab/2.gd" id="5_yqp0o"]
+[ext_resource type="Script" uid="uid://dpxbq3v4a5mnt" path="res://scripts/days_tab/3.gd" id="6_l5pxe"]
+[ext_resource type="Script" uid="uid://rsrikbfl3cbk" path="res://scripts/days_tab/4.gd" id="7_bud5a"]
+[ext_resource type="Script" uid="uid://w0gn2j42f8ee" path="res://scripts/days_tab/5.gd" id="8_vqkwy"]
+[ext_resource type="Script" uid="uid://dch7jygdrxowu" path="res://scripts/days_tab/6.gd" id="9_sio1q"]
+
+[node name="calendar" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_nb4pb")
+script = ExtResource("2_o53js")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="top" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -35.0
+offset_right = 35.0
+offset_bottom = 10.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Panel/top"]
+layout_mode = 2
+text = "每天的日程安排"
+
+[node name="bottom" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="sc" type="ScrollContainer" parent="Panel/bottom"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="bt" type="VBoxContainer" parent="Panel/bottom/sc"]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="day_tabs" type="TabContainer" parent="Panel/bottom/sc/bt"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+current_tab = 0
+
+[node name="d1" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+layout_mode = 2
+script = ExtResource("3_vrnb8")
+metadata/_tab_index = 0
+
+[node name="d2" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+visible = false
+layout_mode = 2
+script = ExtResource("4_xnkdq")
+metadata/_tab_index = 1
+
+[node name="d3" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+visible = false
+layout_mode = 2
+script = ExtResource("5_yqp0o")
+metadata/_tab_index = 2
+
+[node name="d4" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+visible = false
+layout_mode = 2
+script = ExtResource("6_l5pxe")
+metadata/_tab_index = 3
+
+[node name="d5" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+visible = false
+layout_mode = 2
+script = ExtResource("7_bud5a")
+metadata/_tab_index = 4
+
+[node name="d6" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+visible = false
+layout_mode = 2
+script = ExtResource("8_vqkwy")
+metadata/_tab_index = 5
+
+[node name="d7" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+visible = false
+layout_mode = 2
+script = ExtResource("9_sio1q")
+metadata/_tab_index = 6
+
+[node name="6" type="FlowContainer" parent="Panel/bottom/sc/bt/day_tabs/d7"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -18.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Button" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "保存
+"
+
+[connection signal="pressed" from="Panel/VBoxContainer/Button" to="." method="_on_close_pressed"]

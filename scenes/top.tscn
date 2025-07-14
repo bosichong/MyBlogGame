@@ -1,0 +1,97 @@
+[gd_scene load_steps=4 format=3 uid="uid://cydvv2l4ek4v8"]
+
+[ext_resource type="Theme" uid="uid://sy5n06opf6op" path="res://our_theme.tres" id="1_aclgy"]
+[ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="2_hug1f"]
+[ext_resource type="Script" uid="uid://d8tbldfsemoa" path="res://scripts/top.gd" id="2_kl8r5"]
+
+[node name="top" type="VBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 14.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_aclgy")
+script = ExtResource("2_kl8r5")
+
+[node name="h1" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(960, 0)
+layout_mode = 2
+
+[node name="blog_author" type="Label" parent="h1"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "J.sky"
+
+[node name="头衔" type="Label" parent="h1"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "(当前头衔)"
+
+[node name="blog_level" type="Label" parent="h1"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "level"
+
+[node name="blog_stamina" type="Label" parent="h1"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "stamina"
+
+[node name="blog_money" type="Label" parent="h1"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 0
+text = "money"
+
+[node name="time_stop" type="Button" parent="h1"]
+layout_mode = 2
+text = "暂停时间"
+
+[node name="time_x" type="Button" parent="h1"]
+layout_mode = 2
+text = "1倍速"
+
+[node name="date" type="Label" parent="h1"]
+custom_minimum_size = Vector2(145, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "系统时间"
+
+[node name="h2" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="h2"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="ProgressBar" type="ProgressBar" parent="h2/Panel"]
+self_modulate = Color(0.337255, 0.917647, 0.172549, 1)
+layout_mode = 0
+offset_top = -1.0
+offset_right = 960.0
+offset_bottom = 13.0
+tooltip_text = "经验值"
+theme_override_fonts/font = ExtResource("2_hug1f")
+theme_override_font_sizes/font_size = 6
+show_percentage = false
+
+[node name="blog_exp" type="Label" parent="h2/Panel/ProgressBar"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -11.0
+offset_top = -3.0
+offset_right = 13.0
+offset_bottom = 14.0
+grow_horizontal = 2
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="h1/time_stop" to="." method="_on_time_stop_pressed"]
+[connection signal="pressed" from="h1/time_x" to="." method="_on_time_x_pressed"]

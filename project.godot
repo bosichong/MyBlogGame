@@ -1,0 +1,36 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="MyBlog"
+run/main_scene="uid://cl00vejve6l78"
+config/features=PackedStringArray("4.4", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+TimerManager="*res://scripts/timer_manager.gd"
+Blogger="*res://scripts/blogger.gd"
+Utils="*res://scripts/utils.gd"
+Strs="*res://scripts/strings.gd"
+AdManager="*res://scripts/ad_manager.gd"
+Tongji="*res://scripts/tongji.gd"
+
+[display]
+
+window/size/viewport_width=960
+window/size/viewport_height=480
+window/stretch/mode="canvas_items"
+
+[rendering]
+
+anti_aliasing/quality/msaa_2d=2
+anti_aliasing/quality/msaa_3d=2

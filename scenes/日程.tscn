@@ -1,0 +1,283 @@
+[gd_scene load_steps=10 format=3 uid="uid://cptfk2fj0xonm"]
+
+[ext_resource type="Theme" uid="uid://cp1t7xqq6k8jr" path="res://scenes/程菜单.tres" id="1_y2yoe"]
+[ext_resource type="Script" uid="uid://blbwckhg81aqx" path="res://scripts/日程.gd" id="2_pyukl"]
+[ext_resource type="Script" uid="uid://bmy840o53e2f3" path="res://scripts/days/d_1.gd" id="3_wktfe"]
+[ext_resource type="Script" uid="uid://bxigrp7kvklug" path="res://scripts/days/d_2.gd" id="4_rrgel"]
+[ext_resource type="Script" uid="uid://d3drjxsy36oij" path="res://scripts/days/d_3.gd" id="5_mlf78"]
+[ext_resource type="Script" uid="uid://cx37rb1pi6mq" path="res://scripts/days/d_4.gd" id="6_8iyum"]
+[ext_resource type="Script" uid="uid://bjpk3ekfty85u" path="res://scripts/days/d_5.gd" id="7_8lr35"]
+[ext_resource type="Script" uid="uid://bslfg1a3ti7j4" path="res://scripts/days/d_6.gd" id="8_l46n6"]
+[ext_resource type="Script" uid="uid://bfuba8vv3bi1l" path="res://scripts/days/d_7.gd" id="9_8x0de"]
+
+[node name="日程" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_y2yoe")
+script = ExtResource("2_pyukl")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.196078)
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -210.0
+offset_right = 450.0
+offset_bottom = 210.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="bg"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.666667)
+
+[node name="top" type="VBoxContainer" parent="bg"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -35.0
+offset_right = 35.0
+offset_bottom = 10.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="bg/top"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "每天的日程安排"
+
+[node name="按钮组" type="Panel" parent="bg"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 120.0
+grow_vertical = 2
+
+[node name="vb" type="VBoxContainer" parent="bg/按钮组"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="mc1" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b1" type="Button" parent="bg/按钮组/vb/mc1"]
+layout_mode = 2
+toggle_mode = true
+text = "周一"
+
+[node name="mc2" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b2" type="Button" parent="bg/按钮组/vb/mc2"]
+layout_mode = 2
+toggle_mode = true
+text = "周二"
+
+[node name="mc3" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b3" type="Button" parent="bg/按钮组/vb/mc3"]
+layout_mode = 2
+toggle_mode = true
+text = "周三"
+
+[node name="mc4" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b4" type="Button" parent="bg/按钮组/vb/mc4"]
+layout_mode = 2
+toggle_mode = true
+text = "周四"
+
+[node name="mc5" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b5" type="Button" parent="bg/按钮组/vb/mc5"]
+layout_mode = 2
+toggle_mode = true
+text = "周五"
+
+[node name="mc6" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b6" type="Button" parent="bg/按钮组/vb/mc6"]
+layout_mode = 2
+toggle_mode = true
+text = "周六"
+
+[node name="mc7" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b7" type="Button" parent="bg/按钮组/vb/mc7"]
+layout_mode = 2
+toggle_mode = true
+text = "周日"
+
+[node name="选项组" type="Panel" parent="bg"]
+layout_mode = 0
+offset_left = 150.0
+offset_top = 40.0
+offset_right = 870.0
+offset_bottom = 360.0
+
+[node name="sc1" type="ScrollContainer" parent="bg/选项组"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d1" type="VBoxContainer" parent="bg/选项组/sc1"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("3_wktfe")
+
+[node name="sc2" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d2" type="VBoxContainer" parent="bg/选项组/sc2"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("4_rrgel")
+
+[node name="sc3" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d3" type="VBoxContainer" parent="bg/选项组/sc3"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("5_mlf78")
+
+[node name="sc4" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d4" type="VBoxContainer" parent="bg/选项组/sc4"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("6_8iyum")
+
+[node name="sc5" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d5" type="VBoxContainer" parent="bg/选项组/sc5"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("7_8lr35")
+
+[node name="sc6" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d6" type="VBoxContainer" parent="bg/选项组/sc6"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("8_l46n6")
+
+[node name="sc7" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d7" type="VBoxContainer" parent="bg/选项组/sc7"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("9_8x0de")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -18.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Button" type="Button" parent="bg/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "保存
+"
+
+[connection signal="pressed" from="bg/按钮组/vb/mc1/b1" to="." method="_on_b_1_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc2/b2" to="." method="_on_b_2_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc3/b3" to="." method="_on_b_3_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc4/b4" to="." method="_on_b_4_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc5/b5" to="." method="_on_b_5_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc6/b6" to="." method="_on_b_6_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc7/b7" to="." method="_on_b_7_pressed"]
+[connection signal="pressed" from="bg/VBoxContainer/Button" to="." method="_on_button_pressed"]

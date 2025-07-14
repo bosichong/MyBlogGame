@@ -1,0 +1,236 @@
+[gd_scene load_steps=4 format=3 uid="uid://cjugt1joovfkl"]
+
+[ext_resource type="Theme" uid="uid://cp1t7xqq6k8jr" path="res://scenes/程菜单.tres" id="1_fn3lw"]
+[ext_resource type="Script" uid="uid://bm8sem5pfhxp4" path="res://scripts/ad.gd" id="2_wbmsd"]
+[ext_resource type="Script" uid="uid://bx7r6qmrrstyl" path="res://scripts/hf.gd" id="3_6cjuh"]
+
+[node name="Ad" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_fn3lw")
+script = ExtResource("2_wbmsd")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.196078)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -200.0
+offset_right = 400.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="管理" type="Panel" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="标题" type="Label" parent="Panel/管理"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "广告管理面版"
+
+[node name="Panel" type="Panel" parent="Panel/管理"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -125.0
+offset_right = 300.0
+offset_bottom = -45.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="hf" type="HFlowContainer" parent="Panel/管理/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_6cjuh")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/管理"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Btn1" type="Button" parent="Panel/管理/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+text = "确定"
+
+[node name="Panel2" type="HBoxContainer" parent="Panel/管理"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -40.0
+offset_right = 300.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="m_0" type="Label" parent="Panel/管理/Panel2"]
+layout_mode = 2
+text = "未结算金额："
+
+[node name="m_1" type="Label" parent="Panel/管理/Panel2"]
+layout_mode = 2
+text = "已结算金额："
+
+[node name="m_2" type="Label" parent="Panel/管理/Panel2"]
+layout_mode = 2
+text = "累计发放金额："
+
+[node name="审核" type="Panel" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="标题" type="Label" parent="Panel/审核"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "审核中..."
+
+[node name="内容" type="Label" parent="Panel/审核"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -120.0
+offset_right = 350.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "注册简介"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/审核"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Btn1" type="Button" parent="Panel/审核/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+text = "确定"
+
+[node name="注册" type="Panel" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="标题" type="Label" parent="Panel/注册"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "注册联盟"
+
+[node name="内容" type="Label" parent="Panel/注册"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -120.0
+offset_right = 350.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "注册简介"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/注册"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Btn1" type="Button" parent="Panel/注册/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+text = "同意申请"
+
+[node name="Btn2" type="Button" parent="Panel/注册/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+text = "稍后申请"
+
+[connection signal="pressed" from="Panel/管理/HBoxContainer/Btn1" to="." method="_on_btn_1_pressed"]
+[connection signal="pressed" from="Panel/审核/HBoxContainer/Btn1" to="." method="_on_btn_1_pressed"]
+[connection signal="pressed" from="Panel/注册/HBoxContainer/Btn1" to="." method="_on_注册_pressed"]
+[connection signal="pressed" from="Panel/注册/HBoxContainer/Btn2" to="." method="_on_btn_1_pressed"]

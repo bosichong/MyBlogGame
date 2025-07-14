@@ -1,0 +1,162 @@
+[gd_scene load_steps=4 format=3 uid="uid://w8c2ddi66hy1"]
+
+[ext_resource type="Theme" uid="uid://sy5n06opf6op" path="res://our_theme.tres" id="1_5l24l"]
+[ext_resource type="Script" uid="uid://4paehdr5t8tu" path="res://scripts/r_panel.gd" id="2_5l24l"]
+[ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="2_xdp7j"]
+
+[node name="r_panel" type="Control"]
+layout_mode = 3
+anchor_right = 0.208333
+anchor_bottom = 0.333333
+offset_right = 40.0003
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_5l24l")
+script = ExtResource("2_5l24l")
+
+[node name="top" type="Panel" parent="."]
+self_modulate = Color(0.34902, 0.34902, 0.34902, 0.160784)
+layout_mode = 1
+offset_right = 240.0
+offset_bottom = 80.0
+
+[node name="title" type="Label" parent="top"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -24.0
+offset_right = 24.0
+offset_bottom = 17.0
+grow_horizontal = 2
+text = "技能栏"
+horizontal_alignment = 1
+
+[node name="writing" type="Label" parent="top"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 20.0
+offset_right = 31.0
+offset_bottom = 35.0
+tooltip_text = "写作博文的能力。"
+mouse_filter = 1
+text = "写作"
+
+[node name="writingProgressBar" type="ProgressBar" parent="top"]
+self_modulate = Color(0.94211, 0.274692, 0.601722, 1)
+layout_mode = 0
+offset_left = 41.0
+offset_top = 26.0
+offset_right = 107.0
+offset_bottom = 32.0
+theme_override_fonts/font = ExtResource("2_xdp7j")
+theme_override_font_sizes/font_size = 6
+show_percentage = false
+
+[node name="technical" type="Label" parent="top"]
+layout_mode = 0
+offset_left = 116.0
+offset_top = 20.0
+offset_right = 148.0
+offset_bottom = 37.0
+tooltip_text = "部署以及维护博客的技术能力"
+mouse_filter = 1
+text = "技术"
+
+[node name="technicalProgressBar" type="ProgressBar" parent="top"]
+self_modulate = Color(0.227451, 0.603922, 0.870588, 1)
+layout_mode = 0
+offset_left = 148.0
+offset_top = 27.0
+offset_right = 214.0
+offset_bottom = 33.0
+theme_override_fonts/font = ExtResource("2_xdp7j")
+theme_override_font_sizes/font_size = 6
+show_percentage = false
+
+[node name="code" type="Label" parent="top"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 39.0
+offset_right = 34.0
+offset_bottom = 56.0
+tooltip_text = "编程能力：可以撰写编程相关的博文，
+2级学完可以开始接私活赚钱。"
+mouse_filter = 1
+text = "编程"
+
+[node name="codeProgressBar" type="ProgressBar" parent="top"]
+self_modulate = Color(0.14902, 0.901961, 0.105882, 1)
+layout_mode = 0
+offset_left = 40.0
+offset_top = 45.0
+offset_right = 106.0
+offset_bottom = 51.0
+theme_override_fonts/font = ExtResource("2_xdp7j")
+theme_override_font_sizes/font_size = 6
+show_percentage = false
+
+[node name="literature" type="Label" parent="top"]
+layout_mode = 0
+offset_left = 115.0
+offset_top = 41.0
+offset_right = 147.0
+offset_bottom = 58.0
+tooltip_text = "文学能力：可以博主的文学素养，
+除了可以撰写相关文章，还可以优化其他类型的文章。"
+mouse_filter = 1
+text = "文学"
+
+[node name="literatureProgressBar" type="ProgressBar" parent="top"]
+self_modulate = Color(0.9, 0.4776, 0.108, 1)
+layout_mode = 0
+offset_left = 150.0
+offset_top = 48.0
+offset_right = 216.0
+offset_bottom = 54.0
+theme_override_fonts/font = ExtResource("2_xdp7j")
+theme_override_font_sizes/font_size = 6
+show_percentage = false
+
+[node name="drawing" type="Label" parent="top"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 59.0
+offset_right = 34.0
+offset_bottom = 76.0
+tooltip_text = "绘画能力:最后可以为原画师和大画家。"
+mouse_filter = 1
+text = "绘画"
+
+[node name="drawingProgressBar" type="ProgressBar" parent="top"]
+self_modulate = Color(0.14902, 0.901961, 0.105882, 1)
+layout_mode = 0
+offset_left = 40.0
+offset_top = 67.0
+offset_right = 106.0
+offset_bottom = 73.0
+theme_override_fonts/font = ExtResource("2_xdp7j")
+theme_override_font_sizes/font_size = 6
+show_percentage = false
+
+[node name="bot" type="Panel" parent="."]
+self_modulate = Color(0.34902, 0.34902, 0.34902, 0.160784)
+layout_mode = 0
+offset_left = 1.0
+offset_top = 85.0
+offset_right = 241.0
+offset_bottom = 295.0
+
+[node name="Sm" type="ScrollContainer" parent="bot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBm" type="VBoxContainer" parent="bot/Sm"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

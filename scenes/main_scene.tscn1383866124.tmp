@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://ck5ea6adc7yev"]
+
+[ext_resource type="Script" uid="uid://dit0rf05i7d38" path="res://scripts/game_manager.gd" id="1_w2twt"]
+
+[node name="main_scene" type="Node2D"]
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("1_w2twt")
+
+[connection signal="week_ended" from="GameManager" to="GameManager" method="_on_week_ended"]

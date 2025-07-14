@@ -1,0 +1,121 @@
+[gd_scene load_steps=3 format=3 uid="uid://bpdy78cdcnwkj"]
+
+[ext_resource type="Theme" uid="uid://sy5n06opf6op" path="res://our_theme.tres" id="1_oq8qd"]
+[ext_resource type="Script" uid="uid://b6xkrj6v2m082" path="res://scripts/bottom.gd" id="2_oq8qd"]
+
+[node name="bottom" type="HBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 59.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_oq8qd")
+script = ExtResource("2_oq8qd")
+
+[node name="v1" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+
+[node name="h3" type="HBoxContainer" parent="v1"]
+layout_mode = 2
+
+[node name="blog_name" type="Label" parent="v1/h3"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "博客名称"
+
+[node name="blog_posts" type="Label" parent="v1/h3"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "文章：0"
+
+[node name="blog_safety" type="Label" parent="v1/h3"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "safety"
+
+[node name="blog_seo" type="Label" parent="v1/h3"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "seo"
+
+[node name="h4" type="HBoxContainer" parent="v1"]
+layout_mode = 2
+
+[node name="today_views" type="Label" parent="v1/h4"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "昨日"
+
+[node name="month_vies" type="Label" parent="v1/h4"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "本月"
+
+[node name="year_vies" type="Label" parent="v1/h4"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "今年"
+
+[node name="blog_views" type="Label" parent="v1/h4"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "总：0"
+
+[node name="h5" type="HBoxContainer" parent="v1"]
+layout_mode = 2
+
+[node name="rss" type="Label" parent="v1/h5"]
+layout_mode = 2
+text = "RSS订阅:100"
+
+[node name="favorites" type="Label" parent="v1/h5"]
+layout_mode = 2
+text = "favorites:100"
+
+[node name="每日收入" type="Label" parent="v1/h5"]
+layout_mode = 2
+text = "每日收入:100"
+
+[node name="h2" type="GridContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+columns = 3
+
+[node name="create_blog" type="Button" parent="h2"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "日程安排"
+
+[node name="Button4" type="Button" parent="h2"]
+layout_mode = 2
+text = "博客排行"
+
+[node name="Button2" type="Button" parent="h2"]
+layout_mode = 2
+text = "消费购买"
+
+[node name="Button5" type="Button" parent="h2"]
+layout_mode = 2
+text = "广告联盟"
+
+[node name="Button" type="Button" parent="h2"]
+layout_mode = 2
+text = "投资理财"
+
+[node name="Button3" type="Button" parent="h2"]
+layout_mode = 2
+text = "系统菜单"
+
+[connection signal="pressed" from="h2/create_blog" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="h2/Button5" to="." method="_on_button_5_pressed"]

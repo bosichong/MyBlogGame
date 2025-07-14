@@ -1,0 +1,166 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvq2wgi8h4ges"]
+
+[ext_resource type="Theme" uid="uid://sy5n06opf6op" path="res://our_theme.tres" id="1_nb4pb"]
+[ext_resource type="Script" uid="uid://nw3arwhtr5ck" path="res://scripts/calendar.gd" id="2_o53js"]
+[ext_resource type="Script" uid="uid://c4risckfcecq3" path="res://scripts/days_tab/0.gd" id="3_vrnb8"]
+
+[node name="calendar" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_nb4pb")
+script = ExtResource("2_o53js")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="top" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+offset_left = 125.0
+offset_right = 195.0
+offset_bottom = 10.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Panel/top"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "每天的日程安排"
+
+[node name="bottom" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="sc" type="ScrollContainer" parent="Panel/bottom"]
+layout_mode = 2
+
+[node name="bt" type="VBoxContainer" parent="Panel/bottom/sc"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="day_tabs" type="TabContainer" parent="Panel/bottom/sc/bt"]
+layout_mode = 2
+current_tab = 0
+
+[node name="d1" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Label" type="Label" parent="Panel/bottom/sc/bt/day_tabs/d1"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "写作安排"
+
+[node name="0" type="FlowContainer" parent="Panel/bottom/sc/bt/day_tabs/d1"]
+layout_mode = 2
+script = ExtResource("3_vrnb8")
+
+[node name="d2" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Label" type="Label" parent="Panel/bottom/sc/bt/day_tabs/d2"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "写作安排"
+
+[node name="1" type="FlowContainer" parent="Panel/bottom/sc/bt/day_tabs/d2"]
+layout_mode = 2
+
+[node name="d3" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="Label" type="Label" parent="Panel/bottom/sc/bt/day_tabs/d3"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "写作安排"
+
+[node name="2" type="FlowContainer" parent="Panel/bottom/sc/bt/day_tabs/d3"]
+layout_mode = 2
+
+[node name="d4" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="Label" type="Label" parent="Panel/bottom/sc/bt/day_tabs/d4"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "写作安排"
+
+[node name="3" type="FlowContainer" parent="Panel/bottom/sc/bt/day_tabs/d4"]
+layout_mode = 2
+
+[node name="d5" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 4
+
+[node name="Label" type="Label" parent="Panel/bottom/sc/bt/day_tabs/d5"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "写作安排"
+
+[node name="4" type="FlowContainer" parent="Panel/bottom/sc/bt/day_tabs/d5"]
+layout_mode = 2
+
+[node name="d6" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 5
+
+[node name="Label" type="Label" parent="Panel/bottom/sc/bt/day_tabs/d6"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "写作安排"
+
+[node name="5" type="FlowContainer" parent="Panel/bottom/sc/bt/day_tabs/d6"]
+layout_mode = 2
+
+[node name="d7" type="VBoxContainer" parent="Panel/bottom/sc/bt/day_tabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 6
+
+[node name="Label" type="Label" parent="Panel/bottom/sc/bt/day_tabs/d7"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "写作安排"
+
+[node name="6" type="FlowContainer" parent="Panel/bottom/sc/bt/day_tabs/d7"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -18.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Button" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "保存
+"
+
+[connection signal="pressed" from="Panel/VBoxContainer/Button" to="." method="_on_close_pressed"]
