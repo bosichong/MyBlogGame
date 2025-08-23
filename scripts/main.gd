@@ -17,13 +17,23 @@ func _ready() -> void:
 		# 广告联盟审核通过通知
 		AdManager.connect("sig_ad_1_day",on_sig_ad_1_day)
 		
+		
+		#休息信号
+		Blogger.s_recrecreation_rest.connect(s_recrecreation_rest)
+		Blogger.s_playgame.connect(s_playgame)
+		
 		# 网站安全信号
 		Blogger.signal_website_security.connect(signal_website_security)
 		Blogger.signal_website_security_no_stamina.connect(signal_website_security_no_stamina)
+		Blogger.signal_website_security_no_money.connect(signal_website_security_no_money)
 		
 		# seo维护
 		Blogger.signal_website_seo.connect(signal_website_seo)
 		Blogger.signal_website_seo_no_stamina.connect(signal_website_seo_no_stamina)
+		
+		# 页面美化
+		Blogger.signal_design_web.connect(signal_design_web)
+		Blogger.signal_design_web_no_stamina.connect(signal_design_web_no_stamina)
 		
 		# 编程技能信号
 		Blogger.s_self_learning_programming_end.connect(s_self_learning_programming_end)
@@ -93,13 +103,39 @@ func _ready() -> void:
 
 ## 每天的信号量
 func _on_day_ended():
+	game_events()
 	Blogger.daily_activities()
 	time_stop_bt()
 	update_ui()
 	AdManager.ad_day() # 更新审核日期触发审核结束的信号量
 	
 	
+	
+## 游戏事件触发遍历
+func game_events():
+	for e in Utils.blog_post_events:
+		if e.name == "热点风向":
+			if TimerManager.is_time_match(e.event_date):
+				var random_index = randi() % Utils.bc_type.size()
+				e.type = Utils.bc_type[random_index]
+				var tmp_tips = Strs.game_strs.热点风向[e.type][random_index]
+				show_popup_message("提示", tmp_tips)
+				
+		if e.name == "年度总结":
+			if TimerManager.is_time_match(e.event_date):
+				if e.times :
+					e.times = 0
+					var d = Utils.find_category_by_name(Utils.possible_categories,e.name)
+					d.disabled = false
+					info_display.add_message("一年过去了！可以发布年度总结了！ ")
+			else:
+				if not e.times :
+					e.times = 1
+					var d = Utils.find_category_by_name(Utils.possible_categories,e.name)
+					d.disabled = true
 
+
+##主界面UI刷新
 func update_ui():
 	$ui/top/h1/blog_author.text = Blogger.blog_data.blog_author
 	$ui/top/h1/blog_level.text = "等级:"+str(Blogger.level) + "级"
@@ -122,11 +158,12 @@ func update_ui():
 	
 	
 	$ui/bottom/v1/h4/today_views.text="昨日:"+ str(Blogger.blog_data.today_views)
-	$ui/bottom/v1/h4/month_vies.text="本月:"+ str(Blogger.blog_data.month_views)
-	$ui/bottom/v1/h4/year_vies.text="今年:"+ str(Blogger.blog_data.year_views)
-	$ui/bottom/v1/h4/blog_views.text="总:"+ str(Blogger.blog_data.views)
+	$ui/bottom/v1/h4/month_vies.text="本月:"+ Utils.format_number(Blogger.blog_data.month_views)
+	$ui/bottom/v1/h4/year_vies.text="今年:"+ Utils.format_number(Blogger.blog_data.year_views)
+	$ui/bottom/v1/h4/blog_views.text="总:"+ Utils.format_number(Blogger.blog_data.views)
 	
-	$ui/bottom/v1/h5/rss.text = "RSS订阅数:"+ str(Blogger.blog_data.rss)
+	$ui/bottom/v1/h5/rss.text = "RSS订阅数:"+ Utils.format_number(Blogger.blog_data.rss)
+	$ui/bottom/v1/h5/favorites.text = "博文收藏数:"+ Utils.format_number(Blogger.blog_data.favorites)
 	
 	$ui/r_panel/top/writingProgressBar.show_percentage = false
 	$ui/r_panel/top/writingProgressBar.set_value_no_signal(Blogger.writing_ability)
@@ -138,7 +175,8 @@ func update_ui():
 	$ui/r_panel/top/literatureProgressBar.set_value_no_signal(Blogger.literature_ability) 
 	$ui/r_panel/top/drawingProgressBar.show_percentage = false
 	$ui/r_panel/top/drawingProgressBar.set_value_no_signal(Blogger.drawing_ability) 
-	
+
+## 游戏时间倍数运行控制
 func time_stop_bt():
 	if TimerManager.time_stop :
 		$ui/top/h1/time_stop.text = "启动时间"
@@ -168,10 +206,10 @@ func _on_time_x():
 		$ui/top/h1/time_x.text = "2倍速"
 		#print(TimerManager.timer.wait_time)
 	elif TimerManager.timer.wait_time == 1.0 :
-		TimerManager.timer.wait_time = 0.5
+		TimerManager.timer.wait_time = 0.1
 		$ui/top/h1/time_x.text = "4倍速"
 		#print(TimerManager.timer.wait_time)
-	elif TimerManager.timer.wait_time == 0.5 :
+	elif TimerManager.timer.wait_time != 2.0 :
 		TimerManager.timer.wait_time = 2.0
 		$ui/top/h1/time_x.text = "1倍速"
 		#print(TimerManager.timer.wait_time)
@@ -204,18 +242,34 @@ func _on_quarter_passed():
 func _on_year_passed():
 	info_display.add_message("一年过去了！ ")
 	
+
+func s_playgame(msg):
+	info_display.add_message(msg)
+
+func s_recrecreation_rest(msg):
+	info_display.add_message(msg)
+	
 func signal_website_security(msg):
-	pass
+	info_display.add_message(msg)
 	
 func signal_website_security_no_stamina(msg):
 	info_display.add_message(msg)
 	
+func signal_website_security_no_money(msg):
+	info_display.add_message(msg)
+	
+	
 func signal_website_seo(msg):
-	pass
+	info_display.add_message(msg)
 	
 func signal_website_seo_no_stamina(msg):
 	info_display.add_message(msg)
+
+func signal_design_web(msg):
+	info_display.add_message(msg)
 	
+func signal_design_web_no_stamina(msg):
+	info_display.add_message(msg)	
 	
 # 编程技能信号量
 func s_self_learning_programming_end(msg):
@@ -320,46 +374,39 @@ func s_draw_4_no_stamina(msg):
 	info_display.add_message(msg)
 
 
-func s_level(l):
+## 显示通用弹窗
+func show_popup_message(title: String, content: String) -> void:
 	TimerManager.timer.stop()
-	# 创建提示框实例
 	popup = popup_scene.instantiate()
 	add_child(popup)
 	
-	var tx = get_rank_title(l,Strs.game_strs.头衔)
-	# 设置标题和内容
-	popup.set_title_and_content("等级提升", "恭喜您的等级提升到"+str(l)+"！您的博客段位提升到了："+tx+"。")
+	# 获取视口（Viewport）的大小，并将其转换为 Vector2 类型
+	var viewport_size = Vector2(get_viewport().size)
 	
-	# 连接关闭信号（可选）
+	# 获取弹窗自身的大小，它已经是 Vector2 类型
+	var popup_size = popup.size
+	
+	# 计算居中位置
+	# 现在两个向量都是 Vector2 类型，可以正常进行减法运算了
+	var center_position = (viewport_size - popup_size) / 2
+	
+	# 设置弹窗的位置
+	popup.position = center_position
+	
+	popup.set_title_and_content(title, content)
 	popup.closed.connect(_on_popup_closed)
-	
-	# 显示提示框
 	popup.show_popup()
 
+func s_level(l):
+	var tx = get_rank_title(l,Strs.game_strs.头衔)
+	show_popup_message("等级提升", "恭喜您的等级提升到"+str(l)+"！您的博客段位提升到了："+tx+"。")
 
 func on_sig_ad_1_day():
 	# 从审核界面切换到管理面板，并开始记录广告费用
 	AdManager.ad_1_day = 0
 	AdManager.ad_1 = false
 	AdManager.ad_2 = true	
-	
-	#弹出窗口提示
-	print("弹出窗口提示")
-	TimerManager.timer.stop()
-	
-	# 创建提示框实例
-	popup = popup_scene.instantiate()
-	add_child(popup)
-	
-	# 设置标题和内容
-	popup.set_title_and_content("审核通知", "恭喜您通过广告联盟的申请！现在您可以通过点击广告联盟的按钮来设置广告投放方式以及查看收入。")
-	
-	# 连接关闭信号（可选）
-	popup.closed.connect(_on_popup_closed)
-	
-	# 显示提示框
-	popup.show_popup()
-
+	show_popup_message("审核通知", "恭喜您通过广告联盟的申请！现在您可以通过点击广告联盟的按钮来设置广告投放方式以及查看收入。")
 
 func _on_popup_closed():
 	TimerManager.timer.start()
@@ -371,3 +418,7 @@ func get_rank_title(level: int,arr:Array) -> String:
 		return "无效等级"
 	Blogger.dw = int((level) / 10)
 	return arr[Blogger.dw]
+	
+	
+	
+	

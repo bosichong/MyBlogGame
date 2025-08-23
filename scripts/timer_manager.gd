@@ -75,3 +75,40 @@ func _on_day_passed():
 		emit_signal("s_ad_money_2")
 	
 	
+
+## 游戏中时间类型的时间，对比时间时间	
+func is_time_match(config: Dictionary) -> bool:
+	var y_values = config.get("y", [])
+	var m_values = config.get("m", [])
+	var w_values = config.get("w", [])
+	var d_values = config.get("d", [])
+
+	# 检查年
+	if y_values.size() > 0 and y_values[0] != 0:
+		if not is_match(current_year, y_values):
+			return false
+
+	# 检查月
+	if m_values.size() > 0 and m_values[0] != 0:
+		if not is_match(current_month, m_values):
+			return false
+
+	# 检查周
+	if w_values.size() > 0 and w_values[0] != 0:
+		if not is_match(current_week, w_values):
+			return false
+
+	# 检查日
+	if d_values.size() > 0 and d_values[0] != 0:
+		if not is_match(current_day, d_values):
+			return false
+
+	return true
+
+
+# 辅助函数：检查值是否在数组中
+func is_match(value: int, array: Array) -> bool:
+	for v in array:
+		if v == value:
+			return true
+	return false

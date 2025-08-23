@@ -16,9 +16,6 @@ func _ready() -> void:
 	
 	
 func _on_show_panel():
-	print("重绘AD面板")
-	
-	
 	
 	$Panel/管理.visible = AdManager.ad_2
 	$Panel/审核.visible = AdManager.ad_1

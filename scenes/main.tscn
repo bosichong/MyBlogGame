@@ -1,115 +1,28 @@
-[gd_scene load_steps=20 format=3 uid="uid://cl00vejve6l78"]
+[gd_scene load_steps=9 format=3 uid="uid://cl00vejve6l78"]
 
 [ext_resource type="Script" uid="uid://cqvdo83xm6ab8" path="res://scripts/main.gd" id="1_85g3d"]
-[ext_resource type="PackedScene" uid="uid://d0hpni7gmmee2" path="res://blender/电脑桌.blend" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://dgno60v7uo37w" path="res://scenes/场景.tscn" id="2_tipki"]
 [ext_resource type="Theme" uid="uid://cp1t7xqq6k8jr" path="res://scenes/程菜单.tres" id="4_85g3d"]
-[ext_resource type="PackedScene" uid="uid://dw1nu7iu7s02m" path="res://blender/显示器.blend" id="4_eb6dy"]
 [ext_resource type="PackedScene" uid="uid://cydvv2l4ek4v8" path="res://scenes/top.tscn" id="5_85g3d"]
-[ext_resource type="PackedScene" uid="uid://djc4vr28db6x7" path="res://blender/音箱.blend" id="5_trceg"]
-[ext_resource type="PackedScene" uid="uid://rpxd787essl0" path="res://blender/键盘.blend" id="6_a8y0u"]
 [ext_resource type="PackedScene" uid="uid://bpdy78cdcnwkj" path="res://scenes/bottom.tscn" id="6_choun"]
 [ext_resource type="PackedScene" uid="uid://w8c2ddi66hy1" path="res://scenes/r_panel.tscn" id="7_ya4ey"]
 [ext_resource type="PackedScene" uid="uid://cptfk2fj0xonm" path="res://scenes/日程.tscn" id="9_85g3d"]
-[ext_resource type="PackedScene" uid="uid://cbiyg2264nb28" path="res://blender/书架1blend.blend" id="10_choun"]
 [ext_resource type="PackedScene" uid="uid://cjugt1joovfkl" path="res://scenes/ad.tscn" id="12_eb6dy"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sgp6g"]
-sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-
-[sub_resource type="Sky" id="Sky_o5qli"]
-sky_material = SubResource("ProceduralSkyMaterial_sgp6g")
-
-[sub_resource type="Environment" id="Environment_0wfyh"]
-background_mode = 2
-sky = SubResource("Sky_o5qli")
-tonemap_mode = 2
-ssr_enabled = true
-ssao_enabled = true
-ssil_enabled = true
-ssil_radius = 16.0
-sdfgi_enabled = true
-sdfgi_read_sky_light = false
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sgp6g"]
-albedo_color = Color(0.94, 0.94, 0.94, 1)
-metallic = 0.18
-metallic_specular = 1.0
-roughness = 0.42
-clearcoat_enabled = true
-
-[sub_resource type="BoxMesh" id="BoxMesh_sgp6g"]
-material = SubResource("StandardMaterial3D_sgp6g")
-size = Vector3(5, 0.2, 5)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o5qli"]
-albedo_color = Color(0.798275, 0.773713, 0.765378, 1)
-clearcoat_enabled = true
-
-[sub_resource type="BoxMesh" id="BoxMesh_o5qli"]
-material = SubResource("StandardMaterial3D_o5qli")
-size = Vector3(0.1, 3, 5)
-
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node2D"]
 script = ExtResource("1_85g3d")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_0wfyh")
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 960.0
+offset_bottom = 480.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.787129, 0.813516, 0.790252, 1)
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.707107, -0.161468, 0.688424, 0, 0.973579, 0.228351, -0.707107, -0.161468, 0.688424, 1.6, 1.314, 1.6)
-keep_aspect = 0
-fov = 83.6
-far = 999.0
-
-[node name="Node3D" type="Node3D" parent="."]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0769715, 0)
-mesh = SubResource("BoxMesh_sgp6g")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.57993, 0)
-visible = false
-mesh = SubResource("BoxMesh_sgp6g")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4544, 1.13127, 0)
-mesh = SubResource("BoxMesh_o5qli")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.00144233, 1.13127, -2.41371)
-mesh = SubResource("BoxMesh_o5qli")
-skeleton = NodePath("../..")
-
-[node name="SpotLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.844618, 0, 0.53537, 0, 1, 0, -0.53537, 0, 0.844618, 1.73054, 1.47393, 4.96962)
-light_color = Color(0.790322, 0.706148, 0.658776, 1)
-
-[node name="SpotLight3D2" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.505989, 0, 0.86254, 0, 1, 0, -0.86254, 0, 0.505989, 4.46662, 1.09805, 1.06973)
-light_color = Color(0.820229, 0.955139, 0.977363, 1)
-
-[node name="电脑桌" parent="." instance=ExtResource("1_o5qli")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.03141, 0.655979, -1.53809)
-
-[node name="书架" parent="." instance=ExtResource("10_choun")]
-transform = Transform3D(-1.90145e-08, 0, 0.435, 0, 0.435, 0, -0.435, 0, -1.90145e-08, -2.21876, 0.830955, -0.213033)
-
-[node name="显示器" parent="." instance=ExtResource("4_eb6dy")]
-transform = Transform3D(-1.33162e-08, 0, 0.30464, 0, 0.30464, 0, -0.30464, 0, -1.33162e-08, -2.06898, 0.99213, -1.56624)
-
-[node name="音箱" parent="." instance=ExtResource("5_trceg")]
-transform = Transform3D(-2.79753e-09, 0, 0.064, 0, 0.064, 0, -0.064, 0, -2.79753e-09, -2.19758, 0.798955, -1.09521)
-
-[node name="音箱2" parent="." instance=ExtResource("5_trceg")]
-transform = Transform3D(-2.79753e-09, 0, 0.064, 0, 0.064, 0, -0.064, 0, -2.79753e-09, -2.19234, 0.79501, -2.00664)
-
-[node name="键盘" parent="." instance=ExtResource("6_a8y0u")]
-transform = Transform3D(-6.55671e-09, 0, 0.15, 0, 0.15, 0, -0.15, 0, -6.55671e-09, -1.86482, 0.686982, -1.57373)
+[node name="场景" parent="." instance=ExtResource("2_tipki")]
 
 [node name="ui" type="Control" parent="."]
 layout_mode = 3
@@ -141,13 +54,35 @@ grow_vertical = 0
 [node name="r_panel" parent="ui" instance=ExtResource("7_ya4ey")]
 layout_mode = 1
 offset_left = 713.0
-offset_top = 43.0
+offset_top = 53.0
 offset_right = 713.0
-offset_bottom = 43.0
+offset_bottom = 53.0
 max_messages = 25
 
 [node name="日程" parent="." instance=ExtResource("9_85g3d")]
 visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+offset_left = 480.0
+offset_top = 239.0
+offset_right = 480.0
+offset_bottom = 239.0
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="Ad" parent="." instance=ExtResource("12_eb6dy")]
 visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.0
+offset_left = 480.0
+offset_top = 254.0
+offset_right = 480.0
+offset_bottom = 254.0
+grow_vertical = 1
+size_flags_horizontal = 4
+size_flags_vertical = 4

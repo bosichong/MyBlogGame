@@ -122,8 +122,8 @@ func update_ad(views):
 	
 	return end_views
 	
+## 广告联盟审核时间刷新
 func ad_day():
-	print(ad_1,ad_1_day)
 	if ad_1:
 		ad_1_day += 1
 		if ad_1_day == 3 :

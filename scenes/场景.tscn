@@ -1,0 +1,156 @@
+[gd_scene load_steps=26 format=3 uid="uid://dgno60v7uo37w"]
+
+[ext_resource type="Texture2D" uid="uid://bom83rk1btmia" path="res://assets/1111.jpg" id="1_vcifu"]
+[ext_resource type="Texture2D" uid="uid://u0q1107gl1v" path="res://assets/窗户.png" id="3_2fk0d"]
+[ext_resource type="Texture2D" uid="uid://d3wdmiob7w5ee" path="res://assets/主角背面.png" id="3_ava4q"]
+[ext_resource type="Texture2D" uid="uid://ue1lksap2od7" path="res://assets/风景.png" id="3_i4niq"]
+[ext_resource type="Texture2D" uid="uid://xxnj8dgv3c1o" path="res://assets/窗帘.png" id="4_2fk0d"]
+[ext_resource type="Texture2D" uid="uid://byoxg8e4gphrk" path="res://assets/电脑桌.png" id="5_od4ig"]
+[ext_resource type="Texture2D" uid="uid://ch7vn8m3i2wub" path="res://assets/显示器.png" id="6_mshda"]
+[ext_resource type="Texture2D" uid="uid://dly1dho6tmlon" path="res://assets/键盘.png" id="7_j21q1"]
+[ext_resource type="Texture2D" uid="uid://ih47js0t8c48" path="res://assets/椅子背面.png" id="7_mshda"]
+[ext_resource type="Texture2D" uid="uid://b5n6xnas0t2f8" path="res://assets/门.png" id="9_h01gp"]
+[ext_resource type="Texture2D" uid="uid://bsfcotbutghmo" path="res://assets/钟表.png" id="10_yqs8p"]
+[ext_resource type="Texture2D" uid="uid://dk235p5u0iycu" path="res://assets/吊灯.png" id="11_k44t4"]
+[ext_resource type="Texture2D" uid="uid://bvhocu6pi2ssw" path="res://assets/床.png" id="12_7figx"]
+[ext_resource type="Texture2D" uid="uid://uvgbvp111v3s" path="res://assets/相框大.png" id="13_j21q1"]
+[ext_resource type="Texture2D" uid="uid://dyp8q8s884fgu" path="res://assets/立式台灯.png" id="14_l3guo"]
+[ext_resource type="Texture2D" uid="uid://c6aq4f15b4xy6" path="res://assets/书架.png" id="15_anfv0"]
+[ext_resource type="Texture2D" uid="uid://brkb0q53lpyxj" path="res://assets/植物.png" id="16_v80p3"]
+[ext_resource type="Texture2D" uid="uid://egs1orqbsy13" path="res://assets/书.png" id="17_5ufp3"]
+[ext_resource type="Texture2D" uid="uid://b0v8c3l4oacia" path="res://assets/书2.png" id="18_bkdat"]
+[ext_resource type="Texture2D" uid="uid://b5pbmamuvxdsu" path="res://assets/球.png" id="19_w2x7t"]
+[ext_resource type="Texture2D" uid="uid://o7vpc7d6mbm4" path="res://assets/盒子.png" id="20_yqs8p"]
+[ext_resource type="Texture2D" uid="uid://dqhgcsnvnpkoi" path="res://assets/相框小.png" id="22_l3guo"]
+[ext_resource type="Texture2D" uid="uid://cj2c26lmj3nf7" path="res://assets/音箱.png" id="23_anfv0"]
+[ext_resource type="Texture2D" uid="uid://b0177vyh8abvq" path="res://assets/狗垫子.png" id="24_anfv0"]
+[ext_resource type="Texture2D" uid="uid://dt2yeu0rhls5u" path="res://assets/露西.png" id="25_v80p3"]
+
+[node name="场景" type="Node2D"]
+
+[node name="背景" type="Sprite2D" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="背景"]
+self_modulate = Color(1, 0.968627, 0.917647, 1)
+offset_right = 964.0
+offset_bottom = 470.0
+
+[node name="1111" type="Sprite2D" parent="背景"]
+visible = false
+position = Vector2(480, 240)
+texture = ExtResource("1_vcifu")
+
+[node name="ColorRect3" type="ColorRect" parent="背景"]
+self_modulate = Color(0.784314, 0.772549, 0.752941, 1)
+offset_left = -40.0
+offset_right = 1008.0
+offset_bottom = 54.0
+
+[node name="ColorRect2" type="ColorRect" parent="背景"]
+self_modulate = Color(0.784314, 0.772549, 0.752941, 1)
+offset_left = -40.0
+offset_top = 296.0
+offset_right = 1008.0
+offset_bottom = 470.0
+
+[node name="前景" type="Sprite2D" parent="."]
+
+[node name="风景" type="Sprite2D" parent="前景"]
+position = Vector2(518, 160)
+texture = ExtResource("3_i4niq")
+
+[node name="窗户" type="Sprite2D" parent="前景"]
+position = Vector2(518, 160)
+texture = ExtResource("3_2fk0d")
+
+[node name="窗帘" type="Sprite2D" parent="前景"]
+position = Vector2(516, 159)
+texture = ExtResource("4_2fk0d")
+
+[node name="电脑桌" type="Sprite2D" parent="前景"]
+position = Vector2(510, 278)
+texture = ExtResource("5_od4ig")
+
+[node name="显示器" type="Sprite2D" parent="前景"]
+position = Vector2(505, 226)
+texture = ExtResource("6_mshda")
+
+[node name="Sprite2D" type="Sprite2D" parent="前景"]
+position = Vector2(505, 256)
+texture = ExtResource("7_j21q1")
+
+[node name="主角背面" type="Sprite2D" parent="前景"]
+position = Vector2(504, 264)
+texture = ExtResource("3_ava4q")
+
+[node name="椅子诶面" type="Sprite2D" parent="前景"]
+position = Vector2(505, 283)
+texture = ExtResource("7_mshda")
+
+[node name="门" type="Sprite2D" parent="前景"]
+position = Vector2(127, 237)
+texture = ExtResource("9_h01gp")
+
+[node name="表" type="Sprite2D" parent="前景"]
+position = Vector2(127, 145)
+texture = ExtResource("10_yqs8p")
+
+[node name="吊灯" type="Sprite2D" parent="前景"]
+position = Vector2(216, 102)
+texture = ExtResource("11_k44t4")
+
+[node name="床" type="Sprite2D" parent="前景"]
+position = Vector2(741, 348)
+texture = ExtResource("12_7figx")
+
+[node name="相框大" type="Sprite2D" parent="前景"]
+position = Vector2(675, 147)
+texture = ExtResource("13_j21q1")
+
+[node name="台灯" type="Sprite2D" parent="前景"]
+position = Vector2(652, 269)
+texture = ExtResource("14_l3guo")
+
+[node name="书架" type="Sprite2D" parent="前景"]
+position = Vector2(341, 238)
+texture = ExtResource("15_anfv0")
+
+[node name="植物" type="Sprite2D" parent="前景"]
+position = Vector2(233, 266)
+texture = ExtResource("16_v80p3")
+
+[node name="书1" type="Sprite2D" parent="前景"]
+position = Vector2(343, 195)
+texture = ExtResource("17_5ufp3")
+
+[node name="书2" type="Sprite2D" parent="前景"]
+position = Vector2(339, 242)
+texture = ExtResource("18_bkdat")
+
+[node name="球" type="Sprite2D" parent="前景"]
+position = Vector2(310, 285)
+texture = ExtResource("19_w2x7t")
+
+[node name="盒子" type="Sprite2D" parent="前景"]
+position = Vector2(365, 284)
+texture = ExtResource("20_yqs8p")
+
+[node name="相框小" type="Sprite2D" parent="前景"]
+position = Vector2(275, 121)
+texture = ExtResource("22_l3guo")
+
+[node name="音箱右" type="Sprite2D" parent="前景"]
+position = Vector2(560, 244)
+texture = ExtResource("23_anfv0")
+
+[node name="音箱左" type="Sprite2D" parent="前景"]
+position = Vector2(455, 243)
+texture = ExtResource("23_anfv0")
+
+[node name="狗垫子" type="Sprite2D" parent="前景"]
+position = Vector2(391, 333)
+texture = ExtResource("24_anfv0")
+
+[node name="露西" type="Sprite2D" parent="前景"]
+position = Vector2(387, 328)
+texture = ExtResource("25_v80p3")
