@@ -144,9 +144,9 @@ show_percentage = false
 self_modulate = Color(0.34902, 0.34902, 0.34902, 0.160784)
 layout_mode = 0
 offset_left = 1.0
-offset_top = 85.0
+offset_top = 90.0
 offset_right = 241.0
-offset_bottom = 295.0
+offset_bottom = 340.0
 
 [node name="Sm" type="ScrollContainer" parent="bot"]
 layout_mode = 1

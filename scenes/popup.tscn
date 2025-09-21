@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://d0qccbqd48cy2"]
+[gd_scene load_steps=3 format=3 uid="uid://d0qccbqd48cy2"]
 
 [ext_resource type="Script" uid="uid://d2nwufa0k4f2y" path="res://scripts/popup.gd" id="1_4ebxx"]
+[ext_resource type="Theme" uid="uid://cp1t7xqq6k8jr" path="res://scenes/程菜单.tres" id="1_cpc1a"]
 
 [node name="Popup" type="Control"]
 layout_mode = 3
@@ -11,6 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource("1_cpc1a")
 script = ExtResource("1_4ebxx")
 
 [node name="Background" type="ColorRect" parent="."]
@@ -20,7 +22,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.196078)
+color = Color(0.254902, 0.254902, 0.254902, 0.588235)
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
@@ -35,6 +37,15 @@ offset_right = 200.0
 offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.145098, 0.145098, 0.145098, 0.815686)
 
 [node name="TitleBar" type="HBoxContainer" parent="Panel"]
 layout_mode = 1

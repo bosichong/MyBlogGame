@@ -83,6 +83,7 @@ layout_mode = 2
 text = "favorites:100"
 
 [node name="每日收入" type="Label" parent="v1/h5"]
+visible = false
 layout_mode = 2
 text = "每日收入:100"
 
@@ -90,7 +91,7 @@ text = "每日收入:100"
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
-columns = 3
+columns = 4
 
 [node name="create_blog" type="Button" parent="h2"]
 layout_mode = 2
@@ -99,23 +100,25 @@ text = "日程安排"
 
 [node name="Button4" type="Button" parent="h2"]
 layout_mode = 2
-text = "博客排行"
-
-[node name="Button2" type="Button" parent="h2"]
-layout_mode = 2
-text = "消费购买"
+text = "博客江湖"
 
 [node name="Button5" type="Button" parent="h2"]
 layout_mode = 2
 text = "广告联盟"
 
-[node name="Button" type="Button" parent="h2"]
+[node name="Button1" type="Button" parent="h2"]
 layout_mode = 2
 text = "投资理财"
+
+[node name="Button2" type="Button" parent="h2"]
+layout_mode = 2
+text = "消费购买"
 
 [node name="Button3" type="Button" parent="h2"]
 layout_mode = 2
 text = "系统菜单"
 
 [connection signal="pressed" from="h2/create_blog" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="h2/Button4" to="." method="_on_button_4_pressed"]
 [connection signal="pressed" from="h2/Button5" to="." method="_on_button_5_pressed"]
+[connection signal="pressed" from="h2/Button1" to="." method="_on_button_1_pressed"]

@@ -1,0 +1,436 @@
+[gd_scene load_steps=3 format=3 uid="uid://1n7kcvrjb6l0"]
+
+[ext_resource type="Theme" uid="uid://cp1t7xqq6k8jr" path="res://scenes/程菜单.tres" id="1_7u3j4"]
+[ext_resource type="Script" uid="uid://bytaig53vud7q" path="res://scripts/lm_mian.gd" id="2_no45j"]
+
+[node name="lm_mian" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 960.0
+offset_bottom = 480.0
+theme = ExtResource("1_7u3j4")
+script = ExtResource("2_no45j")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.196078)
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 930.0
+offset_bottom = 450.0
+
+[node name="ColorRect" type="ColorRect" parent="bg"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.666667)
+
+[node name="按钮组" type="Panel" parent="bg"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 120.0
+grow_vertical = 2
+
+[node name="vb" type="VBoxContainer" parent="bg/按钮组"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="mc1" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b1" type="Button" parent="bg/按钮组/vb/mc1"]
+layout_mode = 2
+toggle_mode = true
+text = "首页"
+
+[node name="mc2" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b2" type="Button" parent="bg/按钮组/vb/mc2"]
+layout_mode = 2
+toggle_mode = true
+text = "江湖榜"
+
+[node name="mc3" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b3" type="Button" parent="bg/按钮组/vb/mc3"]
+layout_mode = 2
+toggle_mode = true
+text = "关于联盟"
+
+[node name="mc4" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b4" type="Button" parent="bg/按钮组/vb/mc4"]
+layout_mode = 2
+toggle_mode = true
+text = "捐赠记录"
+
+[node name="mc5" type="MarginContainer" parent="bg/按钮组/vb"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b5" type="Button" parent="bg/按钮组/vb/mc5"]
+layout_mode = 2
+toggle_mode = true
+text = "关于联盟"
+
+[node name="mc6" type="MarginContainer" parent="bg/按钮组/vb"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b6" type="Button" parent="bg/按钮组/vb/mc6"]
+layout_mode = 2
+toggle_mode = true
+text = "周六"
+
+[node name="mc7" type="MarginContainer" parent="bg/按钮组/vb"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b7" type="Button" parent="bg/按钮组/vb/mc7"]
+layout_mode = 2
+toggle_mode = true
+text = "周日"
+
+[node name="选项组" type="Panel" parent="bg"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 142.0
+offset_right = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="sc1" type="PanelContainer" parent="bg/选项组"]
+layout_mode = 2
+offset_top = 10.0
+offset_right = 760.0
+offset_bottom = 410.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc1"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc1/VBoxContainer"]
+layout_mode = 2
+
+[node name="tit" type="Label" parent="bg/选项组/sc1/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.827451, 0.352941, 0, 1)
+text = "博客江湖"
+
+[node name="lm_con" type="Label" parent="bg/选项组/sc1/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+
+[node name="hbox" type="HBoxContainer" parent="bg/选项组/sc1/VBoxContainer"]
+layout_mode = 2
+
+[node name="jhb" type="VBoxContainer" parent="bg/选项组/sc1/VBoxContainer/hbox"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="bg/选项组/sc1/VBoxContainer/hbox/jhb"]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="bg/选项组/sc1/VBoxContainer/hbox/jhb/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "江湖榜前十名"
+
+[node name="pb" type="VBoxContainer" parent="bg/选项组/sc1/VBoxContainer/hbox/jhb"]
+layout_mode = 2
+
+[node name="jzb" type="VBoxContainer" parent="bg/选项组/sc1/VBoxContainer/hbox"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="bg/选项组/sc1/VBoxContainer/hbox/jzb"]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="bg/选项组/sc1/VBoxContainer/hbox/jzb/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "联盟推荐[捐赠榜]"
+
+[node name="pb" type="VBoxContainer" parent="bg/选项组/sc1/VBoxContainer/hbox/jzb"]
+layout_mode = 2
+
+[node name="zl" type="VBoxContainer" parent="bg/选项组/sc1/VBoxContainer/hbox"]
+visible = false
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="bg/选项组/sc1/VBoxContainer/hbox/zl"]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="bg/选项组/sc1/VBoxContainer/hbox/zl/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "个人资料"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc1/VBoxContainer/hbox/zl"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="bg/选项组/sc1/VBoxContainer/hbox/zl/VBoxContainer"]
+layout_mode = 2
+text = "还没有加入联盟，快点击[加入联盟]加入我们"
+
+[node name="Button" type="Button" parent="bg/选项组/sc1/VBoxContainer/hbox/zl/VBoxContainer"]
+layout_mode = 2
+text = "加入联盟"
+
+[node name="zl2" type="VBoxContainer" parent="bg/选项组/sc1/VBoxContainer/hbox"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="bg/选项组/sc1/VBoxContainer/hbox/zl2"]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="bg/选项组/sc1/VBoxContainer/hbox/zl2/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "个人资料"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc1/VBoxContainer/hbox/zl2"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="bg/选项组/sc1/VBoxContainer/hbox/zl2/VBoxContainer"]
+layout_mode = 2
+text = "id"
+
+[node name="Button" type="Button" parent="bg/选项组/sc1/VBoxContainer/hbox/zl2/VBoxContainer"]
+layout_mode = 2
+text = "退出联盟"
+
+[node name="sc2" type="PanelContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc2"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc2/VBoxContainer"]
+layout_mode = 2
+
+[node name="tit" type="Label" parent="bg/选项组/sc2/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.827451, 0.352941, 0, 1)
+text = "    博客榜"
+
+[node name="lm_con" type="Label" parent="bg/选项组/sc2/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+
+[node name="hbox" type="HBoxContainer" parent="bg/选项组/sc2/VBoxContainer"]
+layout_mode = 2
+
+[node name="jhb" type="VBoxContainer" parent="bg/选项组/sc2/VBoxContainer/hbox"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="bg/选项组/sc2/VBoxContainer/hbox/jhb"]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="bg/选项组/sc2/VBoxContainer/hbox/jhb/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "文学江湖榜"
+
+[node name="pb" type="VBoxContainer" parent="bg/选项组/sc2/VBoxContainer/hbox/jhb"]
+layout_mode = 2
+
+[node name="jhb2" type="VBoxContainer" parent="bg/选项组/sc2/VBoxContainer/hbox"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="bg/选项组/sc2/VBoxContainer/hbox/jhb2"]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="bg/选项组/sc2/VBoxContainer/hbox/jhb2/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "技术江湖榜"
+
+[node name="pb" type="VBoxContainer" parent="bg/选项组/sc2/VBoxContainer/hbox/jhb2"]
+layout_mode = 2
+
+[node name="jhb3" type="VBoxContainer" parent="bg/选项组/sc2/VBoxContainer/hbox"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="bg/选项组/sc2/VBoxContainer/hbox/jhb3"]
+custom_minimum_size = Vector2(200, 30)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="bg/选项组/sc2/VBoxContainer/hbox/jhb3/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "艺术江湖榜"
+
+[node name="pb" type="VBoxContainer" parent="bg/选项组/sc2/VBoxContainer/hbox/jhb3"]
+layout_mode = 2
+
+[node name="sc3" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc3/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="tit" type="Label" parent="bg/选项组/sc3/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.827451, 0.352941, 0, 1)
+text = "    关于博客江湖"
+
+[node name="lm_con" type="Label" parent="bg/选项组/sc3/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 14
+
+[node name="sc4" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc4"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc4/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="tit" type="Label" parent="bg/选项组/sc4/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.827451, 0.352941, 0, 1)
+text = "   捐赠记录"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="bg/选项组/sc4/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc4/VBoxContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 3
+
+[node name="sc5" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d5" type="VBoxContainer" parent="bg/选项组/sc5"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="sc6" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d6" type="VBoxContainer" parent="bg/选项组/sc6"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="sc7" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d7" type="VBoxContainer" parent="bg/选项组/sc7"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="bg"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -72.0
+offset_bottom = 30.0
+grow_horizontal = 0
+text = "关闭窗口"
+
+[connection signal="pressed" from="bg/按钮组/vb/mc1/b1" to="." method="_on_b_1_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc2/b2" to="." method="_on_b_2_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc3/b3" to="." method="_on_b_3_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc4/b4" to="." method="_on_b_4_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc5/b5" to="." method="_on_b_5_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc6/b6" to="." method="_on_b_6_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc7/b7" to="." method="_on_b_7_pressed"]
+[connection signal="pressed" from="bg/选项组/sc1/VBoxContainer/hbox/zl/VBoxContainer/Button" to="." method="_join_lm"]
+[connection signal="pressed" from="bg/选项组/sc1/VBoxContainer/hbox/zl2/VBoxContainer/Button" to="." method="_on_exit_lm"]
+[connection signal="pressed" from="bg/Button" to="." method="_on_button_pressed"]
