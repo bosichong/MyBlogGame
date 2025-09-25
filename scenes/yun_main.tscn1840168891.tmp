@@ -1,0 +1,238 @@
+[gd_scene load_steps=3 format=3 uid="uid://yx85n3arynvu"]
+
+[ext_resource type="Theme" uid="uid://cp1t7xqq6k8jr" path="res://scenes/程菜单.tres" id="1_ycgth"]
+[ext_resource type="Script" uid="uid://ui4hbsc4ax5v" path="res://scripts/yun_main.gd" id="2_ycgth"]
+
+[node name="yun_main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_ycgth")
+script = ExtResource("2_ycgth")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 930.0
+offset_bottom = 450.0
+
+[node name="ColorRect" type="ColorRect" parent="bg"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.103744, 0.103744, 0.103744, 0.666667)
+
+[node name="按钮组" type="Panel" parent="bg"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 120.0
+grow_vertical = 2
+
+[node name="vb" type="VBoxContainer" parent="bg/按钮组"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="mc1" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b1" type="Button" parent="bg/按钮组/vb/mc1"]
+layout_mode = 2
+toggle_mode = true
+text = "域名"
+
+[node name="mc2" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b2" type="Button" parent="bg/按钮组/vb/mc2"]
+layout_mode = 2
+toggle_mode = true
+text = "主机"
+
+[node name="mc3" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b3" type="Button" parent="bg/按钮组/vb/mc3"]
+layout_mode = 2
+toggle_mode = true
+text = "安全防护"
+
+[node name="mc4" type="MarginContainer" parent="bg/按钮组/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b4" type="Button" parent="bg/按钮组/vb/mc4"]
+layout_mode = 2
+toggle_mode = true
+text = "管理面板"
+
+[node name="mc5" type="MarginContainer" parent="bg/按钮组/vb"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b5" type="Button" parent="bg/按钮组/vb/mc5"]
+layout_mode = 2
+toggle_mode = true
+text = "关于联盟"
+
+[node name="mc6" type="MarginContainer" parent="bg/按钮组/vb"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b6" type="Button" parent="bg/按钮组/vb/mc6"]
+layout_mode = 2
+toggle_mode = true
+text = "周六"
+
+[node name="mc7" type="MarginContainer" parent="bg/按钮组/vb"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b7" type="Button" parent="bg/按钮组/vb/mc7"]
+layout_mode = 2
+toggle_mode = true
+text = "周日"
+
+[node name="选项组" type="Panel" parent="bg"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 142.0
+offset_right = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="sc1" type="PanelContainer" parent="bg/选项组"]
+layout_mode = 2
+offset_top = 10.0
+offset_right = 760.0
+offset_bottom = 410.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc1"]
+layout_mode = 2
+
+[node name="sc2" type="PanelContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc2"]
+layout_mode = 2
+
+[node name="sc3" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="sc4" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc4"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="sc5" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d5" type="VBoxContainer" parent="bg/选项组/sc5"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="sc6" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d6" type="VBoxContainer" parent="bg/选项组/sc6"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="sc7" type="ScrollContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d7" type="VBoxContainer" parent="bg/选项组/sc7"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="bg"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -72.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "关闭窗口"
+
+[node name="AcceptDialog" type="AcceptDialog" parent="."]
+
+[connection signal="pressed" from="bg/Button" to="." method="_on_button_pressed"]

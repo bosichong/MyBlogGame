@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cl00vejve6l78"]
+[gd_scene load_steps=12 format=3 uid="uid://cl00vejve6l78"]
 
 [ext_resource type="Script" uid="uid://cqvdo83xm6ab8" path="res://scripts/main.gd" id="1_85g3d"]
 [ext_resource type="PackedScene" uid="uid://dgno60v7uo37w" path="res://scenes/场景.tscn" id="2_tipki"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://cptfk2fj0xonm" path="res://scenes/日程.tscn" id="9_85g3d"]
 [ext_resource type="PackedScene" uid="uid://1n7kcvrjb6l0" path="res://scenes/lm.tscn" id="9_choun"]
 [ext_resource type="PackedScene" uid="uid://be2m3x33rvmha" path="res://scenes/bank_main.tscn" id="10_choun"]
+[ext_resource type="PackedScene" uid="uid://yx85n3arynvu" path="res://scenes/yun_main.tscn" id="11_ya4ey"]
 [ext_resource type="PackedScene" uid="uid://cjugt1joovfkl" path="res://scenes/ad.tscn" id="12_eb6dy"]
 
 [node name="Main" type="Node2D"]
@@ -93,6 +94,9 @@ size_flags_vertical = 4
 visible = false
 
 [node name="bank_main" parent="." instance=ExtResource("10_choun")]
+visible = false
+
+[node name="yun_main" parent="." instance=ExtResource("11_ya4ey")]
 visible = false
 
 [node name="AcceptDialog" type="AcceptDialog" parent="."]

@@ -800,9 +800,9 @@ func format_date() -> String:
 #参数:
     #date_str1: 第一个日期字符串，格式为 "YYYY-M-W-D"。
     #date_str2: 第二个日期字符串，格式为 "YYYY-M-W-D"。
-    #type: bool。
+    #type: bool。是否回绝对值
 #
-#返回值:两个日期之间的天数差（整数）。
+#   返回值:两个日期之间的天数差（整数）。(days2 - days1)
 func calculate_new_game_time_difference(date_str1: String, date_str2: String, type=true ) -> int:
 
 

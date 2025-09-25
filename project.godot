@@ -25,6 +25,7 @@ AdManager="*res://scripts/ad_manager.gd"
 Tongji="*res://scripts/tongji.gd"
 Lm="*res://scripts/bloglm.gd"
 Bs="*res://scripts/BankSystem.gd"
+Yun="*res://scripts/yun.gd"
 
 [display]
 

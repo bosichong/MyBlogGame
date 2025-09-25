@@ -84,7 +84,8 @@ func _ready() -> void:
     $lm_mian.connect("close_lm",_on_close_lm)
     $ui/bottom.connect("open_bm",_on_open_bm)
     $bank_main.connect("close_bm",_on_close_bm)
-    
+    $ui/bottom.connect("open_yun",_on_open_yun)
+    $yun_main.connect("close_bm",_on_close_yun)
     $AcceptDialog.confirmed.connect(_close_ac)
     
     update_ui()
@@ -226,6 +227,13 @@ func _on_close_lm():
     $lm_mian.visible = false
     TimerManager.start_timer()
 
+func _on_open_yun():
+    $yun_main.visible = true
+    TimerManager.stop_timer()
+    
+func _on_close_yun():
+    $yun_main.visible = false
+    TimerManager.start_timer()
     
 func _on_open_ad_passed():
     $Ad.on_show_panel()

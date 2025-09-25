@@ -98,6 +98,10 @@ layout_mode = 2
 size_flags_horizontal = 8
 text = "日程安排"
 
+[node name="open_yun" type="Button" parent="h2"]
+layout_mode = 2
+text = "域名主机"
+
 [node name="Button4" type="Button" parent="h2"]
 layout_mode = 2
 text = "博客江湖"
@@ -119,6 +123,7 @@ layout_mode = 2
 text = "系统菜单"
 
 [connection signal="pressed" from="h2/create_blog" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="h2/open_yun" to="." method="_on_open_yun_pressed"]
 [connection signal="pressed" from="h2/Button4" to="." method="_on_button_4_pressed"]
 [connection signal="pressed" from="h2/Button5" to="." method="_on_button_5_pressed"]
 [connection signal="pressed" from="h2/Button1" to="." method="_on_button_1_pressed"]

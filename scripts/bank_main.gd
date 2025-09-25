@@ -1,8 +1,6 @@
 extends Control
 signal close_bm
 
-@onready var popup_scene = preload("res://scenes/Popup.tscn")
-var popup: Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
