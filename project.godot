@@ -26,6 +26,7 @@ Tongji="*res://scripts/tongji.gd"
 Lm="*res://scripts/bloglm.gd"
 Bs="*res://scripts/BankSystem.gd"
 Yun="*res://scripts/yun.gd"
+TaskManager="*res://scripts/task_system/TaskManager.gd"
 
 [display]
 

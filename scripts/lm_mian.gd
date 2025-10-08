@@ -153,7 +153,6 @@ func create_labels_jz(jh, node):
         node.add_child(label)
 
 func create_jzjl(data,node):
-    print('start')
     Utils.clear_children(node)
     for d in data:
         var lb = Label.new()
@@ -166,7 +165,8 @@ func _join_lm() -> void:
     Lm.join_lm()
     $"bg/选项组/sc1/VBoxContainer/hbox/zl".visible = false
     $"bg/选项组/sc1/VBoxContainer/hbox/zl2".visible = true
-    
+    var rst = Lm.find_by_id(888)
+    print(rst)
     on_show_panel()
 
 
@@ -175,3 +175,23 @@ func _on_exit_lm() -> void:
     $"bg/选项组/sc1/VBoxContainer/hbox/zl".visible = true
     $"bg/选项组/sc1/VBoxContainer/hbox/zl2".visible = false
     on_show_panel()
+
+## 捐赠
+func _on_jz_btu_pressed() -> void:
+    var m = float($"bg/选项组/sc1/VBoxContainer/hbox/zl2/VBoxContainer/HBoxContainer/LineEdit".text)
+    var rst = Lm.player_donation_data(m)
+    on_show_panel()
+
+    if rst.success:
+        show_popup_message("捐赠成功",  "\n捐赠金额: " + str(rst.amount) + "\n累计捐赠: " + str(rst.total))    
+    else:
+        show_popup_message("捐赠失败", rst.message)
+    
+  
+
+## 显示通用弹窗
+func show_popup_message(title: String, content: String) -> void:
+    $AcceptDialog.title = title
+    $AcceptDialog.dialog_text = content
+    $AcceptDialog.set_size(Vector2i(400,200))
+    $AcceptDialog.popup_centered()    

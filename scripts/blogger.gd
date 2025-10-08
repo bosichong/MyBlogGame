@@ -254,9 +254,10 @@ func add_new_blog_post(title: String, d) -> Dictionary:
     }
     
     blog_data["posts"].append(new_post)
-    #print("新博客文章发布: ", title, "，分类: ", category,"，日期: ", blog_date,)
+    print("新博客文章发布: ", title, "，分类: ", d.name,"，日期: ", blog_date,)
     return new_post
     
+signal sg_new_blog_post(category: String)
 ## 模拟当天发布新博客文章
 func simulate_new_blog_post(category) -> int:
     # 这里可以根据作者的写作、技术能力来决定文章的质量，体力决定是否能发布文章。
@@ -264,11 +265,12 @@ func simulate_new_blog_post(category) -> int:
     if stamina > d.stamina and category: ## 如果体力大于，并且当天有写作任务。
         var new_title: String = Utils.generate_random_title(category) # 生成一个简单的随机标题
         var new_post = add_new_blog_post(new_title, d)
-        
-        if category == '年度总结':
-            var k = Utils.find_category_by_name(Utils.possible_categories,category)
-            k.disabled = true
-            Utils.replace_task_value(blog_calendar, category, "休息")  # 更新日历任务为休息
+        # 这里定义了一个博文发布信号量，当有博文成功发布时候触发，将会在res://scripts/task_system/TaskManager.gd中引用信号量
+        emit_signal("sg_new_blog_post",category) 
+        #if category == '年度总结':
+            #var k = Utils.find_category_by_name(Utils.possible_categories,category)
+            #k.disabled = true
+            #Utils.replace_task_value(blog_calendar, category, "休息")  # 更新日历任务为休息
         # 文章质量：基于写作能力和其他能力，最大100
         
         # 这里可以根据文章的质量和访问量来计算EXP
@@ -322,15 +324,17 @@ func update_blog_views() -> int:
             tody_rss += tmp_rss
             #print("RSS订阅叠加：",end_views_for_post,"RSS订阅增加：",tmp_rss)
         # 页面化增加一个访问量的buff，提升1%，100级提升10%
-        var tmp_design = int(end_views_for_post * (drawing_ability * 0.01))
+        var tmp_design = int(end_views_for_post * (blog_data.design_value * 0.01))
         end_views_for_post += tmp_design
         #print("design叠加：",end_views_for_post,"design增加：",tmp_design)
         # 每10级增加一个访问量的buff，提升1%，100级提升10%
         end_views_for_post += int(end_views_for_post * (dw * 0.01))
         # 根据热门风向标来增加流量,根据文章质量分满分200后，最终可以提升10%的流量
-        var tmp_ent = Utils.find_category_by_name(Utils.blog_post_events,"热点风向") 
-        #print(tmp_ent.type)
-        end_views_for_post+= int(end_views_for_post * (post.quality/200 * tmp_ent.add))
+        if post.type == Utils.post_trend.type:
+            
+            end_views_for_post+= int(end_views_for_post * (post.quality/200 * Utils.post_trend.views_add))
+        
+
         
         # 收费文章将当前的访问量进行转化，暂定每200流量转换1收费，收费根据文章的质量来定义费用，基础费用为:质量分/200*10元*end_views_for_post/200，
         

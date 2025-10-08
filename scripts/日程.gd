@@ -26,13 +26,14 @@ signal close_calendar_passed
 func _ready() -> void:
     show_scroll_container(1)
     
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-    pass
-    
-
+func up_data():
+    $"bg/选项组/sc1/d1"._on_show_panel()
+    $"bg/选项组/sc2/d2"._on_show_panel()
+    $"bg/选项组/sc3/d3"._on_show_panel()
+    $"bg/选项组/sc4/d4"._on_show_panel()
+    $"bg/选项组/sc5/d5"._on_show_panel()
+    $"bg/选项组/sc6/d6"._on_show_panel()
+    $"bg/选项组/sc7/d7"._on_show_panel()
 
 func _on_button_pressed() -> void:
     emit_signal("close_calendar_passed")

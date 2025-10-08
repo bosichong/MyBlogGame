@@ -5,8 +5,7 @@ const KEY = 1
 var current_button_group: ButtonGroup
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-    current_button_group = ButtonGroup.new()
-    Utils.create_all_checkbox(self,KEY,current_button_group,_on_checkbox_toggled)
+    _on_show_panel()
 
 func _on_show_panel():
     # 在面板显示时重新创建单选框

@@ -1,6 +1,5 @@
 extends Node
 
-var lm_0 = false # 是否注册成功
 var jhph = []
 var jhph_js = []
 var jhph_wx = []
@@ -13,6 +12,7 @@ var is_join = false #是否加入联盟
 var donate_data = []
 var donate_max = 100
 var donate_min = 50
+var player_donate = 0.0
 
 #固定捐赠ID
 var donate_ids = [1,2,3,4]
@@ -851,21 +851,17 @@ func exit_lm():
 func donate_lm():
     for id in donate_ids:
         var m = randi_range(10,donate_max)
-        donate_data.append([id,m])
+        donate_data.insert(0,[id,m])
     
     var tm_ids = []
     for i in range(10):
-        tm_ids.append(randi_range(4, 99))
+        tm_ids.insert(0,randi_range(4, 99))
     for id in tm_ids:
         var m = randi_range(10,donate_min)
-        donate_data.append([id,m])
+        donate_data.insert(0,[id,m])
         
         
-    
-    
-     
-func on_month():
-    up_jhph()
+
     
 func quarter_activities():
     # 每季度增加联盟blog的属性值
@@ -970,3 +966,27 @@ func get_index_by_id(target_id):
         if lm_list[i]["id"] == target_id:
             return i  # 返回的就是数组中的索引（从 0 开始）
     return -1  # 没找到
+    
+    
+func player_donation_data(m: float) -> Dictionary:
+    """处理玩家捐赠数据
+    参数: m - 捐赠金额
+    返回值: 包含成功失败状态和提示信息的对象
+    """
+    if m > 0:
+        player_donate += m
+        donate_data.insert(0,[888,m])
+        jhph_jz = process_donation_data(donate_data)
+        return {
+            "success": true,
+            "message": "捐赠成功！捐赠金额: %.2f，累计捐赠: %.2f" % [m, player_donate],
+            "amount": m,
+            "total": player_donate
+        }
+    else:
+        return {
+            "success": false,
+            "message": "捐赠失败！捐赠金额必须大于0",
+            "amount": m,
+            "total": player_donate
+        }

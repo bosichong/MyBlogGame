@@ -191,7 +191,6 @@ text = "联盟推荐[捐赠榜]"
 layout_mode = 2
 
 [node name="zl" type="VBoxContainer" parent="bg/选项组/sc1/VBoxContainer/hbox"]
-visible = false
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="bg/选项组/sc1/VBoxContainer/hbox/zl"]
@@ -215,6 +214,7 @@ layout_mode = 2
 text = "加入联盟"
 
 [node name="zl2" type="VBoxContainer" parent="bg/选项组/sc1/VBoxContainer/hbox"]
+visible = false
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="bg/选项组/sc1/VBoxContainer/hbox/zl2"]
@@ -236,6 +236,18 @@ text = "id"
 [node name="Button" type="Button" parent="bg/选项组/sc1/VBoxContainer/hbox/zl2/VBoxContainer"]
 layout_mode = 2
 text = "退出联盟"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="bg/选项组/sc1/VBoxContainer/hbox/zl2/VBoxContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="bg/选项组/sc1/VBoxContainer/hbox/zl2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "168"
+
+[node name="jz_btu" type="Button" parent="bg/选项组/sc1/VBoxContainer/hbox/zl2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "捐赠联盟"
 
 [node name="sc2" type="PanelContainer" parent="bg/选项组"]
 visible = false
@@ -424,6 +436,8 @@ offset_bottom = 30.0
 grow_horizontal = 0
 text = "关闭窗口"
 
+[node name="AcceptDialog" type="AcceptDialog" parent="."]
+
 [connection signal="pressed" from="bg/按钮组/vb/mc1/b1" to="." method="_on_b_1_pressed"]
 [connection signal="pressed" from="bg/按钮组/vb/mc2/b2" to="." method="_on_b_2_pressed"]
 [connection signal="pressed" from="bg/按钮组/vb/mc3/b3" to="." method="_on_b_3_pressed"]
@@ -433,4 +447,5 @@ text = "关闭窗口"
 [connection signal="pressed" from="bg/按钮组/vb/mc7/b7" to="." method="_on_b_7_pressed"]
 [connection signal="pressed" from="bg/选项组/sc1/VBoxContainer/hbox/zl/VBoxContainer/Button" to="." method="_join_lm"]
 [connection signal="pressed" from="bg/选项组/sc1/VBoxContainer/hbox/zl2/VBoxContainer/Button" to="." method="_on_exit_lm"]
+[connection signal="pressed" from="bg/选项组/sc1/VBoxContainer/hbox/zl2/VBoxContainer/HBoxContainer/jz_btu" to="." method="_on_jz_btu_pressed"]
 [connection signal="pressed" from="bg/Button" to="." method="_on_button_pressed"]

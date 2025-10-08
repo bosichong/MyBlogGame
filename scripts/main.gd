@@ -88,6 +88,8 @@ func _ready() -> void:
     $yun_main.connect("close_bm",_on_close_yun)
     $AcceptDialog.confirmed.connect(_close_ac)
     
+    TaskManager.connect("sg_task_info_display_msg",sg_task_info_display_msg)
+    TaskManager.connect("sg_task_show_popup_msg",sg_task_show_popup_msg)
     update_ui()
     
 
@@ -108,28 +110,6 @@ func _ready() -> void:
 
     
     
-## 游戏事件触发遍历
-func game_events():
-    for e in Utils.blog_post_events:
-        if e.name == "热点风向":
-            if TimerManager.is_time_match(e.event_date):
-                var random_index = randi() % Utils.bc_type.size()
-                e.type = Utils.bc_type[random_index]
-                var tmp_tips = Strs.game_strs.热点风向[e.type][random_index]
-                show_popup_message("提示", tmp_tips)
-                
-        if e.name == "年度总结":
-            if TimerManager.is_time_match(e.event_date):
-                if e.times :
-                    e.times = 0
-                    var d = Utils.find_category_by_name(Utils.possible_categories,e.name)
-                    d.disabled = false
-                    info_display.add_message("一年过去了！可以发布年度总结了！ ")
-            else:
-                if not e.times :
-                    e.times = 1
-                    var d = Utils.find_category_by_name(Utils.possible_categories,e.name)
-                    d.disabled = true
 
 
 ##主界面UI刷新
@@ -183,6 +163,7 @@ func time_stop_bt():
 ## 日程管理
 func _on_bottom_calendar_passed():
     $日程.visible = true
+    $日程.up_data()
     
     
     TimerManager.stop_timer()
@@ -246,12 +227,13 @@ func _on_open_ad_passed():
     
 ## 每天的信号量
 func _on_day_ended():
+    TaskManager.day_task_func() #游戏事件遍历
     Bs.day_fs()
     Blogger.daily_activities()
     time_stop_bt()
     update_ui()
     AdManager.ad_day() # 更新审核日期触发审核结束的信号量
-    game_events()
+    
     
 
 func _on_week_ended():
@@ -259,9 +241,10 @@ func _on_week_ended():
     Blogger.week_activites() #博客相关的数据每周更新
 
 func _on_month_passed():
-    Lm.on_month()
+    pass
 
 func _on_quarter_passed():
+    Lm.up_jhph()
     Lm.quarter_activities()
 
     
@@ -426,9 +409,11 @@ func on_sig_ad_1_day():
 func _close_ac():
     TimerManager.start_timer()
 
+func sg_task_info_display_msg(msg):
+    info_display.add_message(msg)
 
-
-
+func sg_task_show_popup_msg(title: String, content: String):
+    show_popup_message(title,content)
     
     
     
