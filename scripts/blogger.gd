@@ -1,10 +1,12 @@
 extends Node
 
-var tmp_v = 80
+var tmp_v = 23
 
 # 核心属性 - 博客作者的五个关键能力
 ## 最高等级
 const MAX_LEVEL = 100
+## 级能最高等级
+const MAX_SKILL_LEVEL = 100
 ## 写作能力：决定文章质量和写作速度。
 var writing_ability: int = tmp_v
 
@@ -50,22 +52,22 @@ var dw:int = 0
 var attribute_points: int = 0
 
 ## 技能 - 字典，键为技能名，值为技能等级
-var skills: Dictionary = {}
+#var skills: Dictionary = {}
 ## 后最后一篇文章的质量分
 var tmp_quality = 0
 ## 工作学习休息日程
 var blog_calendar : Array = [
     {
-        "task" : "生活日记",
+        "task" : "阅读名著",
     },
     {
-        "task" : "生活日记",
+        "task" : "阅读名著",
     },
     {
-        "task" : "生活日记",
+        "task" : "阅读名著",
     },
     {
-        "task" : "生活日记",
+        "task" : "阅读名著",
     },
     {
         "task" : "安全维护",
@@ -172,32 +174,8 @@ func daily_activities():
         if Blogger.blog_calendar[day].task == "打游戏":
             exp_gained += playgame(Blogger.blog_calendar[day].task) # 休息一天
     elif Utils.check_name_exists(Utils.learning_skills,Blogger.blog_calendar[day].task):
-        if Blogger.blog_calendar[day].task == "自学编程":
-            exp_gained += self_learning_programming(Blogger.blog_calendar[day].task) # 学习编程1级
-        if Blogger.blog_calendar[day].task == "学习前端":
-            exp_gained += web_front(Blogger.blog_calendar[day].task) # 学习编程2级
-        if Blogger.blog_calendar[day].task == "高级编程":
-            exp_gained += advanced_programming(Blogger.blog_calendar[day].task) # 学习编程3级
-        if Blogger.blog_calendar[day].task == "成为黑客":
-            exp_gained += hacker(Blogger.blog_calendar[day].task) # 学习编程4级
-            
-        if Blogger.blog_calendar[day].task == "阅读名著":
-            exp_gained += literature_1(Blogger.blog_calendar[day].task) # 学习文学1级
-        if Blogger.blog_calendar[day].task == "写作基础理论":
-            exp_gained += literature_2(Blogger.blog_calendar[day].task) # 学习文学2级
-        if Blogger.blog_calendar[day].task == "高级文学":
-            exp_gained += literature_3(Blogger.blog_calendar[day].task) # 学习文学3级
-        if Blogger.blog_calendar[day].task == "小说家":
-            exp_gained += literature_4(Blogger.blog_calendar[day].task) # 学习文学4级
-            
-        if Blogger.blog_calendar[day].task == "自学画画":
-            exp_gained += draw_1(Blogger.blog_calendar[day].task) # 学习绘画1级
-        if Blogger.blog_calendar[day].task == "素描和色彩":
-            exp_gained += draw_2(Blogger.blog_calendar[day].task) # 学习绘画2级
-        if Blogger.blog_calendar[day].task == "原画师之路":
-            exp_gained += draw_3(Blogger.blog_calendar[day].task) # 学习绘画3级
-        if Blogger.blog_calendar[day].task == "大画家":
-            exp_gained += draw_4(Blogger.blog_calendar[day].task) # 学习绘画4级
+        exp_gained =  learningToSkills(Blogger.blog_calendar[day].task)
+        
     else:
         stamina += Utils.add_property(stamina,5)
         print("当天没有任务")
@@ -522,305 +500,90 @@ func playgame(category : String) -> int:
     emit_signal("s_playgame",t_msg)
     #print("今天休息体力加：",d.stamina)
     return 0
+
+
+
+enum  Skills {
+    LITERATURE,#文学
+    CODE,      #编程
+    DRAW,      #绘画
+}
+
+## 学习技能
+func learningToSkills(category: String) -> int:
     
-# 编程技能学习方法
-func general_learning(
-    category: String,  # 当前学习任务的类别名称
-    required_ability: int,  # 完成本学习任务需要达到的编程能力值
-    stamina_cost_multiplier: float,  # 学习此任务时消耗体力的倍数因子
-    ability_increment: float,  # 每次完成学习后增加的编程能力值
-    money_cost: int,  # 完成此次学习任务所需花费的金钱数量
-    completion_message: String,  # 当学习任务完成后要发出的消息内容
-    no_stamina_signal: String,  # 当体力不足以进行学习时要发射的信号名
-    completion_signal: String  # 当学习任务成功完成时要发射的信号名
-) -> int:
+    var skill_type = get_skill(category)
+    print(skill_type)
+    var exp = 0
+    exp = learning_skill(skill_type,category)
+    return exp
     
+    
+func get_skill(category: String):
+    var literature = ["阅读名著","写作基础理论","高级文学","小说家",]
+    var code = ["自学编程","学习前端","高级编程","成为黑客",]
+    var draw = ["自学画画","素描和色彩","原画师之路","大画家",]
+    if category in literature : return Skills.LITERATURE
+    elif category in code : return Skills.CODE
+    elif category in draw : return Skills.DRAW
+    else : return 0
+
+
+signal skill_level_up(type:int,lv:float)
+signal no_stamina_signal(tit:String)
+signal no_money_signal(tit:String)
+## 升级能并返回经验值
+func learning_skill(type : int, category : String) -> int:
     # 查找与给定类别名称对应的技能数据
     var d = Utils.find_category_by_name(Utils.learning_skills, category)
-    
-    if code_ability < required_ability:  # 如果当前编程能力小于所需的能力值
-        if stamina < d.stamina * stamina_cost_multiplier:  # 如果当前体力不足以支付此次学习的成本
-            emit_signal(no_stamina_signal, "体力不足，无法进行学习！")  # 发出体力不足的信号
+    var tmp_skill_level = 0
+    match type:
+        Skills.DRAW:
+            tmp_skill_level = drawing_ability
+        Skills.CODE:
+            tmp_skill_level = code_ability
+        Skills.LITERATURE:
+            tmp_skill_level = literature_ability
+    if tmp_skill_level < MAX_SKILL_LEVEL :
+        if stamina < d.stamina :  # 如果当前体力不足以支付此次学习的成本
+            emit_signal("no_stamina_signal", "体力不足，无法进行学习！")  # 发出体力不足的信号
             stamina += Utils.add_property(stamina, 5)  # 增加少量体力
             return 0  # 返回0表示此次学习未成功进行
         if money < d.money :
-            emit_signal(no_stamina_signal, "财力不足，无法进行学习！")  # 发出体力不足的信号
+            emit_signal("no_money_signal", "财力不足，无法进行学习！")  # 发出体力不足的信号
             stamina += Utils.add_property(stamina, 5)  # 增加少量体力
             return 0  # 返回0表示此次学习未成功进行
         # 减少相应的体力和金钱，并增加编程能力
-        stamina -= d.stamina * stamina_cost_multiplier
-        money -= money_cost
-        code_ability += ability_increment
-        code_ability = round(code_ability * 10) / 10  # 保留小数点后一位
-        #print("code_ability",code_ability)  # 打印更新后的编程能力值
+        stamina -= d.stamina
+        money -= d.money
         
-        # 如果能力达到了要求，执行完成任务后的操作
-    if code_ability >= required_ability:
-        Utils.replace_task_value(blog_calendar, category, "休息")  # 更新日历任务为休息
-        emit_signal(completion_signal, completion_message)  # 发出任务完成的信号
-            
-            # 解锁下一个学习任务并禁用当前任务
-            # 查找当前技能的索引
-        var current_index = Utils.find_category_index(Utils.learning_skills, category)
-        if current_index != -1:
-                # 获取该技能所在组（即技能类型）和等级
-            var group_index = current_index / 4
-            var level = current_index % 4
-                
-                # 禁用当前按钮
-            Utils.learning_skills[current_index].disabled = true
-            Utils.learning_skills[current_index].pressed = false
-                
-                # 判断是否还有下一级技能（level < 3 表示还没到第4级）
-            if level < 3:
-                var next_index = current_index + 1
-                if next_index < Utils.learning_skills.size():
-                    Utils.learning_skills[next_index].disabled = false
-                    Utils.learning_skills[next_index].pressed = false
-            else:
-                    # 当前已经是该技能组的最后一级（第4级）
-                    #print("已经完成该技能组的所有等级！")
-                pass
+        tmp_skill_level += get_value(tmp_skill_level)
+        tmp_skill_level = round(tmp_skill_level * 10) / 10  # 保留小数点后一位
+        if tmp_skill_level > MAX_SKILL_LEVEL: #如果最后技分值大于则纠正
+            tmp_skill_level = MAX_SKILL_LEVEL
         
-        # 根据实际情况调整返回值，这里简单地以金钱成本和能力增长来计算
-        #print("返回10")
-        return 10
+        match type:
+            Skills.DRAW:
+                drawing_ability = tmp_skill_level
+            Skills.CODE:
+                code_ability = tmp_skill_level
+            Skills.LITERATURE:
+                literature_ability = tmp_skill_level
+                
+        emit_signal("skill_level_up",type,tmp_skill_level) # 用于任务系统触发信号量
+        print(tmp_skill_level)  # 打印更新后能力值
+    return 10
+
+## 技能升级反回的经验值
+func get_value(k):
+    if k < 25:
+        return 1
+    elif k>=25 and k < 50:
+        return 0.5
+    elif k>=50 and k < 75:
+        return 0.2
+    elif k>=75 and k < 100:
+        return 0.1
     else:
-        return 0  # 如果编程能力已经达到或超过所需的能力值，则无需再次学习，返回0
-
-# 编程学习 信号
-signal s_self_learning_programming_end(msg:String)
-signal s_self_learning_programming_end_no_stamina(msg: String) # 体力不足
-
-signal s_web_front(msg:String)
-signal s_web_front_no_stamina(msg: String) # 体力不足
-
-signal s_advanced_programming(msg:String)
-signal s_advanced_programming_no_stamina(msg: String) # 体力不足
-
-signal s_hacker(msg:String)
-signal s_hacker_no_stamina(msg: String) # 体力不足
-
-
-# 使用封装的方法替代原始的方法
-func self_learning_programming(category: String) -> int:
-    return general_learning(category, 25, 1, 1, 10,
-        "已经完成1级编程学习任务，当日已经转为休息，可以选择开始2级编程学习任务了。",
-        "s_self_learning_programming_end_no_stamina", "s_self_learning_programming_end")
-
-func web_front(category: String) -> int:
-    return general_learning(category, 50, 1, 0.5, 20,
-    "已经完成2级编程学习任务，当日已经转为休息，可以选择开始3级编程学习任务了。",
-    "s_web_front_no_stamina", "s_web_front")
-
-func advanced_programming(category: String) -> int:
-    return general_learning(category, 75, 1, 0.2, 20,
-        "已经完成3级编程学习任务，当日已经转为休息，可以选择开始4级编程学习任务了。",
-    "s_advanced_programming_no_stamina", "s_advanced_programming")
-
-func hacker(category: String) -> int:
-    return general_learning(category, 100, 1, 0.1, 20,
-        "已经完成4级编程学习任务，当日已经转为休息，可以选择一些其他任务了。",
-        "s_hacker_no_stamina", "s_hacker")
-    
-    
-# 文学技能学习方法
-func literature_learning(
-    category: String,  # 当前学习任务的类别名称
-    required_ability: int,  # 完成本学习任务需要达到的编程能力值
-    stamina_cost_multiplier: float,  # 学习此任务时消耗体力的倍数因子
-    ability_increment: float,  # 每次完成学习后增加的能力值
-    money_cost: int,  # 完成此次学习任务所需花费的金钱数量
-    completion_message: String,  # 当学习任务完成后要发出的消息内容
-    no_stamina_signal: String,  # 当体力不足以进行学习时要发射的信号名
-    completion_signal: String  # 当学习任务成功完成时要发射的信号名
-) -> int:
-    
-    # 查找与给定类别名称对应的技能数据
-    var d = Utils.find_category_by_name(Utils.learning_skills, category)
-    
-    if literature_ability < required_ability:  # 如果当前能力小于所需的能力值
-        if stamina < d.stamina * stamina_cost_multiplier:  # 如果当前体力不足以支付此次学习的成本
-            emit_signal(no_stamina_signal, "体力不足，无法进行学习！")  # 发出体力不足的信号
-            stamina += Utils.add_property(stamina, 5)  # 增加少量体力
-            return 0  # 返回0表示此次学习未成功进行
-        if money < d.money :
-            emit_signal(no_stamina_signal, "财力不足，无法进行学习！")  # 发出体力不足的信号
-            stamina += Utils.add_property(stamina, 5)  # 增加少量体力
-            return 0  # 返回0表示此次学习未成功进行
-        
-        # 减少相应的体力和金钱，并增加编程能力
-        stamina -= d.stamina * stamina_cost_multiplier
-        money -= money_cost
-        literature_ability += ability_increment
-        literature_ability = round(literature_ability * 10) / 10  # 保留小数点后一位
-        print("literature_ability",literature_ability)  # 打印更新后的编程能力值
-        
-        # 如果能力达到了要求，执行完成任务后的操作
-    if literature_ability >= required_ability:
-        Utils.replace_task_value(blog_calendar, category, "休息")  # 更新日历任务为休息
-        emit_signal(completion_signal, completion_message)  # 发出任务完成的信号
-            
-            # 解锁下一个学习任务并禁用当前任务
-            # 查找当前技能的索引
-        var current_index = Utils.find_category_index(Utils.learning_skills, category)
-        if current_index != -1:
-                # 获取该技能所在组（即技能类型）和等级
-            var group_index = current_index / 4
-            var level = current_index % 4
-                
-                # 禁用当前按钮
-            Utils.learning_skills[current_index].disabled = true
-            Utils.learning_skills[current_index].pressed = false
-                
-                # 判断是否还有下一级技能（level < 3 表示还没到第4级）
-            if level < 3:
-                var next_index = current_index + 1
-                if next_index < Utils.learning_skills.size():
-                    Utils.learning_skills[next_index].disabled = false
-                    Utils.learning_skills[next_index].pressed = false
-            else:
-                    # 当前已经是该技能组的最后一级（第4级）
-                    #print("已经完成该技能组的所有等级！")
-                pass
-        
-        # 根据实际情况调整返回值，这里简单地以金钱成本和能力增长来计算
-        return 10
-    else:
-        return 0  # 如果编程能力已经达到或超过所需的能力值，则无需再次学习，返回0
-
-# 文学技能学习 信号
-signal s_literature_1(msg:String)
-signal s_literature_1_no_stamina(msg: String) # 体力不足
-
-signal s_literature_2(msg:String)
-signal s_literature_2_no_stamina(msg: String) # 体力不足
-
-signal s_literature_3(msg:String)
-signal s_literature_3_no_stamina(msg: String) # 体力不足
-
-signal s_literature_4(msg:String)
-signal s_literature_4_no_stamina(msg: String) # 体力不足
-
-
-# 使用封装的方法替代原始的方法
-func literature_1(category: String) -> int:
-    return literature_learning(category, 25, 1, 1, 10,
-        "已经完成1级文学学习任务，当日已经转为休息，可以选择开始2级文学学习任务了。",
-        "s_literature_1_no_stamina", "s_literature_1")
-
-func literature_2(category: String) -> int:
-    return literature_learning(category, 50, 1, 0.5, 20,
-    "已经完成2级文学学习任务，当日已经转为休息，可以选择开始3级文学学习任务了。",
-    "s_literature_2_no_stamina", "s_literature_2")
-
-func literature_3(category: String) -> int:
-    return literature_learning(category, 75, 1, 0.2, 20,
-        "已经完成3级文学学习任务，当日已经转为休息，可以选择开始4级文学学习任务了。",
-    "s_literature_3_no_stamina", "s_literature_3")
-
-func literature_4(category: String) -> int:
-    return literature_learning(category, 100, 1, 0.1, 20,
-        "已经完成4级文学学习任务，当日已经转为休息，可以选择一些其他任务了。",
-        "s_literature_4_no_stamina", "s_literature_4")
-
-
-
-# 绘画技能学习方法
-func draw_learning(
-    category: String,  # 当前学习任务的类别名称
-    required_ability: int,  # 完成本学习任务需要达到的编程能力值
-    stamina_cost_multiplier: float,  # 学习此任务时消耗体力的倍数因子
-    ability_increment: float,  # 每次完成学习后增加的编程能力值
-    money_cost: int,  # 完成此次学习任务所需花费的金钱数量
-    completion_message: String,  # 当学习任务完成后要发出的消息内容
-    no_stamina_signal: String,  # 当体力不足以进行学习时要发射的信号名
-    completion_signal: String  # 当学习任务成功完成时要发射的信号名
-) -> int:
-    
-    # 查找与给定类别名称对应的技能数据
-    var d = Utils.find_category_by_name(Utils.learning_skills, category)
-    
-    if drawing_ability < required_ability:  # 如果当前编程能力小于所需的能力值
-        if stamina < d.stamina * stamina_cost_multiplier:  # 如果当前体力不足以支付此次学习的成本
-            emit_signal(no_stamina_signal, "体力不足，无法进行学习！")  # 发出体力不足的信号
-            stamina += Utils.add_property(stamina, 5)  # 增加少量体力
-            return 0  # 返回0表示此次学习未成功进行
-        if money < d.money :
-            emit_signal(no_stamina_signal, "财力不足，无法进行学习！")  # 发出体力不足的信号
-            stamina += Utils.add_property(stamina, 5)  # 增加少量体力
-            return 0  # 返回0表示此次学习未成功进行
-        # 减少相应的体力和金钱，并增加编程能力
-        stamina -= d.stamina * stamina_cost_multiplier
-        money -= money_cost
-        drawing_ability += ability_increment
-        drawing_ability = round(drawing_ability * 10) / 10  # 保留小数点后一位
-        print("drawing_ability",drawing_ability)  # 打印更新后的编程能力值
-        
-        # 如果能力达到了要求，执行完成任务后的操作
-    if drawing_ability >= required_ability:
-        Utils.replace_task_value(blog_calendar, category, "休息")  # 更新日历任务为休息
-        emit_signal(completion_signal, completion_message)  # 发出任务完成的信号
-            
-            # 解锁下一个学习任务并禁用当前任务
-            # 查找当前技能的索引
-        var current_index = Utils.find_category_index(Utils.learning_skills, category)
-        if current_index != -1:
-                # 获取该技能所在组（即技能类型）和等级
-            var group_index = current_index / 4
-            var level = current_index % 4
-                
-                # 禁用当前按钮
-            Utils.learning_skills[current_index].disabled = true
-            Utils.learning_skills[current_index].pressed = false
-                
-                # 判断是否还有下一级技能（level < 3 表示还没到第4级）
-            if level < 3:
-                var next_index = current_index + 1
-                if next_index < Utils.learning_skills.size():
-                    Utils.learning_skills[next_index].disabled = false
-                    Utils.learning_skills[next_index].pressed = false
-            else:
-                    # 当前已经是该技能组的最后一级（第4级）
-                    #print("已经完成该技能组的所有等级！")
-                pass
-        
-        # 根据实际情况调整返回值，这里简单地以金钱成本和能力增长来计算
-        return 10
-    else:
-        return 0  # 如果编程能力已经达到或超过所需的能力值，则无需再次学习，返回0
-
-# 绘画学习 信号
-signal s_draw_1(msg:String)
-signal s_draw_1_no_stamina(msg: String) # 体力不足
-
-signal s_draw_2(msg:String)
-signal s_draw_2_no_stamina(msg: String) # 体力不足
-
-signal s_draw_3(msg:String)
-signal s_draw_3_no_stamina(msg: String) # 体力不足
-
-signal s_draw_4(msg:String)
-signal s_draw_4_no_stamina(msg: String) # 体力不足
-
-
-# 使用封装的方法替代原始的方法
-func draw_1(category: String) -> int:
-    return draw_learning(category, 25, 1, 1, 10,
-        "已经完成1级绘画学习任务，当日已经转为休息，可以选择开始2级绘画学习任务了。",
-        "s_draw_1_no_stamina", "s_draw_1")
-
-func draw_2(category: String) -> int:
-    return draw_learning(category, 50, 1, 0.5, 20,
-    "已经完成2级绘画学习任务，当日已经转为休息，可以选择开始3级绘画学习任务了。",
-    "s_draw_2_no_stamina", "s_draw_2")
-
-func draw_3(category: String) -> int:
-    return draw_learning(category, 75, 1, 0.2, 20,
-        "已经完成3级绘画学习任务，当日已经转为休息，可以选择开始4级绘画学习任务了。",
-    "s_draw_3_no_stamina", "s_draw_3")
-
-func draw_4(category: String) -> int:
-    return draw_learning(category, 100, 1, 0.1, 20,
-        "已经完成4级绘画学习任务，当日已经转为休息，可以选择一些其他任务了。",
-        "s_draw_4_no_stamina", "s_draw_4")
+        # 如果 k >= 100，可以返回一个默认值或根据需求处理
+        return 0  # 或者返回 null, 或抛出错误

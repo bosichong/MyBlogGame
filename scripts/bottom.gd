@@ -5,6 +5,7 @@ signal open_ad_passed
 signal open_lm
 signal open_bm
 signal open_yun
+signal open_mialestones
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -35,3 +36,7 @@ func _on_button_1_pressed() -> void:
 
 func _on_open_yun_pressed() -> void:
    emit_signal("open_yun")
+
+
+func _on_mialestones_pressed() -> void:
+    emit_signal("open_mialestones")

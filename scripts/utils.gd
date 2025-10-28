@@ -9,6 +9,7 @@ var possible_categories: Array[Dictionary] = [
         "tip":"生活流水账，如果文学素养很高，写出的日记会很招人喜欢？",
         "type":"文学",
         "type1":"免费",
+        "isVisible":true,
         "disabled":false,
         "pressed":false,
         "is_money":false,
@@ -21,6 +22,7 @@ var possible_categories: Array[Dictionary] = [
         "tip":"关于运营博客的一些心得，编程等级很高的人可以写出更多的精品运维技术文章。",
         "type":"技术",
         "type1":"免费",
+        "isVisible":true,
         "disabled":false,
         "pressed":false,
         "money" : 0,
@@ -33,6 +35,7 @@ var possible_categories: Array[Dictionary] = [
         "tip":"完成学习编程1级后的时候解锁。",
         "type":"技术",
         "type1":"免费",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -44,6 +47,7 @@ var possible_categories: Array[Dictionary] = [
         "tip":"当技术达到一定程度后，编写技术周刊可以定期收获大量访问量。",
         "type":"技术",
         "type1":"周刊",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -56,6 +60,7 @@ var possible_categories: Array[Dictionary] = [
         但是却可以有一定的收入。",
         "type":"技术",
         "type1":"付费",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -68,6 +73,7 @@ var possible_categories: Array[Dictionary] = [
         但是却可以有很高的收入。",
         "type":"技术",
         "type1":"付费",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -79,6 +85,7 @@ var possible_categories: Array[Dictionary] = [
         "tip":"多多阅读可以解锁。",
         "type":"文学",
         "type1":"免费",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -90,6 +97,7 @@ var possible_categories: Array[Dictionary] = [
         "tip":"高质量的文学周刊，令人眼前一亮！",
         "type":"文学",
         "type1":"周刊",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -101,6 +109,7 @@ var possible_categories: Array[Dictionary] = [
         "tip":"一针见血，直击热点内容！",
         "type":"文学",
         "type1":"免费",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -113,6 +122,7 @@ var possible_categories: Array[Dictionary] = [
         也还是有很多人订阅了连载",
         "type":"文学",
         "type1":"付费",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -124,6 +134,7 @@ var possible_categories: Array[Dictionary] = [
         "tip":"画画新手的练习日常，很受手欢迎？",
         "type":"艺术",
         "type1":"免费",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -135,6 +146,7 @@ var possible_categories: Array[Dictionary] = [
         "tip":"完成素描色彩基础后可以编写些适合新手的程。",
         "type":"艺术",
         "type1":"免费",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -147,6 +159,7 @@ var possible_categories: Array[Dictionary] = [
         深受网友喜爱",
         "type":"艺术",
         "type1":"周刊",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -159,6 +172,7 @@ var possible_categories: Array[Dictionary] = [
         也还是有很多人订阅了连载",
         "type":"艺术",
         "type1":"周刊",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -169,14 +183,31 @@ var possible_categories: Array[Dictionary] = [
         "name":"年度总结",
         "tip":"又一年即将过去了，这一年你都做了些什么？貌似博客站长们都喜欢在年底做个总结，
         而且大家都热衷于告诉别人和了解别人这一年都做了啥？
-        每年的年底年初可以发表一次该博文。",
+        每年的年底可以发表一次该博文。",
         "type":"文学",
         "type1":"免费",
+        "unlock_post_tip":"一年过去了！可以发布年度总结了！",
+        "lock_post_tip":"发布年度总结已发布或最佳发布时间已过，年度博文类型发布已锁定。",
+        "isVisible":true,
         "disabled":true,
         "pressed":false,
         "money" : 0,
         "is_money":false,
         "stamina":50,
+    },
+    {
+        "name":"第一篇博文",
+        "tip":"这是一篇代表着你的博客的第一篇博文，象征着你博客整式开始运营了！",
+        "type":"文学",
+        "type1":"免费",
+        "unlock_post_tip":"经过一阵子的折腾，博客终于整式上线了！当你准备好就可以发表博客的第一篇博文了！",
+        "lock_post_tip":"第一篇博文已发表。",
+        "isVisible":true,
+        "disabled":true,
+        "pressed":false,
+        "money" : 0,
+        "is_money":false,
+        "stamina":10,
     },
     
     ]
@@ -187,6 +218,7 @@ var website_maintenance: Array[Dictionary] =[
         "name":"SEO优化",
         "tip":"保证博客来自搜索引擎的基础访问量，
         SEO值过低，博客会没有访问量",
+        "isVisible":true,
         "disabled":false,
         "pressed":false,
         "money" : 0,
@@ -197,6 +229,7 @@ var website_maintenance: Array[Dictionary] =[
         "name":"安全维护",
         "tip":"博客的安全数值，安全值过低，
         博客会遭到攻击，丢失数据或无法打开页面。",
+        "isVisible":true,
         "disabled":false,
         "pressed":false,
         "money" : 10,
@@ -206,6 +239,7 @@ var website_maintenance: Array[Dictionary] =[
         "name":"页面美化",
         "tip":"需要绘画等级1后解锁，
         漂亮的页面会增加访问量。",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -215,6 +249,7 @@ var website_maintenance: Array[Dictionary] =[
         "name":"互动管理",
         "tip":"良好的互动会增加博客的知名度，
         进而增加博客访问量。需要有评论或留言的候才会开启。",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 0,
@@ -226,6 +261,7 @@ var website_maintenance: Array[Dictionary] =[
 var recreation : Array[Dictionary] = [
     {
         "name":"休息",
+        "isVisible":true,
         "disabled":false,
         "pressed":false,
         "money" : 0,
@@ -233,6 +269,7 @@ var recreation : Array[Dictionary] = [
     },
     {
         "name":"打游戏",
+        "isVisible":true,
         "disabled":false,
         "pressed":false,
         "money" : 100,
@@ -240,6 +277,7 @@ var recreation : Array[Dictionary] = [
     },
     {
         "name":"国内旅游",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 3000,
@@ -247,6 +285,7 @@ var recreation : Array[Dictionary] = [
     },
     {
         "name":"出国旅游",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 10000,
@@ -259,6 +298,9 @@ var learning_skills : Array[Dictionary] = [
     {
         "name":"自学编程",
         "tip":"编程1级",
+        "unlock_post_tip":"可以自学编程了",
+        "lock_post_tip":"编程1级学习已经完成，已锁定该等级技能学习。",
+        "isVisible":true,
         "disabled":false,
         "pressed":false,
         "money" : 10,
@@ -267,6 +309,9 @@ var learning_skills : Array[Dictionary] = [
     {
         "name":"学习前端",
         "tip":"编程2级，需学完编程1级后解锁",
+        "unlock_post_tip":"可以开始学习前端了",
+        "lock_post_tip":"编程2级学习已经完成，已锁定该等级技能学习。",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 20,
@@ -275,6 +320,9 @@ var learning_skills : Array[Dictionary] = [
     {
         "name":"高级编程",
         "tip":"编程3级，需学完2级后解锁",
+        "unlock_post_tip":"可以开始学习高级程了",
+        "lock_post_tip":"编程3级学习已经完成，已锁定该等级技能学习。",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 50,
@@ -283,6 +331,9 @@ var learning_skills : Array[Dictionary] = [
         {
         "name":"成为黑客",
         "tip":"编程4级，需学完编程3级后解锁",
+        "unlock_post_tip":"可以开始学习成为黑客了",
+        "lock_post_tip":"编程4级学习已经完成，已锁定该等级技能学习。",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 100,
@@ -291,6 +342,9 @@ var learning_skills : Array[Dictionary] = [
     {
         "name":"阅读名著",
         "tip":"文学1级，提高文学素养。",
+        "unlock_post_tip":"可以阅读名著提高文学素养",
+        "lock_post_tip":"文学1级学习已经完成，已锁定该等级技能学习。",
+        "isVisible":true,
         "disabled":false,
         "pressed":false,
         "money" : 10,
@@ -299,6 +353,9 @@ var learning_skills : Array[Dictionary] = [
     {
         "name":"写作基础理论",
         "tip":"文学2级，需学完文学1级后解锁",
+        "unlock_post_tip":"可以开始学习写作基础理论",
+        "lock_post_tip":"文学2级学习已经完成，已锁定该等级技能学习。",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 20,
@@ -307,6 +364,9 @@ var learning_skills : Array[Dictionary] = [
     {
         "name":"高级文学",
         "tip":"文学3级，需学完文学2级后解锁",
+        "unlock_post_tip":"可以开始学习高级文学",
+        "lock_post_tip":"文学3级学习已经完成，已锁定该等级技能学习。",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 50,
@@ -315,6 +375,9 @@ var learning_skills : Array[Dictionary] = [
         {
         "name":"小说家",
         "tip":"文学4级，需学完文学3级后解锁",
+        "unlock_post_tip":"努力成为小说家",
+        "lock_post_tip":"文学4级学习已经完成，已锁定该等级技能学习。",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 100,
@@ -323,6 +386,9 @@ var learning_skills : Array[Dictionary] = [
     {
         "name":"自学画画",
         "tip":"绘画1级",
+        "unlock_post_tip":"可以自学画画了",
+        "lock_post_tip":"绘画1级学习已经完成，已锁定该等级技能学习。",
+        "isVisible":true,
         "disabled":false,
         "pressed":false,
         "money" : 10,
@@ -331,6 +397,9 @@ var learning_skills : Array[Dictionary] = [
     {
         "name":"素描和色彩",
         "tip":"绘画2级，需学完绘画1级后解锁",
+        "unlock_post_tip":"可以学习2级绘画技能：素描和色彩",
+        "lock_post_tip":"绘画2级学习已经完成，已锁定该等级技能学习。",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 20,
@@ -339,6 +408,9 @@ var learning_skills : Array[Dictionary] = [
     {
         "name":"原画师之路",
         "tip":"绘画3级，需学完绘画2级后解锁",
+        "unlock_post_tip":"可以开始3级绘画技能的学习：原画师之路",
+        "lock_post_tip":"绘画3级学习已经完成，已锁定该等级技能学习。",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 50,
@@ -347,6 +419,9 @@ var learning_skills : Array[Dictionary] = [
         {
         "name":"大画家",
         "tip":"绘画4级，需学完绘画3级后解锁",
+        "unlock_post_tip":"可以开始4级绘画技能的学习，最终成为:大画家",
+        "lock_post_tip":"你已经完成所有绘画技能的学习！",
+        "isVisible":false,
         "disabled":true,
         "pressed":false,
         "money" : 100,
@@ -597,13 +672,10 @@ func generate_random_title(category: String) -> String:
         var prefix: String = prefixes[randi() % prefixes.size()]
         var topic: String = topics.get(category, ["未知主题"])[randi() % topics.get(category, ["未知主题"]).size()]
         if category == "年度总结":
-            var tit = ""
-            if TimerManager.current_month == 12:
-                tit = prefix + str(TimerManager.current_year) + "年" + topic
-            else :
-                tit = prefix + str(TimerManager.current_year-1) + "年" + topic
-            #print(tit)
+            var tit =  prefix + str(TimerManager.current_year) + "年" + topic
             return tit
+        elif category == "第一篇博文":
+            return "新人报道请多关照：新博客开张了！"      
         else:
             #print(prefix + " " + topic)
             return prefix + " " + topic
@@ -681,18 +753,18 @@ func should_add_category(cname: String, day: int) -> bool:
 # 创建并添加复选框
 func add_checkbox(fc, category, KEY, button_group, _on_checkbox_toggled):
     assert(fc != null, "FlowContainer is null")
-    
-    var checkbox = CheckBox.new()
-    #print("Adding checkbox for category: ", category.name) # 调试信息
-    checkbox.text = category.name
-    if category.has("tip"):
-        checkbox.set_tooltip_text(category.tip)
-    checkbox.disabled = category.disabled
-    if Blogger.blog_calendar[KEY].task == category.name:
-        checkbox.set_pressed_no_signal(true)
-    checkbox.button_group = button_group
-    fc.add_child(checkbox)
-    checkbox.toggled.connect(_on_checkbox_toggled.bind(category.name))
+    if category.isVisible:
+        var checkbox = CheckBox.new()
+        #print("Adding checkbox for category: ", category.name) # 调试信息
+        checkbox.text = category.name
+        if category.has("tip"):
+            checkbox.set_tooltip_text(category.tip)
+        checkbox.disabled = category.disabled
+        if Blogger.blog_calendar[KEY].task == category.name:
+            checkbox.set_pressed_no_signal(true)
+        checkbox.button_group = button_group
+        fc.add_child(checkbox)
+        checkbox.toggled.connect(_on_checkbox_toggled.bind(category.name))
 
 ## 循环创建每日任务单选按钮
 func create_all_checkbox(node,KEY,button_group,_on_checkbox_toggled):
@@ -741,7 +813,12 @@ func get_selected_category_names(categories: Array[Dictionary]) -> Array[String]
 func contains_weekly_shorter(p_string: String) -> bool:
     return p_string.find("周刊") != -1
 
-
+## 根据 id 值从数组中查找并返回对应的字典。
+func find_category_by_id(array:Array ,id: String) -> Dictionary:
+    for category in array:
+        if category.get("id", "").to_lower() == id.to_lower():
+            return category
+    return {}
     
 ## 根据 name 值从数组中查找并返回对应的字典。
 func find_category_by_name(array:Array ,name_to_find: String) -> Dictionary:
@@ -983,4 +1060,4 @@ func get_rank_title(level: int,arr:Array) -> String:
     if level < 1 or level > 100:
         return "无效等级"
     Blogger.dw = int((level) / 10)
-    return arr[Blogger.dw]
+    return arr[Blogger.dw-1]

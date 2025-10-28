@@ -99,20 +99,8 @@ visible = false
 
 [node name="yun_main" parent="." instance=ExtResource("11_ya4ey")]
 visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+
+[node name="AcceptDialog" type="AcceptDialog" parent="."]
 
 [node name="m_main" parent="." instance=ExtResource("12_trceg")]
 visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_right = 960.0
-offset_bottom = 480.0
-
-[node name="AcceptDialog" type="AcceptDialog" parent="."]

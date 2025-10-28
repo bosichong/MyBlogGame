@@ -33,59 +33,20 @@ func _ready() -> void:
         Blogger.signal_design_web.connect(signal_design_web)
         Blogger.signal_design_web_no_stamina.connect(signal_design_web_no_stamina)
         
-        # 编程技能信号
-        Blogger.s_self_learning_programming_end.connect(s_self_learning_programming_end)
-        Blogger.s_self_learning_programming_end_no_stamina.connect(s_self_learning_programming_end_no_stamina)
-        
-        Blogger.s_web_front.connect(s_web_front)
-        Blogger.s_web_front_no_stamina.connect(s_web_front_no_stamina)
-        
-        Blogger.s_advanced_programming.connect(s_advanced_programming)
-        Blogger.s_advanced_programming_no_stamina.connect(s_advanced_programming_no_stamina)
-        
-        Blogger.s_hacker.connect(s_hacker)
-        Blogger.s_hacker_no_stamina.connect(s_hacker_no_stamina)
-        
-        
-        # 文学技能信号
-        Blogger.s_literature_1.connect(s_literature_1)
-        Blogger.s_literature_1_no_stamina.connect(s_literature_1_no_stamina)
-        
-        Blogger.s_literature_2.connect(s_literature_2)
-        Blogger.s_literature_2_no_stamina.connect(s_literature_2_no_stamina)
-        
-        Blogger.s_literature_3.connect(s_literature_3)
-        Blogger.s_literature_3_no_stamina.connect(s_literature_3_no_stamina)
-        
-        Blogger.s_literature_4.connect(s_literature_4)
-        Blogger.s_literature_4_no_stamina.connect(s_literature_4_no_stamina)
-        
-        
-        # 绘画技能信号
-        Blogger.s_draw_1.connect(s_draw_1)
-        Blogger.s_draw_1_no_stamina.connect(s_draw_1_no_stamina)
-        
-        Blogger.s_draw_2.connect(s_draw_2)
-        Blogger.s_draw_2_no_stamina.connect(s_draw_2_no_stamina)
-        
-        Blogger.s_draw_3.connect(s_draw_3)
-        Blogger.s_draw_3_no_stamina.connect(s_draw_3_no_stamina)
-        
-        Blogger.s_draw_4.connect(s_draw_4)
-        Blogger.s_draw_4_no_stamina.connect(s_draw_4_no_stamina)
-        
+   
     TimerManager.timer.wait_time = DAY_TIMA 
     $ui/bottom.connect("create_blog_passed",_on_bottom_calendar_passed)
     $日程.connect("close_calendar_passed",_on_close_blog_passed)
     $ui/top.connect("time_x",_on_time_x)
-    
     $ui/bottom.connect("open_ad_passed",_on_open_ad_passed)
     $ui/bottom.connect("open_lm",_on_open_lm)
     $lm_mian.connect("close_lm",_on_close_lm)
     $ui/bottom.connect("open_bm",_on_open_bm)
     $bank_main.connect("close_bm",_on_close_bm)
     $ui/bottom.connect("open_yun",_on_open_yun)
-    $yun_main.connect("close_bm",_on_close_yun)
+    $yun_main.connect("close_yun",_on_close_yun)
+    $ui/bottom.connect("open_mialestones",_on_open_mialestones)
+    $m_main.connect("close_mialestones",_on_close_mialestones)
     $AcceptDialog.confirmed.connect(_close_ac)
     
     TaskManager.connect("sg_task_info_display_msg",sg_task_info_display_msg)
@@ -216,6 +177,15 @@ func _on_close_yun():
     $yun_main.visible = false
     TimerManager.start_timer()
     
+func _on_open_mialestones():
+    $m_main.visible = true
+    $m_main.setup_ui()
+    TimerManager.stop_timer()
+    
+func _on_close_mialestones():
+    $m_main.visible = false
+    TimerManager.start_timer()
+    
 func _on_open_ad_passed():
     $Ad.on_show_panel()
     $Ad.visible = true
@@ -282,108 +252,6 @@ func signal_design_web(msg):
 func signal_design_web_no_stamina(msg):
     info_display.add_message(msg)	
     
-# 编程技能信号量
-func s_self_learning_programming_end(msg):
-    var d = Utils.find_category_by_name(Utils.possible_categories,"编程教程")
-    d.disabled = false
-    info_display.add_message(msg)
-    
-func s_self_learning_programming_end_no_stamina(msg):
-    info_display.add_message(msg)
-    
-func s_web_front(msg):
-    var d = Utils.find_category_by_name(Utils.possible_categories,"程序员周刊")
-    d.disabled = false
-    info_display.add_message(msg)
-    
-func s_web_front_no_stamina(msg):
-    info_display.add_message(msg)
-    
-func s_advanced_programming(msg):
-    var d = Utils.find_category_by_name(Utils.possible_categories,"付费编程教程")
-    d.disabled = false
-    info_display.add_message(msg)
-    
-func s_advanced_programming_no_stamina(msg):
-    info_display.add_message(msg)
-    
-func s_hacker(msg):
-    var d = Utils.find_category_by_name(Utils.possible_categories,"付费黑客攻防")
-    d.disabled = false
-    info_display.add_message(msg)
-    
-func s_hacker_no_stamina(msg):
-    info_display.add_message(msg)
-    
-    
-# 文学技能信号量
-    
-func s_literature_1(msg):
-    var d = Utils.find_category_by_name(Utils.possible_categories,"散文随笔")
-    d.disabled = false
-    info_display.add_message(msg)
-    
-func s_literature_1_no_stamina(msg):
-    info_display.add_message(msg)
-    
-func s_literature_2(msg):
-    var d = Utils.find_category_by_name(Utils.possible_categories,"文学周刊")
-    d.disabled = false
-    info_display.add_message(msg)
-    
-func s_literature_2_no_stamina(msg):
-    info_display.add_message(msg)
-    
-func s_literature_3(msg):
-    var d = Utils.find_category_by_name(Utils.possible_categories,"爆款网文")
-    d.disabled = false
-    info_display.add_message(msg)
-    
-func s_literature_3_no_stamina(msg):
-    info_display.add_message(msg)
-    
-func s_literature_4(msg):
-    var d = Utils.find_category_by_name(Utils.possible_categories,"小说连载(收费)")
-    d.disabled = false
-    info_display.add_message(msg)
-    
-func s_literature_4_no_stamina(msg):
-    info_display.add_message(msg)
-
-# 绘画技能信号量
-    
-func s_draw_1(msg):
-    var d = Utils.find_category_by_name(Utils.possible_categories,"插画壁纸")
-    d.disabled = false
-    info_display.add_message(msg)
-    
-func s_draw_1_no_stamina(msg):
-    info_display.add_message(msg)
-    
-func s_draw_2(msg):
-    var d = Utils.find_category_by_name(Utils.possible_categories,"绘画基础教程")
-    d.disabled = false
-    info_display.add_message(msg)
-    
-func s_draw_2_no_stamina(msg):
-    info_display.add_message(msg)
-    
-func s_draw_3(msg):
-    var d = Utils.find_category_by_name(Utils.possible_categories,"艺术周刊")
-    d.disabled = false
-    info_display.add_message(msg)
-    
-func s_draw_3_no_stamina(msg):
-    info_display.add_message(msg)
-    
-func s_draw_4(msg):
-    var d = Utils.find_category_by_name(Utils.possible_categories,"动漫连载(收费)")
-    d.disabled = false
-    info_display.add_message(msg)
-    
-func s_draw_4_no_stamina(msg):
-    info_display.add_message(msg)
-
 
 ## 显示通用弹窗
 func show_popup_message(title: String, content: String) -> void:

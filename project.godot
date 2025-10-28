@@ -27,6 +27,7 @@ Lm="*res://scripts/bloglm.gd"
 Bs="*res://scripts/BankSystem.gd"
 Yun="*res://scripts/yun.gd"
 TaskManager="*res://scripts/task_system/TaskManager.gd"
+GDManager="*res://scripts/GlobalDataManager.gd"
 
 [display]
 

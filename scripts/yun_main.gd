@@ -1,5 +1,5 @@
 extends Control
-signal close_bm
+signal close_yun
 var domain_info = Yun.domain_info
 var server_package = Yun.server_package
 var data_security = Yun.data_security
@@ -67,7 +67,7 @@ func on_show_panel():
   
 
 func _on_button_pressed() -> void:
-    emit_signal("close_bm")
+    emit_signal("close_yun")
 
 
 

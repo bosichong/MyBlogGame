@@ -1,0 +1,190 @@
+[gd_scene load_steps=27 format=3 uid="uid://cemka52jreqkg"]
+
+[ext_resource type="Texture2D" uid="uid://ue1lksap2od7" path="res://assets/风景.png" id="1_ujotk"]
+[ext_resource type="Texture2D" uid="uid://u0q1107gl1v" path="res://assets/窗户.png" id="2_uocx0"]
+[ext_resource type="Texture2D" uid="uid://xxnj8dgv3c1o" path="res://assets/窗帘.png" id="3_4fa24"]
+[ext_resource type="Texture2D" uid="uid://byoxg8e4gphrk" path="res://assets/电脑桌.png" id="4_eta06"]
+[ext_resource type="Texture2D" uid="uid://ch7vn8m3i2wub" path="res://assets/显示器.png" id="5_h6bu0"]
+[ext_resource type="Texture2D" uid="uid://dly1dho6tmlon" path="res://assets/键盘.png" id="6_yux7b"]
+[ext_resource type="Texture2D" uid="uid://d3wdmiob7w5ee" path="res://assets/主角背面.png" id="7_u8cxf"]
+[ext_resource type="Texture2D" uid="uid://ih47js0t8c48" path="res://assets/椅子背面.png" id="8_b2g18"]
+[ext_resource type="Texture2D" uid="uid://b5n6xnas0t2f8" path="res://assets/门.png" id="9_rv76f"]
+[ext_resource type="Texture2D" uid="uid://bsfcotbutghmo" path="res://assets/钟表.png" id="10_momq4"]
+[ext_resource type="Texture2D" uid="uid://dk235p5u0iycu" path="res://assets/吊灯.png" id="11_1fqpr"]
+[ext_resource type="Texture2D" uid="uid://bvhocu6pi2ssw" path="res://assets/床.png" id="12_phlig"]
+[ext_resource type="Texture2D" uid="uid://uvgbvp111v3s" path="res://assets/相框大.png" id="13_k4q8h"]
+[ext_resource type="Texture2D" uid="uid://dyp8q8s884fgu" path="res://assets/立式台灯.png" id="14_k1lmq"]
+[ext_resource type="Texture2D" uid="uid://c6aq4f15b4xy6" path="res://assets/书架.png" id="15_r58b2"]
+[ext_resource type="Texture2D" uid="uid://brkb0q53lpyxj" path="res://assets/植物.png" id="16_cbj3i"]
+[ext_resource type="Texture2D" uid="uid://egs1orqbsy13" path="res://assets/书.png" id="17_wfa3g"]
+[ext_resource type="Texture2D" uid="uid://b0v8c3l4oacia" path="res://assets/书2.png" id="18_q65lw"]
+[ext_resource type="Texture2D" uid="uid://b5pbmamuvxdsu" path="res://assets/球.png" id="19_nywu8"]
+[ext_resource type="Texture2D" uid="uid://o7vpc7d6mbm4" path="res://assets/盒子.png" id="20_2ufmy"]
+[ext_resource type="Texture2D" uid="uid://dqhgcsnvnpkoi" path="res://assets/相框小.png" id="21_p627i"]
+[ext_resource type="Texture2D" uid="uid://cj2c26lmj3nf7" path="res://assets/音箱.png" id="22_ymkk4"]
+[ext_resource type="Texture2D" uid="uid://b0177vyh8abvq" path="res://assets/狗垫子.png" id="23_f5nsg"]
+[ext_resource type="Texture2D" uid="uid://dt2yeu0rhls5u" path="res://assets/露西.png" id="24_6lc77"]
+
+[sub_resource type="Animation" id="Animation_uocx0"]
+length = 2.0
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("前景/露西:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(387, 325.35), Vector2(387, 328), Vector2(387, 325.35)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("前景/风景:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_uocx0"]
+_data = {
+&"RESET": SubResource("Animation_uocx0")
+}
+
+[node name="test" type="Node"]
+
+[node name="背景" type="Sprite2D" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="背景"]
+self_modulate = Color(1, 0.968627, 0.917647, 1)
+offset_right = 964.0
+offset_bottom = 470.0
+
+[node name="ColorRect3" type="ColorRect" parent="背景"]
+self_modulate = Color(0.784314, 0.772549, 0.752941, 1)
+offset_left = -40.0
+offset_right = 1008.0
+offset_bottom = 54.0
+
+[node name="ColorRect2" type="ColorRect" parent="背景"]
+self_modulate = Color(0.784314, 0.772549, 0.752941, 1)
+offset_left = -40.0
+offset_top = 296.0
+offset_right = 1008.0
+offset_bottom = 470.0
+
+[node name="前景" type="Sprite2D" parent="."]
+
+[node name="风景" type="Sprite2D" parent="前景"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(518, 160)
+texture = ExtResource("1_ujotk")
+
+[node name="窗户" type="Sprite2D" parent="前景"]
+position = Vector2(518, 160)
+texture = ExtResource("2_uocx0")
+
+[node name="窗帘" type="Sprite2D" parent="前景"]
+position = Vector2(516, 159)
+texture = ExtResource("3_4fa24")
+
+[node name="电脑桌" type="Sprite2D" parent="前景"]
+position = Vector2(510, 278)
+texture = ExtResource("4_eta06")
+
+[node name="显示器" type="Sprite2D" parent="前景"]
+position = Vector2(505, 226)
+texture = ExtResource("5_h6bu0")
+
+[node name="键盘" type="Sprite2D" parent="前景"]
+position = Vector2(505, 256)
+texture = ExtResource("6_yux7b")
+
+[node name="主角背面" type="Sprite2D" parent="前景"]
+position = Vector2(504, 264)
+texture = ExtResource("7_u8cxf")
+
+[node name="椅子诶面" type="Sprite2D" parent="前景"]
+position = Vector2(505, 283)
+texture = ExtResource("8_b2g18")
+
+[node name="门" type="Sprite2D" parent="前景"]
+position = Vector2(127, 237)
+texture = ExtResource("9_rv76f")
+
+[node name="表" type="Sprite2D" parent="前景"]
+position = Vector2(127, 145)
+texture = ExtResource("10_momq4")
+
+[node name="吊灯" type="Sprite2D" parent="前景"]
+position = Vector2(216, 102)
+texture = ExtResource("11_1fqpr")
+
+[node name="床" type="Sprite2D" parent="前景"]
+position = Vector2(741, 348)
+texture = ExtResource("12_phlig")
+
+[node name="相框大" type="Sprite2D" parent="前景"]
+position = Vector2(675, 147)
+texture = ExtResource("13_k4q8h")
+
+[node name="台灯" type="Sprite2D" parent="前景"]
+position = Vector2(652, 269)
+texture = ExtResource("14_k1lmq")
+
+[node name="书架" type="Sprite2D" parent="前景"]
+position = Vector2(341, 238)
+texture = ExtResource("15_r58b2")
+
+[node name="植物" type="Sprite2D" parent="前景"]
+position = Vector2(233, 266)
+texture = ExtResource("16_cbj3i")
+
+[node name="书1" type="Sprite2D" parent="前景"]
+position = Vector2(343, 195)
+texture = ExtResource("17_wfa3g")
+
+[node name="书2" type="Sprite2D" parent="前景"]
+position = Vector2(339, 242)
+texture = ExtResource("18_q65lw")
+
+[node name="球" type="Sprite2D" parent="前景"]
+position = Vector2(310, 285)
+texture = ExtResource("19_nywu8")
+
+[node name="盒子" type="Sprite2D" parent="前景"]
+position = Vector2(365, 284)
+texture = ExtResource("20_2ufmy")
+
+[node name="相框小" type="Sprite2D" parent="前景"]
+position = Vector2(275, 121)
+texture = ExtResource("21_p627i")
+
+[node name="音箱右" type="Sprite2D" parent="前景"]
+position = Vector2(560, 244)
+texture = ExtResource("22_ymkk4")
+
+[node name="音箱左" type="Sprite2D" parent="前景"]
+position = Vector2(455, 243)
+texture = ExtResource("22_ymkk4")
+
+[node name="狗垫子" type="Sprite2D" parent="前景"]
+position = Vector2(391, 333)
+texture = ExtResource("23_f5nsg")
+
+[node name="露西" type="Sprite2D" parent="前景"]
+position = Vector2(387, 325.35)
+texture = ExtResource("24_6lc77")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_uocx0")
+}
+autoplay = "RESET"

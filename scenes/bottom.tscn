@@ -118,6 +118,10 @@ text = "投资理财"
 layout_mode = 2
 text = "消费购买"
 
+[node name="mialestones" type="Button" parent="h2"]
+layout_mode = 2
+text = "成就系统"
+
 [node name="Button3" type="Button" parent="h2"]
 layout_mode = 2
 text = "系统菜单"
@@ -127,3 +131,4 @@ text = "系统菜单"
 [connection signal="pressed" from="h2/Button4" to="." method="_on_button_4_pressed"]
 [connection signal="pressed" from="h2/Button5" to="." method="_on_button_5_pressed"]
 [connection signal="pressed" from="h2/Button1" to="." method="_on_button_1_pressed"]
+[connection signal="pressed" from="h2/mialestones" to="." method="_on_mialestones_pressed"]

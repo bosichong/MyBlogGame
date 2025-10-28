@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://qm6esicdk8o4"]
+
+[ext_resource type="Texture2D" uid="uid://crt5juj80urq6" path="res://assets/milestones/locked.png" id="2_ifest"]
+[ext_resource type="Script" uid="uid://cgv1mqtdoylx6" path="res://milestones/mile.gd" id="3_ll0em"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -896.0
+offset_bottom = -380.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_ll0em")
+
+[node name="mile" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TB" type="TextureButton" parent="mile"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "1111111"
+texture_normal = ExtResource("2_ifest")
+
+[node name="Label" type="Label" parent="mile"]
+layout_mode = 2
+text = "111"
+horizontal_alignment = 1
