@@ -69,7 +69,7 @@ texture = ExtResource("5_od4ig")
 position = Vector2(505, 226)
 texture = ExtResource("6_mshda")
 
-[node name="Sprite2D" type="Sprite2D" parent="前景"]
+[node name="键盘" type="Sprite2D" parent="前景"]
 position = Vector2(505, 256)
 texture = ExtResource("7_j21q1")
 

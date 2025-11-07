@@ -1,0 +1,345 @@
+[gd_scene load_steps=10 format=3 uid="uid://cou3ai48jxaf4"]
+
+[ext_resource type="Texture2D" uid="uid://cu65sg6tpyng7" path="res://assets/scens/s003/email.png" id="1_10thn"]
+[ext_resource type="Script" uid="uid://c47q50hjg1vtk" path="res://scenes/s003/s_003.gd" id="1_heusd"]
+[ext_resource type="Texture2D" uid="uid://do0ukex12h06a" path="res://assets/scens/s003/email2.png" id="2_t7cxx"]
+[ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="3_tu51s"]
+[ext_resource type="Texture2D" uid="uid://b5t3q3lvwp0us" path="res://assets/scens/s003/zhizhen.png" id="4_jqnny"]
+[ext_resource type="Texture2D" uid="uid://bn02govqswnuy" path="res://assets/scens/s003/email3.png" id="4_sfyrg"]
+[ext_resource type="Texture2D" uid="uid://dq6paj68vudt6" path="res://assets/scens/s003/shou.png" id="5_sfyrg"]
+
+[sub_resource type="Animation" id="Animation_yu87a"]
+resource_name = "play"
+length = 60.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node/01:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3, 6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node/02:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(6, 9, 12),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Node/03:self_modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(12, 15, 18),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Node/04:self_modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(18, 21, 24),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Node/05:self_modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(24, 27, 30),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Node/06:self_modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(30, 33, 36),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("emailico:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(36, 39, 39.2, 39.4, 39.6, 39.8, 41),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("emailui:modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(41, 43),
+"transitions": PackedFloat32Array(1, 4.2871),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("zhizhen:modulate")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(46.5, 46.9333, 50.3333, 50.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("zhizhen:position")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(49.1333, 50.2667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(704, 347), Vector2(512, 199)]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("shou:position")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(50.2667, 51.4667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(512, 199), Vector2(498, 184)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("shou:modulate")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0, 50.2667, 52.2, 52.4667, 52.6667, 53.1667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("shou:scale")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(52.7843, 52.9333, 53.0303),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(1.395, 1.395), Vector2(1, 1)]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath("emailui/email_title:modulate")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(52.9836, 53.1, 53.2454),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("email_阿浮:modulate")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(53.2, 53.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ql46m"]
+_data = {
+&"play": SubResource("Animation_yu87a")
+}
+
+[node name="s_003" type="Node2D"]
+script = ExtResource("1_heusd")
+
+[node name="Node" type="Node2D" parent="."]
+position = Vector2(33, 446)
+
+[node name="01" type="Label" parent="Node"]
+self_modulate = Color(1, 1, 1, 0)
+offset_right = 500.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("3_tu51s")
+text = "2004年12月，冬夜......"
+vertical_alignment = 1
+
+[node name="02" type="Label" parent="Node"]
+self_modulate = Color(1, 1, 1, 0)
+offset_right = 500.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("3_tu51s")
+text = "宽带是快了，但内容好像变慢了。"
+vertical_alignment = 1
+
+[node name="03" type="Label" parent="Node"]
+self_modulate = Color(1, 1, 1, 0)
+offset_right = 500.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("3_tu51s")
+text = "连续刷完了今天所有的 BBS 热帖，那些文字太零散，太快餐。"
+vertical_alignment = 1
+
+[node name="04" type="Label" parent="Node"]
+self_modulate = Color(1, 1, 1, 0)
+offset_right = 500.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("3_tu51s")
+text = "我想写的那篇文章，如果发到论坛，不出一个小时就会被淹没在无聊的口水贴里。"
+vertical_alignment = 1
+
+[node name="05" type="Label" parent="Node"]
+self_modulate = Color(1, 1, 1, 0)
+offset_right = 500.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("3_tu51s")
+text = "这个浩瀚互联网，好像缺少了一个真正属于我自己的角落。"
+vertical_alignment = 1
+
+[node name="06" type="Label" parent="Node"]
+self_modulate = Color(1, 1, 1, 0)
+offset_right = 500.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("3_tu51s")
+text = "每天都在重复登录和漫游，我到底在等什么？"
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_ql46m")
+}
+autoplay = "play"
+
+[node name="emailico" type="Node2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(480, 203)
+
+[node name="Sprite2D" type="Sprite2D" parent="emailico"]
+texture = ExtResource("1_10thn")
+
+[node name="emailui" type="Node2D" parent="."]
+
+[node name="ui" type="Sprite2D" parent="emailui"]
+position = Vector2(499, 240)
+texture = ExtResource("2_t7cxx")
+
+[node name="列表" type="Label" parent="emailui"]
+offset_left = 238.0
+offset_top = 167.0
+offset_right = 302.0
+offset_bottom = 190.0
+theme_override_colors/font_color = Color(0, 0.34902, 0.6, 1)
+theme_override_fonts/font = ExtResource("3_tu51s")
+theme_override_font_sizes/font_size = 14
+text = "邮件列表"
+
+[node name="email_title" type="Label" parent="emailui"]
+offset_left = 377.0
+offset_top = 176.0
+offset_right = 638.0
+offset_bottom = 199.0
+theme_override_colors/font_color = Color(7.70092e-07, 0.668736, 0.918941, 1)
+theme_override_fonts/font = ExtResource("3_tu51s")
+theme_override_font_sizes/font_size = 10
+text = "Hi!最近还好吗？我的博客搭建好了！----2004年12月28日"
+
+[node name="email_阿浮" type="Node2D" parent="."]
+
+[node name="email3" type="Sprite2D" parent="email_阿浮"]
+position = Vector2(504, 241)
+texture = ExtResource("4_sfyrg")
+
+[node name="tit" type="Label" parent="email_阿浮"]
+offset_left = 377.0
+offset_top = 176.0
+offset_right = 479.0
+offset_bottom = 199.0
+theme_override_colors/font_color = Color(0, 0.670588, 0.917647, 1)
+theme_override_fonts/font = ExtResource("3_tu51s")
+theme_override_font_sizes/font_size = 14
+text = "来自:阿浮的邮件"
+
+[node name="con" type="Label" parent="email_阿浮"]
+offset_left = 377.0
+offset_top = 199.0
+offset_right = 479.0
+offset_bottom = 222.0
+theme_override_colors/font_color = Color(1.44392e-06, 0.502224, 0.691956, 1)
+theme_override_fonts/font = ExtResource("3_tu51s")
+theme_override_font_sizes/font_size = 10
+text = "Hi!最近还好吗？我的博客搭建好了！----2004年12月28日"
+
+[node name="con2" type="Label" parent="email_阿浮"]
+offset_left = 377.0
+offset_top = 235.0
+offset_right = 777.0
+offset_bottom = 317.0
+theme_override_colors/font_color = Color(1.44392e-06, 0.502224, 0.691956, 1)
+theme_override_fonts/font = ExtResource("3_tu51s")
+theme_override_font_sizes/font_size = 10
+text = "Hi，最近在干嘛？还是在网上无聊的闲逛吗？快看看我的新窝：浮生志。对了，江湖主机最近在搞活动，有免费的域名主机可以申请，快去搞一个博客吧，
+
+另外，你点击[申请免费域名主机]即可参与这个活动啦！比忘了！记得来我的博客踩踩记得给我留言，祝好运！"
+autowrap_mode = 1
+
+[node name="zhizhen" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(512, 199)
+texture = ExtResource("4_jqnny")
+
+[node name="shou" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(498, 184)
+texture = ExtResource("5_sfyrg")
+
+[node name="AcceptDialog" type="AcceptDialog" parent="."]
+auto_translate_mode = 1
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

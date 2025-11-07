@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=3 uid="uid://puc107ifge72"]
+
+[ext_resource type="Script" uid="uid://cfrycygokw6cl" path="res://scenes/s001/s_001.gd" id="1_ixjfk"]
+[ext_resource type="Theme" uid="uid://cp1t7xqq6k8jr" path="res://scenes/程菜单.tres" id="1_uvwdt"]
+
+[node name="S001" type="Node2D"]
+script = ExtResource("1_ixjfk")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 960.0
+offset_bottom = 480.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_uvwdt")
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.666667)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -55.0
+offset_right = 60.0
+offset_bottom = 55.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="new_game" type="Button" parent="Control/VBoxContainer"]
+layout_mode = 2
+text = "新建游戏"
+
+[node name="load" type="Button" parent="Control/VBoxContainer"]
+layout_mode = 2
+text = "读取存档"
+
+[node name="exit" type="Button" parent="Control/VBoxContainer"]
+layout_mode = 2
+text = "退出游戏"
+
+[connection signal="pressed" from="Control/VBoxContainer/new_game" to="." method="_on_new_game_pressed"]

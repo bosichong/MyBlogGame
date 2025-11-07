@@ -1061,3 +1061,11 @@ func get_rank_title(level: int,arr:Array) -> String:
         return "无效等级"
     Blogger.dw = int((level) / 10)
     return arr[Blogger.dw-1]
+
+func goto_scene(SCENE_PATH):
+    var error = get_tree().change_scene_to_file(SCENE_PATH)
+    if error != OK:
+        # 如果加载失败，打印错误信息（用于调试）
+        print("场景切换失败，错误码：", error)
+    else:
+        print("场景跳转成功！",SCENE_PATH)

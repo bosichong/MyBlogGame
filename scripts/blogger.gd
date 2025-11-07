@@ -2,11 +2,20 @@ extends Node
 
 var tmp_v = 23
 
+enum Blog_Type {
+    文学,
+    编程,
+    艺术,
+    综合,  
+}
 # 核心属性 - 博客作者的五个关键能力
 ## 最高等级
 const MAX_LEVEL = 100
 ## 级能最高等级
 const MAX_SKILL_LEVEL = 100
+
+## 博客属性
+var myblog_type = Blog_Type.文学
 ## 写作能力：决定文章质量和写作速度。
 var writing_ability: int = tmp_v
 
@@ -82,7 +91,7 @@ var blog_calendar : Array = [
 
 #@ 博客数据
 var blog_data: Dictionary = {
-    "blog_name": "碎言",
+    "blog_name": "我的博客",
     "blog_author":"J.sky",
     "blog_type":1,#博客类型。
     "safety_value" : 100, #安全值，过低网站会遭受攻击和入侵
