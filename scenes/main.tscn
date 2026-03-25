@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cl00vejve6l78"]
+[gd_scene format=3 uid="uid://cl00vejve6l78"]
 
 [ext_resource type="Script" uid="uid://cqvdo83xm6ab8" path="res://scripts/main.gd" id="1_85g3d"]
 [ext_resource type="PackedScene" uid="uid://dgno60v7uo37w" path="res://scenes/场景.tscn" id="2_tipki"]
@@ -13,10 +13,10 @@
 [ext_resource type="PackedScene" uid="uid://cjugt1joovfkl" path="res://scenes/ad.tscn" id="12_eb6dy"]
 [ext_resource type="PackedScene" uid="uid://drcoxpxaqfn8r" path="res://milestones/main.tscn" id="12_trceg"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" unique_id=733496957]
 script = ExtResource("1_85g3d")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1826913762]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -26,23 +26,23 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.787129, 0.813516, 0.790252, 1)
 
-[node name="场景" parent="." instance=ExtResource("2_tipki")]
+[node name="场景" parent="." unique_id=354961631 instance=ExtResource("2_tipki")]
 
-[node name="ui" type="Control" parent="."]
+[node name="ui" type="Control" parent="." unique_id=1133990306]
 layout_mode = 3
 anchors_preset = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("4_85g3d")
 
-[node name="top" parent="ui" instance=ExtResource("5_85g3d")]
+[node name="top" parent="ui" unique_id=456890158 instance=ExtResource("5_85g3d")]
 layout_mode = 1
 anchors_preset = 0
 anchor_right = 0.0
 offset_right = 420.0
 grow_horizontal = 1
 
-[node name="bottom" parent="ui" instance=ExtResource("6_choun")]
+[node name="bottom" parent="ui" unique_id=987305603 instance=ExtResource("6_choun")]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -55,7 +55,7 @@ offset_right = 955.0
 offset_bottom = 472.0
 grow_vertical = 0
 
-[node name="r_panel" parent="ui" instance=ExtResource("7_ya4ey")]
+[node name="r_panel" parent="ui" unique_id=1149228374 instance=ExtResource("7_ya4ey")]
 layout_mode = 1
 offset_left = 713.0
 offset_top = 53.0
@@ -63,7 +63,7 @@ offset_right = 713.0
 offset_bottom = 53.0
 max_messages = 25
 
-[node name="日程" parent="." instance=ExtResource("9_85g3d")]
+[node name="日程" parent="." unique_id=2093642315 instance=ExtResource("9_85g3d")]
 visible = false
 anchors_preset = 7
 anchor_left = 0.5
@@ -77,7 +77,7 @@ grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Ad" parent="." instance=ExtResource("12_eb6dy")]
+[node name="Ad" parent="." unique_id=1946520366 instance=ExtResource("12_eb6dy")]
 visible = false
 anchors_preset = 5
 anchor_left = 0.5
@@ -91,13 +91,13 @@ grow_vertical = 1
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="lm_mian" parent="." instance=ExtResource("9_choun")]
+[node name="lm_mian" parent="." unique_id=1766402356 instance=ExtResource("9_choun")]
 visible = false
 
-[node name="bank_main" parent="." instance=ExtResource("10_choun")]
+[node name="bank_main" parent="." unique_id=2035315532 instance=ExtResource("10_choun")]
 visible = false
 
-[node name="yun_main" parent="." instance=ExtResource("11_ya4ey")]
+[node name="yun_main" parent="." unique_id=1706880730 instance=ExtResource("11_ya4ey")]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -105,7 +105,7 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 
-[node name="m_main" parent="." instance=ExtResource("12_trceg")]
+[node name="m_main" parent="." unique_id=431631272 instance=ExtResource("12_trceg")]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -115,4 +115,4 @@ anchor_bottom = 0.5
 offset_right = 960.0
 offset_bottom = 480.0
 
-[node name="AcceptDialog" type="AcceptDialog" parent="."]
+[node name="AcceptDialog" type="AcceptDialog" parent="." unique_id=1869509651]
