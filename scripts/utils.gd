@@ -716,7 +716,7 @@ func add_ad_checkbox(fc, category, button_group, _on_checkbox_toggled):
 	fc.add_child(checkbox)
 	checkbox.toggled.connect(_on_checkbox_toggled.bind(category.name))
 
-func create_checkbox(node,KEY,text,array,button_group,_on_checkbox_toggled):
+func create_checkbox(node, KEY, text, array, _on_checkbox_toggled):
 	var fc = FlowContainer.new()
 	var blog_label = Label.new()
 	blog_label.text = text
@@ -728,7 +728,7 @@ func create_checkbox(node,KEY,text,array,button_group,_on_checkbox_toggled):
 		var cname = category.name
 
 		if should_add_category(cname, KEY + 1):
-			add_checkbox(fc, category, KEY, button_group, _on_checkbox_toggled)
+			add_checkbox(fc, category, KEY, _on_checkbox_toggled)
 
 
 # 判断是否应该添加某个类别
@@ -750,24 +750,23 @@ func should_add_category(cname: String, day: int) -> bool:
 
 
 
-# 创建并添加复选框
-func add_checkbox(fc, category, KEY, button_group, _on_checkbox_toggled):
+# 创建并添加复选框（多选）
+func add_checkbox(fc, category, KEY, _on_checkbox_toggled):
 	assert(fc != null, "FlowContainer is null")
 	if category.isVisible:
 		var checkbox = CheckBox.new()
-		#print("Adding checkbox for category: ", category.name) # 调试信息
 		checkbox.text = category.name
 		if category.has("tip"):
 			checkbox.set_tooltip_text(category.tip)
 		checkbox.disabled = category.disabled
-		if Blogger.blog_calendar[KEY].task == category.name:
+		# 多选：检查当前选项是否在 tasks 数组里
+		if category.name in Blogger.blog_calendar[KEY].tasks:
 			checkbox.set_pressed_no_signal(true)
-		checkbox.button_group = button_group
 		fc.add_child(checkbox)
 		checkbox.toggled.connect(_on_checkbox_toggled.bind(category.name))
 
-## 循环创建每日任务单选按钮
-func create_all_checkbox(node,KEY,button_group,_on_checkbox_toggled):
+## 循环创建每日任务多选按钮
+func create_all_checkbox(node, KEY, _on_checkbox_toggled):
 	var items = [
 		{
 			"text":"博文写作安排",
@@ -787,7 +786,7 @@ func create_all_checkbox(node,KEY,button_group,_on_checkbox_toggled):
 		},
 	]
 	for item in items:
-		create_checkbox(node,KEY,item.text,item.ary,button_group,_on_checkbox_toggled)
+		create_checkbox(node, KEY, item.text, item.ary, _on_checkbox_toggled)
 	
 	
 
@@ -908,15 +907,16 @@ func decrease_blog_views(views, old_day, now_day,type) -> int:
 			# 处理 kk <= 0 或 kk > LONG_DECAY_THRESHOLD 的情况
 			return randf_range(0,1) # 例如，超过21天后，几乎没有流量，当然热门文章会另有算法。
 
-## 替换数组中的字典值
+## 替换数组中的字典值（多选版本）
 func replace_task_value(arr: Array, old_task: String, new_task: String):
 	# 遍历数组中的每个元素
 	for i in range(arr.size()):
-		# 检查当前元素是否是字典，并且包含 "task" 键
-		if arr[i].has("task"):
-			# 如果当前任务值等于需要替换的旧任务值，则进行替换
-			if arr[i]["task"] == old_task:
-				arr[i]["task"] = new_task
+		# 检查当前元素是否是字典，并且包含 "tasks" 键
+		if arr[i].has("tasks"):
+			# 遍历 tasks 数组，替换匹配的任务
+			for j in range(arr[i]["tasks"].size()):
+				if arr[i]["tasks"][j] == old_task:
+					arr[i]["tasks"][j] = new_task
 				
 # 定义一个方法用于减少给定值，并确保其不会小于0
 func decrease_value_safely(current_value: int, min_decrease: int, max_decrease: int) -> int:
