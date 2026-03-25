@@ -1,14 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://cptfk2fj0xonm"]
+[gd_scene load_steps=4 format=3 uid="uid://cptfk2fj0xonm"]
 
 [ext_resource type="Theme" uid="uid://cp1t7xqq6k8jr" path="res://scenes/程菜单.tres" id="1_y2yoe"]
 [ext_resource type="Script" uid="uid://blbwckhg81aqx" path="res://scripts/日程.gd" id="2_pyukl"]
-[ext_resource type="Script" uid="uid://bmy840o53e2f3" path="res://scripts/days/d_1.gd" id="3_wktfe"]
-[ext_resource type="Script" uid="uid://bxigrp7kvklug" path="res://scripts/days/d_2.gd" id="4_rrgel"]
-[ext_resource type="Script" uid="uid://d3drjxsy36oij" path="res://scripts/days/d_3.gd" id="5_mlf78"]
-[ext_resource type="Script" uid="uid://cx37rb1pi6mq" path="res://scripts/days/d_4.gd" id="6_8iyum"]
-[ext_resource type="Script" uid="uid://bjpk3ekfty85u" path="res://scripts/days/d_5.gd" id="7_8lr35"]
-[ext_resource type="Script" uid="uid://bslfg1a3ti7j4" path="res://scripts/days/d_6.gd" id="8_l46n6"]
-[ext_resource type="Script" uid="uid://bfuba8vv3bi1l" path="res://scripts/days/d_7.gd" id="9_8x0de"]
+[ext_resource type="Script" path="res://scripts/days/day_panel.gd" id="3_day_panel"]
 
 [node name="日程" type="Control"]
 layout_mode = 3
@@ -171,7 +165,7 @@ grow_vertical = 2
 [node name="d1" type="VBoxContainer" parent="bg/选项组/sc1"]
 layout_mode = 2
 size_flags_horizontal = 3
-script = ExtResource("3_wktfe")
+script = ExtResource("3_day_panel")
 
 [node name="sc2" type="ScrollContainer" parent="bg/选项组"]
 visible = false
@@ -185,7 +179,7 @@ grow_vertical = 2
 [node name="d2" type="VBoxContainer" parent="bg/选项组/sc2"]
 layout_mode = 2
 size_flags_horizontal = 3
-script = ExtResource("4_rrgel")
+script = ExtResource("3_day_panel")
 
 [node name="sc3" type="ScrollContainer" parent="bg/选项组"]
 visible = false
@@ -199,7 +193,7 @@ grow_vertical = 2
 [node name="d3" type="VBoxContainer" parent="bg/选项组/sc3"]
 layout_mode = 2
 size_flags_horizontal = 3
-script = ExtResource("5_mlf78")
+script = ExtResource("3_day_panel")
 
 [node name="sc4" type="ScrollContainer" parent="bg/选项组"]
 visible = false
@@ -213,7 +207,7 @@ grow_vertical = 2
 [node name="d4" type="VBoxContainer" parent="bg/选项组/sc4"]
 layout_mode = 2
 size_flags_horizontal = 3
-script = ExtResource("6_8iyum")
+script = ExtResource("3_day_panel")
 
 [node name="sc5" type="ScrollContainer" parent="bg/选项组"]
 visible = false
@@ -227,7 +221,7 @@ grow_vertical = 2
 [node name="d5" type="VBoxContainer" parent="bg/选项组/sc5"]
 layout_mode = 2
 size_flags_horizontal = 3
-script = ExtResource("7_8lr35")
+script = ExtResource("3_day_panel")
 
 [node name="sc6" type="ScrollContainer" parent="bg/选项组"]
 visible = false
@@ -241,7 +235,7 @@ grow_vertical = 2
 [node name="d6" type="VBoxContainer" parent="bg/选项组/sc6"]
 layout_mode = 2
 size_flags_horizontal = 3
-script = ExtResource("8_l46n6")
+script = ExtResource("3_day_panel")
 
 [node name="sc7" type="ScrollContainer" parent="bg/选项组"]
 visible = false
@@ -255,7 +249,7 @@ grow_vertical = 2
 [node name="d7" type="VBoxContainer" parent="bg/选项组/sc7"]
 layout_mode = 2
 size_flags_horizontal = 3
-script = ExtResource("9_8x0de")
+script = ExtResource("3_day_panel")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="bg"]
 layout_mode = 1
