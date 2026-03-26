@@ -6,8 +6,8 @@ const TaskConfig = preload("res://scripts/task_system/TaskConfig.gd")
 # 任务状态副本（用于运行时修改）
 var task_states: Array[Dictionary]:
     get:
-        if GlobalDataManager:
-            return GlobalDataManager.get_task().task_states
+        if GDManager:
+            return GDManager.get_task().task_states
         return []
 
 # Called when the node enters the scene tree for the first time.
@@ -19,10 +19,10 @@ func _ready() -> void:
 
 # 重置任务状态
 func reset_task_states():
-    if not GlobalDataManager:
+    if not GDManager:
         return
 
-    var task_data = GlobalDataManager.get_task()
+    var task_data = GDManager.get_task()
     task_data.task_states.clear()
 
     # 复制任务配置到运行时状态

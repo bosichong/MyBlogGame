@@ -7,31 +7,31 @@ extends Node
 
 var t_d: Array:
     get:
-        return GlobalDataManager.get_statistics().daily_stats if GlobalDataManager else []
+        return GDManager.get_statistics().daily_stats if GDManager else []
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_statistics().daily_stats = value
+        if GDManager:
+            GDManager.get_statistics().daily_stats = value
 
 var t_w: Array:
     get:
-        return GlobalDataManager.get_statistics().weekly_stats if GlobalDataManager else []
+        return GDManager.get_statistics().weekly_stats if GDManager else []
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_statistics().weekly_stats = value
+        if GDManager:
+            GDManager.get_statistics().weekly_stats = value
 
 var t_m: Array:
     get:
-        return GlobalDataManager.get_statistics().monthly_stats if GlobalDataManager else []
+        return GDManager.get_statistics().monthly_stats if GDManager else []
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_statistics().monthly_stats = value
+        if GDManager:
+            GDManager.get_statistics().monthly_stats = value
 
 var t_y: Array:
     get:
-        return GlobalDataManager.get_statistics().yearly_stats if GlobalDataManager else []
+        return GDManager.get_statistics().yearly_stats if GDManager else []
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_statistics().yearly_stats = value
+        if GDManager:
+            GDManager.get_statistics().yearly_stats = value
 
 
 

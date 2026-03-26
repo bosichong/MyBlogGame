@@ -44,70 +44,70 @@ var ads = [
 
 var ad_set: String:
     get:
-        return GlobalDataManager.get_ad().current_ad_type if GlobalDataManager else "文字广告"
+        return GDManager.get_ad().current_ad_type if GDManager else "文字广告"
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_ad().set_ad_type(value)
+        if GDManager:
+            GDManager.get_ad().set_ad_type(value)
 
 var ad_0: bool:
     get:
-        return GlobalDataManager.get_ad().is_registered if GlobalDataManager else true
+        return GDManager.get_ad().is_registered if GDManager else true
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_ad().is_registered = value
+        if GDManager:
+            GDManager.get_ad().is_registered = value
 
 var ad_1: bool:
     get:
-        return GlobalDataManager.get_ad().is_under_review if GlobalDataManager else false
+        return GDManager.get_ad().is_under_review if GDManager else false
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_ad().is_under_review = value
+        if GDManager:
+            GDManager.get_ad().is_under_review = value
 
 var ad_2: bool:
     get:
-        return GlobalDataManager.get_ad().is_approved if GlobalDataManager else false
+        return GDManager.get_ad().is_approved if GDManager else false
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_ad().is_approved = value
+        if GDManager:
+            GDManager.get_ad().is_approved = value
 
 var ad_1_day: int:
     get:
-        return GlobalDataManager.get_ad().review_days if GlobalDataManager else 0
+        return GDManager.get_ad().review_days if GDManager else 0
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_ad().review_days = value
+        if GDManager:
+            GDManager.get_ad().review_days = value
 
 signal sig_ad_1_day # 审核截止日期信号量
 
 
 var ad_money_0: float:
     get:
-        return GlobalDataManager.get_ad().pending_commission if GlobalDataManager else 0.0
+        return GDManager.get_ad().pending_commission if GDManager else 0.0
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_ad().pending_commission = value
+        if GDManager:
+            GDManager.get_ad().pending_commission = value
 
 var ad_money_1: float:
     get:
-        return GlobalDataManager.get_ad().settled_commission if GlobalDataManager else 0.0
+        return GDManager.get_ad().settled_commission if GDManager else 0.0
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_ad().settled_commission = value
+        if GDManager:
+            GDManager.get_ad().settled_commission = value
 
 var ad_money_2: float:
     get:
-        return GlobalDataManager.get_ad().total_commission if GlobalDataManager else 0.0
+        return GDManager.get_ad().total_commission if GDManager else 0.0
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_ad().total_commission = value
+        if GDManager:
+            GDManager.get_ad().total_commission = value
 
 #这个数组中存放着每日的广告统计，每条数据包括:日期，点击率，广告类型
 var ad_data: Array:
     get:
-        return GlobalDataManager.get_ad().ad_statistics if GlobalDataManager else []
+        return GDManager.get_ad().ad_statistics if GDManager else []
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_ad().ad_statistics = value
+        if GDManager:
+            GDManager.get_ad().ad_statistics = value
 
 
 # Called when the node enters the scene tree for the first time.
@@ -136,10 +136,10 @@ func _on_s_ad_money_2():
 
 # 从广告联盟赚取佣金
 func update_ad(views):
-    if not GlobalDataManager:
+    if not GDManager:
         return views
 
-    var ad_data_obj = GlobalDataManager.get_ad()
+    var ad_data_obj = GDManager.get_ad()
     var ad = get_ad_by_name(ad_data_obj.current_ad_type)
     var end_views = views - int(views * ad.affect)
 

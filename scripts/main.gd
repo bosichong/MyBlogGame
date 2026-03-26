@@ -67,9 +67,9 @@ func _ready() -> void:
     else:
         print("未能获取 TimerManager 实例")
 
-    # 连接GlobalDataManager的自动保存信号
-    if GlobalDataManager and GlobalDataManager.save_manager:
-        GlobalDataManager.save_manager.connect("auto_save_triggered", _on_auto_save_triggered)
+    # 连接GDManager的自动保存信号
+    if GDManager and GDManager.save_manager:
+        GDManager.save_manager.connect("auto_save_triggered", _on_auto_save_triggered)
 
     # 连接游戏退出信号
     get_tree().set_auto_accept_quit(false)
@@ -297,8 +297,8 @@ func sg_task_show_popup_msg(title: String, content: String):
 
 ## 自动保存游戏
 func auto_save_game():
-    if GlobalDataManager:
-        var result = GlobalDataManager.auto_save()
+    if GDManager:
+        var result = GDManager.auto_save()
         if result.get("success", false):
             info_display.add_message("游戏已自动保存到存档槽位0")
         else:

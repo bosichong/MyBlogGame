@@ -129,10 +129,10 @@ func load_rank_titles() -> bool:
 # ===== 加载成就配置 =====
 
 func load_milestones_config() -> bool:
-    if not GlobalDataManager or not GlobalDataManager.has_data("milestones"):
+    if not GDManager or not GDManager.has_data("milestones"):
         return false
 
-    var milestones = GlobalDataManager.get_data("milestones")
+    var milestones = GDManager.get_data("milestones")
     if milestones and milestones.has("milestones"):
         static_config.milestones_config = milestones.milestones.duplicate(true)
     else:

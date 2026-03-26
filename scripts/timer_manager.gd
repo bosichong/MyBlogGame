@@ -5,38 +5,38 @@ extends Node
 # 游戏时间
 var current_day: int:
     get:
-        return GlobalDataManager.get_time().current_day if GlobalDataManager else 1
+        return GDManager.get_time().current_day if GDManager else 1
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_time().current_day = value
+        if GDManager:
+            GDManager.get_time().current_day = value
 
 var current_week: int:
     get:
-        return GlobalDataManager.get_time().current_week if GlobalDataManager else 1
+        return GDManager.get_time().current_week if GDManager else 1
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_time().current_week = value
+        if GDManager:
+            GDManager.get_time().current_week = value
 
 var current_month: int:
     get:
-        return GlobalDataManager.get_time().current_month if GlobalDataManager else 1
+        return GDManager.get_time().current_month if GDManager else 1
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_time().current_month = value
+        if GDManager:
+            GDManager.get_time().current_month = value
 
 var current_quarter: int:
     get:
-        return GlobalDataManager.get_time().current_quarter if GlobalDataManager else 1
+        return GDManager.get_time().current_quarter if GDManager else 1
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_time().current_quarter = value
+        if GDManager:
+            GDManager.get_time().current_quarter = value
 
 var current_year: int:
     get:
-        return GlobalDataManager.get_time().current_year if GlobalDataManager else 2000
+        return GDManager.get_time().current_year if GDManager else 2000
     set(value):
-        if GlobalDataManager:
-            GlobalDataManager.get_time().current_year = value
+        if GDManager:
+            GDManager.get_time().current_year = value
 
 const days_in_week = 7     # 每周7天
 const weeks_in_month = 4   # 每月4周
@@ -75,9 +75,9 @@ func _ready() -> void:
 # 定时器触发
 ## 每天更新事件，游戏的核心更新信号量
 func _on_day_passed():
-    if GlobalDataManager:
-        GlobalDataManager.advance_day()
-        var time_data = GlobalDataManager.get_time()
+    if GDManager:
+        GDManager.advance_day()
+        var time_data = GDManager.get_time()
 
         # 广告联盟佣金结算
         if time_data.current_week == 4 and time_data.current_day == 7:
@@ -89,10 +89,10 @@ func _on_day_passed():
 
 ## 游戏中时间类型的时间，对比时间时间
 func is_time_match(config: Dictionary) -> bool:
-    if not GlobalDataManager:
+    if not GDManager:
         return false
 
-    var time_data = GlobalDataManager.get_time()
+    var time_data = GDManager.get_time()
     var y_values = config.get("y", [])
     var m_values = config.get("m", [])
     var w_values = config.get("w", [])
