@@ -15,6 +15,7 @@ var current_date_str: String = "2000-1-1-1"
 signal day_passed
 signal week_passed
 signal month_passed
+signal quarter_passed
 signal year_passed
 signal date_changed(new_date: String)
 
@@ -22,6 +23,7 @@ signal date_changed(new_date: String)
 const DAYS_IN_WEEK = 7
 const WEEKS_IN_MONTH = 4
 const MONTHS_IN_YEAR = 12
+const QUARTERS_IN_YEAR = 4
 
 # ===== 辅助方法 =====
 
@@ -63,6 +65,13 @@ func advance_month():
     if current_month > MONTHS_IN_YEAR:
         current_month = 1
         advance_year()
+
+    # 检查是否跨季度（每3个月为1季度）
+    if current_month % 3 == 1:
+        current_quarter = (current_month - 1) / 3 + 1
+        if current_quarter > quarters_in_year:
+            current_quarter = 1
+        emit_signal("quarter_passed")
 
     emit_signal("month_passed")
 

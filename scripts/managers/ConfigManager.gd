@@ -122,42 +122,40 @@ func load_ad_config() -> bool:
 # ===== 加载游戏文本 =====
 
 func load_game_strings() -> bool:
-    if not Strs:
-        return false
+	if not Strs:
+		return false
 
-    static_config.game_strings.clear()
-    var strings = Strs.game_strs.duplicate(true)
-    for key in strings:
-        static_config.game_strings[key] = strings[key]
-    return true
+	static_config.game_strings.clear()
+	var strings = Strs.game_strs.duplicate(true)
+	for key in strings:
+		static_config.game_strings[key] = strings[key]
+	return true
 # ===== 加载头衔配置 =====
 
 func load_rank_titles() -> bool:
-    if not Strs:
-        return false
+	if not Strs:
+		return false
 
-    static_config.rank_titles.clear()
-    if Strs.game_strs.has("头衔"):
-        var titles = Strs.game_strs["头衔"].duplicate()
-        for title in titles:
-            static_config.rank_titles.append(title)
-    return true
+	static_config.rank_titles.clear()
+	if Strs.game_strs.has("头衔"):
+		var titles = Strs.game_strs["头衔"].duplicate()
+		for title in titles:
+			static_config.rank_titles.append(title)
+	return true
 
 # ===== 加载成就配置 =====
 
 func load_milestones_config() -> bool:
-    if not GDManager or not GDManager.has_data("milestones"):
-        return false
+	if not GDManager or not GDManager.has_data("milestones"):
+		return false
 
-    var milestones = GDManager.get_data("milestones")
-    if milestones and milestones.has("milestones"):
-        var ms = milestones.milestones
-        static_config.milestones_config.clear()
-        for key in ms:
-            static_config.milestones_config[key] = ms[key]
-    else:
-        static_config.milestones_config = {}
-    return true
+	var milestones = GDManager.get_data("milestones")
+	if milestones and milestones.has_method("get") and milestones.get("lv"):
+		static_config.milestones_config.clear()
+		static_config.milestones_config["lv"] = milestones.lv
+	else:
+		static_config.milestones_config = {}
+	return true
 
 # ===== 获取配置 =====
 

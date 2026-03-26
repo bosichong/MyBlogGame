@@ -22,6 +22,7 @@ signal level_changed(new_level: int)
 signal day_passed
 signal week_passed
 signal month_passed
+signal quarter_passed
 signal year_passed
 signal game_loaded(slot: int)
 signal game_saved(slot: int)
@@ -119,6 +120,7 @@ func connect_data_signals():
         time.connect("day_passed", _on_time_day_passed)
         time.connect("week_passed", _on_time_week_passed)
         time.connect("month_passed", _on_time_month_passed)
+        time.connect("quarter_passed", _on_time_quarter_passed)
         time.connect("year_passed", _on_time_year_passed)
 
     if bank:
@@ -150,6 +152,9 @@ func _on_time_week_passed():
 
 func _on_time_month_passed():
     emit_signal("month_passed")
+
+func _on_time_quarter_passed():
+    emit_signal("quarter_passed")
 
 func _on_time_year_passed():
     emit_signal("year_passed")
