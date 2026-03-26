@@ -142,7 +142,7 @@ func _on_close_blog_passed():
     TimerManager.start_timer()
     
     
-## 倍速按钮按下	
+## 倍速按钮按下   
 func _on_time_x():
     if TimerManager.timer.wait_time == 2.0 :
         TimerManager.timer.wait_time = 1.0
@@ -261,7 +261,7 @@ func signal_design_web(msg):
     info_display.add_message(msg)
     
 func signal_design_web_no_stamina(msg):
-    info_display.add_message(msg)	
+    info_display.add_message(msg)   
     
 
 ## 显示通用弹窗
@@ -282,7 +282,7 @@ func on_sig_ad_1_day():
     # 从审核界面切换到管理面板，并开始记录广告费用
     AdManager.ad_1_day = 0
     AdManager.ad_1 = false
-    AdManager.ad_2 = true	
+    AdManager.ad_2 = true   
     show_popup_message("审核通知", "恭喜您通过广告联盟的申请！现在您可以通过点击广告联盟的按钮来设置广告投放方式以及查看收入。")
 
 func _close_ac():
