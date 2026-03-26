@@ -42,22 +42,72 @@ var ads = [
     },
 ]
 
-var ad_set = "文字广告" # 当前博客选择的广告投放模式
+var ad_set: String:
+    get:
+        return GlobalDataManager.get_ad().current_ad_type if GlobalDataManager else "文字广告"
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_ad().set_ad_type(value)
 
-var ad_0 = true # 注册
-var ad_1 = false # 审核
-var ad_2 = false # 管理
+var ad_0: bool:
+    get:
+        return GlobalDataManager.get_ad().is_registered if GlobalDataManager else true
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_ad().is_registered = value
 
-var ad_1_day = 0
+var ad_1: bool:
+    get:
+        return GlobalDataManager.get_ad().is_under_review if GlobalDataManager else false
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_ad().is_under_review = value
+
+var ad_2: bool:
+    get:
+        return GlobalDataManager.get_ad().is_approved if GlobalDataManager else false
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_ad().is_approved = value
+
+var ad_1_day: int:
+    get:
+        return GlobalDataManager.get_ad().review_days if GlobalDataManager else 0
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_ad().review_days = value
+
 signal sig_ad_1_day # 审核截止日期信号量
 
 
-var ad_money_0 = 0.0 #周期未结算佣金
-var ad_money_1 = 0.0 #周期已结算佣金
-var ad_money_2 = 0.0 #累计已发放的所有佣金
+var ad_money_0: float:
+    get:
+        return GlobalDataManager.get_ad().pending_commission if GlobalDataManager else 0.0
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_ad().pending_commission = value
+
+var ad_money_1: float:
+    get:
+        return GlobalDataManager.get_ad().settled_commission if GlobalDataManager else 0.0
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_ad().settled_commission = value
+
+var ad_money_2: float:
+    get:
+        return GlobalDataManager.get_ad().total_commission if GlobalDataManager else 0.0
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_ad().total_commission = value
 
 #这个数组中存放着每日的广告统计，每条数据包括:日期，点击率，广告类型
-var ad_data = [] # 所有广告的统计
+var ad_data: Array:
+    get:
+        return GlobalDataManager.get_ad().ad_statistics if GlobalDataManager else []
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_ad().ad_statistics = value
 
 
 # Called when the node enters the scene tree for the first time.
@@ -86,9 +136,13 @@ func _on_s_ad_money_2():
 
 # 从广告联盟赚取佣金
 func update_ad(views):
-    var ad = get_ad_by_name(AdManager.ad_set)
+    if not GlobalDataManager:
+        return views
+
+    var ad_data_obj = GlobalDataManager.get_ad()
+    var ad = get_ad_by_name(ad_data_obj.current_ad_type)
     var end_views = views - int(views * ad.affect)
-    
+
     #联盟的访问量福利，访问量越高，点击率也会越高
     var ctr = 0.0
     var commission = 0.0
@@ -113,13 +167,13 @@ func update_ad(views):
     else :
         ctr = ad.ctr + 0.1
         commission = ad.commission + 0.25
-    
+
     var today_money = int(end_views * ctr )* commission
-    ad_money_0 += today_money
+    ad_data_obj.pending_commission += today_money
     var today = Utils.format_date()
-    ad_data.append([today,today_money])
+    ad_data_obj.ad_statistics.append([today,today_money])
     #print(ad_data)
-    
+
     return end_views
     
 ## 广告联盟审核时间刷新

@@ -3,11 +3,41 @@ extends Node
 
 
 # 游戏时间
-var current_day = 1      # 当前天，从1开始
-var current_week = 1     # 当前周
-var current_month = 1    # 当前月
-var current_quarter = 1  # 当前季度
-var current_year = 2000  # 当前年，从2000年开始
+var current_day: int:
+    get:
+        return GlobalDataManager.get_time().current_day if GlobalDataManager else 1
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_time().current_day = value
+
+var current_week: int:
+    get:
+        return GlobalDataManager.get_time().current_week if GlobalDataManager else 1
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_time().current_week = value
+
+var current_month: int:
+    get:
+        return GlobalDataManager.get_time().current_month if GlobalDataManager else 1
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_time().current_month = value
+
+var current_quarter: int:
+    get:
+        return GlobalDataManager.get_time().current_quarter if GlobalDataManager else 1
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_time().current_quarter = value
+
+var current_year: int:
+    get:
+        return GlobalDataManager.get_time().current_year if GlobalDataManager else 2000
+    set(value):
+        if GlobalDataManager:
+            GlobalDataManager.get_time().current_year = value
+
 const days_in_week = 7     # 每周7天
 const weeks_in_month = 4   # 每月4周
 const months_in_quarter = 3 # 每季度3个月
@@ -45,42 +75,24 @@ func _ready() -> void:
 # 定时器触发
 ## 每天更新事件，游戏的核心更新信号量
 func _on_day_passed():
-    current_day +=1
-    # 检查是否到新的一周
-    if current_day > days_in_week:
-        current_day = 1
-        current_week += 1
-        if current_week > weeks_in_month:
-            current_week = 1
-            current_month += 1
-            
-            # 检查是否到新的一季度（每3个月为1季度）
-            if current_month % months_in_quarter == 1 :  # 新季度开始
-                current_quarter = (current_month - 1) / months_in_quarter + 1
-                if current_quarter > quarters_in_year :
-                    current_quarter = 1
-                emit_signal("quarter_passed")
-            
-                
-            # 检查是否到新的一年（每年12）
-            if current_month > months_in_year:
-                current_month = 1
-                current_year += 1
-                emit_signal("year_passed")
-            emit_signal("month_passed")	
-        emit_signal("week_passed")
-    emit_signal("day_passed")
-    
-    # 广告联盟佣金结算
-    if current_week == 4 and current_day == 7:
-        emit_signal("s_ad_money_1")
-    if current_week == 2 and current_day == 1:
-        emit_signal("s_ad_money_2")
+    if GlobalDataManager:
+        GlobalDataManager.advance_day()
+        var time_data = GlobalDataManager.get_time()
+
+        # 广告联盟佣金结算
+        if time_data.current_week == 4 and time_data.current_day == 7:
+            emit_signal("s_ad_money_1")
+        if time_data.current_week == 2 and time_data.current_day == 1:
+            emit_signal("s_ad_money_2")
     
     
 
-## 游戏中时间类型的时间，对比时间时间	
+## 游戏中时间类型的时间，对比时间时间
 func is_time_match(config: Dictionary) -> bool:
+    if not GlobalDataManager:
+        return false
+
+    var time_data = GlobalDataManager.get_time()
     var y_values = config.get("y", [])
     var m_values = config.get("m", [])
     var w_values = config.get("w", [])
@@ -88,22 +100,22 @@ func is_time_match(config: Dictionary) -> bool:
 
     # 检查年
     if y_values.size() > 0 and y_values[0] != 0:
-        if not is_match(current_year, y_values):
+        if not is_match(time_data.current_year, y_values):
             return false
 
     # 检查月
     if m_values.size() > 0 and m_values[0] != 0:
-        if not is_match(current_month, m_values):
+        if not is_match(time_data.current_month, m_values):
             return false
 
     # 检查周
     if w_values.size() > 0 and w_values[0] != 0:
-        if not is_match(current_week, w_values):
+        if not is_match(time_data.current_week, w_values):
             return false
 
     # 检查日
     if d_values.size() > 0 and d_values[0] != 0:
-        if not is_match(current_day, d_values):
+        if not is_match(time_data.current_day, d_values):
             return false
 
     return true

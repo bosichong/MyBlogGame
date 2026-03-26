@@ -4,22 +4,31 @@ extends Node
 # 引用任务配置
 const TaskConfig = preload("res://scripts/task_system/TaskConfig.gd")
 # 任务状态副本（用于运行时修改）
-var task_states: Array[Dictionary] = []
+var task_states: Array[Dictionary]:
+    get:
+        if GlobalDataManager:
+            return GlobalDataManager.get_task().task_states
+        return []
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	reset_task_states()
-	Blogger.connect("sg_new_blog_post",check_new_blog_post)
-	Blogger.connect("s_level",check_lv_based_tasks)
-	Blogger.connect("skill_level_up",check_skill_level_up)
+    reset_task_states()
+    Blogger.connect("sg_new_blog_post",check_new_blog_post)
+    Blogger.connect("s_level",check_lv_based_tasks)
+    Blogger.connect("skill_level_up",check_skill_level_up)
 
 # 重置任务状态
 func reset_task_states():
-	task_states.clear()
-	
-	# 复制任务配置到运行时状态
-	for task in TaskConfig.TASKS:
-		var task_state = task.duplicate(true)
-		task_states.append(task_state)
+    if not GlobalDataManager:
+        return
+
+    var task_data = GlobalDataManager.get_task()
+    task_data.task_states.clear()
+
+    # 复制任务配置到运行时状态
+    for task in TaskConfig.TASKS:
+        var task_state = task.duplicate(true)
+        task_data.task_states.append(task_state)
 
 
 #任务生命周期：
