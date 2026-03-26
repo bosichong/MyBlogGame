@@ -1059,8 +1059,8 @@ func format_number(value: int) -> String:
 func get_rank_title(level: int,arr:Array) -> String:
     if level < 1 or level > 100:
         return "无效等级"
-    Blogger.dw = int((level) / 10)
-    return arr[Blogger.dw-1]
+    var rank_tier = int((level) / 10)
+    return arr[rank_tier-1]
 
 func goto_scene(SCENE_PATH):
     var error = get_tree().change_scene_to_file(SCENE_PATH)

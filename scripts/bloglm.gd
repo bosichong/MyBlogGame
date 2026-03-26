@@ -837,10 +837,10 @@ func join_lm():
     "blog_author": Blogger.blog_data.blog_author,
     "lv": Blogger.level,
     "type": Blogger.blog_data.blog_type,
-    "quality": Blogger.tmp_quality,
+    "quality": GDManager.get_blogger().last_post_quality if GDManager else 0,
     }
     lm_list.append(lm_player)
-    
+
     is_join = true
     
 func exit_lm():

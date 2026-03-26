@@ -126,7 +126,12 @@ var attribute_points: int:
             GDManager.get_blogger().attribute_points = value
 
 ## 后最后一篇文章的质量分
-var tmp_quality = 0
+var tmp_quality: int:
+    get:
+        return GDManager.get_blogger().last_post_quality if GDManager else 0
+    set(value):
+        if GDManager:
+            GDManager.get_blogger().last_post_quality = value
 
 ## 工作学习休息日程（多选）
 var blog_calendar : Array:
@@ -179,9 +184,26 @@ var blog_data: Dictionary:
             blogger.posts = value.get("posts", [])
 
 # 临时量，用来记录周、月份、年份统计使用
-var tmp_w = 1 #第一周
-var tmp_m = 1 #第一月
-var tmp_y = 2000 #第一年
+var tmp_w: int:
+    get:
+        return GDManager.get_blogger().tmp_week if GDManager else 1
+    set(value):
+        if GDManager:
+            GDManager.get_blogger().tmp_week = value
+
+var tmp_m: int:
+    get:
+        return GDManager.get_blogger().tmp_month if GDManager else 1
+    set(value):
+        if GDManager:
+            GDManager.get_blogger().tmp_month = value
+
+var tmp_y: int:
+    get:
+        return GDManager.get_blogger().tmp_year if GDManager else 2000
+    set(value):
+        if GDManager:
+            GDManager.get_blogger().tmp_year = value
 
 # 初始化
 func _ready():
