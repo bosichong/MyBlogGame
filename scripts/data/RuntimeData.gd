@@ -1,4 +1,4 @@
-class_name RuntimeData extends Resource
+class_name RuntimeData
 
 var blogger: BloggerData = BloggerData.new()
 var time: TimeData = TimeData.new()

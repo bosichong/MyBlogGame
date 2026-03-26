@@ -1,4 +1,4 @@
-class_name BloggerData extends Resource
+class_name BloggerData
 
 # ===== 核心属性 =====
 var level: int = 1

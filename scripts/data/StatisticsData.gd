@@ -1,4 +1,4 @@
-class_name StatisticsData extends Resource
+class_name StatisticsData
 
 var daily_stats: Array[Dictionary] = []
 var weekly_stats: Array[Dictionary] = []

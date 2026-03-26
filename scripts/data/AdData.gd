@@ -1,4 +1,4 @@
-class_name AdData extends Resource
+class_name AdData
 
 var current_ad_type: String = "文字广告"
 var is_registered: bool = true

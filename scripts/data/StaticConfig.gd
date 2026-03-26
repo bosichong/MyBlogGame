@@ -1,4 +1,4 @@
-class_name StaticConfig extends Resource
+class_name StaticConfig
 
 var post_categories: Array[Dictionary] = []
 var skills_config: Array[Dictionary] = []

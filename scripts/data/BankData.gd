@@ -1,4 +1,4 @@
-class_name BankData extends Resource
+class_name BankData
 
 var savings_balance: float = 0.0
 var savings_interest: float = 0.0

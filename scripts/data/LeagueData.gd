@@ -1,4 +1,4 @@
-class_name LeagueData extends Resource
+class_name LeagueData
 
 var is_joined: bool = false
 var donation_total: float = 0.0

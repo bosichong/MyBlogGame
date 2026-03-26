@@ -1,4 +1,4 @@
-class_name DataContainer extends Resource
+class_name DataContainer
 
 var static_config: StaticConfig = StaticConfig.new()
 var runtime_data: RuntimeData = RuntimeData.new()

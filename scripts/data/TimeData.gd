@@ -1,4 +1,4 @@
-class_name TimeData extends Resource
+class_name TimeData
 
 var current_year: int = 2000
 var current_month: int = 1

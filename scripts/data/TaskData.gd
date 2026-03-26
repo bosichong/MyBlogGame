@@ -1,4 +1,4 @@
-class_name TaskData extends Resource
+class_name TaskData
 
 var task_states: Array[Dictionary] = []
 var completed_tasks: int = 0
