@@ -14,27 +14,27 @@ func _ready() -> void:
         Blogger.s_level.connect(s_level)
         # 广告联盟审核通过通知
         AdManager.connect("sig_ad_1_day",on_sig_ad_1_day)
-        
-        
+
+
         #休息信号
         Blogger.s_recrecreation_rest.connect(s_recrecreation_rest)
         Blogger.s_playgame.connect(s_playgame)
-        
+
         # 网站安全信号
         Blogger.signal_website_security.connect(signal_website_security)
         Blogger.signal_website_security_no_stamina.connect(signal_website_security_no_stamina)
         Blogger.signal_website_security_no_money.connect(signal_website_security_no_money)
-        
+
         # seo维护
         Blogger.signal_website_seo.connect(signal_website_seo)
         Blogger.signal_website_seo_no_stamina.connect(signal_website_seo_no_stamina)
-        
+
         # 页面美化
         Blogger.signal_design_web.connect(signal_design_web)
         Blogger.signal_design_web_no_stamina.connect(signal_design_web_no_stamina)
-        
-   
-    TimerManager.timer.wait_time = DAY_TIMA 
+
+
+    TimerManager.timer.wait_time = DAY_TIMA
     $ui/bottom.connect("create_blog_passed",_on_bottom_calendar_passed)
     $日程.connect("close_calendar_passed",_on_close_blog_passed)
     $ui/top.connect("time_x",_on_time_x)
@@ -48,11 +48,11 @@ func _ready() -> void:
     $ui/bottom.connect("open_mialestones",_on_open_mialestones)
     $m_main.connect("close_mialestones",_on_close_mialestones)
     $AcceptDialog.confirmed.connect(_close_ac)
-    
+
     TaskManager.connect("sg_task_info_display_msg",sg_task_info_display_msg)
     TaskManager.connect("sg_task_show_popup_msg",sg_task_show_popup_msg)
     update_ui()
-    
+
 
     if TimerManager:
         TimerManager.connect("day_passed",_on_day_ended) # 绑定每天信号量
@@ -63,9 +63,17 @@ func _ready() -> void:
         if TimerManager.timer.is_stopped():
             TimerManager.timer.start()
             #Blogger.daily_activities()
-        
+
     else:
         print("未能获取 TimerManager 实例")
+
+    # 连接GlobalDataManager的自动保存信号
+    if GlobalDataManager and GlobalDataManager.save_manager:
+        GlobalDataManager.save_manager.connect("auto_save_triggered", _on_auto_save_triggered)
+
+    # 连接游戏退出信号
+    get_tree().set_auto_accept_quit(false)
+    get_tree().quit_requested.connect(_on_quit_requested)
 
 
 
@@ -203,6 +211,9 @@ func _on_day_ended():
     time_stop_bt()
     update_ui()
     AdManager.ad_day() # 更新审核日期触发审核结束的信号量
+
+    # 自动保存游戏
+    auto_save_game()
     
     
 
@@ -282,6 +293,26 @@ func sg_task_info_display_msg(msg):
 
 func sg_task_show_popup_msg(title: String, content: String):
     show_popup_message(title,content)
+
+
+## 自动保存游戏
+func auto_save_game():
+    if GlobalDataManager:
+        var result = GlobalDataManager.auto_save()
+        if result.get("success", false):
+            info_display.add_message("游戏已自动保存到存档槽位0")
+        else:
+            info_display.add_message("自动保存失败：" + result.get("error", "未知错误"))
+
+## 处理自动保存触发信号
+func _on_auto_save_triggered():
+    auto_save_game()
+
+## 处理游戏退出请求
+func _on_quit_requested():
+    # 退出前保存游戏
+    auto_save_game()
+    get_tree().quit()
     
     
     
