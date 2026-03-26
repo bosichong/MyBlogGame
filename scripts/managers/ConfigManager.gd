@@ -125,9 +125,11 @@ func load_game_strings() -> bool:
     if not Strs:
         return false
 
-    static_config.game_strings = Strs.game_strs.duplicate(true)
+    static_config.game_strings.clear()
+    var strings = Strs.game_strs.duplicate(true)
+    for key in strings:
+        static_config.game_strings[key] = strings[key]
     return true
-
 # ===== 加载头衔配置 =====
 
 func load_rank_titles() -> bool:
