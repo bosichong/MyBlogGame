@@ -9,9 +9,9 @@ var attribute_points: int = 0
 # ===== 能力值 =====
 var writing_ability: int = 23
 var technical_ability: int = 23
-var code_ability: int = 23
-var literature_ability: int = 23
-var drawing_ability: int = 23
+var code_ability: float = 23.0
+var literature_ability: float = 23.0
+var drawing_ability: float = 23.0
 
 # ===== 资源 =====
 var stamina: int = 100
@@ -41,13 +41,13 @@ var posts: Array[Dictionary] = []
 
 # ===== 日程安排（7天）=====
 var calendar: Array[Dictionary] = [
-    {"tasks": ["阅读名著"]},
-    {"tasks": ["阅读名著"]},
-    {"tasks": ["阅读名著"]},
-    {"tasks": ["阅读名著"]},
-    {"tasks": ["安全维护"]},
-    {"tasks": ["SEO优化"]},
-    {"tasks": ["打游戏"]},
+	{"tasks": ["阅读名著"]},
+	{"tasks": ["阅读名著"]},
+	{"tasks": ["阅读名著"]},
+	{"tasks": ["阅读名著"]},
+	{"tasks": ["安全维护"]},
+	{"tasks": ["SEO优化"]},
+	{"tasks": ["打游戏"]},
 ]
 
 # ===== 临时变量 =====
@@ -56,41 +56,44 @@ var tmp_month: int = 1
 var tmp_year: int = 2000
 var last_post_quality: int = 0
 
+# ===== 已学会的技能 =====
+var learned_skills: Array[String] = []
+
 # ===== 信号 =====
 signal level_changed(new_level: int)
 signal exp_changed(new_exp: int)
-signal ability_changed(ability_type: String, new_value: int)
+signal ability_changed(ability_type: String, new_value: float)
 signal blog_views_changed(new_views: int)
 signal post_added(post_data: Dictionary)
 
 # ===== 辅助方法 =====
 
 func add_exp(amount: int):
-    exp += amount
-    emit_signal("exp_changed", exp)
+	exp += amount
+	emit_signal("exp_changed", exp)
 
 func set_level(new_level: int):
-    level = new_level
-    emit_signal("level_changed", level)
+	level = new_level
+	emit_signal("level_changed", level)
 
-func set_ability(ability_type: String, new_value: int):
-    match ability_type:
-        "writing":
-            writing_ability = new_value
-        "technical":
-            technical_ability = new_value
-        "code":
-            code_ability = new_value
-        "literature":
-            literature_ability = new_value
-        "drawing":
-            drawing_ability = new_value
-    emit_signal("ability_changed", ability_type, new_value)
+func set_ability(ability_type: String, new_value: float):
+	match ability_type:
+		"writing":
+			writing_ability = new_value
+		"technical":
+			technical_ability = new_value
+		"code":
+			code_ability = new_value
+		"literature":
+			literature_ability = new_value
+		"drawing":
+			drawing_ability = new_value
+	emit_signal("ability_changed", ability_type, new_value)
 
 func add_post(post_data: Dictionary):
-    posts.append(post_data)
-    emit_signal("post_added", post_data)
+	posts.append(post_data)
+	emit_signal("post_added", post_data)
 
 func set_views(new_views: int):
-    views = new_views
-    emit_signal("blog_views_changed", views)
+	views = new_views
+	emit_signal("blog_views_changed", views)

@@ -17,8 +17,8 @@ func _ready():
     if not dir.dir_exists("saves"):
         dir.make_dir("saves")
 
-    # 设置自动保存
-    setup_auto_save()
+    # 设置自动保存（已禁用）
+    # setup_auto_save()
 
 func setup_auto_save():
     auto_save_timer = Timer.new()

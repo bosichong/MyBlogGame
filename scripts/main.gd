@@ -61,9 +61,9 @@ func _ready() -> void:
 	else:
 		print("未能获取 TimerManager 实例")
 
-	# 连接GDManager的自动保存信号
-	if GDManager and GDManager.save_manager:
-		GDManager.save_manager.connect("auto_save_triggered", _on_auto_save_triggered)
+	# 连接GDManager的自动保存信号（已禁用）
+	# if GDManager and GDManager.save_manager:
+	#     GDManager.save_manager.connect("auto_save_triggered", _on_auto_save_triggered)
 
 	# 连接GDManager的时间信号
 	if GDManager:
@@ -215,8 +215,8 @@ func _on_day_ended():
 	update_ui()
 	AdManager.ad_day() # 更新审核日期触发审核结束的信号量
 
-	# 自动保存游戏
-	auto_save_game()
+	# 自动保存游戏（已禁用）
+	# auto_save_game()
 	
 	
 
@@ -298,7 +298,7 @@ func sg_task_show_popup_msg(title: String, content: String):
 	show_popup_message(title,content)
 
 
-## 自动保存游戏
+## 自动保存游戏（已禁用）
 func auto_save_game():
 	if GDManager:
 		var result = GDManager.auto_save()
@@ -307,14 +307,15 @@ func auto_save_game():
 		else:
 			info_display.add_message("自动保存失败：" + result.get("error", "未知错误"))
 
-## 处理自动保存触发信号
+## 处理自动保存触发信号（已禁用）
 func _on_auto_save_triggered():
-	auto_save_game()
+	# auto_save_game()
+	pass
 
 ## 处理游戏退出请求
 func _on_quit_requested():
-	# 退出前保存游戏
-	auto_save_game()
+	# 退出前保存游戏（已禁用）
+	# auto_save_game()
 	get_tree().quit()
 	
 	
