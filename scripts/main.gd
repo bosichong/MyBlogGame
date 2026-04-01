@@ -14,6 +14,9 @@ func _ready() -> void:
 		Blogger.s_level.connect(s_level)
 		# 广告联盟审核通过通知
 		AdManager.connect("sig_ad_1_day",on_sig_ad_1_day)
+		# 广告联盟佣金结算和发放通知
+		AdManager.connect("sig_ad_commission_settled",on_sig_ad_commission_settled)
+		AdManager.connect("sig_ad_commission_paid",on_sig_ad_commission_paid)
 
 
 		#休息信号
@@ -287,6 +290,12 @@ func on_sig_ad_1_day():
 	AdManager.ad_1 = false
 	AdManager.ad_2 = true   
 	show_popup_message("审核通知", "恭喜您通过广告联盟的申请！现在您可以通过点击广告联盟的按钮来设置广告投放方式以及查看收入。")
+
+func on_sig_ad_commission_settled(msg):
+	info_display.add_message(msg)
+
+func on_sig_ad_commission_paid(msg):
+	info_display.add_message(msg)
 
 func _close_ac():
 	TimerManager.start_timer()

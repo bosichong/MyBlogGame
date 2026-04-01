@@ -91,6 +91,22 @@ var blog_rss: int:
 		if GDManager:
 			GDManager.get_blogger().rss = value
 
+## 今日访问量
+var today_views: int:
+	get:
+		return GDManager.get_blogger().today_views if GDManager else 0
+	set(value):
+		if GDManager:
+			GDManager.get_blogger().today_views = value
+
+## 本周访问量
+var week_views: int:
+	get:
+		return GDManager.get_blogger().week_views if GDManager else 0
+	set(value):
+		if GDManager:
+			GDManager.get_blogger().week_views = value
+
 ## exp: 当前经验值
 var exp: int:
 	get:
@@ -621,9 +637,7 @@ func recreation_rest(category : String) -> int:
 	var blogger = GDManager.get_blogger()
 	var d = Utils.find_category_by_name( Utils.recreation,category)
 	blogger.stamina += Utils.add_property(blogger.stamina,d.stamina)
-	var t_msg = "今天休息体力加："+str(d.stamina)
-	emit_signal("s_recrecreation_rest",t_msg)
-	#print("今天休息体力加：",d.stamina)
+	# 不再发送体力恢复消息
 	return 0
 ## 休闲娱乐 -> 打游戏
 signal s_playgame(msg)
@@ -634,9 +648,7 @@ func playgame(category : String) -> int:
 	var blogger = GDManager.get_blogger()
 	var d = Utils.find_category_by_name( Utils.recreation,category)
 	blogger.stamina += Utils.add_property(blogger.stamina,d.stamina)
-	var t_msg = "今天休息体力加："+str(d.stamina)
-	emit_signal("s_playgame",t_msg)
-	#print("今天休息体力加：",d.stamina)
+	# 不再发送体力恢复消息
 	return 0
 
 

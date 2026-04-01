@@ -1,7 +1,7 @@
 class_name AdData
 
 var current_ad_type: String = "文字广告"
-var is_registered: bool = true
+var is_registered: bool = false
 var is_under_review: bool = false
 var is_approved: bool = false
 var review_days: int = 0

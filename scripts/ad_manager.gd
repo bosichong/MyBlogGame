@@ -51,7 +51,7 @@ var ad_set: String:
 
 var ad_0: bool:
     get:
-        return GDManager.get_ad().is_registered if GDManager else true
+        return GDManager.get_ad().is_registered if GDManager else false
     set(value):
         if GDManager:
             GDManager.get_ad().is_registered = value
@@ -78,6 +78,8 @@ var ad_1_day: int:
             GDManager.get_ad().review_days = value
 
 signal sig_ad_1_day # 审核截止日期信号量
+signal sig_ad_commission_settled(msg) # 佣金结算信号
+signal sig_ad_commission_paid(msg) # 佣金发放信号
 
 
 var ad_money_0: float:
@@ -125,11 +127,23 @@ func get_ad_by_name(name: String) -> Dictionary:
     return {}  # 如果未找到，返回空字典
 
 func _on_s_ad_money_1():
+    # 结算佣金
+    var amount = ad_money_0
+    if amount > 0:
+        emit_signal("sig_ad_commission_settled", "广告联盟佣金结算：%.2f 元" % amount)
     ad_money_1 = ad_money_0
     ad_money_0 = 0.0
-    
+
 func _on_s_ad_money_2():
-    ad_money_2 += ad_money_1
+    # 发放佣金到用户账户
+    var payout = ad_money_1
+    if payout > 0:
+        if GDManager:
+            GDManager.add_money(payout)
+            emit_signal("sig_ad_commission_paid", "广告联盟佣金发放：%.2f 元，已转入账户" % payout)
+        elif Blogger:
+            Blogger.money += payout
+    ad_money_2 += payout
     ad_money_1 = 0.0
     
     
