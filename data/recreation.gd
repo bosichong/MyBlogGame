@@ -9,15 +9,15 @@ var items = [
 		"disabled": false,
 		"pressed": false,
 		"money": 0,
-		"stamina": 30,
+		"stamina": 20,  # 从30改为20
 	},
 	{
 		"name": "打游戏",
 		"isVisible": true,
 		"disabled": false,
 		"pressed": false,
-		"money": 100,
-		"stamina": 100,
+		"money": 100,  # 花费将在代码中动态计算
+		"stamina": 30,  # 从100改为30
 	},
 	{
 		"name": "国内旅游",

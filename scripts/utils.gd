@@ -163,11 +163,67 @@ func find_category_by_name(array: Array, name: String) -> Dictionary:
 	return {}
 
 
-func add_property(a, b) -> int:
-	if a + b <= 100:
-		return b
-	elif a <= 100 and a + b > 100:
-		return 100 - a
+## 获取体力上限（按等级）
+func get_max_stamina(level: int) -> int:
+	if level <= 10:
+		return 50 + level  # 51-60
+	elif level <= 30:
+		return 60 + (level - 10)  # 61-80
+	elif level <= 50:
+		return 80 + (level - 30)  # 81-100
+	else:
+		return 100 + int((level - 50) * 0.5)  # 101-125
+
+
+## 获取实际体力消耗（按等级）
+func get_stamina_cost(base_cost: int, level: int) -> int:
+	var coefficient = 1.0
+	if level <= 10:
+		coefficient = 1.0
+	elif level <= 30:
+		coefficient = 0.9
+	elif level <= 50:
+		coefficient = 0.8
+	elif level <= 75:
+		coefficient = 0.7
+	else:
+		coefficient = 0.6
+	return int(base_cost * coefficient)
+
+
+## 获取每日自然恢复量（按等级）
+func get_daily_stamina_recovery(level: int) -> int:
+	if level <= 10:
+		return 5
+	elif level <= 30:
+		return 8
+	elif level <= 50:
+		return 10
+	else:
+		return 15
+
+
+## 获取打游戏花费（按等级增加）
+func get_playgame_cost(level: int) -> int:
+	if level <= 10:
+		return 50    # 新手便宜
+	elif level <= 30:
+		return 80    # 中期适中
+	elif level <= 50:
+		return 100   # 后期标准
+	elif level <= 75:
+		return 150   # 高级玩家买更好的游戏
+	else:
+		return 200   # 满级玩家买顶级游戏设备
+
+
+## 属性增加值计算（支持等级参数）
+func add_property(current_value: int, add_value: int, level: int = 1) -> int:
+	var max_value = get_max_stamina(level)
+	if current_value + add_value <= max_value:
+		return add_value
+	elif current_value <= max_value and current_value + add_value > max_value:
+		return max_value - current_value
 	return 0
 
 
@@ -294,9 +350,21 @@ func format_number(val: int) -> String:
 
 
 func get_rank_title(level: int, ranks: Array) -> String:
-	if level < 1 or level > 100:
+	"""根据等级获取段位名称
+	- level 1-10 → 索引0（初入江湖）
+	- level 11-20 → 索引1（崭露头角）
+	- level 21-30 → 索引2（锋芒毕露）
+	- ...
+	- level 91-100 → 索引9（天外飞仙）
+	"""
+	if level < 1:
 		return "无效等级"
-	return ranks[level / 10 - 1]
+	if level > 100:
+		level = 100
+	var index = (level - 1) / 10  # 关键：(level-1)/10 确保每10级一个段位
+	if index >= ranks.size():
+		index = ranks.size() - 1
+	return ranks[index]
 
 
 func goto_scene(path: String):

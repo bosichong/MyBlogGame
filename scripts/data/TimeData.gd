@@ -1,6 +1,6 @@
 class_name TimeData
 
-var current_year: int = 2000
+var current_year: int = 2005
 var current_month: int = 1
 var current_week: int = 1
 var current_day: int = 1

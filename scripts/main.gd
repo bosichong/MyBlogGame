@@ -36,6 +36,11 @@ func _ready() -> void:
 		Blogger.signal_design_web.connect(signal_design_web)
 		Blogger.signal_design_web_no_stamina.connect(signal_design_web_no_stamina)
 
+	# ===== 主机域名系统信号 =====
+	if Yun:
+		Yun.connect("game_over", _on_game_over)
+		Yun.connect("suspend_warning", _on_suspend_warning)
+		Yun.connect("blog_suspended", _on_blog_suspended)
 
 	TimerManager.timer.wait_time = DAY_TIMA
 	$ui/bottom.connect("create_blog_passed",_on_bottom_calendar_passed)
@@ -213,7 +218,12 @@ func _on_open_ad_passed():
 func _on_day_ended():
 	TaskManager.day_task_func() #游戏事件遍历
 	Bs.day_fs()
+	Yun.day_fs()  # 主机域名系统每日检查（新增）
 	Blogger.daily_activities()
+	
+	# 每日自然恢复体力（新增）
+	Blogger.daily_stamina_recovery()
+	
 	time_stop_bt()
 	update_ui()
 	AdManager.ad_day() # 更新审核日期触发审核结束的信号量
@@ -305,6 +315,25 @@ func sg_task_info_display_msg(msg):
 
 func sg_task_show_popup_msg(title: String, content: String):
 	show_popup_message(title,content)
+
+# ===== 主机域名系统信号处理 =====
+
+func _on_blog_suspended(source: String):
+	"""博客暂停信号处理"""
+	info_display.add_message("⚠️ 博客已暂停运营！原因：" + ("域名" if source == "domain" else "主机" if source == "host" else "域名和主机") + "欠费")
+	show_popup_message("博客暂停", "您的博客因欠费已暂停运营！\n原因：" + ("域名" if source == "domain" else "主机" if source == "host" else "域名和主机") + "到期未续费\n\n请尽快续费，否则4周后游戏将结束！")
+
+func _on_suspend_warning(message: String):
+	"""欠费警告信号处理"""
+	info_display.add_message("⚠️ " + message)
+	show_popup_message("欠费警告", message)
+
+func _on_game_over(suspend_days: int):
+	"""游戏结束信号处理"""
+	# 暂停计时器
+	TimerManager.stop_timer()
+	# 显示游戏结束弹窗
+	show_popup_message("游戏结束", "您的博客因欠费已永久下线！\n\n欠费天数：%d 天\n\n感谢您的游玩！" % suspend_days)
 
 
 ## 自动保存游戏（已禁用）

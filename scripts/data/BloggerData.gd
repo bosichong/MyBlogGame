@@ -14,7 +14,7 @@ var literature_ability: float = 23.0
 var drawing_ability: float = 23.0
 
 # ===== 资源 =====
-var stamina: int = 100
+var stamina: int = 51
 var money: float = 100000.0
 var social_ability: int = 5
 
