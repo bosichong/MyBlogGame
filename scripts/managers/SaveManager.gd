@@ -228,7 +228,7 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.calendar = dict.get("calendar", [])
     data.tmp_week = dict.get("tmp_week", 1)
     data.tmp_month = dict.get("tmp_month", 1)
-    data.tmp_year = dict.get("tmp_year", 2000)
+    data.tmp_year = dict.get("tmp_year", 2005)
     data.last_post_quality = dict.get("last_post_quality", 0)
 
 func serialize_time_data(data: TimeData) -> Dictionary:
@@ -245,15 +245,15 @@ func serialize_time_data(data: TimeData) -> Dictionary:
     }
 
 func deserialize_time_data(data: TimeData, dict: Dictionary):
-    data.current_year = dict.get("current_year", 2000)
+    data.current_year = dict.get("current_year", 2005)
     data.current_month = dict.get("current_month", 1)
     data.current_week = dict.get("current_week", 1)
     data.current_day = dict.get("current_day", 1)
     data.current_quarter = dict.get("current_quarter", 1)
     data.time_scale = dict.get("time_scale", 1.0)
     data.is_paused = dict.get("is_paused", false)
-    data.game_start_date = dict.get("game_start_date", "2000-1-1-1")
-    data.current_date_str = dict.get("current_date_str", "2000-1-1-1")
+    data.game_start_date = dict.get("game_start_date", "2005-1-1-1")
+    data.current_date_str = dict.get("current_date_str", "2005-1-1-1")
 
 func serialize_bank_data(data: BankData) -> Dictionary:
     return {

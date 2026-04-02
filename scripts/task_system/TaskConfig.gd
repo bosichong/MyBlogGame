@@ -77,7 +77,8 @@ const CONDITIONS: Dictionary = {
 	"year_summary_eq_1": {"type": ConditionType.POST_COUNT, "post_type": "年度总结", "op": CompareOp.EQ, "value": 1},
 	
 	# 时间条件（配合 event_date 使用）
-	"time_first_post_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2000], "m": [1], "w": [1], "d": [3]}},
+	# 注意：游戏起始年份为 2005 年
+	"time_first_post_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2005], "m": [1], "w": [1], "d": [3]}},
 	"time_year_summary_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [12], "w": [2], "d": [1]}},
 	"time_year_summary_lock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [12], "w": [4], "d": [7]}},
 	"time_trend_change": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [1, 6], "w": [2], "d": [1]}},

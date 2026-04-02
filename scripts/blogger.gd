@@ -2,6 +2,9 @@ extends Node
 
 var tmp_v = 23
 
+## 访问量计算器
+var views_calculator: ViewsCalculator = null
+
 enum Blog_Type {
 	文学,
 	编程,
@@ -216,14 +219,15 @@ var tmp_m: int:
 
 var tmp_y: int:
 	get:
-		return GDManager.get_blogger().tmp_year if GDManager else 2000
+		return GDManager.get_blogger().tmp_year if GDManager else 2005
 	set(value):
 		if GDManager:
 			GDManager.get_blogger().tmp_year = value
 
 # 初始化
 func _ready():
-	pass
+	# 初始化访问量计算器
+	views_calculator = ViewsCalculator.new()
 
 
 
@@ -355,16 +359,22 @@ func del_fa():
 func add_new_blog_post(title: String, d) -> Dictionary:
 	var blog_date = Utils.format_date()
 	tmp_quality = Utils.get_quality(d.name)
+	
+	# 生成唯一文章ID
+	var post_id = "post_" + str(Time.get_ticks_msec()) + "_" + str(randi() % 10000)
+	
 	var new_post: Dictionary = {
+		"id": post_id,              # 文章唯一ID
 		"title": title,
 		"category": d.name,
-		"type":d.type,#博文种类
-		"type1":d.type1,#博文种类
-		"views": 0,#总访问量
-		"comments": 0, #评论
-		"favorites": 0,#收藏
-		"is_money":false, #是否收费
-		"date" : blog_date,
+		"task_type": "",            # 任务类型（普通文章为空）
+		"type": d.type,             # 博文种类
+		"type1": d.type1,           # 博文种类
+		"views": 0,                 # 总访问量
+		"comments": 0,              # 评论
+		"favorites": 0,             # 收藏
+		"is_money": false,          # 是否收费
+		"date": blog_date,
 		"quality": tmp_quality,
 	}
 
@@ -373,7 +383,7 @@ func add_new_blog_post(title: String, d) -> Dictionary:
 		blogger.posts.append(new_post)
 		blogger.add_post(new_post)
 
-	print("新博客文章发布: ", title, "，分类: ", d.name,"，日期: ", blog_date,)
+	print("新博客文章发布: ", title, "，分类: ", d.name, "，ID: ", post_id)
 	return new_post
 	
 signal sg_new_blog_post(category: String)
@@ -410,172 +420,111 @@ func simulate_new_blog_post(category) -> int:
 		return 0
 
 
-## 更新博客访问量
+## 更新博客访问量（使用新的模块化计算器）
 func update_blog_views() -> int:
 	if not GDManager:
 		return 0
 
 	# ===== 欠费暂停检查 =====
 	if Yun.is_blog_suspended():
-		# 博客暂停，访问量不增加
 		print("[暂停状态] 博客因欠费暂停运营，访问量不增加")
 		return 0
 
+	# 确保计算器已初始化
+	if views_calculator == null:
+		views_calculator = ViewsCalculator.new()
+
 	var blogger = GDManager.get_blogger()
-	blogger.today_views = 0
-	var exp_day_views:int = 0 #经验值
-	var tody_money = 0 # 今日的付费文章入
-	var tody_rss = 0
-	var tody_f =0
-	# 遍历所有博客文章，增加它们的访问量
+	
+	# 构建博主数据字典
+	var blogger_data = {
+		"seo_value": blogger.seo_value,
+		"design_value": blogger.design_value,
+		"rank_tier": blogger.rank_tier,
+		"rss": blogger.rss,
+		"social_ability": blogger.social_ability,
+		"last_post_quality": blogger.last_post_quality,
+		"month_views": blogger.month_views,
+		"tmp_year": blogger.tmp_year,
+		"posts": blogger.posts
+	}
+	
+	# 使用新计算器计算访问量
+	var result = views_calculator.calculate_daily(blogger_data)
+	blogger.today_views = result.views
+	
+	# 计算付费文章收入（使用今日访问量）
+	var today_money = 0
 	for post in blogger.posts:
-		#print(post)
-		# 每篇文章的基础访问量
-		var base_views: int = randi_range(1,blogger.seo_value * 0.1)
-		var new_views_for_post: int = Utils.calculate_post_views(base_views,post)
-		#print(post.quality ,blogger.seo_value,new_views_for_post)
-		var now_date = Utils.format_date()
-		# 访问量按着时间递减，因为越久的文章浏览量会越少
-		new_views_for_post = Utils.decrease_blog_views(new_views_for_post,post.date,now_date,post.type1)
-		#print("old:",new_views_for_post)
-		var end_views_for_post = new_views_for_post #最终叠加所有buff的访问量
-		# 在最终确定每篇访问量之前，叠加各种访问量buff。
-		# 分享，每篇文章都会被分享，根据访问量有几率获得一定的文章分享值，已增加最终的访问量
-		end_views_for_post += Utils.calculate_final_views(new_views_for_post)
-		#print("叠加分享：",end_views_for_post)
-		## 根据文章的收藏增加访问量
-		var tmp_fa = Utils.favorites_add(post.favorites,post.date)
-		#if tmp_fa > 0:
-			#print(Utils.format_date()," ",tmp_fa)
-		end_views_for_post += tmp_fa
-		tody_f += tmp_fa
-		#print("收藏叠加：",end_views_for_post,"收藏增加：",tmp_fa)
-
-		# 博文发布时间与当前时间的间隔日期。
-		var tmp_b = Utils.calculate_new_game_time_difference(Utils.format_date(),post.date)
-
-		if tmp_b < 8 :
-			var tmp_rss = Utils.rss_add(blogger.rss,tmp_b)
-			# 根据blogRSS订阅，按几率增加问量。
-			end_views_for_post += tmp_rss
-			tody_rss += tmp_rss
-			#print("RSS订阅叠加：",end_views_for_post,"RSS订阅增加：",tmp_rss)
-		# 页面化增加一个访问量的buff，提升1%，100级提升10%
-		var tmp_design = int(end_views_for_post * (blogger.design_value * 0.01))
-		end_views_for_post += tmp_design
-		#print("design叠加：",end_views_for_post,"design增加：",tmp_design)
-		# 每10级增加一个访问量的buff，提升1%，100级提升10%
-		end_views_for_post += int(end_views_for_post * (blogger.rank_tier * 0.01))
-		# 根据热门风向标来增加流量,根据文章质量分满分200后，最终可以提升10%的流量
-		if post.type == Utils.post_trend.type:
-
-			end_views_for_post+= int(end_views_for_post * (post.quality/200 * Utils.post_trend.views_add))
-
-
-
-		# 收费文章将当前的访问量进行转化，暂定每200流量转换1收费，收费根据文章的质量来定义费用，基础费用为:质量分/200*10元*end_views_for_post/200，
-
-
-		if post.type1 == "付费":
-			end_views_for_post = int(end_views_for_post / 100)
-			if end_views_for_post > 0 : # 访问量大于最低访问才会有收入
-				var post_money = int(float(post.quality)/200 * 10 * end_views_for_post)
-				tody_money += post_money
-
-
-
-		## 叠加访问量后更新每篇文章的收藏.
-		post.favorites += Utils.update_favorites(end_views_for_post,post.quality)
-		blogger.favorites += Utils.update_favorites(end_views_for_post,post.quality)
-
-
-		post.views += end_views_for_post
-		blogger.today_views += end_views_for_post
-		exp_day_views += calculate_article_exp(end_views_for_post)
+		if post.get("type1", "") == "付费":
+			# 获取今日访问量
+			var post_id = post.get("id", "")
+			var today_post_views = 0
+			if post_id != "" and views_calculator:
+				var stats = views_calculator.get_post_stats(post_id)
+				var daily = stats.get("daily_views", [])
+				if daily.size() > 0:
+					today_post_views = daily[-1].get("views", 0)
+			
+			if today_post_views > 0:
+				var post_money = int(float(post.get("quality", 100)) / 200.0 * 10.0 * today_post_views)
+				today_money += post_money
+	blogger.money += today_money
 	
-	# ===== 访问量上限截断 =====
-	# 获取主机月访问量限制
-	var monthly_limit = Yun.get_monthly_traffic_limit()
-	if monthly_limit > 0:  # -1表示无限制，跳过截断
-		var limit_count = monthly_limit * 10000  # 万次转换为次
-		var month_views_so_far = blogger.month_views
-		
-		# 检查是否达到上限
-		var remaining_capacity = limit_count - month_views_so_far
-		if remaining_capacity <= 0:
-			# 已达上限，今日访问量强制为最小值
-			blogger.today_views = randi_range(1, 5)
-			print("[主机限制] 本月访问量已达上限，今日仅保留极少量访问")
-		elif blogger.today_views > remaining_capacity:
-			# 接近上限，截断到剩余容量
-			blogger.today_views = remaining_capacity
-			print("[主机限制] 本月访问量接近上限，今日截断到剩余容量")
-	
-	# ===== 恢复惩罚应用 =====
-	# 检查是否有恢复惩罚（续费后逐渐恢复）
-	if Yun.recovery_penalty > 0 and Yun.recovery_penalty < 1.0:
-		# 应用惩罚（访问量 × (1 - 惩罚系数))
-		var penalty_views = int(blogger.today_views * (1.0 - Yun.recovery_penalty))
-		print("[恢复惩罚] 访问量减少 %d%%，今日访问: %d -> %d" % [int(Yun.recovery_penalty * 100), blogger.today_views, penalty_views])
-		blogger.today_views = penalty_views
-	
-	#print(blogger.today_views)
-	# 叠加今日付费文章收入
-	#if tody_money > 0 :
-			#print(tody_money)
-	#print("rss++",tody_rss)
-	#print("f+++",tody_f)
-	blogger.money += tody_money
-	#这里更新广告联盟的收入，以及添加广告后对问量的最终影响
-	if AdManager.ad_2: # 只有申请并通过并有广告管理的权限后，才会有收入。
+	# 广告收入和影响
+	if AdManager.ad_2:
 		blogger.today_views = AdManager.update_ad(blogger.today_views)
-
-
-	# 这里可以方便创建个站点的统计，统计blog的访问量细节。
-	#统计系统记录访问量
-	Tongji.t_d.append([Utils.format_date(),blogger.today_views])
-	#print(Tongji.t_d)
-
-	# 每周的访问量
+	
+	# 更新统计
+	Tongji.t_d.append([Utils.format_date(), blogger.today_views])
+	
+	# 更新收藏数（基于今日访问量）
+	for post in blogger.posts:
+		var post_views_today = 0
+		var post_id = post.get("id", "")
+		if post_id != "" and views_calculator:
+			var stats = views_calculator.get_post_stats(post_id)
+			var daily = stats.get("daily_views", [])
+			if daily.size() > 0:
+				post_views_today = daily[-1].get("views", 0)
+		
+		if post_views_today > 0:
+			var new_favorites = Utils.update_favorites(post_views_today, post.get("quality", 100))
+			post.favorites = post.get("favorites", 0) + new_favorites
+			blogger.favorites += new_favorites
+	
+	# 周/月/年统计
 	if tmp_w == TimerManager.current_week:
 		blogger.week_views += blogger.today_views
-		#周访问量几录
-		if TimerManager.current_day == 7 :
+		if TimerManager.current_day == 7:
 			var date = str(TimerManager.current_year) + "-" + str(TimerManager.current_month) + "-" + str(TimerManager.current_week)
-			Tongji.t_w.append([date,blogger.week_views])
-			#print(Tongji.t_w)
+			Tongji.t_w.append([date, blogger.week_views])
 	else:
-		blogger.week_views = 0
-		blogger.week_views += blogger.today_views
+		blogger.week_views = blogger.today_views
 		tmp_w = TimerManager.current_week
 
-	# 每月的访问量
 	if tmp_m == TimerManager.current_month:
 		blogger.month_views += blogger.today_views
-		if TimerManager.current_week == 4 and TimerManager.current_day == 7 :
+		if TimerManager.current_week == 4 and TimerManager.current_day == 7:
 			var date = str(TimerManager.current_year) + "-" + str(TimerManager.current_month)
-			Tongji.t_m.append([date,blogger.month_views])
+			Tongji.t_m.append([date, blogger.month_views])
 	else:
-		blogger.month_views = 0
-		blogger.month_views += blogger.today_views
+		blogger.month_views = blogger.today_views
 		tmp_m = TimerManager.current_month
 
-	# 每年的访问量
 	if tmp_y == TimerManager.current_year:
 		blogger.year_views += blogger.today_views
-		if TimerManager.current_month == 12 and TimerManager.current_week == 4 and TimerManager.current_day == 7 :
+		if TimerManager.current_month == 12 and TimerManager.current_week == 4 and TimerManager.current_day == 7:
 			var date = str(TimerManager.current_year)
-			Tongji.t_y.append([date,blogger.year_views])
-			#print(Tongji.t_y)
+			Tongji.t_y.append([date, blogger.year_views])
 	else:
-		blogger.year_views = 0
-		blogger.year_views += blogger.today_views
+		blogger.year_views = blogger.today_views
 		tmp_y = TimerManager.current_year
 
 	blogger.views += blogger.today_views
-	# 叠加访问量后更新博客的RSS订阅量
 	blogger.rss += Utils.update_rss(blogger.today_views)
-	return exp_day_views
+	
+	return calculate_article_exp(blogger.today_views)
 
 
 

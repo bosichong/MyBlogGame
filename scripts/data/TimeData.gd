@@ -9,8 +9,11 @@ var current_quarter: int = 1
 var time_scale: float = 1.0
 var is_paused: bool = false
 
-var game_start_date: String = "2000-1-1-1"
-var current_date_str: String = "2000-1-1-1"
+## 游戏起始日期（格式：年-月-周-日）
+var game_start_date: String = "2005-1-1-1"
+
+## 当前日期字符串
+var current_date_str: String = "2005-1-1-1"
 
 signal day_passed
 signal week_passed
@@ -27,8 +30,9 @@ const QUARTERS_IN_YEAR = 4
 
 # ===== 辅助方法 =====
 
+## 获取从游戏开始到现在的总天数
 func get_total_days() -> int:
-	return (current_year - 2000) * 12 * 4 * 7 + \
+	return (current_year - 2005) * 12 * 4 * 7 + \
 		   (current_month - 1) * 4 * 7 + \
 		   (current_week - 1) * 7 + \
 		   current_day

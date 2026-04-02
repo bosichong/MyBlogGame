@@ -218,10 +218,15 @@ func _on_open_ad_passed():
 func _on_day_ended():
 	TaskManager.day_task_func() #游戏事件遍历
 	Bs.day_fs()
-	Yun.day_fs()  # 主机域名系统每日检查（新增）
+	Yun.day_fs()  # 主机域名系统每日检查
+	
+	# 访问量计算器每日更新（事件衰减等）
+	if Blogger.views_calculator:
+		Blogger.views_calculator.daily_update()
+	
 	Blogger.daily_activities()
 	
-	# 每日自然恢复体力（新增）
+	# 每日自然恢复体力
 	Blogger.daily_stamina_recovery()
 	
 	time_stop_bt()
@@ -234,11 +239,16 @@ func _on_day_ended():
 	
 
 func _on_week_ended():
-	
 	Blogger.week_activites() #博客相关的数据每周更新
+	
+	# 访问量统计周更新
+	if Blogger.views_calculator:
+		Blogger.views_calculator.weekly_update(TimerManager.current_year, TimerManager.current_week)
 
 func _on_month_passed():
-	pass
+	# 访问量统计月更新
+	if Blogger.views_calculator:
+		Blogger.views_calculator.monthly_update(TimerManager.current_year, TimerManager.current_month)
 
 func _on_quarter_passed():
 	Lm.up_jhph()
@@ -248,6 +258,11 @@ func _on_quarter_passed():
 
 func _on_year_passed():
 	Bs.year_fs()
+	
+	# 访问量统计年更新
+	if Blogger.views_calculator:
+		Blogger.views_calculator.yearly_update(TimerManager.current_year)
+	
 	info_display.add_message("一年过去了！ ")
 	
 
