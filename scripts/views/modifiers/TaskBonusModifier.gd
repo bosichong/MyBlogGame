@@ -28,6 +28,12 @@ func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
 ## 获取任务加成比例
 func _get_task_bonus_ratio(task_type: String) -> float:
 	match task_type:
+		"第一篇博文":
+			# 第一篇博文：50%-100%加成
+			return randf_range(0.5, 1.0)
+		"年度总结":
+			# 年度总结：50%-100%加成
+			return randf_range(0.5, 1.0)
 		"节日文章":
 			# 节日文章：100%-400%加成
 			return randf_range(1.0, 4.0)

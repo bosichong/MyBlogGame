@@ -60,17 +60,17 @@ const CONDITIONS: Dictionary = {
 	"draw_ge_75": {"type": ConditionType.SKILL_LEVEL, "skill": "DRAW", "op": CompareOp.GE, "value": 75},
 	"draw_ge_100": {"type": ConditionType.SKILL_LEVEL, "skill": "DRAW", "op": CompareOp.GE, "value": 100},
 	
-	# 玩家等级条件
-	"player_eq_10": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.EQ, "value": 10},
-	"player_eq_20": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.EQ, "value": 20},
-	"player_eq_30": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.EQ, "value": 30},
-	"player_eq_40": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.EQ, "value": 40},
-	"player_eq_50": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.EQ, "value": 50},
-	"player_eq_60": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.EQ, "value": 60},
-	"player_eq_70": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.EQ, "value": 70},
-	"player_eq_80": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.EQ, "value": 80},
-	"player_eq_90": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.EQ, "value": 90},
-	"player_eq_100": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.EQ, "value": 100},
+	# 玩家等级条件（使用GE避免跳级漏触发）
+	"player_ge_10": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.GE, "value": 10},
+	"player_ge_20": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.GE, "value": 20},
+	"player_ge_30": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.GE, "value": 30},
+	"player_ge_40": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.GE, "value": 40},
+	"player_ge_50": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.GE, "value": 50},
+	"player_ge_60": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.GE, "value": 60},
+	"player_ge_70": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.GE, "value": 70},
+	"player_ge_80": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.GE, "value": 80},
+	"player_ge_90": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.GE, "value": 90},
+	"player_ge_100": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.GE, "value": 100},
 	
 	# 发布次数条件
 	"first_post_eq_1": {"type": ConditionType.POST_COUNT, "post_type": "第一篇博文", "op": CompareOp.EQ, "value": 1},
@@ -327,7 +327,7 @@ const TASKS: Array = [
 	{
 		"id": "milestone_lv10",
 		"description": "恭喜您的等级升级到10级，江湖段位达到[出入江湖]！",
-		"conditions": ["player_eq_10"],
+		"conditions": ["player_ge_10"],
 		"is_repeatable": false,
 		"trigger_type": "level_up",
 		"actions": [
@@ -337,7 +337,7 @@ const TASKS: Array = [
 	{
 		"id": "milestone_lv20",
 		"description": "恭喜您的等级升级到20级，江湖段位达到[崭露头角]！",
-		"conditions": ["player_eq_20"],
+		"conditions": ["player_ge_20"],
 		"is_repeatable": false,
 		"trigger_type": "level_up",
 		"actions": [
@@ -347,7 +347,7 @@ const TASKS: Array = [
 	{
 		"id": "milestone_lv30",
 		"description": "恭喜您的等级升级到30级，江湖段位达到[锋芒毕露]！",
-		"conditions": ["player_eq_30"],
+		"conditions": ["player_ge_30"],
 		"is_repeatable": false,
 		"trigger_type": "level_up",
 		"actions": [
@@ -357,7 +357,7 @@ const TASKS: Array = [
 	{
 		"id": "milestone_lv40",
 		"description": "恭喜您的等级升级到40级，江湖段位达到[名扬四海]！",
-		"conditions": ["player_eq_40"],
+		"conditions": ["player_ge_40"],
 		"is_repeatable": false,
 		"trigger_type": "level_up",
 		"actions": [
@@ -367,7 +367,7 @@ const TASKS: Array = [
 	{
 		"id": "milestone_lv50",
 		"description": "恭喜您的等级升级到50级，江湖段位达到[独步天下]！",
-		"conditions": ["player_eq_50"],
+		"conditions": ["player_ge_50"],
 		"is_repeatable": false,
 		"trigger_type": "level_up",
 		"actions": [
@@ -377,7 +377,7 @@ const TASKS: Array = [
 	{
 		"id": "milestone_lv60",
 		"description": "恭喜您的等级升级到60级，江湖段位达到[一代宗师]！",
-		"conditions": ["player_eq_60"],
+		"conditions": ["player_ge_60"],
 		"is_repeatable": false,
 		"trigger_type": "level_up",
 		"actions": [
@@ -387,7 +387,7 @@ const TASKS: Array = [
 	{
 		"id": "milestone_lv70",
 		"description": "恭喜您的等级升级到70级，江湖段位达到[剑气长虹]！",
-		"conditions": ["player_eq_70"],
+		"conditions": ["player_ge_70"],
 		"is_repeatable": false,
 		"trigger_type": "level_up",
 		"actions": [
@@ -397,7 +397,7 @@ const TASKS: Array = [
 	{
 		"id": "milestone_lv80",
 		"description": "恭喜您的等级升级到80级，江湖段位达到[无敌于世]！",
-		"conditions": ["player_eq_80"],
+		"conditions": ["player_ge_80"],
 		"is_repeatable": false,
 		"trigger_type": "level_up",
 		"actions": [
@@ -407,7 +407,7 @@ const TASKS: Array = [
 	{
 		"id": "milestone_lv90",
 		"description": "恭喜您的等级升级到90级，江湖段位达到[武林霸主]！",
-		"conditions": ["player_eq_90"],
+		"conditions": ["player_ge_90"],
 		"is_repeatable": false,
 		"trigger_type": "level_up",
 		"actions": [
@@ -417,7 +417,7 @@ const TASKS: Array = [
 	{
 		"id": "milestone_lv100",
 		"description": "恭喜您的等级升级到100级，江湖段位达到[天外飞仙]！",
-		"conditions": ["player_eq_100"],
+		"conditions": ["player_ge_100"],
 		"is_repeatable": false,
 		"trigger_type": "level_up",
 		"actions": [

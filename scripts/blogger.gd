@@ -363,11 +363,18 @@ func add_new_blog_post(title: String, d) -> Dictionary:
 	# 生成唯一文章ID
 	var post_id = "post_" + str(Time.get_ticks_msec()) + "_" + str(randi() % 10000)
 	
+	# 判断是否是任务型文章
+	var task_type = ""
+	if d.name == "第一篇博文":
+		task_type = "第一篇博文"
+	elif d.name == "年度总结":
+		task_type = "年度总结"
+	
 	var new_post: Dictionary = {
 		"id": post_id,              # 文章唯一ID
 		"title": title,
 		"category": d.name,
-		"task_type": "",            # 任务类型（普通文章为空）
+		"task_type": task_type,     # 任务类型（第一篇博文、年度总结等）
 		"type": d.type,             # 博文种类
 		"type1": d.type1,           # 博文种类
 		"views": 0,                 # 总访问量
