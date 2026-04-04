@@ -75,6 +75,10 @@ func _ready() -> void:
 # 定时器触发
 ## 每天更新事件，游戏的核心更新信号量
 func _on_day_passed():
+	# 如果时间已停止（游戏结束），不再处理
+	if time_stop:
+		return
+	
 	if GDManager:
 		GDManager.advance_day()
 		var time_data = GDManager.get_time()

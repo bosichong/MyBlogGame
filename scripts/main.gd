@@ -23,6 +23,9 @@ func _ready() -> void:
 		Blogger.s_recrecreation_rest.connect(s_recrecreation_rest)
 		Blogger.s_playgame.connect(s_playgame)
 
+		# 技能学习信号
+		Blogger.skill_learned.connect(_on_skill_learned)
+
 		# 网站安全信号
 		Blogger.signal_website_security.connect(signal_website_security)
 		Blogger.signal_website_security_no_stamina.connect(signal_website_security_no_stamina)
@@ -58,8 +61,17 @@ func _ready() -> void:
 	$AcceptDialog.confirmed.connect(_close_ac)
 
 	TaskManager.connect("sg_task_info_display_msg",sg_task_info_display_msg)
+	TaskManager.connect("schedule_refresh_needed", _on_schedule_refresh_needed)
 	TaskManager.connect("sg_task_show_popup_msg",sg_task_show_popup_msg)
+	
+	# 延迟检查初始任务，确保所有节点的 _ready() 都执行完毕
+	call_deferred("_check_initial_tasks")
+	
 	update_ui()
+
+
+func _check_initial_tasks() -> void:
+	TaskManager.check_initial_tasks()
 
 
 	if TimerManager:
@@ -151,6 +163,12 @@ func _on_bottom_calendar_passed():
 func _on_close_blog_passed():
 	$日程.visible = false
 	TimerManager.start_timer()
+
+## 日程刷新请求（任务系统锁定/隐藏文章后触发）
+func _on_schedule_refresh_needed():
+	# 无论日程面板是否打开，都刷新数据
+	if $日程.visible:
+		$日程.up_data()
 	
 	
 ## 倍速按钮按下   
@@ -249,6 +267,16 @@ func _on_month_passed():
 	# 访问量统计月更新
 	if Blogger.views_calculator:
 		Blogger.views_calculator.monthly_update(TimerManager.current_year, TimerManager.current_month)
+	
+	# 书籍销售月结算
+	var sales_result = TaskManager.settle_monthly_book_sales()
+	if sales_result.total_income > 0:
+		info_display.add_message("📚 本月书籍销售收入：%d元" % sales_result.total_income)
+	
+	# 开源项目月结算
+	var os_result = TaskManager.settle_monthly_open_source()
+	if os_result.total_income > 0:
+		info_display.add_message("💻 本月开源项目赞助收入：%d元" % os_result.total_income)
 
 func _on_quarter_passed():
 	Lm.up_jhph()
@@ -264,16 +292,16 @@ func _on_year_passed():
 		Blogger.views_calculator.yearly_update(TimerManager.current_year)
 	
 	info_display.add_message("一年过去了！ ")
-	
+
 
 func s_playgame(msg):
-	info_display.add_message(msg)
+	pass
 
 func s_recrecreation_rest(msg):
-	info_display.add_message(msg)
+	pass
 	
 func signal_website_security(msg):
-	info_display.add_message(msg)
+	pass
 	
 func signal_website_security_no_stamina(msg):
 	info_display.add_message(msg)
@@ -281,15 +309,15 @@ func signal_website_security_no_stamina(msg):
 func signal_website_security_no_money(msg):
 	info_display.add_message(msg)
 	
-	
+
 func signal_website_seo(msg):
-	info_display.add_message(msg)
+	pass
 	
 func signal_website_seo_no_stamina(msg):
 	info_display.add_message(msg)
 
 func signal_design_web(msg):
-	info_display.add_message(msg)
+	pass
 	
 func signal_design_web_no_stamina(msg):
 	info_display.add_message(msg)   
@@ -327,6 +355,13 @@ func _close_ac():
 
 func sg_task_info_display_msg(msg):
 	info_display.add_message(msg)
+
+## 技能学习完成处理
+func _on_skill_learned(skill_name: String, tip: String):
+	info_display.add_message(tip)
+	# 刷新日程面板
+	if $日程.visible:
+		$日程.up_data()
 
 func sg_task_show_popup_msg(title: String, content: String):
 	show_popup_message(title,content)

@@ -38,6 +38,11 @@ func _register_default_modifiers() -> void:
 	modifier_manager.register(FavoritesModifier.new())
 	modifier_manager.register(ShareModifier.new())
 	modifier_manager.register(TrendModifier.new())
+	modifier_manager.register(SerialBonusModifier.new())  # 连载加成
+	modifier_manager.register(BookNotesModifier.new())  # 出书笔记加成
+	modifier_manager.register(OpenSourceModifier.new())  # 开源维护笔记加成
+	modifier_manager.register(BookSalesBoostModifier.new())  # 书籍销售加成
+	modifier_manager.register(AnimationMovieModifier.new())  # 动画影视加成
 	modifier_manager.register(TaskBonusModifier.new())  # 任务加成
 	
 	# 限制层
@@ -72,20 +77,27 @@ func calculate_daily(blogger_data: Dictionary) -> Dictionary:
 	var posts = blogger_data.get("posts", [])
 	for post in posts:
 		var result = _calculate_post_views(post, blogger_data)
-		total_views += result.views
 		
 		# 更新文章的 views 字段
 		post.views = post.get("views", 0) + result.views
+		
+		# 付费文章的访问量不计入总访问量（如小说连载）
+		# 只统计公开访问的文章
+		var is_paid = post.get("is_money", false)
+		var is_private = is_paid  # 仅付费文章不计入总访问量
+		
+		if not is_private:
+			total_views += result.views
+			
+			# 统计来源
+			for key in result.sources:
+				if sources.has(key):
+					sources[key] += result.sources[key]
 		
 		# 记录单篇文章统计
 		var post_id = post.get("id", "")
 		if post_id != "":
 			post_stats_manager.record_post_views(post_id, result.views, result.sources)
-		
-		# 统计来源
-		for key in result.sources:
-			if sources.has(key):
-				sources[key] += result.sources[key]
 	
 	# 3. 记录总体统计
 	var date = Utils.format_date()

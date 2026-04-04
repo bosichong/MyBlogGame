@@ -196,6 +196,8 @@ var suspend_days: int = 0
 var is_suspended: bool = false
 # 欠费来源（"domain" / "host" / "both"）
 var suspend_source: String = ""
+# 游戏是否已结束（避免重复触发 game_over 信号）
+var is_game_over: bool = false
 
 # ===== 恢复惩罚追踪变量 =====
 # 当前惩罚系数（0.0-1.0，表示访问量损失比例）
@@ -590,6 +592,10 @@ func update_suspend_status(today: String, source: String):
 
 func check_suspend_status(today: String):
     """每日检查暂停状态和欠费天数"""
+    # 如果游戏已结束，不再处理
+    if is_game_over:
+        return
+    
     if not is_suspended:
         return
     
@@ -599,6 +605,7 @@ func check_suspend_status(today: String):
     
     # 检查是否游戏结束（欠费满4周=28天）
     if suspend_days >= 28:
+        is_game_over = true  # 标记游戏已结束，避免重复触发
         emit_signal("game_over", suspend_days)
         return
     

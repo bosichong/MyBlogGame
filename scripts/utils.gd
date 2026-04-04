@@ -22,8 +22,8 @@ func _init():
 ## 返回文章质量
 func get_quality(category: String) -> int:
 	var literary = ["年度总结", "生活日记", "爆款网文", "散文随笔", "文学周刊", "小说连载(收费)"]
-	var tech = ["编程教程", "付费编程教程", "程序员周刊", "付费黑客攻防"]
-	var art = ["插画壁纸", "绘画基础教程", "艺术周刊", "动漫连载(收费)"]
+	var tech = ["编程教程", "程序员周刊", "付费黑客攻防"]
+	var art = ["插画壁纸", "绘画基础教程", "商业插画高级教程", "艺术周刊", "动漫连载(收费)"]
 	
 	if category in literary:
 		return int(Blogger.writing_ability + Blogger.literature_ability)
@@ -33,6 +33,21 @@ func get_quality(category: String) -> int:
 		return int(Blogger.writing_ability * 0.5 + Blogger.code_ability + Blogger.literature_ability * 0.5)
 	elif category in art:
 		return int(Blogger.writing_ability * 0.5 + Blogger.drawing_ability + Blogger.literature_ability * 0.5)
+	elif category == "出书笔记":
+		# 出书笔记：写作能力 + 文学能力
+		return int(Blogger.writing_ability + Blogger.literature_ability)
+	elif category == "出版畅销书":
+		# 出版畅销书：文学能力为主，写作能力辅助
+		return int(Blogger.writing_ability * 0.5 + Blogger.literature_ability * 1.5)
+	elif category == "IP授权":
+		# IP授权：文学能力决定
+		return int(Blogger.literature_ability)
+	elif category == "开源项目":
+		# 开源项目：编程能力为主，写作能力辅助
+		return int(Blogger.writing_ability * 0.5 + Blogger.code_ability * 1.5)
+	elif category == "开源维护笔记":
+		# 开源维护笔记：写作能力 + 编程能力（与出书笔记一致）
+		return int(Blogger.writing_ability + Blogger.code_ability)
 	else:
 		return 0
 

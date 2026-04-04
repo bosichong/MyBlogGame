@@ -22,7 +22,7 @@ const MAX_SKILL_LEVEL = 100
 ## 博客属性
 var myblog_type = Blog_Type.文学
 
-## 写作能力：决定文章质量和写作速度。
+## 写作能力:决定文章质量和写作速度。
 var writing_ability: int:
 	get:
 		return GDManager.get_blogger().writing_ability if GDManager else tmp_v
@@ -30,7 +30,7 @@ var writing_ability: int:
 		if GDManager:
 			GDManager.get_blogger().writing_ability = value
 
-## 技术能力：影响博客维护、SEO优化和网站性能。
+## 技术能力:影响博客维护、SEO优化和网站性能。
 var technical_ability: int:
 	get:
 		return GDManager.get_blogger().technical_ability if GDManager else tmp_v
@@ -38,7 +38,7 @@ var technical_ability: int:
 		if GDManager:
 			GDManager.get_blogger().technical_ability = value
 
-## 文学能力：可以博主的文学素养，除了可以撰写相关文章，还可以优化其他类型的文章。
+## 文学能力:可以博主的文学素养,除了可以撰写相关文章,还可以优化其他类型的文章。
 var literature_ability: float:
 	get:
 		return GDManager.get_blogger().literature_ability if GDManager else tmp_v
@@ -46,7 +46,7 @@ var literature_ability: float:
 		if GDManager:
 			GDManager.get_blogger().literature_ability = value
 
-## 编程能力：可以撰写编程相关的博文，2级学完可以开始接私活赚钱。
+## 编程能力:可以撰写编程相关的博文,2级学完可以开始接私活赚钱。
 var code_ability: float:
 	get:
 		return GDManager.get_blogger().code_ability if GDManager else tmp_v
@@ -62,7 +62,7 @@ var drawing_ability: float:
 		if GDManager:
 			GDManager.get_blogger().drawing_ability = value
 
-## 体力值：创作文章，维护博客，社交需要体力值。
+## 体力值:创作文章,维护博客,社交需要体力值。
 var stamina : int:
 	get:
 		return GDManager.get_blogger().stamina if GDManager else 100
@@ -70,7 +70,7 @@ var stamina : int:
 		if GDManager:
 			GDManager.get_blogger().stamina = value
 
-## 社交能力：影响推广成功率和读者参与度。
+## 社交能力:影响推广成功率和读者参与度。
 var social_ability: int:
 	get:
 		return GDManager.get_blogger().social_ability if GDManager else 5
@@ -78,7 +78,7 @@ var social_ability: int:
 		if GDManager:
 			GDManager.get_blogger().social_ability = value
 
-## 金钱：用于推广、学习技能、网站维护等
+## 金钱:用于推广、学习技能、网站维护等
 var money: float:
 	get:
 		return GDManager.get_blogger().money if GDManager else 100000.0
@@ -86,7 +86,7 @@ var money: float:
 		if GDManager:
 			GDManager.get_blogger().money = value
 
-## 博客的rss订阅量：新文章提供访问量
+## 博客的rss订阅量:新文章提供访问量
 var blog_rss: int:
 	get:
 		return GDManager.get_blogger().rss if GDManager else 0
@@ -118,8 +118,9 @@ var exp: int:
 		if GDManager:
 			GDManager.get_blogger().exp = value
 
-# 已经为等级提升添加了提示，还需要添加绰号
+# 已经为等级提升添加了提示,还需要添加绰号
 signal s_level(l:int) #定义一个关于等级成长的信号量
+signal skill_learned(skill_name: String, tip: String)  # 技能学习完成信号
 ## level: 当前等级
 var level: int:
 	get:
@@ -152,7 +153,7 @@ var tmp_quality: int:
 		if GDManager:
 			GDManager.get_blogger().last_post_quality = value
 
-## 工作学习休息日程（多选）
+## 工作学习休息日程(多选)
 var blog_calendar : Array:
 	get:
 		return GDManager.get_blogger().calendar if GDManager else []
@@ -202,7 +203,7 @@ var blog_data: Dictionary:
 			blogger.year_views = value.get("year_views", 0)
 			blogger.posts = value.get("posts", [])
 
-# 临时量，用来记录周、月份、年份统计使用
+# 临时量,用来记录周、月份、年份统计使用
 var tmp_w: int:
 	get:
 		return GDManager.get_blogger().tmp_week if GDManager else 1
@@ -235,11 +236,11 @@ func _ready():
 func daily_stamina_recovery():
 	if not GDManager:
 		return
-	
+
 	var blogger = GDManager.get_blogger()
 	var recovery = Utils.get_daily_stamina_recovery(blogger.level)
 	blogger.stamina += Utils.add_property(blogger.stamina, recovery, blogger.level)
-	print("[每日恢复] 体力+", recovery, "，当前体力:", blogger.stamina)
+	print("[每日恢复] 体力+", recovery, ",当前体力:", blogger.stamina)
 
 
 ## 获取升级到下一级所需的EXP
@@ -264,12 +265,12 @@ func gain_exp(amount: int):
 	if GDManager:
 		GDManager.get_blogger().add_exp(amount)
 
-		# 循环处理升级，直到EXP不足以升到下一级
+		# 循环处理升级,直到EXP不足以升到下一级
 		var blogger = GDManager.get_blogger()
 		while blogger.exp >= get_exp_for_next_level() and blogger.level < MAX_LEVEL:
 			blogger.exp -= get_exp_for_next_level() # 扣除升级所需EXP
 			blogger.level += 1 # 等级提升
-			# 判断是否是10的倍数，并且 level 不等于0（避免刚初始化就触发）
+			# 判断是否是10的倍数,并且 level 不等于0(避免刚初始化就触发)
 			if blogger.level % 10 == 0 and blogger.level != 0:
 				emit_signal("s_level", blogger.level)
 			# 技能升
@@ -284,19 +285,19 @@ func gain_exp(amount: int):
 			if blogger.social_ability < 100:
 				blogger.social_ability += 1
 				blogger.set_ability("social", blogger.social_ability)
-		# 达到100级后，EXP不再累积
+		# 达到100级后,EXP不再累积
 		if blogger.level >= MAX_LEVEL:
 			blogger.exp = 0 # 封顶于maxlevel级
 
 
 
 
-## 博客的核心更新方法，每日更新
+## 博客的核心更新方法,每日更新
 func daily_activities():
 	# 模拟每天的活动
 	var exp_gained := 0 # 记录本周获得的EXP
 	var day = TimerManager.current_day-1 #获取当日所属周中几日值。
-	# 遍历当天的所有任务（多选）
+	# 遍历当天的所有任务(多选)
 	for task in Blogger.blog_calendar[day].tasks:
 		if Utils.check_name_exists(Utils.possible_categories, task):
 			exp_gained += simulate_new_blog_post(task) # 模拟发布新博客文章
@@ -313,23 +314,28 @@ func daily_activities():
 			if task == "打游戏":
 				exp_gained += playgame(task) # 休息一天
 		elif Utils.check_name_exists(Utils.learning_skills, task):
+			# 检查技能是否已解锁(未禁用)
+			var skill = Utils.find_category_by_name(Utils.learning_skills, task)
+			if skill.get("disabled", false):
+				print("技能【%s】已禁用,跳过" % task)
+				continue
 			exp_gained += learningToSkills(task)
-	
-	# 如果当天没有任务，不再自动恢复体力（已改为每日自然恢复）
+
+	# 如果当天没有任务,不再自动恢复体力(已改为每日自然恢复)
 	if Blogger.blog_calendar[day].tasks.is_empty():
-		print("当天没有任务，体力不自动恢复")
-	
+		print("当天没有任务,体力不自动恢复")
+
 	#exp_gained += calculate_promotion_exp() # 推广EXP
 	#exp_gained += calculate_interaction_exp() # 读者互动EXP
 	#exp_gained += calculate_skill_learning_exp() # 技能学习EXP
 	exp_gained += update_blog_views() # 更新博客访问量
 	#earn_money_from_ads() # 从广告联盟赚取佣金
 	gain_exp(exp_gained) # 累加EXP并处理升级
-	
+
 func week_activites():
 	if not GDManager:
 		return
-	
+
 	var blogger = GDManager.get_blogger()
 	blogger.safety_value = Utils.decrease_value_safely(blogger.safety_value, 1, 3)
 	blogger.seo_value = Utils.decrease_value_safely(blogger.seo_value, 1, 3)
@@ -337,7 +343,7 @@ func week_activites():
 	blogger.rss = Utils.decrease_rss(blogger.rss)
 	del_fa()
 
-	# 判断绘画技能值>=25时，开启页面美化
+	# 判断绘画技能值>=25时,开启页面美化
 	var tmp_design = Utils.find_category_by_name(Utils.website_maintenance, "页面美化")
 	if tmp_design.disabled:
 		if blogger.drawing_ability >= 25:
@@ -359,28 +365,28 @@ func del_fa():
 func add_new_blog_post(title: String, d) -> Dictionary:
 	var blog_date = Utils.format_date()
 	tmp_quality = Utils.get_quality(d.name)
-	
+
 	# 生成唯一文章ID
 	var post_id = "post_" + str(Time.get_ticks_msec()) + "_" + str(randi() % 10000)
-	
+
 	# 判断是否是任务型文章
 	var task_type = ""
 	if d.name == "第一篇博文":
 		task_type = "第一篇博文"
 	elif d.name == "年度总结":
 		task_type = "年度总结"
-	
+
 	var new_post: Dictionary = {
 		"id": post_id,              # 文章唯一ID
 		"title": title,
 		"category": d.name,
-		"task_type": task_type,     # 任务类型（第一篇博文、年度总结等）
+		"task_type": task_type,     # 任务类型(第一篇博文、年度总结等)
 		"type": d.type,             # 博文种类
 		"type1": d.type1,           # 博文种类
 		"views": 0,                 # 总访问量
 		"comments": 0,              # 评论
 		"favorites": 0,             # 收藏
-		"is_money": false,          # 是否收费
+		"is_money": d.get("is_money", false),  # 是否收费(从配置读取)
 		"date": blog_date,
 		"quality": tmp_quality,
 	}
@@ -390,51 +396,51 @@ func add_new_blog_post(title: String, d) -> Dictionary:
 		blogger.posts.append(new_post)
 		blogger.add_post(new_post)
 
-	print("新博客文章发布: ", title, "，分类: ", d.name, "，ID: ", post_id)
+	print("新博客文章发布: ", title, ",分类: ", d.name, ",ID: ", post_id)
 	return new_post
-	
+
 signal sg_new_blog_post(category: String)
 ## 模拟当天发布新博客文章
 func simulate_new_blog_post(category) -> int:
 	# ===== 欠费暂停检查 =====
 	if Yun.is_blog_suspended():
-		print("[暂停状态] 博客因欠费暂停运营，无法写新文章")
-		emit_signal("no_stamina_signal", "博客因欠费暂停运营，请先续费域名或主机！")
+		print("[暂停状态] 博客因欠费暂停运营,无法写新文章")
+		emit_signal("no_stamina_signal", "博客因欠费暂停运营,请先续费域名或主机!")
 		return 0
-	
-	# 这里可以根据作者的写作、技术能力来决定文章的质量，体力决定是否能发布文章。
+
+	# 这里可以根据作者的写作、技术能力来决定文章的质量,体力决定是否能发布文章。
 	if not GDManager:
 		return 0
-	
+
 	var blogger = GDManager.get_blogger()
 	var d = Utils.find_category_by_name(Utils.possible_categories, category)
 	var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
-	
-	if blogger.stamina >= actual_cost and category: ## 如果体力足够，并且当天有写作任务。
+
+	if blogger.stamina >= actual_cost and category: ## 如果体力足够,并且当天有写作任务。
 		var new_title: String = Utils.generate_random_title(category) # 生成一个简单的随机标题
 		var new_post = add_new_blog_post(new_title, d)
-		# 这里定义了一个博文发布信号量，当有博文成功发布时候触发，将会在res://scripts/task_system/TaskManager.gd中引用信号量
-		emit_signal("sg_new_blog_post",category) 
-		
+		# 这里定义了一个博文发布信号量,当有博文成功发布时候触发,将会在res://scripts/task_system/TaskManager.gd中引用信号量
+		emit_signal("sg_new_blog_post",category)
+
 		# 这里可以根据文章的质量和访问量来计算EXP
 		blogger.stamina -= actual_cost  # 使用实际消耗
-		print("[写博客] 消耗体力:", actual_cost, "，剩余体力:", blogger.stamina)
-		return int(new_post.quality*0.2)# 简化计算，实际应更复杂
+		print("[写博客] 消耗体力:", actual_cost, ",剩余体力:", blogger.stamina)
+		return int(new_post.quality*0.2)# 简化计算,实际应更复杂
 	else:
-		# 不再自动恢复体力，直接拒绝
-		print("体力不足，无法写博客")
-		emit_signal("no_stamina_signal", "体力不足，无法写博客！需要" + str(actual_cost) + "体力")
+		# 不再自动恢复体力,直接拒绝
+		print("体力不足,无法写博客")
+		emit_signal("no_stamina_signal", "体力不足,无法写博客!需要" + str(actual_cost) + "体力")
 		return 0
 
 
-## 更新博客访问量（使用新的模块化计算器）
+## 更新博客访问量(使用新的模块化计算器)
 func update_blog_views() -> int:
 	if not GDManager:
 		return 0
 
 	# ===== 欠费暂停检查 =====
 	if Yun.is_blog_suspended():
-		print("[暂停状态] 博客因欠费暂停运营，访问量不增加")
+		print("[暂停状态] 博客因欠费暂停运营,访问量不增加")
 		return 0
 
 	# 确保计算器已初始化
@@ -442,7 +448,7 @@ func update_blog_views() -> int:
 		views_calculator = ViewsCalculator.new()
 
 	var blogger = GDManager.get_blogger()
-	
+
 	# 构建博主数据字典
 	var blogger_data = {
 		"seo_value": blogger.seo_value,
@@ -455,12 +461,12 @@ func update_blog_views() -> int:
 		"tmp_year": blogger.tmp_year,
 		"posts": blogger.posts
 	}
-	
+
 	# 使用新计算器计算访问量
 	var result = views_calculator.calculate_daily(blogger_data)
 	blogger.today_views = result.views
-	
-	# 计算付费文章收入（使用今日访问量）
+
+	# 计算付费文章收入(使用今日访问量)
 	var today_money = 0
 	for post in blogger.posts:
 		if post.get("type1", "") == "付费":
@@ -472,20 +478,20 @@ func update_blog_views() -> int:
 				var daily = stats.get("daily_views", [])
 				if daily.size() > 0:
 					today_post_views = daily[-1].get("views", 0)
-			
+
 			if today_post_views > 0:
 				var post_money = int(float(post.get("quality", 100)) / 200.0 * 10.0 * today_post_views)
 				today_money += post_money
 	blogger.money += today_money
-	
+
 	# 广告收入和影响
 	if AdManager.ad_2:
 		blogger.today_views = AdManager.update_ad(blogger.today_views)
-	
+
 	# 更新统计
 	Tongji.t_d.append([Utils.format_date(), blogger.today_views])
-	
-	# 更新收藏数（基于今日访问量）
+
+	# 更新收藏数(基于今日访问量)
 	for post in blogger.posts:
 		var post_views_today = 0
 		var post_id = post.get("id", "")
@@ -494,12 +500,12 @@ func update_blog_views() -> int:
 			var daily = stats.get("daily_views", [])
 			if daily.size() > 0:
 				post_views_today = daily[-1].get("views", 0)
-		
+
 		if post_views_today > 0:
 			var new_favorites = Utils.update_favorites(post_views_today, post.get("quality", 100))
 			post.favorites = post.get("favorites", 0) + new_favorites
 			blogger.favorites += new_favorites
-	
+
 	# 周/月/年统计
 	if tmp_w == TimerManager.current_week:
 		blogger.week_views += blogger.today_views
@@ -530,12 +536,12 @@ func update_blog_views() -> int:
 
 	blogger.views += blogger.today_views
 	blogger.rss += Utils.update_rss(blogger.today_views)
-	
+
 	return calculate_article_exp(blogger.today_views)
 
 
 
-## EXP计算函数（可根据游戏具体机制自定义）
+## EXP计算函数(可根据游戏具体机制自定义)
 func calculate_article_exp(views) -> int:
 	# 根据当前博文新增访问量来计算增加的EXP
 	var daily_article_exp: int = 0
@@ -543,27 +549,27 @@ func calculate_article_exp(views) -> int:
 	return daily_article_exp
 
 func calculate_promotion_exp() -> int:
-	var promotion_cost: int = 10 # 推广花费，可根据社交能力调整
+	var promotion_cost: int = 10 # 推广花费,可根据社交能力调整
 	if money < promotion_cost:
-		print("金钱不足，无法进行推广")
+		print("金钱不足,无法进行推广")
 		return 0
 
 	money -= promotion_cost
-	print("花费金钱进行推广: ", promotion_cost, "，当前金钱: ", money)
+	print("花费金钱进行推广: ", promotion_cost, ",当前金钱: ", money)
 
-	var new_readers := social_ability * 5 # 占位符；新读者数
+	var new_readers := social_ability * 5 # 占位符;新读者数
 	# 基础EXP + 效果奖励
 	return 5 + (new_readers / 10.0 * 2)
 
 func calculate_interaction_exp() -> int:
-	var interactions: int = 3 # 占位符；互动次数
+	var interactions: int = 3 # 占位符;互动次数
 	# 假设 social_ability 是在其他地方定义的整型变量
 	var quality: int = min(social_ability / 10, 10) # 互动质量
-	# 每次互动的EXP：基础 + 质量奖励
+	# 每次互动的EXP:基础 + 质量奖励
 	return interactions * (2 + int(float(quality) / 10.0 * 5))
 
 func calculate_skill_learning_exp() -> int:
-	# 占位符：50%几率进行技能训练，获得20 EXP
+	# 占位符:50%几率进行技能训练,获得20 EXP
 	return 20 if randf() > 0.5 else 0
 
 
@@ -583,16 +589,16 @@ func maintain_website_security(category: String) -> int:
 	var blogger = GDManager.get_blogger()
 	var d = Utils.find_category_by_name( Utils.website_maintenance,category)
 	var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
-	
+
 	if blogger.money < d.money:
-		emit_signal("signal_website_security_no_money","财力不足，无法进行网站维护！")
+		emit_signal("signal_website_security_no_money","财力不足,无法进行网站维护!")
 		return 0
 
 	if blogger.stamina < actual_cost:
-		emit_signal("signal_website_security_no_stamina","体力不足，无法进行网站维护！需要" + str(actual_cost) + "体力")
+		emit_signal("signal_website_security_no_stamina","体力不足,无法进行网站维护!需要" + str(actual_cost) + "体力")
 		return 0
-	
-	blogger.stamina -= actual_cost #消耗体力值（使用实际消耗）
+
+	blogger.stamina -= actual_cost #消耗体力值(使用实际消耗)
 	blogger.money -= d.money
 	blogger.safety_value += Utils.add_property(blogger.safety_value,int(blogger.technical_ability/4))
 	emit_signal("signal_website_security","网站的安全值+10")
@@ -609,12 +615,12 @@ func maintain_website_seo(category: String) -> int:
 	var blogger = GDManager.get_blogger()
 	var d = Utils.find_category_by_name( Utils.website_maintenance,category)
 	var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
-	
+
 	if blogger.stamina < actual_cost:
-		emit_signal("signal_website_seo_no_stamina","体力不足，无法进行seo优化！需要" + str(actual_cost) + "体力")
+		emit_signal("signal_website_seo_no_stamina","体力不足,无法进行seo优化!需要" + str(actual_cost) + "体力")
 		return 0
-	
-	blogger.stamina -= actual_cost #消耗体力值（使用实际消耗）
+
+	blogger.stamina -= actual_cost #消耗体力值(使用实际消耗)
 	blogger.seo_value += Utils.add_property(blogger.seo_value,int(blogger.technical_ability/4))
 	emit_signal("signal_website_seo","网站seo值+10")
 	return 10
@@ -629,16 +635,16 @@ func maintain_design_web(category: String) -> int:
 	var blogger = GDManager.get_blogger()
 	var d = Utils.find_category_by_name( Utils.website_maintenance,category)
 	var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
-	
+
 	if blogger.stamina < actual_cost:
-		emit_signal("signal_design_web_no_stamina","体力不足，无法进行页面美化！需要" + str(actual_cost) + "体力")
+		emit_signal("signal_design_web_no_stamina","体力不足,无法进行页面美化!需要" + str(actual_cost) + "体力")
 		return 0
-	
-	blogger.stamina -= actual_cost #消耗体力值（使用实际消耗）
+
+	blogger.stamina -= actual_cost #消耗体力值(使用实际消耗)
 	blogger.design_value += Utils.add_property(blogger.design_value,int(blogger.drawing_ability/4))
 	emit_signal("signal_design_web","页面美化值+10")
 	return 10
-	
+
 ## 休闲娱乐 -> 休息
 signal s_recrecreation_rest(msg)
 func recreation_rest(category : String) -> int:
@@ -648,7 +654,7 @@ func recreation_rest(category : String) -> int:
 	var blogger = GDManager.get_blogger()
 	var d = Utils.find_category_by_name( Utils.recreation, category)
 	blogger.stamina += Utils.add_property(blogger.stamina, d.stamina, blogger.level)
-	emit_signal("s_recrecreation_rest", "休息恢复" + str(d.stamina) + "体力")
+	# 恢复体力时不显示提示
 	return 0
 ## 休闲娱乐 -> 打游戏
 signal s_playgame(msg)
@@ -658,17 +664,17 @@ func playgame(category : String) -> int:
 
 	var blogger = GDManager.get_blogger()
 	var d = Utils.find_category_by_name( Utils.recreation, category)
-	
-	# 检查金钱是否足够（使用动态花费）
+
+	# 检查金钱是否足够(使用动态花费)
 	var cost = Utils.get_playgame_cost(blogger.level)
 	if blogger.money < cost:
-		emit_signal("s_playgame", "金钱不足，无法打游戏！需要" + str(cost) + "金钱")
+		emit_signal("s_playgame", "金钱不足,无法打游戏!需要" + str(cost) + "金钱")
 		return 0
-	
-	# 消耗金钱，恢复体力
+
+	# 消耗金钱,恢复体力
 	blogger.money -= cost
 	blogger.stamina += Utils.add_property(blogger.stamina, d.stamina, blogger.level)
-	emit_signal("s_playgame", "打游戏花费" + str(cost) + "金钱，恢复" + str(d.stamina) + "体力")
+	emit_signal("s_playgame", "打游戏花费" + str(cost) + "金钱,恢复" + str(d.stamina) + "体力")
 	return 0
 
 
@@ -690,55 +696,58 @@ func learningToSkills(category: String) -> int:
 
 	var blogger = GDManager.get_blogger()
 	var d = Utils.find_category_by_name(Utils.learning_skills, category)
-	
+
 	if d.is_empty():
 		print("未找到技能: ", category)
 		return 0
-	
+
 	# 从数据获取技能类型
 	var skill_type = d.get("skill_type", "")
-	
+
 	# 计算实际体力消耗
 	var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
-	
+
 	# 检查体力
 	if blogger.stamina < actual_cost:
-		emit_signal("no_stamina_signal", "体力不足，无法进行学习！需要" + str(actual_cost) + "体力")
+		emit_signal("no_stamina_signal", "体力不足,无法进行学习!需要" + str(actual_cost) + "体力")
 		return 0
-	
+
 	# 检查金钱
 	if blogger.money < d.money:
-		emit_signal("no_money_signal", "财力不足，无法进行学习！")
+		emit_signal("no_money_signal", "财力不足,无法进行学习!")
 		return 0
-	
+
 	# 获取当前能力值
 	var current_ability = get_ability_by_type(skill_type)
-	
+
 	# 检查是否已达到上限
 	if current_ability >= MAX_SKILL_LEVEL:
-		print("能力值已满！")
+		print("能力值已满!")
 		return 0
-	
-	# 消耗资源（使用实际体力消耗）
+
+	# 消耗资源(使用实际体力消耗)
 	blogger.stamina -= actual_cost
 	blogger.money -= d.money
-	
+
 	# 增加能力值
 	var add_value = get_skill_value(current_ability)
 	var old_ability = current_ability
 	current_ability += add_value
 	current_ability = minf(current_ability, float(MAX_SKILL_LEVEL))
 	current_ability = round(current_ability * 10) / 10.0
-	
+
 	# 更新能力值
 	set_ability_by_type(skill_type, current_ability)
-	
+
 	# 打印学习结果
 	print("[技能学习] ", category, " | ", skill_type, " 能力值: ", old_ability, " -> ", current_ability, " (+", add_value, ")")
-	
-	# 发送信号，由任务系统处理技能解锁
+
+	# 检查并解锁下一级技能
+	try_unlock_next_skill(d, current_ability)
+
+	# 发送信号,由任务系统处理技能解锁
 	emit_signal("skill_level_up", get_skill_type_enum(skill_type), current_ability)
-	
+
 	return 10
 
 
@@ -756,14 +765,13 @@ func try_unlock_next_skill(current_skill: Dictionary, current_ability: float):
 	
 	# 能力值达到解锁条件
 	if current_ability >= unlock_at:
-		# 隐藏当前技能
+		# 锁定当前技能
 		current_skill.isVisible = false
 		current_skill.disabled = true
 		
-		# 显示下一级技能
+		# 解锁下一级技能
 		next_skill.isVisible = true
 		next_skill.disabled = false
-		print("解锁新技能: ", next_name)
 
 
 ## 根据技能类型获取能力值
