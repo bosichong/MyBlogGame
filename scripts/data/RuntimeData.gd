@@ -10,10 +10,10 @@ var league: LeagueData = LeagueData.new()
 
 # 初始化所有数据
 func reset():
-	blogger = BloggerData.new()
-	time = TimeData.new()
-	bank = BankData.new()
-	ad = AdData.new()
-	statistics = StatisticsData.new()
-	task = TaskData.new()
-	league = LeagueData.new()
+    blogger = BloggerData.new()
+    time = TimeData.new()
+    bank = BankData.new()
+    ad = AdData.new()
+    statistics = StatisticsData.new()
+    task = TaskData.new()
+    league = LeagueData.new()

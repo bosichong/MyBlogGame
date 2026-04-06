@@ -20,13 +20,13 @@ var yearly_stats: Array = []
 
 ## 来源累计统计
 var source_stats: Dictionary = {
-	"direct": 0,      # 直接访问
-	"search": 0,      # 搜索引擎
-	"social": 0,      # 社交媒体
-	"rss": 0,         # RSS订阅
-	"favorite": 0,    # 收藏
-	"event": 0,       # 事件加成
-	"task": 0         # 任务加成
+    "direct": 0,      # 直接访问
+    "search": 0,      # 搜索引擎
+    "social": 0,      # 社交媒体
+    "rss": 0,         # RSS订阅
+    "favorite": 0,    # 收藏
+    "event": 0,       # 事件加成
+    "task": 0         # 任务加成
 }
 
 ## 单篇文章统计
@@ -35,38 +35,38 @@ var post_stats: Dictionary = {}
 
 ## 清空所有统计
 func clear() -> void:
-	daily_stats.clear()
-	weekly_stats.clear()
-	monthly_stats.clear()
-	yearly_stats.clear()
-	source_stats = {
-		"direct": 0,
-		"search": 0,
-		"social": 0,
-		"rss": 0,
-		"favorite": 0,
-		"event": 0,
-		"task": 0
-	}
-	post_stats.clear()
+    daily_stats.clear()
+    weekly_stats.clear()
+    monthly_stats.clear()
+    yearly_stats.clear()
+    source_stats = {
+        "direct": 0,
+        "search": 0,
+        "social": 0,
+        "rss": 0,
+        "favorite": 0,
+        "event": 0,
+        "task": 0
+    }
+    post_stats.clear()
 
 ## 获取总访问量
 func get_total_views() -> int:
-	var total = 0
-	for d in daily_stats:
-		total += d.get("views", 0)
-	return total
+    var total = 0
+    for d in daily_stats:
+        total += d.get("views", 0)
+    return total
 
 ## 获取今日访问量
 func get_today_views() -> int:
-	if daily_stats.size() > 0:
-		return daily_stats[-1].get("views", 0)
-	return 0
+    if daily_stats.size() > 0:
+        return daily_stats[-1].get("views", 0)
+    return 0
 
 ## 获取最近N天访问量
 func get_recent_views(days: int) -> int:
-	var total = 0
-	var start = max(0, daily_stats.size() - days)
-	for i in range(start, daily_stats.size()):
-		total += daily_stats[i].get("views", 0)
-	return total
+    var total = 0
+    var start = max(0, daily_stats.size() - days)
+    for i in range(start, daily_stats.size()):
+        total += daily_stats[i].get("views", 0)
+    return total

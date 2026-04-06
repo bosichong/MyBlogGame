@@ -39,47 +39,47 @@ var is_money: bool = false
 
 ## 初始化
 func _init(p_title: String = "", p_category: String = "", p_type: String = "", p_type1: String = ""):
-	id = _generate_id()
-	title = p_title
-	category = p_category
-	type = p_type
-	type1 = p_type1
-	date = Utils.format_date()
+    id = _generate_id()
+    title = p_title
+    category = p_category
+    type = p_type
+    type1 = p_type1
+    date = Utils.format_date()
 
 ## 生成唯一ID
 func _generate_id() -> String:
-	return "post_" + str(Time.get_ticks_msec()) + "_" + str(randi() % 10000)
+    return "post_" + str(Time.get_ticks_msec()) + "_" + str(randi() % 10000)
 
 ## 转换为字典（用于保存）
 func to_dict() -> Dictionary:
-	return {
-		"id": id,
-		"title": title,
-		"category": category,
-		"task_type": task_type,
-		"type": type,
-		"type1": type1,
-		"quality": quality,
-		"views": views,
-		"favorites": favorites,
-		"comments": comments,
-		"date": date,
-		"is_money": is_money
-	}
+    return {
+        "id": id,
+        "title": title,
+        "category": category,
+        "task_type": task_type,
+        "type": type,
+        "type1": type1,
+        "quality": quality,
+        "views": views,
+        "favorites": favorites,
+        "comments": comments,
+        "date": date,
+        "is_money": is_money
+    }
 
 ## 从字典加载
 static func from_dict(data: Dictionary) -> PostData:
-	var post = PostData.new()
-	post.id = data.get("id", "")
-	post.title = data.get("title", "")
-	post.category = data.get("category", "")
-	post.task_type = data.get("task_type", "")
-	post.type = data.get("type", "")
-	post.type1 = data.get("type1", "")
-	post.quality = data.get("quality", 100)
-	post.views = data.get("views", 0)
-	post.favorites = data.get("favorites", 0)
-	post.comments = data.get("comments", 0)
-	post.date = data.get("date", "")
-	post.is_money = data.get("is_money", false)
-	return post
+    var post = PostData.new()
+    post.id = data.get("id", "")
+    post.title = data.get("title", "")
+    post.category = data.get("category", "")
+    post.task_type = data.get("task_type", "")
+    post.type = data.get("type", "")
+    post.type1 = data.get("type1", "")
+    post.quality = data.get("quality", 100)
+    post.views = data.get("views", 0)
+    post.favorites = data.get("favorites", 0)
+    post.comments = data.get("comments", 0)
+    post.date = data.get("date", "")
+    post.is_money = data.get("is_money", false)
+    return post

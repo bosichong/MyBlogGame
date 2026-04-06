@@ -19,48 +19,48 @@ const MONTHS_IN_YEAR = 12
 # ===== 辅助方法 =====
 
 func get_post_category(index: int) -> Dictionary:
-	if index >= 0 and index < post_categories.size():
-		return post_categories[index]
-	return {}
+    if index >= 0 and index < post_categories.size():
+        return post_categories[index]
+    return {}
 
 func get_post_category_by_name(name: String) -> Dictionary:
-	for category in post_categories:
-		if category.has("name") and category["name"] == name:
-			return category
-	return {}
+    for category in post_categories:
+        if category.has("name") and category["name"] == name:
+            return category
+    return {}
 
 func get_skill_config(skill_name: String) -> Dictionary:
-	for skill in skills_config:
-		if skill.has("name") and skill["name"] == skill_name:
-			return skill
-	return {}
+    for skill in skills_config:
+        if skill.has("name") and skill["name"] == skill_name:
+            return skill
+    return {}
 
 func get_milestone(level: int) -> Dictionary:
-	if milestones_config.has(str(level)):
-		return milestones_config[str(level)]
-	return {}
+    if milestones_config.has(str(level)):
+        return milestones_config[str(level)]
+    return {}
 
 func get_rank_title(tier: int) -> String:
-	if tier >= 0 and tier < rank_titles.size():
-		return rank_titles[tier]
-	return ""
+    if tier >= 0 and tier < rank_titles.size():
+        return rank_titles[tier]
+    return ""
 
 func get_string(key: String, default: String = "") -> String:
-	if game_strings.has(key):
-		return game_strings[key]
-	return default
+    if game_strings.has(key):
+        return game_strings[key]
+    return default
 
 func get_all_post_categories() -> Array[Dictionary]:
-	return post_categories
+    return post_categories
 
 func get_all_skills() -> Array[Dictionary]:
-	return skills_config
+    return skills_config
 
 func get_all_maintenance_tasks() -> Array[Dictionary]:
-	return maintenance_config
+    return maintenance_config
 
 func get_all_recreation_activities() -> Array[Dictionary]:
-	return recreation_config
+    return recreation_config
 
 func get_all_ad_types() -> Array[Dictionary]:
-	return ad_config
+    return ad_config

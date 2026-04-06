@@ -29,9 +29,9 @@ func on_show_panel():
     $Panel/审核.visible = show_review
     $Panel/注册.visible = show_register
     
-    $Panel/管理/Panel2/m_0.text = "未结算佣金：" + str(AdManager.ad_money_0)
-    $Panel/管理/Panel2/m_1.text = "已结算佣金：" + str(AdManager.ad_money_1)
-    $Panel/管理/Panel2/m_2.text = "累计发放佣金：" + str(AdManager.ad_money_2)
+    $Panel/管理/Panel2/m_0.text = "未结算佣金：%.2f" % AdManager.ad_money_0
+    $Panel/管理/Panel2/m_1.text = "已结算佣金：%.2f" % AdManager.ad_money_1
+    $Panel/管理/Panel2/m_2.text = "累计发放佣金：%.2f" % AdManager.ad_money_2
     
     # 注册按钮：周访问量 >= 100 才可点击
     # 使用当前周的实时访问量，而不是历史统计数据

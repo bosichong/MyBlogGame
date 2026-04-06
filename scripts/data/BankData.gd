@@ -19,7 +19,7 @@ signal interest_earned(amount: float)
 # ===== 数据访问方法 =====
 
 func get_total_assets() -> float:
-	var total = savings_balance
-	for deposit_id in fixed_deposits:
-		total += fixed_deposits[deposit_id].amount
-	return total
+    var total = savings_balance
+    for deposit_id in fixed_deposits:
+        total += fixed_deposits[deposit_id].amount
+    return total

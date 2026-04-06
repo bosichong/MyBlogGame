@@ -24,10 +24,10 @@ var enabled: bool = true
 
 ## 修饰器类型
 enum Type {
-	BASE,    # 基础计算
-	DECAY,   # 时间衰减
-	BOOST,   # 正向加成
-	LIMIT    # 负向限制
+    BASE,    # 基础计算
+    DECAY,   # 时间衰减
+    BOOST,   # 正向加成
+    LIMIT    # 负向限制
 }
 var type: Type = Type.BASE
 
@@ -37,24 +37,24 @@ var type: Type = Type.BASE
 ## blogger: 博主数据
 ## 返回: 修改后的访问量
 func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
-	return views
+    return views
 
 ## 获取修饰器信息（用于UI显示）
 func get_info() -> Dictionary:
-	return {
-		"name": modifier_name,
-		"display_name": display_name,
-		"description": description,
-		"priority": priority,
-		"enabled": enabled,
-		"type": type
-	}
+    return {
+        "name": modifier_name,
+        "display_name": display_name,
+        "description": description,
+        "priority": priority,
+        "enabled": enabled,
+        "type": type
+    }
 
 ## 获取调试信息
 func get_debug_info(views_before: int, views_after: int) -> Dictionary:
-	return {
-		"name": display_name,
-		"before": views_before,
-		"after": views_after,
-		"change": views_after - views_before
-	}
+    return {
+        "name": display_name,
+        "before": views_before,
+        "after": views_after,
+        "change": views_after - views_before
+    }

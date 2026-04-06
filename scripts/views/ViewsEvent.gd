@@ -28,39 +28,39 @@ var is_active: bool = false
 ## blogger: 博主数据
 ## 返回: 是否触发
 func check_trigger(blogger: Dictionary) -> bool:
-	return false
+    return false
 
 ## 应用事件效果
 func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
-	if remaining_days <= 0:
-		return views
-	return int(views * (1.0 + bonus_ratio))
+    if remaining_days <= 0:
+        return views
+    return int(views * (1.0 + bonus_ratio))
 
 ## 每日更新（减少剩余天数）
 func daily_update() -> void:
-	if remaining_days > 0:
-		remaining_days -= 1
-		if remaining_days <= 0:
-			is_active = false
+    if remaining_days > 0:
+        remaining_days -= 1
+        if remaining_days <= 0:
+            is_active = false
 
 ## 触发事件
 func trigger() -> void:
-	remaining_days = duration
-	is_active = true
+    remaining_days = duration
+    is_active = true
 
 ## 强制结束事件
 func end() -> void:
-	remaining_days = 0
-	is_active = false
+    remaining_days = 0
+    is_active = false
 
 ## 获取事件信息
 func get_info() -> Dictionary:
-	return {
-		"event_id": event_id,
-		"event_name": event_name,
-		"description": description,
-		"duration": duration,
-		"remaining_days": remaining_days,
-		"bonus_ratio": bonus_ratio,
-		"is_active": is_active
-	}
+    return {
+        "event_id": event_id,
+        "event_name": event_name,
+        "description": description,
+        "duration": duration,
+        "remaining_days": remaining_days,
+        "bonus_ratio": bonus_ratio,
+        "is_active": is_active
+    }

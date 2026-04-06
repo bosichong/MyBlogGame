@@ -24,10 +24,10 @@ var attribute_points: int = 0
 # ============================================
 
 ## 写作能力：影响所有文章的质量分
-var writing_ability: int = 0
+var writing_ability: float = 0
 
 ## 技术能力：影响技术类文章质量和网站维护效果
-var technical_ability: int = 0
+var technical_ability: float = 0
 
 ## 编程能力：影响编程教程、黑客攻防等技术文章质量
 var code_ability: float = 0
@@ -129,13 +129,13 @@ var posts: Array[Dictionary] = []
 ## 每日任务安排
 ## 每天可以安排多个任务（写作、维护、休息、学习等）
 var calendar: Array[Dictionary] = [
-	{"tasks": ["文学入门", ]},      # 周一
-	{"tasks": ["文学入门", ]},      # 周二
-	{"tasks": ["文学入门", ]},      # 周三
-	{"tasks": ["文学入门", ]},      # 周四
-	{"tasks": ["安全维护"]},      # 周五
-	{"tasks": ["SEO优化"]},       # 周六
-	{"tasks": ["打游戏"]},        # 周日
+    {"tasks": ["文学入门", ]},      # 周一
+    {"tasks": ["文学入门", ]},      # 周二
+    {"tasks": ["文学入门", ]},      # 周三
+    {"tasks": ["文学入门", ]},      # 周四
+    {"tasks": ["安全维护"]},      # 周五
+    {"tasks": ["SEO优化"]},       # 周六
+    {"tasks": ["打游戏"]},        # 周日
 ]
 
 # ============================================
@@ -186,36 +186,36 @@ signal post_added(post_data: Dictionary)
 
 ## 增加经验值
 func add_exp(amount: int):
-	exp += amount
-	emit_signal("exp_changed", exp)
+    exp += amount
+    emit_signal("exp_changed", exp)
 
 ## 设置等级
 func set_level(new_level: int):
-	level = new_level
-	emit_signal("level_changed", level)
+    level = new_level
+    emit_signal("level_changed", level)
 
 ## 设置能力值
 ## ability_type: "writing", "technical", "code", "literature", "drawing"
 func set_ability(ability_type: String, new_value: float):
-	match ability_type:
-		"writing":
-			writing_ability = new_value
-		"technical":
-			technical_ability = new_value
-		"code":
-			code_ability = new_value
-		"literature":
-			literature_ability = new_value
-		"drawing":
-			drawing_ability = new_value
-	emit_signal("ability_changed", ability_type, new_value)
+    match ability_type:
+        "writing":
+            writing_ability = new_value
+        "technical":
+            technical_ability = new_value
+        "code":
+            code_ability = new_value
+        "literature":
+            literature_ability = new_value
+        "drawing":
+            drawing_ability = new_value
+    emit_signal("ability_changed", ability_type, new_value)
 
 ## 添加新文章
 func add_post(post_data: Dictionary):
-	posts.append(post_data)
-	emit_signal("post_added", post_data)
+    posts.append(post_data)
+    emit_signal("post_added", post_data)
 
 ## 设置访问量
 func set_views(new_views: int):
-	views = new_views
-	emit_signal("blog_views_changed", views)
+    views = new_views
+    emit_signal("blog_views_changed", views)
