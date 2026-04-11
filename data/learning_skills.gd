@@ -42,7 +42,7 @@ var items = [
 		"isVisible": false,
 		"disabled": true,
 		"money": 20,
-		"stamina": 10,
+		"stamina": 20,
 	},
 	{
 		"name": "高级编程",
@@ -56,7 +56,7 @@ var items = [
 		"isVisible": false,
 		"disabled": true,
 		"money": 50,
-		"stamina": 10,
+		"stamina": 30,
 	},
 	{
 		"name": "网络安全",
@@ -70,7 +70,7 @@ var items = [
 		"isVisible": false,
 		"disabled": true,
 		"money": 80,
-		"stamina": 10,
+		"stamina": 40,
 	},
 	{
 		"name": "成为黑客",
@@ -84,7 +84,7 @@ var items = [
 		"isVisible": false,
 		"disabled": true,
 		"money": 100,
-		"stamina": 10,
+		"stamina": 50,
 	},
 	
 	# ===== 文学技能 =====
@@ -114,7 +114,7 @@ var items = [
 		"isVisible": false,
 		"disabled": true,
 		"money": 20,
-		"stamina": 10,
+		"stamina": 20,
 	},
 	{
 		"name": "创作达人",
@@ -128,7 +128,7 @@ var items = [
 		"isVisible": false,
 		"disabled": true,
 		"money": 50,
-		"stamina": 10,
+		"stamina": 30,
 	},
 	{
 		"name": "人气作家",
@@ -142,7 +142,7 @@ var items = [
 		"isVisible": false,
 		"disabled": true,
 		"money": 80,
-		"stamina": 10,
+		"stamina": 40,
 	},
 	{
 		"name": "文学大师",
@@ -156,7 +156,7 @@ var items = [
 		"isVisible": false,
 		"disabled": true,
 		"money": 100,
-		"stamina": 10,
+		"stamina": 50,
 	},
 	
 	# ===== 绘画技能 =====
@@ -186,7 +186,7 @@ var items = [
 		"isVisible": false,
 		"disabled": true,
 		"money": 20,
-		"stamina": 10,
+		"stamina": 20,
 	},
 	{
 		"name": "板绘达人",
@@ -200,7 +200,7 @@ var items = [
 		"isVisible": false,
 		"disabled": true,
 		"money": 50,
-		"stamina": 10,
+		"stamina": 30,
 	},
 	{
 		"name": "游戏原画",
@@ -214,7 +214,7 @@ var items = [
 		"isVisible": false,
 		"disabled": true,
 		"money": 80,
-		"stamina": 10,
+		"stamina": 40,
 	},
 	{
 		"name": "美术总监",
@@ -228,6 +228,6 @@ var items = [
 		"isVisible": false,
 		"disabled": true,
 		"money": 100,
-		"stamina": 10,
+		"stamina": 50,
 	},
 ]

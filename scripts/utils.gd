@@ -180,14 +180,12 @@ func find_category_by_name(array: Array, name: String) -> Dictionary:
 
 ## 获取体力上限（按等级）
 func get_max_stamina(level: int) -> int:
-    if level <= 10:
-        return 50 + level  # 51-60
-    elif level <= 30:
-        return 60 + (level - 10)  # 61-80
+    if level <= 30:
+        return 50 + level  # 1级:51, 30级:80
     elif level <= 50:
-        return 80 + (level - 30)  # 81-100
+        return 100 + (level - 30) * 2.5  # 31级:150, 50级:200 (取整)
     else:
-        return 100 + int((level - 50) * 0.5)  # 101-125
+        return 200  # 51级+:固定200
 
 
 ## 获取实际体力消耗（按等级）
@@ -208,14 +206,10 @@ func get_stamina_cost(base_cost: int, level: int) -> int:
 
 ## 获取每日自然恢复量（按等级）
 func get_daily_stamina_recovery(level: int) -> int:
-    if level <= 10:
-        return 5
-    elif level <= 30:
-        return 8
-    elif level <= 50:
-        return 10
+    if level <= 30:
+        return 15  # 前期:15点/天
     else:
-        return 15
+        return 20  # 后期:20点/天
 
 
 ## 获取打游戏花费（按等级增加）
