@@ -360,17 +360,18 @@ func format_number(val: int) -> String:
 
 func get_rank_title(level: int, ranks: Array) -> String:
     """根据等级获取段位名称
-    - level 1-10 → 索引0（初入江湖）
-    - level 11-20 → 索引1（崭露头角）
-    - level 21-30 → 索引2（锋芒毕露）
+    - level 0-9 → 索引0（初入江湖）
+    - level 10-19 → 索引1（崭露头角）
+    - level 20-29 → 索引2（锋芒毕露）
     - ...
-    - level 91-100 → 索引9（天外飞仙）
+    - level 90-99 → 索引9（天外飞仙）
+    - level 100 → 索引9（天外飞仙）
     """
-    if level < 1:
+    if level < 0:
         return "无效等级"
     if level > 100:
         level = 100
-    var index = (level - 1) / 10  # 关键：(level-1)/10 确保每10级一个段位
+    var index = level / 10  # 10级一个段位
     if index >= ranks.size():
         index = ranks.size() - 1
     return ranks[index]

@@ -63,7 +63,7 @@ func load_all_configs():
 # ===== 加载文章类型配置 =====
 
 func load_post_categories() -> bool:
-    if not Utils:
+    if not Utils or not Utils.possible_categories:
         return false
 
     var categories = Utils.possible_categories.duplicate()
@@ -75,7 +75,7 @@ func load_post_categories() -> bool:
 # ===== 加载技能配置 =====
 
 func load_skills_config() -> bool:
-    if not Utils:
+    if not Utils or not Utils.learning_skills:
         return false
 
     var skills = Utils.learning_skills.duplicate()
@@ -87,7 +87,7 @@ func load_skills_config() -> bool:
 # ===== 加载维护配置 =====
 
 func load_maintenance_config() -> bool:
-    if not Utils:
+    if not Utils or not Utils.website_maintenance:
         return false
 
     var maintenance = Utils.website_maintenance.duplicate()
@@ -99,7 +99,7 @@ func load_maintenance_config() -> bool:
 # ===== 加载娱乐配置 =====
 
 func load_recreation_config() -> bool:
-    if not Utils:
+    if not Utils or not Utils.recreation:
         return false
 
     var recreation = Utils.recreation.duplicate()
@@ -110,7 +110,7 @@ func load_recreation_config() -> bool:
 # ===== 加载广告配置 =====
 
 func load_ad_config() -> bool:
-    if not AdManager:
+    if not AdManager or not AdManager.get("ads"):
         return false
 
     var ads_array = AdManager.ads.duplicate()
@@ -122,7 +122,7 @@ func load_ad_config() -> bool:
 # ===== 加载游戏文本 =====
 
 func load_game_strings() -> bool:
-    if not Strs:
+    if not Strs or not Strs.get("game_strs"):
         return false
 
     static_config.game_strings.clear()
@@ -133,7 +133,7 @@ func load_game_strings() -> bool:
 # ===== 加载头衔配置 =====
 
 func load_rank_titles() -> bool:
-    if not Strs:
+    if not Strs or not Strs.get("game_strs"):
         return false
 
     static_config.rank_titles.clear()

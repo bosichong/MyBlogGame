@@ -7,7 +7,7 @@ class_name BloggerData
 # ============================================
 
 ## 等级（1-100）
-var level: int = 1
+var level: int = 8
 
 ## 经验值
 var exp: int = 0

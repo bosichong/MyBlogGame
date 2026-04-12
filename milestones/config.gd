@@ -2,90 +2,90 @@ extends Node
 
 
 
-# 在编辑器中或脚本中设置成就数据
+# 江湖段位成就配置
+# 等级范围：0-9级=初入江湖，10-19级=崭露头角，...，90-100级=天外飞仙
 var lv = [
     {
-        "id": "level_10",
+        "id": "level_0",
         "name": "初入江湖",
-        "description": "达到10级",
+        "description": "0-9级",
         "icon": preload("res://assets/milestones/lv10.png"),
         "locked_icon": preload("res://assets/milestones/locked.png"),
-        "unlocked": false
+        "unlocked": true  # 默认解锁，因为1级就属于初入江湖段位
     },
     {
-        "id": "level_20",
+        "id": "level_10",
         "name": "崭露头角",
-        "description": "达到20级",
+        "description": "10-19级",
         "icon": preload("res://assets/milestones/lv20.png"),
         "locked_icon": preload("res://assets/milestones/locked.png"),
         "unlocked": false
     },
     {
-        "id": "level_30",
+        "id": "level_20",
         "name": "锋芒毕露",
-        "description": "达到30级",
+        "description": "20-29级",
         "icon": preload("res://assets/milestones/lv30.png"),
         "locked_icon": preload("res://assets/milestones/locked.png"),
         "unlocked": false
     },
     {
-        "id": "level_40",
+        "id": "level_30",
         "name": "名扬四海",
-        "description": "达到40级",
+        "description": "30-39级",
         "icon": preload("res://assets/milestones/lv40.png"),
         "locked_icon": preload("res://assets/milestones/locked.png"),
         "unlocked": false
     },
     {
-        "id": "level_50",
+        "id": "level_40",
         "name": "独步天下",
-        "description": "达到50级",
+        "description": "40-49级",
         "icon": preload("res://assets/milestones/lv50.png"),
         "locked_icon": preload("res://assets/milestones/locked.png"),
         "unlocked": false
     },
     {
-        "id": "level_60",
+        "id": "level_50",
         "name": "一代宗师",
-        "description": "达到60级",
+        "description": "50-59级",
         "icon": preload("res://assets/milestones/lv60.png"),
         "locked_icon": preload("res://assets/milestones/locked.png"),
         "unlocked": false
     },
     {
-        "id": "level_70",
+        "id": "level_60",
         "name": "剑气长虹",
-        "description": "达到70级",
+        "description": "60-69级",
         "icon": preload("res://assets/milestones/lv70.png"),
         "locked_icon": preload("res://assets/milestones/locked.png"),
         "unlocked": false
     },
     {
-        "id": "level_80",
+        "id": "level_70",
         "name": "无敌于世",
-        "description": "达到80级",
+        "description": "70-79级",
         "icon": preload("res://assets/milestones/lv80.png"),
         "locked_icon": preload("res://assets/milestones/locked.png"),
         "unlocked": false
     },
     {
-        "id": "level_90",
+        "id": "level_80",
         "name": "武林霸主",
-        "description": "达到90级",
+        "description": "80-89级",
         "icon": preload("res://assets/milestones/lv90.png"),
         "locked_icon": preload("res://assets/milestones/locked.png"),
         "unlocked": false
     },
     {
-        "id": "level_100",
+        "id": "level_90",
         "name": "天外飞仙",
-        "description": "达到100级",
+        "description": "90-100级",
         "icon": preload("res://assets/milestones/lv100.png"),
         "locked_icon": preload("res://assets/milestones/locked.png"),
         "unlocked": false
     },
 ]
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-    pass # Replace with function body.
+    pass

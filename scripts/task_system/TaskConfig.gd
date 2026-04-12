@@ -616,7 +616,7 @@ const TASKS: Array = [
     
     {
         "id": "milestone_lv10",
-        "description": "恭喜您的等级升级到10级，江湖段位达到[出入江湖]！",
+        "description": "恭喜您的等级升级到10级，江湖段位达到[崭露头角]！",
         "conditions": ["player_ge_10"],
         "is_repeatable": false,
         "trigger_type": "level_up",
@@ -626,7 +626,7 @@ const TASKS: Array = [
     },
     {
         "id": "milestone_lv20",
-        "description": "恭喜您的等级升级到20级，江湖段位达到[崭露头角]！",
+        "description": "恭喜您的等级升级到20级，江湖段位达到[锋芒毕露]！",
         "conditions": ["player_ge_20"],
         "is_repeatable": false,
         "trigger_type": "level_up",
@@ -711,7 +711,7 @@ const TASKS: Array = [
         "is_repeatable": false,
         "trigger_type": "level_up",
         "actions": [
-            {"type": ActionType.UNLOCK_MILESTONES_TASK, "milestones_id": "level_100", "milestones_name": "lv"},
+            {"type": ActionType.UNLOCK_MILESTONES_TASK, "milestones_id": "level_90", "milestones_name": "lv"},
         ],
     },
     
