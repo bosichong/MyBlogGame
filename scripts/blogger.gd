@@ -5,6 +5,27 @@ var tmp_v = 23
 ## 访问量计算器
 var views_calculator: ViewsCalculator = null
 
+## 付费文章周收入累积
+var weekly_paid_income: float = 0
+## 上次结算时付费文章总访问量（用于计算新增访问量）
+var last_settle_paid_views: int = 0
+
+## 付费文章订阅配置
+const PAID_SUBSCRIPTION_PRICE: float = 9.9  # 固定订阅价格
+const PAID_SUBSCRIPTION_RATE: float = 0.05  # 5%访问量会订阅
+
+## 计算付费文章收入（按周结算）
+## 逻辑：质量分决定访问量，访问量决定订阅人数
+func calculate_paid_income(new_views: int, avg_quality: float) -> int:
+    if new_views <= 0:
+        return 0
+    
+    # 访问量决定订阅人数（5%转化率，无上限）
+    var subscribers = int(float(new_views) * PAID_SUBSCRIPTION_RATE)
+    
+    # 收入 = 订阅人数 × 固定价格
+    return int(subscribers * PAID_SUBSCRIPTION_PRICE)
+
 enum Blog_Type {
     文学,
     编程,
@@ -460,23 +481,42 @@ func update_blog_views() -> int:
     var result = views_calculator.calculate_daily(blogger_data)
     blogger.today_views = result.views
 
-    # 计算付费文章收入(使用今日访问量)
+    # 计算付费文章收入(按周结算)
     var today_money = 0
+    var paid_posts = []
+    var current_total_views = 0
     for post in blogger.posts:
         if post.get("type1", "") == "付费":
-            # 获取今日访问量
-            var post_id = post.get("id", "")
-            var today_post_views = 0
-            if post_id != "" and views_calculator:
-                var stats = views_calculator.get_post_stats(post_id)
-                var daily = stats.get("daily_views", [])
-                if daily.size() > 0:
-                    today_post_views = daily[-1].get("views", 0)
-
-            if today_post_views > 0:
-                var post_money = int(float(post.get("quality", 100)) / 200.0 * 10.0 * today_post_views)
-                today_money += post_money
-    blogger.money += today_money
+            paid_posts.append(post)
+            current_total_views += post.get("views", 0)
+    
+    # 计算新增访问量
+    var new_views = current_total_views - last_settle_paid_views
+    if new_views > 0 and paid_posts.size() > 0:
+        var avg_quality = 0
+        for post in paid_posts:
+            avg_quality += post.get("quality", 50)
+        avg_quality = avg_quality / paid_posts.size()
+        today_money = calculate_paid_income(new_views, avg_quality)
+    
+    # 调试日志
+    if paid_posts.size() > 0:
+        print("[付费文章] 共", paid_posts.size(), "篇, 上次访问量:", last_settle_paid_views, ", 当前:", current_total_views, ", 新增:", new_views, ", 本周收入:", today_money)
+    
+    # 累积每周收入
+    weekly_paid_income += today_money
+    
+    # 每周结算（第7天）
+    if TimerManager.current_day == 7 and weekly_paid_income > 0:
+        blogger.money += weekly_paid_income
+        print("[小说连载收入] 本周收入: ", weekly_paid_income, " 元，已入账")
+        # 更新上次结算访问量
+        var total_paid_views = 0
+        for post in blogger.posts:
+            if post.get("type1", "") == "付费":
+                total_paid_views += post.get("views", 0)
+        last_settle_paid_views = total_paid_views
+        weekly_paid_income = 0
 
     # 广告收入和影响
     if AdManager.ad_2:

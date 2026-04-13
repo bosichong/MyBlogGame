@@ -133,6 +133,12 @@ func update_ui():
     
     $ui/bottom/v1/h5/rss.text = "RSS订阅数:"+ Utils.format_number(Blogger.blog_data.rss)
     $ui/bottom/v1/h5/favorites.text = "博文收藏数:"+ Utils.format_number(Blogger.blog_data.favorites)
+    $ui/bottom/v1/h5/weekly_income.text = "小说周收入:" + str(int(Blogger.weekly_paid_income)) + "元"
+    # 能力值>=80时显示付费收入
+    if Blogger.literature_ability >= 80 or Blogger.code_ability >= 80 or Blogger.drawing_ability >= 80:
+        $ui/bottom/v1/h5/weekly_income.visible = true
+    else:
+        $ui/bottom/v1/h5/weekly_income.visible = false
     
     $ui/r_panel/top/writingProgressBar.show_percentage = false
     $ui/r_panel/top/writingProgressBar.set_value_no_signal(Blogger.writing_ability)

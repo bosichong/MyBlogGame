@@ -1,12 +1,12 @@
 ## 连载加成修饰器
 ## 用于文学周刊等连续性文章
-## 加成公式：1.0 + 发布篇数 × 0.01
+## 加成公式：每10篇 +2%，100篇到顶（20%）
 class_name SerialBonusModifier
 extends ViewsModifier
 
 ## 连载文章类型列表（文学周刊、程序员周刊、艺术周刊）
 ## 小说连载、动漫连载是付费文章不计入总访问量
-var serial_types: Array = ["文学周刊", "程序员周刊", "艺术周刊", "动漫连载(收费)"]
+var serial_types: Array = ["文学周刊", "程序员周刊", "艺术周刊", "动漫连载(收费)", "小说连载(付费)"]
 
 func _init():
     modifier_name = "serial_bonus"
@@ -25,9 +25,10 @@ func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
     # 计算该类型文章的发布篇数
     var serial_count = _get_serial_count(category, blogger)
     
-    # 加成公式：1.0 + 发布篇数 × 0.01
-    # 即：每发布1篇，加成增加1%
-    var bonus_ratio = 1.0 + float(serial_count) * 0.01
+    # 加成公式：每10篇 +2%，100篇到顶（20%）
+    var bonus_percent = int(serial_count / 10) * 2
+    bonus_percent = min(bonus_percent, 20)  # 最高20%
+    var bonus_ratio = 1.0 + float(bonus_percent) / 100.0
     
     # 应用加成
     var bonus = int(views * (bonus_ratio - 1.0))

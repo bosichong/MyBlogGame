@@ -1,78 +1,26 @@
 extends Node
 
-## 休闲娱乐数据配置
+## 休闲娱乐汇总（从独立文件加载）
 
-var items = [
-    {
-        "name": "和宠物玩",
-        "isVisible": true,
-        "disabled": false,
-        "pressed": false,
-        "money": 0,
-        "stamina": 10,
-        "tip": "免费，恢复10点体力，和萌宠互动放松身心",
-    },
-    {
-        "name": "打游戏",
-        "isVisible": true,
-        "disabled": false,
-        "pressed": false,
-        "money": 50,
-        "stamina": 20,
-        "tip": "花费50元，恢复20点体力，畅玩游戏放松一下",
-    },
-    {
-        "name": "吃烧烤",
-        "isVisible": true,
-        "disabled": false,
-        "pressed": false,
-        "money": 100,
-        "stamina": 30,
-        "tip": "花费100元，恢复30点体力，美味烧烤满足味蕾",
-    },
-    {
-        "name": "KTV",
-        "isVisible": true,
-        "disabled": false,
-        "pressed": false,
-        "money": 200,
-        "stamina": 50,
-        "tip": "花费200元，恢复50点体力，KTV欢唱释放压力",
-    },
-    {
-        "name": "开Party",
-        "isVisible": true,
-        "disabled": false,
-        "pressed": false,
-        "money": 1000,
-        "stamina": 150,
-        "tip": "花费1000元，恢复150点体力，举办派对尽情狂欢（3天冷却）",
-    },
-    {
-        "name": "城市周边自驾游",
-        "isVisible": true,
-        "disabled": false,
-        "pressed": false,
-        "money": 500,
-        "stamina": 100,
-        "tip": "花费500元，恢复100点体力，周边自驾放飞心情",
-    },
-    {
-        "name": "国内旅游",
-        "isVisible": false,
-        "disabled": true,
-        "pressed": false,
-        "money": 3000,
-        "stamina": 80,
-        "tip": "花费3000元，3天每天恢复80点体力，国内旅游放松身心",
-    },
-    {
-        "name": "国外旅游",
-        "isVisible": false,
-        "disabled": true,
-        "pressed": false,
-        "money": 10000,
-        "stamina": 80,
-        "tip": "花费10000元，7天每天恢复80点体力，出国度假深度放松",
-    },
-]
+var items: Array = []
+
+func _init():
+    _load_all_recreation()
+
+func _load_all_recreation():
+    var dir = DirAccess.open("res://data/recreation/")
+    if dir:
+        dir.list_dir_begin()
+        var file_name = dir.get_next()
+        while file_name != "":
+            if file_name.ends_with(".gd") and file_name != "recreation.gd":
+                var full_path = "res://data/recreation/" + file_name
+                var script = load(full_path)
+                if script:
+                    var instance = script.new()
+                    if "item" in instance:
+                        items.append(instance.get("item"))
+            file_name = dir.get_next()
+        dir.list_dir_end()
+    
+    print("[Recreation] 加载了 ", items.size(), " 个活动")

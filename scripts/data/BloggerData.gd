@@ -33,7 +33,7 @@ var technical_ability: float = 0
 var code_ability: float = 0
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 0
+var literature_ability: float = 79
 
 ## 绘画能力：影响艺术类文章质量（插画壁纸、绘画教程等）
 var drawing_ability: float = 0

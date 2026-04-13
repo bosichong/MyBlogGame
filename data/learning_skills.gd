@@ -1,233 +1,26 @@
 extends Node
 
-## 学习技能数据配置
-## 字段说明：
-## - skill_type: 技能类型 (code/literature/draw)
-## - skill_level: 技能等级 (1-5)
-## - unlock_at: 解锁需要的能力值 (0=初始解锁)
-## - next_skill: 下一级技能名称
+## 学习技能汇总（从独立文件加载）
 
-## 技能等级划分：
-## 等级1: 0-20 (初始解锁)
-## 等级2: 20-40 (能力值≥20解锁)
-## 等级3: 40-60 (能力值≥40解锁)
-## 等级4: 60-80 (能力值≥60解锁)
-## 等级5: 80-100 (能力值≥80解锁，最高级)
+var items: Array = []
 
-var items = [
-	# ===== 编程技能 =====
-	{
-		"name": "自学编程",
-		"skill_type": "code",
-		"skill_level": 1,
-		"unlock_at": 0,
-		"next_skill": "学习前端",
-		"tip": "编程1级",
-		"unlock_post_tip": "可以自学编程了",
-		"lock_post_tip": "编程1级学习已经完成",
-		"isVisible": true,
-		"disabled": false,
-		"money": 10,
-		"stamina": 10,
-	},
-	{
-		"name": "学习前端",
-		"skill_type": "code",
-		"skill_level": 2,
-		"unlock_at": 20,
-		"next_skill": "高级编程",
-		"tip": "编程2级，需能力值≥20解锁",
-		"unlock_post_tip": "可以开始学习前端了",
-		"lock_post_tip": "编程2级学习已经完成",
-		"isVisible": false,
-		"disabled": true,
-		"money": 20,
-		"stamina": 20,
-	},
-	{
-		"name": "高级编程",
-		"skill_type": "code",
-		"skill_level": 3,
-		"unlock_at": 40,
-		"next_skill": "网络安全",
-		"tip": "编程3级，需能力值≥40解锁",
-		"unlock_post_tip": "可以开始学习高级编程了",
-		"lock_post_tip": "编程3级学习已经完成",
-		"isVisible": false,
-		"disabled": true,
-		"money": 50,
-		"stamina": 30,
-	},
-	{
-		"name": "网络安全",
-		"skill_type": "code",
-		"skill_level": 4,
-		"unlock_at": 60,
-		"next_skill": "成为黑客",
-		"tip": "编程4级，需能力值≥60解锁",
-		"unlock_post_tip": "可以开始学习网络安全了",
-		"lock_post_tip": "编程4级学习已经完成",
-		"isVisible": false,
-		"disabled": true,
-		"money": 80,
-		"stamina": 40,
-	},
-	{
-		"name": "成为黑客",
-		"skill_type": "code",
-		"skill_level": 5,
-		"unlock_at": 80,
-		"next_skill": "",
-		"tip": "编程5级，需能力值≥80解锁",
-		"unlock_post_tip": "可以开始学习成为黑客了",
-		"lock_post_tip": "你已经掌握所有编程技能！",
-		"isVisible": false,
-		"disabled": true,
-		"money": 100,
-		"stamina": 50,
-	},
-	
-	# ===== 文学技能 =====
-	{
-		"name": "文学入门",
-		"skill_type": "literature",
-		"skill_level": 1,
-		"unlock_at": 0,
-		"next_skill": "写作新手",
-		"tip": "文学1级",
-		"unlock_post_tip": "可以开始学习文学知识了",
-		"lock_post_tip": "文学1级学习已经完成",
-		"isVisible": true,
-		"disabled": false,
-		"money": 10,
-		"stamina": 10,
-	},
-	{
-		"name": "写作新手",
-		"skill_type": "literature",
-		"skill_level": 2,
-		"unlock_at": 20,
-		"next_skill": "创作达人",
-		"tip": "文学2级，需能力值≥20解锁",
-		"unlock_post_tip": "可以开始练习写作了",
-		"lock_post_tip": "文学2级学习已经完成",
-		"isVisible": false,
-		"disabled": true,
-		"money": 20,
-		"stamina": 20,
-	},
-	{
-		"name": "创作达人",
-		"skill_type": "literature",
-		"skill_level": 3,
-		"unlock_at": 40,
-		"next_skill": "人气作家",
-		"tip": "文学3级，需能力值≥40解锁",
-		"unlock_post_tip": "可以开始创作优秀作品了",
-		"lock_post_tip": "文学3级学习已经完成",
-		"isVisible": false,
-		"disabled": true,
-		"money": 50,
-		"stamina": 30,
-	},
-	{
-		"name": "人气作家",
-		"skill_type": "literature",
-		"skill_level": 4,
-		"unlock_at": 60,
-		"next_skill": "文学大师",
-		"tip": "文学4级，需能力值≥60解锁",
-		"unlock_post_tip": "可以开始打造人气作品了",
-		"lock_post_tip": "文学4级学习已经完成",
-		"isVisible": false,
-		"disabled": true,
-		"money": 80,
-		"stamina": 40,
-	},
-	{
-		"name": "文学大师",
-		"skill_type": "literature",
-		"skill_level": 5,
-		"unlock_at": 80,
-		"next_skill": "",
-		"tip": "文学5级，需能力值≥80解锁",
-		"unlock_post_tip": "努力成为文学大师",
-		"lock_post_tip": "你已经掌握所有文学技能！",
-		"isVisible": false,
-		"disabled": true,
-		"money": 100,
-		"stamina": 50,
-	},
-	
-	# ===== 绘画技能 =====
-	{
-		"name": "画渣上路",
-		"skill_type": "draw",
-		"skill_level": 1,
-		"unlock_at": 0,
-		"next_skill": "手绘基础",
-		"tip": "绘画1级",
-		"unlock_post_tip": "可以开始学习画画了",
-		"lock_post_tip": "绘画1级学习已经完成",
-		"isVisible": true,
-		"disabled": false,
-		"money": 10,
-		"stamina": 10,
-	},
-	{
-		"name": "手绘基础",
-		"skill_type": "draw",
-		"skill_level": 2,
-		"unlock_at": 20,
-		"next_skill": "板绘达人",
-		"tip": "绘画2级，需能力值≥20解锁",
-		"unlock_post_tip": "可以学习手绘基础了",
-		"lock_post_tip": "绘画2级学习已经完成",
-		"isVisible": false,
-		"disabled": true,
-		"money": 20,
-		"stamina": 20,
-	},
-	{
-		"name": "板绘达人",
-		"skill_type": "draw",
-		"skill_level": 3,
-		"unlock_at": 40,
-		"next_skill": "游戏原画",
-		"tip": "绘画3级，需能力值≥40解锁",
-		"unlock_post_tip": "可以开始数位板绘画了",
-		"lock_post_tip": "绘画3级学习已经完成",
-		"isVisible": false,
-		"disabled": true,
-		"money": 50,
-		"stamina": 30,
-	},
-	{
-		"name": "游戏原画",
-		"skill_type": "draw",
-		"skill_level": 4,
-		"unlock_at": 60,
-		"next_skill": "美术总监",
-		"tip": "绘画4级，需能力值≥60解锁",
-		"unlock_post_tip": "可以开始游戏原画创作了",
-		"lock_post_tip": "绘画4级学习已经完成",
-		"isVisible": false,
-		"disabled": true,
-		"money": 80,
-		"stamina": 40,
-	},
-	{
-		"name": "美术总监",
-		"skill_type": "draw",
-		"skill_level": 5,
-		"unlock_at": 80,
-		"next_skill": "",
-		"tip": "绘画5级，需能力值≥80解锁",
-		"unlock_post_tip": "可以开始美术总监的修行",
-		"lock_post_tip": "你已经掌握所有绘画技能！",
-		"isVisible": false,
-		"disabled": true,
-		"money": 100,
-		"stamina": 50,
-	},
-]
+func _init():
+    _load_all_skills()
+
+func _load_all_skills():
+    var dir = DirAccess.open("res://data/skills/")
+    if dir:
+        dir.list_dir_begin()
+        var file_name = dir.get_next()
+        while file_name != "":
+            if file_name.ends_with(".gd") and file_name != "learning_skills.gd":
+                var full_path = "res://data/skills/" + file_name
+                var script = load(full_path)
+                if script:
+                    var instance = script.new()
+                    if "item" in instance:
+                        items.append(instance.get("item"))
+            file_name = dir.get_next()
+        dir.list_dir_end()
+    
+    print("[LearningSkills] 加载了 ", items.size(), " 个技能")
