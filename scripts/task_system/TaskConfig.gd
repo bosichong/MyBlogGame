@@ -272,16 +272,16 @@ const TASKS: Array = [
     },
     
     # ====================
-    # IP授权解锁任务
+    # IP授权解锁任务（简化版 - 逻辑已在 blogger.gd 中处理）
     # ====================
     {
         "id": "ip_authorization_unlock",
-        "description": "文学能力达到100级且小说连载发布超过50篇，触发IP授权事件！",
-        "conditions": ["literature_value_ge_100", "novel_serial_ge_50"],
+        "description": "小说连载每批次≥50篇后，有机会触发IP授权！",
+        "conditions": ["novel_serial_ge_50"],
         "trigger_type": "post_event",
         "is_repeatable": false,
         "actions": [
-            {"type": ActionType.TRIGGER_IP_AUTH},
+            {"type": ActionType.SHOW_NOTIFICATION, "message": "IP授权触发检查已在新小说发布时自动处理"},
         ],
     },
 

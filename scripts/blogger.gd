@@ -406,11 +406,88 @@ func add_new_blog_post(title: String, d) -> Dictionary:
 
     if GDManager:
         var blogger = GDManager.get_blogger()
+        
+        # ===== 小说连载批次逻辑（先处理篇数，再生成标题）=====
+        if d.name == "小说连载(付费)":
+            _handle_novel_batch(blogger)
+            # 生成标题
+            if blogger.novel_batch_title == "":
+                _assign_novel_title(blogger)
+            var chapter = blogger.novel_batch_count
+            title = "%s 第%d章" % [blogger.novel_batch_title, chapter]
+            new_post.title = title  # 更新文章标题
+        
         blogger.posts.append(new_post)
         blogger.add_post(new_post)
 
     print("新博客文章发布: ", title, ",分类: ", d.name, ",ID: ", post_id)
     return new_post
+
+## 处理小说连载批次逻辑
+func _handle_novel_batch(blogger):
+    # 第一次发布时，随机选择主题
+    if blogger.novel_batch_title == "":
+        _assign_novel_title(blogger)
+    
+    blogger.novel_batch_count += 1
+    print("[小说连载] 《%s》 批次%d, 第%d篇" % [blogger.novel_batch_title, blogger.novel_batch, blogger.novel_batch_count])
+    
+    # 检查是否达到100篇，自动开新批次
+    if blogger.novel_batch_count >= 100:
+        blogger.novel_batch += 1
+        blogger.novel_batch_count = 0
+        blogger.novel_batch_ip_triggered = false
+        _assign_novel_title(blogger)  # 分配新主题
+        print("[小说连载] 《%s》完结，新批次《%s》开启" % [blogger.novel_batch_title, blogger.novel_batch_title])
+    
+    # 检查是否触发IP授权（>=50篇且未触发过）
+    elif blogger.novel_batch_count >= 5 and not blogger.novel_batch_ip_triggered:  # 测试用5篇
+        _try_trigger_ip_auth(blogger)
+
+## 为当前批次分配小说主题
+func _assign_novel_title(blogger):
+    var title_templates = GDManager.get_title_templates()
+    var topics = title_templates.topics.get("小说连载(付费)", ["程序员修仙传"])
+    blogger.novel_batch_title = topics[randi() % topics.size()]
+
+## 尝试触发IP授权（20%概率）
+## 条件：文学等级>=100 且 小说连载>=50篇
+func _try_trigger_ip_auth(blogger):
+    var literature_level = int(blogger.literature_ability)
+    
+    # 检查文学等级是否达到85
+    if literature_level < 85:
+        print("[IP授权] 跳过检查 - 文学等级%d/85，未达到85级" % literature_level)
+        return
+    
+    var random_val = randi() % 100
+    print("[IP授权] 检查触发... 批次:%d, 篇数:%d, 文学等级:%d, 随机值:%d/100 (需<99)" % [blogger.novel_batch, blogger.novel_batch_count, literature_level, random_val])
+    
+    if random_val < 99:  # 99%概率（测试用）
+        # 计算收益
+        var literature_value = blogger.literature_ability
+        var base_reward = 100000.0
+        var bonus = base_reward * (literature_value / 100.0)
+        var total_reward = base_reward + bonus
+        
+        # 发放收益
+        blogger.money += total_reward
+        blogger.reputation += 500
+        
+        print("[IP授权] 🎉 触发成功！基础收益: %.0f元, 文学加成: %.0f%%, 总收益: %.0f元" % [base_reward, literature_value, total_reward])
+        
+        # 弹窗提示
+        _show_ip_auth_popup(total_reward, literature_value)
+        
+        blogger.novel_batch_ip_triggered = true
+
+## 显示IP授权到账弹窗
+func _show_ip_auth_popup(reward: float, literature_bonus: float):
+    var main = get_tree().root.get_node("Main")
+    if main and main.has_method("show_popup_message"):
+        main.show_popup_message("IP授权收益到账！", "您的作品被影视公司看中！\n\n基础收益: 100000元\n文学加成: %.0f%%\n总收益: %.0f元\n\n声望 +500" % [literature_bonus, reward])
+    else:
+        print("[IP授权] ❌ 未触发！下次篇数达到50时再检查（每批次只触发一次）" )
 
 signal sg_new_blog_post(category: String)
 ## 模拟当天发布新博客文章

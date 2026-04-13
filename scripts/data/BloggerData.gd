@@ -33,7 +33,7 @@ var technical_ability: float = 0
 var code_ability: float = 0
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 79
+var literature_ability: float = 86
 
 ## 绘画能力：影响艺术类文章质量（插画壁纸、绘画教程等）
 var drawing_ability: float = 0
@@ -51,6 +51,9 @@ var money: float = 100000.0
 
 ## 社交能力：影响文章分享、爆款事件触发概率
 var social_ability: int = 5
+
+## 声望
+var reputation: int = 0
 
 # ============================================
 # 博客基础数据
@@ -153,6 +156,22 @@ var tmp_year: int = 2005
 
 ## 最后一篇文章的质量分
 var last_post_quality: int = 0
+
+# ============================================
+# 小说连载批次
+# ============================================
+
+## 当前小说连载批次号（从1开始）
+var novel_batch: int = 1
+
+## 当前批次已发布的小说篇数
+var novel_batch_count: int = 0
+
+## 当前批次是否已触发过IP授权
+var novel_batch_ip_triggered: bool = false
+
+## 当前批次小说主题名
+var novel_batch_title: String = ""
 
 # ============================================
 # 技能学习
