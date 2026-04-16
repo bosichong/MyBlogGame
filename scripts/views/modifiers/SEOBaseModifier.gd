@@ -35,7 +35,7 @@ func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
         age_factor = 1.0
     
     # 基础访问量（占50%，预留任务加成空间）
-    var base = randi_range(2, 5)
+    var base = randi_range(20, 50)
     
     # SEO系数：SEO值 × 年龄系数
     # 新手期 SEO=50, 年龄<3月: 50/100 × 0.3 = 0.15

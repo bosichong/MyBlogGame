@@ -33,7 +33,7 @@ var technical_ability: float = 0
 var code_ability: float = 0
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 86
+var literature_ability: float = 91
 
 ## 绘画能力：影响艺术类文章质量（插画壁纸、绘画教程等）
 var drawing_ability: float = 0
@@ -172,6 +172,19 @@ var novel_batch_ip_triggered: bool = false
 
 ## 当前批次小说主题名
 var novel_batch_title: String = ""
+
+# ============================================
+# 出版畅销书
+# ============================================
+
+## 当前出版的书名
+var book_title: String = ""
+
+## 当前书已发布篇数
+var book_article_count: int = 0
+
+## 是否正在写书
+var is_writing_book: bool = false
 
 # ============================================
 # 技能学习

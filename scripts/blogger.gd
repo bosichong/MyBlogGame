@@ -417,6 +417,17 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             title = "%s 第%d章" % [blogger.novel_batch_title, chapter]
             new_post.title = title  # 更新文章标题
         
+        # ===== 出版畅销书逻辑 =====
+        elif d.name == "出版畅销书":
+            _handle_book_publish(blogger)
+            if blogger.book_title == "":
+                _assign_book_title(blogger)
+            blogger.book_article_count += 1
+            var article_num = blogger.book_article_count
+            title = "%s 第%d篇" % [blogger.book_title, article_num]
+            new_post.title = title
+            print("[出版畅销书] 《%s》 已发布第%d篇" % [blogger.book_title, article_num])
+        
         blogger.posts.append(new_post)
         blogger.add_post(new_post)
 
@@ -449,6 +460,27 @@ func _assign_novel_title(blogger):
     var title_templates = GDManager.get_title_templates()
     var topics = title_templates.topics.get("小说连载(付费)", ["程序员修仙传"])
     blogger.novel_batch_title = topics[randi() % topics.size()]
+
+## 处理出版畅销书批次逻辑
+func _handle_book_publish(blogger):
+    # 标记正在写书
+    blogger.is_writing_book = true
+
+## 为当前书籍分配书名
+func _assign_book_title(blogger):
+    var book_names = [
+        "林间微光",
+        "时光流影",
+        "思想的涟漪",
+        "归途笔记",
+        "浮世清欢",
+        "沉默的潮汐",
+        "边缘漫步",
+        "空杯哲学",
+        "远山浅唱",
+        "流年如歌"
+    ]
+    blogger.book_title = book_names[randi() % book_names.size()]
 
 ## 尝试触发IP授权（20%概率）
 ## 条件：文学等级>=100 且 小说连载>=50篇

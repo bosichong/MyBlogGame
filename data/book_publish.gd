@@ -1,19 +1,19 @@
 extends Node
 
 ## 出版畅销书数据配置
-## 解锁条件：文学能力 ≥100
+## 解锁条件：文学能力 ≥90（测试版）
 
 var books = [
 	{
 		"name": "畅销书写作",
 		"description": "文学能力达到最高境界后，可以开始创作畅销书",
-		"unlock_condition": "literature_value_ge_100",
+		"unlock_condition": "literature_value_ge_90",
 		"type": "出版",
 		
 		# 写作阶段参数（游戏时间）
 		"stamina_per_write": 50,        # 每次写作消耗体力
-		"min_write_days": 168,          # 最少写作天数（游戏内半年）
-		"max_write_days": 336,          # 最长写作天数（游戏内一年）
+		"min_write_days": 5,            # 最少发布篇数（测试用）
+		"max_write_days": 10,          # 最多发布篇数（测试用）
 		"progress_per_day": 1,          # 每天写作进度
 		
 		# 出版流程阶段（游戏时间）
@@ -49,9 +49,9 @@ var books = [
 		"reputation_reward": 1000,       # 声望奖励
 		
 		# 销售持续收入参数
-		"sales_duration_months": 36,     # 销售周期36个月（3年）
-		"peak_month": 12,                # 峰值月份（约1年）
-		"decline_start_month": 18,       # 开始下降月份（1.5年）
+		"sales_duration_months": 12,     # 销售周期12个月（1年，测试用）
+		"peak_month": 6,                 # 峰值月份（半年）
+		"decline_start_month": 9,        # 开始下降月份（9个月）
 		
 		# 峰值收入（文学值≥90时）
 		"peak_income_max": 200000,       # 峰值最高月收入

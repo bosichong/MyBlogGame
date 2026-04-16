@@ -43,7 +43,18 @@ func action_start_book_write() -> void:
         book_notes.isVisible = true
     
     book_state.is_writing = true
-    emit_info_msg.call("文学能力达到最高境界，可以开始创作畅销书了！")
+    
+    # 书名由 blogger.gd 在发布文章时初始化，这里不再处理
+    var book_title = "未命名书籍"
+    if GDManager and GDManager.has_method("get_blogger"):
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            book_title = blogger.book_title
+            if book_title == null or book_title == "":
+                book_title = "未命名书籍"
+    
+    book_state.book_name = book_title
+    emit_info_msg.call("文学能力达到90级，可以开始创作畅销书了！书名：《%s》" % book_title)
 
 ## 动作：写书进度更新
 func action_book_progress(progress: int) -> void:
@@ -51,7 +62,7 @@ func action_book_progress(progress: int) -> void:
     if book_state.get("is_writing", false):
         book_state.write_days += 1
         book_state.total_progress += progress
-        if book_state.write_days >= 168:
+        if book_state.write_days >= 5:
             _check_book_phase_complete(book_state)
 
 ## 动作：书籍阶段变化
@@ -79,11 +90,30 @@ func _check_book_phase_complete(book_state: Dictionary) -> void:
             if book_state.phase_day >= book_state.get("publisher", {}).get("edit_days", 5):
                 book_state.current_phase = 2
                 book_state.phase_day = 0
+                # 进入出版社审核阶段，禁用写书功能
+                _disable_book_publish_category()
                 emit_info_msg.call("编辑修改完成，进入出版社审核阶段...")
         2:
             if book_state.phase_day >= book_state.get("publisher", {}).get("publish_days", 7):
                 book_state.current_phase = 3
                 _complete_book_publish(book_state)
+
+## 禁用出版畅销书分类（审核期间不再写新书）
+func _disable_book_publish_category() -> void:
+    # 清空日程中的出书任务（改为休息），但保持分类可用
+    if Utils and typeof(Blogger) == TYPE_OBJECT:
+        Utils.replace_task_value(Blogger.blog_calendar, "出版畅销书", "休息")
+    print("[出版畅销书] 进入审核阶段，日程任务已改为休息")
+
+## 每日更新书籍阶段进度（审核期每天调用）
+func update_book_phase() -> void:
+    var book_state = _get_or_create_book_state()
+    if book_state.get("is_writing", false) and book_state.current_phase > 0:
+        book_state.phase_day += 1
+        var phase_names = ["编辑修改", "出版社审核", "出版上市"]
+        var phase_name = phase_names[book_state.current_phase - 1] if book_state.current_phase <= 3 else "未知"
+        print("[出版畅销书] 阶段进度: %s, 第%d天" % [phase_name, book_state.phase_day])
+        _check_book_phase_complete(book_state)
 
 ## 获取随机出版商
 func _get_random_publisher() -> Dictionary:
@@ -103,7 +133,7 @@ func _complete_book_publish(book_state: Dictionary) -> void:
     var publisher = book_state.get("publisher", {})
     var base_reward = 50000
     var multiplier = publisher.get("reward_multiplier", 1.0)
-    var final_reward = int(base_reward * multiplier * (book_state.write_days / 168.0))
+    var final_reward = int(base_reward * multiplier * (book_state.write_days / 5.0))
     
     book_state.publish_date = Utils.format_date() if Utils else ""
     book_state.book_id = "book_" + str(Time.get_ticks_msec())
@@ -116,18 +146,25 @@ func _complete_book_publish(book_state: Dictionary) -> void:
     book_state.total_sales_income = 0
     book_state.publisher_name = publisher.get("name", "未知出版社")
     
-    if Blogger:
-        Blogger.money += final_reward
-        Blogger.reputation += 1000
+    # 发放出版收益
+    var blogger = null
+    if GDManager and GDManager.has_method("get_blogger"):
+        blogger = GDManager.get_blogger()
+    if blogger:
+        var current_money = blogger.money
+        var current_reputation = blogger.reputation
+        blogger.set("money", current_money + final_reward)
+        blogger.set("reputation", current_reputation + 1000)
     
     _book_publish_instance.published_books.append(book_state.duplicate())
     
-    var msg = "恭喜！您的畅销书正式出版上市！\n出版社：【%s】\n收益：%d元\n声望：+1000" % [publisher.get("name", "未知"), final_reward]
+    var book_name = book_state.get("book_name", "未知")
+    var msg = "恭喜！《%s》正式出版上市！\n\n出版社：【%s】\n出版收益：%d元\n声望：+1000\n销售周期：12个月\n\n提示：书籍将开始产生持续销售收入" % [book_name, publisher.get("name", "未知"), final_reward]
     emit_popup_msg.call("出版成功", msg)
 
 ## 计算书籍写作质量
 func _calculate_book_quality(write_days: int, literature_value: float) -> float:
-    var day_factor = clamp(float(write_days) / 336.0, 0.5, 1.0)
+    var day_factor = clamp(float(write_days) / 10.0, 0.5, 1.0)
     var lit_factor = literature_value / 100.0
     return day_factor * lit_factor
 
@@ -147,8 +184,13 @@ func settle_monthly_book_sales() -> Dictionary:
         var monthly_income = _calculate_book_monthly_income(book, book.sales_months)
         book.sales_months = book.get("sales_months", 0) + 1
         book.total_sales_income = book.get("total_sales_income", 0) + monthly_income
-        if Blogger and monthly_income > 0:
-            Blogger.money += monthly_income
+        if monthly_income > 0:
+            var blogger = null
+            if GDManager and GDManager.has_method("get_blogger"):
+                blogger = GDManager.get_blogger()
+            if blogger:
+                var current_money = blogger.money
+                blogger.set("money", current_money + monthly_income)
         total_income += monthly_income
     
     return {"total_income": total_income}

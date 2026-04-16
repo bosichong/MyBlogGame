@@ -59,6 +59,7 @@ const CONDITIONS: Dictionary = {
     "literature_value_ge_40": {"type": ConditionType.SKILL_VALUE, "skill": "LITERATURE", "op": CompareOp.GE, "value": 40},
     "literature_value_ge_60": {"type": ConditionType.SKILL_VALUE, "skill": "LITERATURE", "op": CompareOp.GE, "value": 60},
     "literature_value_ge_80": {"type": ConditionType.SKILL_VALUE, "skill": "LITERATURE", "op": CompareOp.GE, "value": 80},
+    "literature_value_ge_90": {"type": ConditionType.SKILL_VALUE, "skill": "LITERATURE", "op": CompareOp.GE, "value": 90},
     "literature_value_ge_100": {"type": ConditionType.SKILL_VALUE, "skill": "LITERATURE", "op": CompareOp.GE, "value": 100},
     
     # 技能数值条件 - 编程（每20能力值一个等级）
@@ -206,9 +207,9 @@ const TASKS: Array = [
         ],
     },
     {
-        "id": "literature_unlock_100",
-        "description": "文学能力值达到100，已达到最高境界",
-        "conditions": ["literature_value_ge_100"],
+        "id": "literature_unlock_90",
+        "description": "文学能力值达到90，可开始创作畅销书（测试版）",
+        "conditions": ["literature_value_ge_90"],
         "trigger_type": "skill_up",
         "is_repeatable": false,
         "actions": [
@@ -261,13 +262,27 @@ const TASKS: Array = [
         ],
     },
     {
-        "id": "literature_post_unlock_100",
-        "description": "文学能力值达到100，解锁出版畅销书写作",
-        "conditions": ["literature_value_ge_100"],
+        "id": "literature_post_unlock_90",
+        "description": "文学能力值达到90，解锁出版畅销书写作（测试版）",
+        "conditions": ["literature_value_ge_90"],
         "trigger_type": "skill_up",
         "is_repeatable": false,
         "actions": [
             {"type": ActionType.UNLOCK_POST_TASK, "post_type": "出版畅销书"},
+        ],
+    },
+    
+    # ====================
+    # 出版畅销书进度任务（发布文章时自动累计进度）
+    # ====================
+    {
+        "id": "book_publish_progress",
+        "description": "发布出版畅销书文章，累计进度",
+        "conditions": [],
+        "trigger_type": "post_event",
+        "is_repeatable": true,
+        "actions": [
+            {"type": ActionType.BOOK_PROGRESS, "progress": 1},
         ],
     },
     

@@ -114,6 +114,9 @@ func _on_blog_post(category: String) -> void:
 ## 每日任务检查
 func day_task_func() -> void:
     check_tasks_by_trigger("time_check", {})
+    # 更新书籍阶段进度
+    if BookPublishMgr and BookPublishMgr.has_method("update_book_phase"):
+        BookPublishMgr.update_book_phase()
 
 ## ============================================================
 ## 任务检查
