@@ -31,16 +31,13 @@ func action_start_book_write() -> void:
     var book_state = _book_publish_instance.current_book_state
     
     # 解锁出版畅销书选项
-    var d = Utils.find_category_by_name(Utils.possible_categories, "出版畅销书") if Utils else null
+    var d = Utils.find_category_by_name(Utils.possible_categories, "出版畅销书", true) if Utils else null
     if d != null:
         d.disabled = false
         d.isVisible = true
     
-    # 解锁"出书笔记"文章类型
-    var book_notes = Utils.find_category_by_name(Utils.possible_categories, "出书笔记") if Utils else null
-    if book_notes != null:
-        book_notes.disabled = false
-        book_notes.isVisible = true
+    # 注意："出书笔记"的解锁移到 action_book_progress 中
+    # 只有真正开始写书（发布第一篇"出版畅销书"）时才解锁
     
     book_state.is_writing = true
     
@@ -61,6 +58,25 @@ func action_start_book_write() -> void:
 ## 动作：写书进度更新
 func action_book_progress(progress: int) -> void:
     var book_state = _get_or_create_book_state()
+    var is_first_article = book_state.get("write_days", 0) == 0
+    
+    # 如果是第一次写书（write_days 为 0），解锁"出书笔记"
+    if is_first_article:
+        var blogger = null
+        if GDManager and GDManager.has_method("get_blogger"):
+            blogger = GDManager.get_blogger()
+        if blogger and blogger.is_writing_book:
+            # 确保 is_writing 为 true
+            if not book_state.get("is_writing", false):
+                book_state.is_writing = true
+            
+            # 解锁"出书笔记"文章类型
+            var book_notes = Utils.find_category_by_name(Utils.possible_categories, "出书笔记", true) if Utils else null
+            if book_notes != null and book_notes.disabled:
+                book_notes.disabled = false
+                book_notes.isVisible = true
+                print("[出版畅销书] 第一次写书，已解锁出书笔记类型")
+    
     if book_state.get("is_writing", false):
         book_state.write_days += 1
         book_state.total_progress += progress
@@ -106,6 +122,17 @@ func _disable_book_publish_category() -> void:
     if Utils and typeof(Blogger) == TYPE_OBJECT:
         Utils.replace_task_value(Blogger.blog_calendar, "出版畅销书", "休息")
     print("[出版畅销书] 进入审核阶段，日程任务已改为休息")
+
+## 隐藏出书笔记分类（出版完成后调用）
+func _hide_book_notes_category() -> void:
+    var book_notes = Utils.find_category_by_name(Utils.possible_categories, "出书笔记", true) if Utils else null
+    if book_notes != null:
+        book_notes.disabled = true
+        book_notes.isVisible = false
+        # 取消勾选日程中的出书笔记任务
+        if Utils and typeof(Blogger) == TYPE_OBJECT:
+            Utils.replace_task_value(Blogger.blog_calendar, "出书笔记", "休息")
+        print("[出版畅销书] 已隐藏出书笔记类型")
 
 ## 每日更新书籍阶段进度（审核期每天调用）
 func update_book_phase() -> void:
@@ -160,6 +187,17 @@ func _complete_book_publish(book_state: Dictionary) -> void:
         var current_reputation = blogger.reputation
         blogger.set("money", current_money + final_reward)
         blogger.set("reputation", current_reputation + 1000)
+        
+        # 重置书名和文章计数，为下一本书做准备
+        blogger.set("book_title", "")
+        blogger.set("book_article_count", 0)
+        print("[出版畅销书] 重置书名和文章计数，准备写新书")
+        
+        # 出版完成后，锁定并隐藏出书笔记
+        _hide_book_notes_category()
+    
+    # 重置 current_book_state，为新书做准备
+    _reset_book_state()
     
     _book_publish_instance.published_books.append(book_state.duplicate())
     
@@ -177,18 +215,53 @@ func _calculate_book_quality(write_days: int, literature_value: float) -> float:
 func _get_or_create_book_state() -> Dictionary:
     return _book_publish_instance.current_book_state if _book_publish_instance else {}
 
+## 重置书籍状态（用于出版完成后开始新书）
+func _reset_book_state() -> void:
+    if not _book_publish_instance:
+        return
+    _book_publish_instance.current_book_state = {
+        "is_writing": false,
+        "book_id": "",
+        "book_name": "",
+        "current_phase": 0,
+        "write_days": 0,
+        "write_quality": 0,
+        "total_progress": 0,
+        "phase_day": 0,
+        "completed": false,
+        "publisher": {},
+        "published": false,
+        "publish_date": "",
+        "sales_months": 0,
+        "total_sales_income": 0,
+    }
+    print("[出版畅销书] current_book_state 已重置")
+
 ## 每月结算书籍销售收入
 func settle_monthly_book_sales() -> Dictionary:
     if not _book_publish_instance:
-        return {"total_income": 0}
+        return {"total_income": 0, "books": []}
     
     var total_income = 0
+    var books_info = []
+    
     for book in _book_publish_instance.published_books:
         if not book.get("published", false) or book.get("sales_months", 0) >= 36:
             continue
         var monthly_income = _calculate_book_monthly_income(book, book.sales_months)
         book.sales_months = book.get("sales_months", 0) + 1
         book.total_sales_income = book.get("total_sales_income", 0) + monthly_income
+        
+        # 记录每本书的收入信息
+        var book_info = {
+            "book_name": book.get("book_name", "未知"),
+            "publisher": book.get("publisher_name", "未知出版社"),
+            "income": monthly_income,
+            "sales_months": book.sales_months,
+            "total_income": book.total_sales_income
+        }
+        books_info.append(book_info)
+        
         if monthly_income > 0:
             var blogger = null
             if GDManager and GDManager.has_method("get_blogger"):
@@ -198,7 +271,7 @@ func settle_monthly_book_sales() -> Dictionary:
                 blogger.set("money", current_money + monthly_income)
         total_income += monthly_income
     
-    return {"total_income": total_income}
+    return {"total_income": total_income, "books": books_info}
 
 ## 计算书籍月销售收入
 func _calculate_book_monthly_income(book: Dictionary, sales_months: int) -> int:

@@ -277,7 +277,20 @@ func _on_month_passed():
     # 书籍销售月结算
     var sales_result = TaskManager.settle_monthly_book_sales()
     if sales_result.total_income > 0:
-        info_display.add_message("📚 本月书籍销售收入：%d元" % sales_result.total_income)
+        var msg = "📚 本月书籍销售收入：%d元" % sales_result.total_income
+        if sales_result.has("books") and sales_result.books.size() > 0:
+            msg += "\n"
+            for book in sales_result.books:
+                msg += "  《%s》[%s]: %d元 (第%d月, 累计%d元)\n" % [
+                    book.book_name, 
+                    book.publisher,
+                    book.income, 
+                    book.sales_months, 
+                    book.total_income
+                ]
+        # 去掉最后的换行
+        msg = msg.trim_suffix("\n")
+        info_display.add_message(msg)
     
     # 开源项目月结算
     var os_result = TaskManager.settle_monthly_open_source()

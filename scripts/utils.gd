@@ -171,8 +171,11 @@ func find_category_by_id(array: Array, id: String) -> Dictionary:
     return {}
 
 
-func find_category_by_name(array: Array, name: String) -> Dictionary:
+func find_category_by_name(array: Array, name: String, include_disabled: bool = false) -> Dictionary:
     for cat in array:
+        # 跳过禁用的分类（除非明确指定要包含）
+        if not include_disabled and cat.get("disabled", false):
+            continue
         if cat.get("name", "").to_lower() == name.to_lower():
             return cat
     return {}

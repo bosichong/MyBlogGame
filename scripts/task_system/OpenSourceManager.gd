@@ -29,7 +29,7 @@ func action_start_open_source_project() -> void:
     os_state.stars = 0
     
     # 解锁开源维护笔记文章类型
-    var os_notes = Utils.find_category_by_name(Utils.possible_categories, "开源维护笔记") if Utils else null
+    var os_notes = Utils.find_category_by_name(Utils.possible_categories, "开源维护笔记", true) if Utils else null
     if os_notes != null:
         os_notes.disabled = false
         os_notes.isVisible = true

@@ -261,7 +261,6 @@ func daily_stamina_recovery():
     var blogger = GDManager.get_blogger()
     var recovery = Utils.get_daily_stamina_recovery(blogger.level)
     blogger.stamina += Utils.add_property(blogger.stamina, recovery, blogger.level)
-    print("[每日恢复] 体力+", recovery, ",当前体力:", blogger.stamina)
 
 
 ## 获取升级到下一级所需的EXP
@@ -328,8 +327,8 @@ func daily_activities():
                 exp_gained += playgame(task) # 休息一天
         elif Utils.check_name_exists(Utils.learning_skills, task):
             # 检查技能是否已解锁(未禁用)
-            var skill = Utils.find_category_by_name(Utils.learning_skills, task)
-            if skill.get("disabled", false):
+            var skill = Utils.find_category_by_name(Utils.learning_skills, task, true)
+            if skill.is_empty() or skill.get("disabled", false):
                 print("技能【%s】已禁用,跳过" % task)
                 continue
             exp_gained += learningToSkills(task)
@@ -357,8 +356,8 @@ func week_activites():
     del_fa()
 
     # 判断绘画技能值>=25时,开启页面美化
-    var tmp_design = Utils.find_category_by_name(Utils.website_maintenance, "页面美化")
-    if tmp_design.disabled:
+    var tmp_design = Utils.find_category_by_name(Utils.website_maintenance, "页面美化", true)
+    if not tmp_design.is_empty() and tmp_design.disabled:
         if blogger.drawing_ability >= 25:
             tmp_design.disabled = false
 
@@ -428,6 +427,12 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             new_post.title = title
             print("[出版畅销书] 《%s》 已发布第%d篇" % [blogger.book_title, article_num])
         
+        # ===== 出书笔记逻辑 =====
+        elif d.name == "出书笔记":
+            title = _generate_book_note_title(blogger)
+            new_post.title = title
+            print("[出书笔记] 《%s》" % title)
+        
         blogger.posts.append(new_post)
         blogger.add_post(new_post)
 
@@ -481,6 +486,29 @@ func _assign_book_title(blogger):
         "流年如歌"
     ]
     blogger.book_title = book_names[randi() % book_names.size()]
+
+## 生成出书笔记标题（书名 + 随机词语）
+func _generate_book_note_title(blogger) -> String:
+    var book_title = blogger.book_title
+    if book_title == "":
+        # 如果没有书名，生成一个
+        _assign_book_title(blogger)
+        book_title = blogger.book_title
+    
+    var suffixes = [
+        "写作心得",
+        "创作感悟",
+        "灵感随笔",
+        "写作笔记",
+        "创作历程",
+        "写作回顾",
+        "灵感记录",
+        "创作故事",
+        "文字的力量",
+        "书的诞生"
+    ]
+    var suffix = suffixes[randi() % suffixes.size()]
+    return "%s - %s" % [book_title, suffix]
 
 ## 尝试触发IP授权（20%概率）
 ## 条件：文学等级>=100 且 小说连载>=50篇
@@ -536,6 +564,9 @@ func simulate_new_blog_post(category) -> int:
 
     var blogger = GDManager.get_blogger()
     var d = Utils.find_category_by_name(Utils.possible_categories, category)
+    if d.is_empty():
+        print("[警告] 分类 %s 未找到或已被禁用" % category)
+        return 0
     var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
 
     if blogger.stamina >= actual_cost and category: ## 如果体力足够,并且当天有写作任务。
@@ -845,7 +876,7 @@ func learningToSkills(category: String) -> int:
         return 0
 
     var blogger = GDManager.get_blogger()
-    var d = Utils.find_category_by_name(Utils.learning_skills, category)
+    var d = Utils.find_category_by_name(Utils.learning_skills, category, true)
 
     if d.is_empty():
         print("未找到技能: ", category)
@@ -907,7 +938,7 @@ func try_unlock_next_skill(current_skill: Dictionary, current_ability: float):
     if next_name == "":
         return
     
-    var next_skill = Utils.find_category_by_name(Utils.learning_skills, next_name)
+    var next_skill = Utils.find_category_by_name(Utils.learning_skills, next_name, true)
     if next_skill.is_empty():
         return
     

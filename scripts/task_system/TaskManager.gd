@@ -419,7 +419,7 @@ func _action_skill_lock(action: Dictionary) -> void:
         push_error("[TaskManager] Utils 未初始化")
         return
 
-    var d = Utils.find_category_by_name(Utils.learning_skills, skill_name)
+    var d = Utils.find_category_by_name(Utils.learning_skills, skill_name, true)
     if d.is_empty():
         push_error("[TaskManager] Skill not found: %s" % skill_name)
         return
@@ -440,7 +440,7 @@ func _action_skill_unlock(action: Dictionary) -> void:
         push_error("[TaskManager] Utils 未初始化")
         return
 
-    var d = Utils.find_category_by_name(Utils.learning_skills, skill_name)
+    var d = Utils.find_category_by_name(Utils.learning_skills, skill_name, true)
     if d.is_empty():
         push_error("[TaskManager] Skill not found: %s" % skill_name)
         return
@@ -464,7 +464,8 @@ func _action_unlock_post(action: Dictionary) -> void:
         push_error("[TaskManager] Utils 未初始化")
         return
 
-    var d = Utils.find_category_by_name(Utils.possible_categories, post_type)
+    # 使用 include_disabled=true 以便找到被禁用的分类并进行解锁
+    var d = Utils.find_category_by_name(Utils.possible_categories, post_type, true)
     if d.is_empty():
         push_error("[TaskManager] Post type not found: %s" % post_type)
         return
@@ -488,7 +489,7 @@ func _action_lock_post(action: Dictionary) -> void:
         push_error("[TaskManager] Utils 未初始化")
         return
 
-    var d = Utils.find_category_by_name(Utils.possible_categories, post_type)
+    var d = Utils.find_category_by_name(Utils.possible_categories, post_type, true)
     if d.is_empty():
         push_error("[TaskManager] Post type not found: %s" % post_type)
         return
@@ -510,7 +511,7 @@ func _action_hide_post(action: Dictionary) -> void:
         push_error("[TaskManager] Utils 未初始化")
         return
 
-    var d = Utils.find_category_by_name(Utils.possible_categories, post_type)
+    var d = Utils.find_category_by_name(Utils.possible_categories, post_type, true)
     if d.is_empty():
         push_error("[TaskManager] Post type not found: %s" % post_type)
         return
