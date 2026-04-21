@@ -51,7 +51,9 @@ func action_start_book_write() -> void:
         if blogger:
             book_title = blogger.book_title
             if book_title == null or book_title == "":
-                book_title = "未命名书籍"
+                # 书名为空时使用随机名称
+                var default_names = ["林间微光", "时光流影", "思想的涟漪", "归途笔记", "浮世清欢"]
+                book_title = default_names[randi() % default_names.size()]
     
     book_state.book_name = book_title
     emit_info_msg.call("文学能力达到90级，可以开始创作畅销书了！书名：《%s》" % book_title)
@@ -137,7 +139,10 @@ func _complete_book_publish(book_state: Dictionary) -> void:
     
     book_state.publish_date = Utils.format_date() if Utils else ""
     book_state.book_id = "book_" + str(Time.get_ticks_msec())
-    book_state.book_name = "畅销书#" + str(randi() % 1000)
+    # 只在书名为空时设置默认名称
+    if book_state.get("book_name", "") == "" or book_state.get("book_name", "").begins_with("畅销书"):
+        var default_names = ["林间微光", "时光流影", "思想的涟漪", "归途笔记", "浮世清欢"]
+        book_state.book_name = default_names[randi() % default_names.size()]
     
     var literature_value = Blogger.get_ability_by_type("literature") if Blogger else 50.0
     book_state.write_quality = _calculate_book_quality(book_state.write_days, literature_value)
