@@ -67,6 +67,7 @@ const CONDITIONS: Dictionary = {
     "code_value_ge_40": {"type": ConditionType.SKILL_VALUE, "skill": "CODE", "op": CompareOp.GE, "value": 40},
     "code_value_ge_60": {"type": ConditionType.SKILL_VALUE, "skill": "CODE", "op": CompareOp.GE, "value": 60},
     "code_value_ge_80": {"type": ConditionType.SKILL_VALUE, "skill": "CODE", "op": CompareOp.GE, "value": 80},
+    "code_value_ge_90": {"type": ConditionType.SKILL_VALUE, "skill": "CODE", "op": CompareOp.GE, "value": 90},
     "code_value_ge_100": {"type": ConditionType.SKILL_VALUE, "skill": "CODE", "op": CompareOp.GE, "value": 100},
     
     # 技能数值条件 - 绘画（每20能力值一个等级）
@@ -213,7 +214,6 @@ const TASKS: Array = [
         "trigger_type": "skill_up",
         "is_repeatable": false,
         "actions": [
-            {"type": ActionType.SKILL_LEVEL_LOCK, "skill_name": "文学大师"},
             {"type": ActionType.START_BOOK_WRITE},
         ],
     },
@@ -280,9 +280,25 @@ const TASKS: Array = [
         "description": "发布出版畅销书文章，累计进度",
         "conditions": [],
         "trigger_type": "post_event",
+        "post_type_filter": "出版畅销书",  # 只在发布出版畅销书时触发
         "is_repeatable": true,
         "actions": [
             {"type": ActionType.BOOK_PROGRESS, "progress": 1},
+        ],
+    },
+    
+    # ====================
+    # 开源项目进度任务（发布文章时自动累计进度）
+    # ====================
+    {
+        "id": "open_source_progress",
+        "description": "发布开源项目文章，累计进度",
+        "conditions": [],
+        "trigger_type": "post_event",
+        "post_type_filter": "开源项目",  # 只在发布开源项目时触发
+        "is_repeatable": true,
+        "actions": [
+            {"type": ActionType.OPEN_SOURCE_PROGRESS, "progress": 1},
         ],
     },
     
@@ -432,13 +448,12 @@ const TASKS: Array = [
         ],
     },
     {
-        "id": "code_unlock_100",
-        "description": "编程能力值达到100，已达到最高境界",
-        "conditions": ["code_value_ge_100"],
+        "id": "code_unlock_90",
+        "description": "编程能力值达到90，可开始创建开源项目",
+        "conditions": ["code_value_ge_90"],
         "trigger_type": "skill_up",
         "is_repeatable": false,
         "actions": [
-            {"type": ActionType.SKILL_LEVEL_LOCK, "skill_name": "成为黑客"},
             {"type": ActionType.START_OPEN_SOURCE_PROJECT},
         ],
     },

@@ -295,7 +295,20 @@ func _on_month_passed():
     # 开源项目月结算
     var os_result = TaskManager.settle_monthly_open_source()
     if os_result.total_income > 0:
-        info_display.add_message("💻 本月开源项目赞助收入：%d元" % os_result.total_income)
+        var msg = "💻 本月开源项目赞助收入：%d元" % os_result.total_income
+        if os_result.has("projects") and os_result.projects.size() > 0:
+            msg += "\n"
+            for project in os_result.projects:
+                msg += "  《%s》[%s]: %d元 (第%d月, 累计%d元)\n" % [
+                    project.project_name, 
+                    project.sponsor,
+                    project.income, 
+                    project.sponsor_months, 
+                    project.total_income
+                ]
+        # 去掉最后的换行
+        msg = msg.trim_suffix("\n")
+        info_display.add_message(msg)
 
 func _on_quarter_passed():
     Lm.up_jhph()

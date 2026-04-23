@@ -5,10 +5,14 @@ var tmp_v = 23
 ## 访问量计算器
 var views_calculator: ViewsCalculator = null
 
-## 付费文章周收入累积
+## 付费文章周收入累积（按类型分别统计）
 var weekly_paid_income: float = 0
+var weekly_novel_income: float = 0       # 小说连载收入
+var weekly_hacker_income: float = 0      # 付费黑客攻防收入
 ## 上次结算时付费文章总访问量（用于计算新增访问量）
 var last_settle_paid_views: int = 0
+var last_settle_novel_views: int = 0      # 小说连载上次结算访问量
+var last_settle_hacker_views: int = 0    # 付费黑客攻防上次结算访问量
 
 ## 付费文章订阅配置
 const PAID_SUBSCRIPTION_PRICE: float = 9.9  # 固定订阅价格
@@ -427,6 +431,17 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             new_post.title = title
             print("[出版畅销书] 《%s》 已发布第%d篇" % [blogger.book_title, article_num])
         
+        # ===== 开源项目逻辑 =====
+        elif d.name == "开源项目":
+            _handle_os_project(blogger)
+            if blogger.os_project_name == "":
+                _assign_os_project_name(blogger)
+            blogger.os_article_count += 1
+            var article_num = blogger.os_article_count
+            title = "%s 第%d篇" % [blogger.os_project_name, article_num]
+            new_post.title = title
+            print("[开源项目] 《%s》 已发布第%d篇" % [blogger.os_project_name, article_num])
+        
         # ===== 出书笔记逻辑 =====
         elif d.name == "出书笔记":
             title = _generate_book_note_title(blogger)
@@ -486,6 +501,27 @@ func _assign_book_title(blogger):
         "流年如歌"
     ]
     blogger.book_title = book_names[randi() % book_names.size()]
+
+## 处理开源项目批次逻辑
+func _handle_os_project(blogger):
+    # 标记正在开发开源项目
+    blogger.is_developing_os = true
+
+## 为当前项目分配名称
+func _assign_os_project_name(blogger):
+    var project_names = [
+        "FastAPI",           # 快速Web框架
+        "Gin",               # Go语言Web框架
+        "Vue.js",            # 前端框架
+        "TensorFlow",        # 机器学习框架
+        "React",             # 前端库
+        "Docker",            # 容器平台
+        "Kubernetes",        # 容器编排
+        "PyTorch",           # 深度学习框架
+        "Redis",             # 内存数据库
+        "Elasticsearch"     # 搜索引擎
+    ]
+    blogger.os_project_name = project_names[randi() % project_names.size()]
 
 ## 生成出书笔记标题（书名 + 随机词语）
 func _generate_book_note_title(blogger) -> String:
@@ -623,25 +659,53 @@ func update_blog_views() -> int:
 
     # 计算付费文章收入(按周结算)
     var today_money = 0
+    var today_novel_money = 0
+    var today_hacker_money = 0
     var paid_posts = []
+    var novel_posts = []
+    var hacker_posts = []
     var current_total_views = 0
+    var novel_views = 0
+    var hacker_views = 0
     for post in blogger.posts:
         if post.get("type1", "") == "付费":
             paid_posts.append(post)
-            current_total_views += post.get("views", 0)
+            var post_views = post.get("views", 0)
+            current_total_views += post_views
+            # 分别统计不同类型
+            if post.get("category", "") == "小说连载(付费)":
+                novel_posts.append(post)
+                novel_views += post_views
+            elif post.get("category", "") == "付费黑客攻防":
+                hacker_posts.append(post)
+                hacker_views += post_views
     
-    # 计算新增访问量
-    var new_views = current_total_views - last_settle_paid_views
-    if new_views > 0 and paid_posts.size() > 0:
-        var avg_quality = 0
-        for post in paid_posts:
-            avg_quality += post.get("quality", 50)
-        avg_quality = avg_quality / paid_posts.size()
-        today_money = calculate_paid_income(new_views, avg_quality)
+    # 分别计算不同类型的收入
+    if novel_posts.size() > 0:
+        var novel_new_views = novel_views - last_settle_novel_views
+        if novel_new_views > 0:
+            var avg_quality = 0
+            for post in novel_posts:
+                avg_quality += post.get("quality", 50)
+            avg_quality = avg_quality / novel_posts.size()
+            today_novel_money = calculate_paid_income(novel_new_views, avg_quality)
+            weekly_novel_income += today_novel_money
+    
+    if hacker_posts.size() > 0:
+        var hacker_new_views = hacker_views - last_settle_hacker_views
+        if hacker_new_views > 0:
+            var avg_quality = 0
+            for post in hacker_posts:
+                avg_quality += post.get("quality", 50)
+            avg_quality = avg_quality / hacker_posts.size()
+            today_hacker_money = calculate_paid_income(hacker_new_views, avg_quality)
+            weekly_hacker_income += today_hacker_money
+    
+    today_money = today_novel_money + today_hacker_money
     
     # 调试日志
     if paid_posts.size() > 0:
-        print("[付费文章] 共", paid_posts.size(), "篇, 上次访问量:", last_settle_paid_views, ", 当前:", current_total_views, ", 新增:", new_views, ", 本周收入:", today_money)
+        print("[付费文章] 共", paid_posts.size(), "篇, 小说:", novel_posts.size(), "篇(新增:", novel_views - last_settle_novel_views, "), 黑客:", hacker_posts.size(), "篇(新增:", hacker_views - last_settle_hacker_views, "), 本周收入:", today_money)
     
     # 累积每周收入
     weekly_paid_income += today_money
@@ -649,14 +713,37 @@ func update_blog_views() -> int:
     # 每周结算（第7天）
     if TimerManager.current_day == 7 and weekly_paid_income > 0:
         blogger.money += weekly_paid_income
-        print("[小说连载收入] 本周收入: ", weekly_paid_income, " 元，已入账")
+        
+        # 在游戏界面显示收入到账弹窗
+        var main = get_tree().root.get_node("Main")
+        if main and main.has_method("show_popup_message"):
+            var msg = ""
+            if weekly_novel_income > 0:
+                msg += "小说连载收入: %.0f 元\n" % weekly_novel_income
+            if weekly_hacker_income > 0:
+                msg += "付费黑客攻防收入: %.0f 元\n" % weekly_hacker_income
+            if weekly_novel_income > 0 or weekly_hacker_income > 0:
+                msg += "付费文章总收入: %.0f 元，已入账" % weekly_paid_income
+            main.show_popup_message("付费文章收入到账", msg)
+        
+        # 分别打印不同来源的收入
+        if weekly_novel_income > 0:
+            print("[小说连载收入] 本周收入: ", weekly_novel_income, " 元，已入账")
+        if weekly_hacker_income > 0:
+            print("[付费黑客攻防收入] 本周收入: ", weekly_hacker_income, " 元，已入账")
+        if weekly_novel_income > 0 or weekly_hacker_income > 0:
+            print("[付费文章总收入] ", weekly_paid_income, " 元")
         # 更新上次结算访问量
+        last_settle_novel_views = novel_views
+        last_settle_hacker_views = hacker_views
         var total_paid_views = 0
         for post in blogger.posts:
             if post.get("type1", "") == "付费":
                 total_paid_views += post.get("views", 0)
         last_settle_paid_views = total_paid_views
         weekly_paid_income = 0
+        weekly_novel_income = 0
+        weekly_hacker_income = 0
 
     # 广告收入和影响
     if AdManager.ad_2:

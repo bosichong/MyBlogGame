@@ -117,6 +117,10 @@ func day_task_func() -> void:
     # 更新书籍阶段进度
     if BookPublishMgr and BookPublishMgr.has_method("update_book_phase"):
         BookPublishMgr.update_book_phase()
+    
+    # 更新开源项目阶段进度
+    if OpenSourceMgr and OpenSourceMgr.has_method("update_os_phase"):
+        OpenSourceMgr.update_os_phase()
 
 ## ============================================================
 ## 任务检查
@@ -131,6 +135,13 @@ func check_tasks_by_trigger(trigger_type: String, context: Dictionary) -> void:
         var task_trigger = task.get("trigger_type", "")
         if task_trigger != trigger_type:
             continue
+        
+        # 检查 post_type_filter（如果有）
+        var post_type_filter = task.get("post_type_filter", "")
+        if post_type_filter != "":
+            var post_type = context.get("post_type", "")
+            if post_type != post_type_filter:
+                continue
 
         # 检查任务是否可执行
         if not _can_execute_task(task):
@@ -402,7 +413,7 @@ func _execute_action(action: Dictionary) -> void:
         TaskConfig.ActionType.START_OPEN_SOURCE_PROJECT:
             OpenSourceMgr.action_start_open_source_project() if OpenSourceMgr else null
         TaskConfig.ActionType.OPEN_SOURCE_PROGRESS:
-            OpenSourceMgr.action_open_source_progress(action.get("progress", 1)) if OpenSourceMgr else null
+            OpenSourceMgr.action_os_progress(action.get("progress", 1)) if OpenSourceMgr else null
         TaskConfig.ActionType.OPEN_SOURCE_ACQUISITION:
             OpenSourceMgr.action_open_source_acquisition() if OpenSourceMgr else null
         _:

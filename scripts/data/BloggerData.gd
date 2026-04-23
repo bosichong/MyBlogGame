@@ -30,7 +30,7 @@ var writing_ability: float = 0
 var technical_ability: float = 0
 
 ## 编程能力：影响编程教程、黑客攻防等技术文章质量
-var code_ability: float = 0
+var code_ability: float = 91
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
 var literature_ability: float = 91
@@ -132,13 +132,13 @@ var posts: Array[Dictionary] = []
 ## 每日任务安排
 ## 每天可以安排多个任务（写作、维护、休息、学习等）
 var calendar: Array[Dictionary] = [
-    {"tasks": ["文学入门", ]},      # 周一
-    {"tasks": ["文学入门", ]},      # 周二
-    {"tasks": ["文学入门", ]},      # 周三
-    {"tasks": ["文学入门", ]},      # 周四
-    {"tasks": ["安全维护"]},      # 周五
-    {"tasks": ["SEO优化"]},       # 周六
-    {"tasks": ["打游戏"]},        # 周日
+    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周一
+    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周二
+    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周三
+    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周四
+    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周五
+    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周六
+    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周日
 ]
 
 # ============================================
@@ -185,6 +185,19 @@ var book_article_count: int = 0
 
 ## 是否正在写书
 var is_writing_book: bool = false
+
+# ============================================
+# 开源项目
+# ============================================
+
+## 当前开源项目名
+var os_project_name: String = ""
+
+## 当前项目已发布篇数
+var os_article_count: int = 0
+
+## 是否正在开发开源项目
+var is_developing_os: bool = false
 
 # ============================================
 # 技能学习
