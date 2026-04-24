@@ -45,16 +45,23 @@ func on_show_panel():
     $"bg/选项组/sc3/VBoxContainer/Label5".text = Strs.yun.网络安全简介
     $"bg/选项组/sc3/VBoxContainer/Label5".set_autowrap_mode(TextServer.AUTOWRAP_WORD_SMART)
     create_package_ui()
+    
+    # ===== 显示暂停状态 =====
+    var suspend_info = Yun.get_suspend_info()
+    var suspend_status_text = ""
+    if suspend_info.is_suspended:
+        suspend_status_text = "\n⚠️ [暂停中] 已欠费 %d 天，请尽快续费！" % suspend_info.suspend_days
+    
     domain_label.text = "域名: " + domain_info.name + "  " + \
                    "开始时间: " + domain_info.start_time + "  " + \
                    "结束时间: " + domain_info.end_time + "  " + \
-                   "状态: " + ("正常" if domain_info.is_active else "过期")
+                   "状态: " + ("正常" if domain_info.is_active else "❌ 过期") + suspend_status_text
                 
     server_label.text = "主机: " + server_package.name + "  " + \
                    "开始时间: " + server_package.start_time + "  " + \
                    "结束时间: " + server_package.end_time + "  " + \
-                   "状态: " + ("正常" if server_package.is_active else "过期") + "  " + \
-                   "月访问量限制: " + str(server_package.monthly_traffic_limit) + "万次/月"
+                   "状态: " + ("正常" if server_package.is_active else "❌ 过期") + "  " + \
+                   "月访问量限制: " + ("无限制" if server_package.monthly_traffic_limit == -1 else str(server_package.monthly_traffic_limit) + "万次/月") + suspend_status_text
     ds.text = "数据安全: " + \
           ("开始时间: " + data_security.start_time + "  " + \
            "结束时间: " + data_security.end_time + "  " + \
@@ -181,8 +188,8 @@ func create_package_ui():
     var package_costs = all_packages["package_costs"]
     var package_limits = all_packages["package_traffic_limits"]
     
-    # 为每个套餐创建UI组件
-    for package_type in range(5):
+    # 为每个套餐创建UI组件（包含终极套餐）
+    for package_type in range(6):  # 0-5，包含ULTIMATE
         create_single_package_ui(package_type, package_names[package_type], 
                                 package_costs[package_type], package_limits[package_type])
 
@@ -205,7 +212,11 @@ func create_single_package_ui(package_type: int, package_name: String,
     
     # 套餐信息标签
     var info_label = Label.new()
-    info_label.text = "月访问量: %d万次\n年费用: %.2f元" % [traffic_limit, package_cost]
+    # 处理终极套餐无限制的情况
+    if traffic_limit == -1:
+        info_label.text = "月访问量: 无限制\n年费用: %.2f元" % [package_cost]
+    else:
+        info_label.text = "月访问量: %d万次\n年费用: %.2f元" % [traffic_limit, package_cost]
     info_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     info_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
     main_container.add_child(info_label)
@@ -246,6 +257,7 @@ func get_package_color(package_type: int) -> Color:
         Yun.PackageType.STANDARD: return Color.GREEN
         Yun.PackageType.PREMIUM: return Color.PURPLE
         Yun.PackageType.ENTERPRISE: return Color.GOLD
+        Yun.PackageType.ULTIMATE: return Color.RED  # 终极套餐用红色
         _: return Color.WHITE
 
 func _on_change_package_pressed(package_type: int):

@@ -15,7 +15,7 @@ func _on_show_panel():
         if child is HFlowContainer:
             remove_child(child)
             child.queue_free()
-    print("重绘面板")
+    
     Utils.create_ad_checkbox(self,AdManager.ads,current_button_group,_on_checkbox_toggled)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

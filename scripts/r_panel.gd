@@ -12,6 +12,10 @@ func _ready() -> void:
 
 
 func add_message(text: String):
+    if not message_container:
+        push_error("[r_panel] message_container 未初始化!")
+        return
+    
     var new_label = Label.new()
     new_label.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
     new_label.text = text

@@ -34,13 +34,13 @@
 │                    游戏场景层 (Scenes)                    │
 │  main.tscn, bottom.tscn, bank_main.tscn, yun_main.tscn  │
 └────────────────────┬────────────────────────────────────┘
-                     │ 通过信号和直接调用访问
+					 │ 通过信号和直接调用访问
 ┌────────────────────▼────────────────────────────────────┐
 │                  业务逻辑层 (Scripts)                     │
 │  Blogger.gd, TimerManager.gd, BankSystem.gd,            │
 │  AdManager.gd, TaskManager.gd, Tongji.gd                │
 └────────────────────┬────────────────────────────────────┘
-                     │ 所有数据访问通过统一接口
+					 │ 所有数据访问通过统一接口
 ┌────────────────────▼────────────────────────────────────┐
 │              GlobalDataManager (数据中心)                 │
 │  ┌─────────────────────────────────────────────────┐   │
@@ -158,13 +158,13 @@ var posts: Array[Dictionary] = []
 
 # ===== 日程安排（7天）=====
 var calendar: Array[Dictionary] = [
-    {"tasks": ["阅读名著"]},
-    {"tasks": ["阅读名著"]},
-    {"tasks": ["阅读名著"]},
-    {"tasks": ["阅读名著"]},
-    {"tasks": ["安全维护"]},
-    {"tasks": ["SEO优化"]},
-    {"tasks": ["打游戏"]},
+	{"tasks": ["阅读名著"]},
+	{"tasks": ["阅读名著"]},
+	{"tasks": ["阅读名著"]},
+	{"tasks": ["阅读名著"]},
+	{"tasks": ["安全维护"]},
+	{"tasks": ["SEO优化"]},
+	{"tasks": ["打游戏"]},
 ]
 
 # ===== 临时变量 =====
@@ -199,10 +199,10 @@ var game_start_date: String = "2000-1-1-1"
 var current_date_str: String = "2000-1-1-1"
 
 func get_total_days() -> int:
-    return (current_year - 2000) * 12 * 4 * 7 + \
-           (current_month - 1) * 4 * 7 + \
-           (current_week - 1) * 7 + \
-           current_day
+	return (current_year - 2000) * 12 * 4 * 7 + \
+		   (current_month - 1) * 4 * 7 + \
+		   (current_week - 1) * 7 + \
+		   current_day
 ```
 
 ### 3.4 BankData（银行数据）
@@ -334,25 +334,25 @@ var static_config: StaticConfig = StaticConfig.new()
 var runtime_data: RuntimeData = RuntimeData.new()
 
 func get_blogger() -> BloggerData:
-    return runtime_data.blogger
+	return runtime_data.blogger
 
 func get_time() -> TimeData:
-    return runtime_data.time
+	return runtime_data.time
 
 func get_bank() -> BankData:
-    return runtime_data.bank
+	return runtime_data.bank
 
 func get_ad() -> AdData:
-    return runtime_data.ad
+	return runtime_data.ad
 
 func get_statistics() -> StatisticsData:
-    return runtime_data.statistics
+	return runtime_data.statistics
 
 func get_task() -> TaskData:
-    return runtime_data.task
+	return runtime_data.task
 
 func get_league() -> LeagueData:
-    return runtime_data.league
+	return runtime_data.league
 ```
 
 ---
@@ -376,19 +376,19 @@ func get_league() -> LeagueData:
   "version": "1.0",
   "timestamp": 1234567890,
   "runtime_data": {
-    "blogger": {...},
-    "time": {...},
-    "bank": {...},
-    "ad": {...},
-    "statistics": {...},
-    "task": {...},
-    "league": {...}
+	"blogger": {...},
+	"time": {...},
+	"bank": {...},
+	"ad": {...},
+	"statistics": {...},
+	"task": {...},
+	"league": {...}
   },
   "metadata": {
-    "blog_name": "我的博客",
-    "level": 10,
-    "money": 50000.0,
-    "current_date": "2001-3-2-1"
+	"blog_name": "我的博客",
+	"level": 10,
+	"money": 50000.0,
+	"current_date": "2001-3-2-1"
   }
 }
 ```
@@ -567,16 +567,16 @@ GlobalDataManager.connect("game_loaded", _on_game_loaded)
 ```gdscript
 # Blogger.gd 中保持兼容
 var level: int:
-    get:
-        return GlobalDataManager.get_blogger().level
-    set(value):
-        GlobalDataManager.set_level(value)
+	get:
+		return GlobalDataManager.get_blogger().level
+	set(value):
+		GlobalDataManager.set_level(value)
 
 var money: float:
-    get:
-        return GlobalDataManager.get_blogger().money
-    set(value):
-        GlobalDataManager.get_blogger().money = value
+	get:
+		return GlobalDataManager.get_blogger().money
+	set(value):
+		GlobalDataManager.get_blogger().money = value
 ```
 
 **新旧接口并存**：
