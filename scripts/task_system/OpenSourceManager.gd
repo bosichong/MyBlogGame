@@ -285,7 +285,7 @@ func _complete_os_project(os_state: Dictionary) -> void:
     # 完整的赞助成功提示
     var msg = "🎉 恭喜！项目《%s》正式获得 %s 赞助！\n\n" % [project_name, sponsor_name]
     msg += "━━━━━━━━━━━━━━━━━━━━\n"
-    msg += "🏢 赞助厂商：%s\n" % sponsor_desc
+    msg += "🏢 赞助厂商：%s\n" % sponsor_name
     msg += "💰 上线奖励：%d 元\n" % final_reward
     msg += "⭐ 项目Star：%d\n" % os_state.stars
     msg += "📈 声望：+2000\n"

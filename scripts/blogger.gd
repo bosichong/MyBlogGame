@@ -1124,7 +1124,6 @@ func add_writing_ability_points() -> void:
         blogger.writing_ability += increment
         blogger.writing_ability = min(float(blogger.writing_ability), 100.0)
         blogger.writing_ability = round(blogger.writing_ability * 10) / 10.0
-        print("[写作能力] +%.1f，当前：%.1f" % [increment, blogger.writing_ability])
 
 ## 增加技术能力（维护网站时调用）
 func add_technical_ability_points() -> void:
