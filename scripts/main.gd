@@ -23,6 +23,9 @@ func _ready() -> void:
         Blogger.s_recrecreation_rest.connect(s_recrecreation_rest)
         Blogger.s_playgame.connect(s_playgame)
 
+        # 付费文章收入结算信号
+        Blogger.sg_paid_income_settled.connect(_on_paid_income_settled)
+
         # 技能学习信号
         Blogger.skill_learned.connect(_on_skill_learned)
 
@@ -38,7 +41,11 @@ func _ready() -> void:
         # 页面美化
         Blogger.signal_design_web.connect(signal_design_web)
         Blogger.signal_design_web_no_stamina.connect(signal_design_web_no_stamina)
-
+        
+        # 友链维护
+        Blogger.signal_friendlink_maintenance.connect(signal_friendlink_maintenance)
+        Blogger.signal_friendlink_no_stamina.connect(signal_friendlink_no_stamina)
+    
     # ===== 主机域名系统信号 =====
     if Yun:
         Yun.connect("game_over", _on_game_over)
@@ -57,6 +64,8 @@ func _ready() -> void:
     $ui/bottom.connect("open_yun",_on_open_yun)
     $yun_main.connect("close_yun",_on_close_yun)
     $ui/bottom.connect("open_mialestones",_on_open_mialestones)
+    $ui/bottom.connect("open_blog_dashboard", _on_open_blog_dashboard)
+    $blog_dashboard.connect("close_blog_dashboard", _on_close_blog_dashboard)
     $m_main.connect("close_mialestones",_on_close_mialestones)
     $AcceptDialog.confirmed.connect(_close_ac)
 
@@ -133,12 +142,6 @@ func update_ui():
     
     $ui/bottom/v1/h5/rss.text = "RSS订阅数:"+ Utils.format_number(Blogger.blog_data.rss)
     $ui/bottom/v1/h5/favorites.text = "博文收藏数:"+ Utils.format_number(Blogger.blog_data.favorites)
-    $ui/bottom/v1/h5/weekly_income.text = "小说周收入:" + str(int(Blogger.weekly_paid_income)) + "元"
-    # 能力值>=80时显示付费收入
-    if Blogger.literature_ability >= 80 or Blogger.code_ability >= 80 or Blogger.drawing_ability >= 80:
-        $ui/bottom/v1/h5/weekly_income.visible = true
-    else:
-        $ui/bottom/v1/h5/weekly_income.visible = false
     
     $ui/r_panel/top/writingProgressBar.show_percentage = false
     $ui/r_panel/top/writingProgressBar.set_value_no_signal(Blogger.writing_ability)
@@ -149,7 +152,7 @@ func update_ui():
     $ui/r_panel/top/literatureProgressBar.show_percentage = false
     $ui/r_panel/top/literatureProgressBar.set_value_no_signal(Blogger.literature_ability) 
     $ui/r_panel/top/drawingProgressBar.show_percentage = false
-    $ui/r_panel/top/drawingProgressBar.set_value_no_signal(Blogger.drawing_ability) 
+    # $ui/r_panel/top/drawingProgressBar.set_value_no_signal(Blogger.drawing_ability)  # 【已禁用】 
 
 ## 游戏时间倍数运行控制
 func time_stop_bt():
@@ -228,7 +231,16 @@ func _on_open_mialestones():
 func _on_close_mialestones():
     $m_main.visible = false
     TimerManager.start_timer()
-    
+
+func _on_open_blog_dashboard():
+    $blog_dashboard.visible = true
+    $blog_dashboard.show_panel(0)  # 刷新数据看板
+    TimerManager.stop_timer()
+
+func _on_close_blog_dashboard():
+    $blog_dashboard.visible = false
+    TimerManager.start_timer()
+
 func _on_open_ad_passed():
     $Ad.on_show_panel()
     $Ad.visible = true
@@ -252,6 +264,9 @@ func _on_day_ended():
     
     # 每日自然恢复体力
     Blogger.daily_stamina_recovery()
+    
+    # 友链申请结果检查
+    _check_friendlink_applies()
     
     time_stop_bt()
     update_ui()
@@ -325,6 +340,35 @@ func _on_year_passed():
     
     info_display.add_message("一年过去了！ ")
 
+func _check_friendlink_applies() -> void:
+    if not GDManager:
+        return
+    
+    var fl_manager = GDManager.friend_link_manager
+    if not fl_manager:
+        return
+    
+    var results = fl_manager.check_pending_requests()
+    
+    if results.is_empty():
+        return
+    
+    for result in results:
+        var member_id = result.get("member_id")
+        var member_info = fl_manager.get_member_by_id(member_id)
+        var member_name = member_info.get("name", "未知博客") if member_info else "未知博客"
+        
+        var success = result.get("success", false)
+        
+        var message = ""
+        if success:
+            message = "✅ 友链申请成功：【%s】" % member_name
+        else:
+            message = "❌ 友链申请被拒绝：【%s】" % member_name
+        
+        if info_display:
+            info_display.add_message(message)
+
 
 func s_playgame(msg):
     pass
@@ -352,8 +396,14 @@ func signal_design_web(msg):
     pass
     
 func signal_design_web_no_stamina(msg):
-    info_display.add_message(msg)   
-    
+    info_display.add_message(msg)
+
+func signal_friendlink_maintenance(msg):
+    info_display.add_message(msg)
+
+func signal_friendlink_no_stamina(msg):
+    info_display.add_message(msg)
+
 
 ## 显示通用弹窗
 func show_popup_message(title: String, content: String) -> void:
@@ -380,6 +430,9 @@ func on_sig_ad_commission_settled(msg):
     info_display.add_message(msg)
 
 func on_sig_ad_commission_paid(msg):
+    info_display.add_message(msg)
+
+func _on_paid_income_settled(msg):
     info_display.add_message(msg)
 
 func _close_ac():

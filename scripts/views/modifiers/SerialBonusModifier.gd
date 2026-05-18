@@ -4,9 +4,9 @@
 class_name SerialBonusModifier
 extends ViewsModifier
 
-## 连载文章类型列表（文学周刊、程序员周刊、艺术周刊）
+## 连载文章类型列表（文学周刊、程序员周刊，【艺术周刊已禁用】）
 ## 小说连载、动漫连载是付费文章不计入总访问量
-var serial_types: Array = ["文学周刊", "程序员周刊", "艺术周刊", "动漫连载(收费)", "小说连载(付费)"]
+var serial_types: Array = ["文学周刊", "程序员周刊"]  # 艺术周刊、动漫连载(收费)、小说连载(付费) 已禁用
 
 func _init():
     modifier_name = "serial_bonus"

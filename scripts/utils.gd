@@ -9,7 +9,7 @@ var recreation
 var learning_skills
 
 var post_trend = {"type": "文学", "views_add": 0.1}
-var bc_type = ["文学", "技术", "艺术"]
+var bc_type = ["文学", "技术"]  # 艺术已禁用
 
 func _init():
     # GDManager 的 _init 先执行，数据已加载
@@ -21,9 +21,9 @@ func _init():
 
 ## 返回文章质量
 func get_quality(category: String) -> int:
-    var literary = ["年度总结", "生活日记", "爆款网文", "散文随笔", "文学周刊", "小说连载(收费)"]
+    var literary = ["年度总结", "春节特辑", "五一特辑", "国庆特辑", "生活日记", "爆款网文", "散文随笔", "文学周刊", "小说连载(收费)"]
     var tech = ["编程教程", "程序员周刊", "付费黑客攻防"]
-    var art = ["插画壁纸", "绘画基础教程", "商业插画高级教程", "艺术周刊", "动漫连载(收费)"]
+    # var art = ["插画壁纸", "绘画基础教程", "商业插画高级教程", "艺术周刊", "动漫连载(收费)"]  # 艺术已禁用
     
     if category in literary:
         return int(Blogger.writing_ability + Blogger.literature_ability)
@@ -31,8 +31,8 @@ func get_quality(category: String) -> int:
         return int(Blogger.writing_ability * 0.5 + Blogger.technical_ability * 0.5 + Blogger.code_ability * 0.5 + Blogger.literature_ability * 0.5)
     elif category in tech:
         return int(Blogger.writing_ability * 0.5 + Blogger.code_ability + Blogger.literature_ability * 0.5)
-    elif category in art:
-        return int(Blogger.writing_ability * 0.5 + Blogger.drawing_ability + Blogger.literature_ability * 0.5)
+    # elif category in art:  # 艺术已禁用
+    #     return int(Blogger.writing_ability * 0.5 + Blogger.drawing_ability + Blogger.literature_ability * 0.5)
     elif category == "出书笔记":
         # 出书笔记：写作能力 + 文学能力
         return int(Blogger.writing_ability + Blogger.literature_ability)
@@ -136,7 +136,7 @@ func add_checkbox(fc, cat, KEY, callback):
 
 func create_all_checkbox(node, KEY, callback):
     var items = [
-        {"text": "博文写作安排", "ary": possible_categories},
+        {"text": "内容创作安排", "ary": possible_categories},
         {"text": "网站维护", "ary": website_maintenance},
         {"text": "休闲娱乐", "ary": recreation},
         {"text": "自律学习", "ary": learning_skills},
@@ -183,36 +183,50 @@ func find_category_by_name(array: Array, name: String, include_disabled: bool = 
 
 ## 获取体力上限（按等级）
 func get_max_stamina(level: int) -> int:
-    if level <= 30:
-        return 50 + level  # 1级:51, 30级:80
-    elif level <= 50:
-        return 100 + (level - 30) * 2.5  # 31级:150, 50级:200 (取整)
-    else:
-        return 200  # 51级+:固定200
+    return GameBalanceConfig.get_max_stamina(level)
 
 
-## 获取实际体力消耗（按等级）
+## 获取实际体力消耗（按等级）- 简化为固定值
 func get_stamina_cost(base_cost: int, level: int) -> int:
-    var coefficient = 1.0
-    if level <= 10:
-        coefficient = 1.0
-    elif level <= 30:
-        coefficient = 0.9
-    elif level <= 50:
-        coefficient = 0.8
-    elif level <= 75:
-        coefficient = 0.7
-    else:
-        coefficient = 0.6
-    return int(base_cost * coefficient)
+    return base_cost
+
+
+## 计算日程任务的总体力消耗
+func calculate_day_stamina(tasks: Array) -> int:
+    var total = 0
+    for task in tasks:
+        total += get_task_stamina_cost(task)
+    return total
+
+
+## 获取任务类型的体力消耗
+func get_task_stamina_cost(task_name: String) -> int:
+    return GameBalanceConfig.get_task_stamina_cost(task_name)
+
+
+## 检查是否可以选择任务（不超过体力上限）
+func can_select_task(tasks: Array, new_task: String) -> bool:
+    var blogger = GDManager.get_blogger()
+    var max_stamina = get_max_stamina(blogger.level)
+    var total = calculate_day_stamina(tasks) + get_task_stamina_cost(new_task)
+    return total <= max_stamina
+
+
+## 获取剩余可支配体力
+func get_remaining_stamina(tasks: Array) -> int:
+    var blogger = GDManager.get_blogger()
+    var max_stamina = get_max_stamina(blogger.level)
+    return max_stamina - calculate_day_stamina(tasks)
 
 
 ## 获取每日自然恢复量（按等级）
 func get_daily_stamina_recovery(level: int) -> int:
-    if level <= 30:
-        return 15  # 前期:15点/天
+    if level <= 10:
+        return 5   # 新手:5点/天
+    elif level <= 30:
+        return 8   # 中期:8点/天
     else:
-        return 20  # 后期:20点/天
+        return 10  # 后期:10点/天
 
 
 ## 获取打游戏花费（按等级增加）
@@ -288,10 +302,10 @@ func replace_task_value(arr: Array, old_task: String, new_task: String):
                     tasks[j] = new_task
 
 
-func decrease_value_safely(val: int, min_d: int, max_d: int) -> int:
+func decrease_value_safely(val: int, min_d: int, max_d: int, min_val: int = 0) -> int:
     var dec = randi_range(min_d, max_d)
     var new_val = val - dec
-    return clamp(new_val, 0, 100)
+    return clamp(new_val, min_val, 100)
 
 
 func find_category_index(list, name: String) -> int:

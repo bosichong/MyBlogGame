@@ -82,16 +82,6 @@ text = "RSS订阅:100"
 layout_mode = 2
 text = "favorites:100"
 
-[node name="每日收入" type="Label" parent="v1/h5" unique_id=1701522323]
-visible = false
-layout_mode = 2
-text = "每日收入:100"
-
-[node name="weekly_income" type="Label" parent="v1/h5" unique_id=681803955]
-visible = false
-layout_mode = 2
-text = "小说周收入:0元"
-
 [node name="h2" type="GridContainer" parent="." unique_id=313134562]
 layout_mode = 2
 size_flags_horizontal = 10
@@ -102,6 +92,10 @@ columns = 4
 layout_mode = 2
 size_flags_horizontal = 8
 text = "日程安排"
+
+[node name="blog_plan" type="Button" parent="h2" unique_id=1593422182]
+layout_mode = 2
+text = "博客后台"
 
 [node name="open_yun" type="Button" parent="h2" unique_id=111086752]
 layout_mode = 2
@@ -127,11 +121,8 @@ text = "消费购买"
 layout_mode = 2
 text = "成就系统"
 
-[node name="Button3" type="Button" parent="h2" unique_id=1593422182]
-layout_mode = 2
-text = "系统菜单"
-
 [connection signal="pressed" from="h2/create_blog" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="h2/blog_plan" to="." method="_on_blog_dashboard_btn_pressed"]
 [connection signal="pressed" from="h2/open_yun" to="." method="_on_open_yun_pressed"]
 [connection signal="pressed" from="h2/Button4" to="." method="_on_button_4_pressed"]
 [connection signal="pressed" from="h2/Button5" to="." method="_on_button_5_pressed"]

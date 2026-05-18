@@ -1,8 +1,22 @@
 extends Node
 ## 游戏的任务管理器,负责检查和执行任务
 
-# 引用任务配置
-const TaskConfig = preload("res://scripts/task_system/TaskConfig.gd")
+# 延迟加载 TaskConfig（用于运行时访问）
+var TaskConfig = null
+func get_task_config():
+    if TaskConfig == null:
+        TaskConfig = load("res://scripts/task_system/TaskConfig.gd")
+    return TaskConfig
+
+# 缓存枚举引用（用于 match 语句 - 必须是常量）
+var TaskConfig_ConditionType = null
+var TaskConfig_CompareOp = null  
+var TaskConfig_ActionType = null
+func _init_task_config_refs():
+    var cfg = get_task_config()
+    TaskConfig_ConditionType = cfg.ConditionType
+    TaskConfig_CompareOp = cfg.CompareOp
+    TaskConfig_ActionType = cfg.ActionType
 
 ## 子模块
 var BookPublishMgr = null
@@ -18,6 +32,9 @@ signal sg_task_info_display_msg(msg)
 signal sg_task_show_popup_msg(title, content)
 
 func _ready():
+    # 初始化 TaskConfig 引用（必须在其他初始化之前）
+    _init_task_config_refs()
+    
     # 初始化子模块
     BookPublishMgr = preload("res://scripts/task_system/BookPublishManager.gd").new()
     IPAuthMgr = preload("res://scripts/task_system/IPAuthManager.gd").new()
@@ -61,9 +78,9 @@ func _force_check_skill_tasks() -> void:
     var code_level = Blogger.get_ability_by_type("code") if Blogger.has_method("get_ability_by_type") else 0
     check_tasks_by_trigger("skill_up", {"skill_type": Blogger.Skills.CODE, "level": code_level})
 
-    # 检查绘画技能
-    var draw_level = Blogger.get_ability_by_type("draw") if Blogger.has_method("get_ability_by_type") else 0
-    check_tasks_by_trigger("skill_up", {"skill_type": Blogger.Skills.DRAW, "level": draw_level})
+    # 检查绘画技能 - 已禁用
+    # var draw_level = Blogger.get_ability_by_type("draw") if Blogger.has_method("get_ability_by_type") else 0
+    # check_tasks_by_trigger("skill_up", {"skill_type": Blogger.Skills.DRAW, "level": draw_level})
 
     # 检查时间任务
     _check_time_tasks()
@@ -81,7 +98,7 @@ func reset_task_states() -> void:
     # 清空本地任务状态
     task_states.clear()
 
-    for task in TaskConfig.TASKS:
+    for task in get_task_config().TASKS:
         var state = task.duplicate(true)
         # 初始化状态字段
         if not state.has("is_active"):
@@ -180,7 +197,7 @@ func _check_single_condition(cond, context: Dictionary) -> bool:
     var condition: Dictionary
 
     if cond is String:
-        condition = TaskConfig.get_condition(cond)
+        condition = get_task_config().get_condition(cond)
         if condition.is_empty():
             push_error("[TaskManager] Condition not found: %s" % cond)
             return false
@@ -193,17 +210,17 @@ func _check_single_condition(cond, context: Dictionary) -> bool:
     var cond_type = condition.get("type")
 
     match cond_type:
-        TaskConfig.ConditionType.SKILL_VALUE:
+        TaskConfig_ConditionType.SKILL_VALUE:
             return _check_skill_value_condition(condition, context)
-        TaskConfig.ConditionType.SKILL_LEVEL:
+        TaskConfig_ConditionType.SKILL_LEVEL:
             return _check_skill_level_condition(condition, context)
-        TaskConfig.ConditionType.PLAYER_LEVEL:
+        TaskConfig_ConditionType.PLAYER_LEVEL:
             return _check_player_level_condition(condition, context)
-        TaskConfig.ConditionType.POST_COUNT:
+        TaskConfig_ConditionType.POST_COUNT:
             return _check_post_count_condition(condition, context)
-        TaskConfig.ConditionType.TIME_MATCH:
+        TaskConfig_ConditionType.TIME_MATCH:
             return _check_time_condition(condition, context)
-        TaskConfig.ConditionType.CUSTOM:
+        TaskConfig_ConditionType.CUSTOM:
             return _check_custom_condition(condition, context)
         _:
             push_error("[TaskManager] Unknown condition type: %s" % cond_type)
@@ -212,7 +229,7 @@ func _check_single_condition(cond, context: Dictionary) -> bool:
 ## 技能数值条件检查(能力值 0-100)
 func _check_skill_value_condition(cond: Dictionary, context: Dictionary) -> bool:
     var skill_name = cond.get("skill", "")
-    var op = cond.get("op", TaskConfig.CompareOp.GE)
+    var op = cond.get("op", TaskConfig_CompareOp.GE)
     var target_value = cond.get("value", 0)
 
     # 获取技能枚举值
@@ -239,7 +256,7 @@ func _check_skill_level_condition(cond: Dictionary, context: Dictionary) -> bool
 
 ## 玩家等级条件检查
 func _check_player_level_condition(cond: Dictionary, context: Dictionary) -> bool:
-    var op = cond.get("op", TaskConfig.CompareOp.EQ)
+    var op = cond.get("op", TaskConfig_CompareOp.EQ)
     var target_value = cond.get("value", 0)
     var current_value = context.get("level", Blogger.level if Blogger else 0)
 
@@ -248,7 +265,7 @@ func _check_player_level_condition(cond: Dictionary, context: Dictionary) -> boo
 ## 发布次数条件检查
 func _check_post_count_condition(cond: Dictionary, _context: Dictionary) -> bool:
     var post_type = cond.get("post_type", "")
-    var op = cond.get("op", TaskConfig.CompareOp.GE)
+    var op = cond.get("op", TaskConfig_CompareOp.GE)
     var target_value = cond.get("value", 0)
 
     var current_value = _get_post_count_by_type(post_type)
@@ -300,17 +317,17 @@ func _check_custom_condition(cond: Dictionary, context: Dictionary) -> bool:
 ## 通用比较函数
 func _compare(current, op: int, target) -> bool:
     match op:
-        TaskConfig.CompareOp.EQ:
+        TaskConfig_CompareOp.EQ:
             return current == target
-        TaskConfig.CompareOp.NE:
+        TaskConfig_CompareOp.NE:
             return current != target
-        TaskConfig.CompareOp.GT:
+        TaskConfig_CompareOp.GT:
             return current > target
-        TaskConfig.CompareOp.GE:
+        TaskConfig_CompareOp.GE:
             return current >= target
-        TaskConfig.CompareOp.LT:
+        TaskConfig_CompareOp.LT:
             return current < target
-        TaskConfig.CompareOp.LE:
+        TaskConfig_CompareOp.LE:
             return current <= target
         _:
             push_error("[TaskManager] Unknown compare op: %s" % op)
@@ -324,7 +341,7 @@ func _get_skill_enum(skill_name: String) -> int:
     match skill_name.to_upper():
         "LITERATURE": return Blogger.Skills.LITERATURE
         "CODE": return Blogger.Skills.CODE
-        "DRAW": return Blogger.Skills.DRAW
+        # "DRAW": return Blogger.Skills.DRAW  # 已禁用
         _:
             return -1
 
@@ -385,36 +402,36 @@ func _execute_action(action: Dictionary) -> void:
         return
 
     match action_type:
-        TaskConfig.ActionType.SKILL_LEVEL_LOCK:
+        TaskConfig_ActionType.SKILL_LEVEL_LOCK:
             _action_skill_lock(action)
-        TaskConfig.ActionType.SKILL_LEVEL_UNLOCK:
+        TaskConfig_ActionType.SKILL_LEVEL_UNLOCK:
             _action_skill_unlock(action)
-        TaskConfig.ActionType.UNLOCK_POST_TASK:
+        TaskConfig_ActionType.UNLOCK_POST_TASK:
             _action_unlock_post(action)
-        TaskConfig.ActionType.LOCK_POST_TASK:
+        TaskConfig_ActionType.LOCK_POST_TASK:
             _action_lock_post(action)
-        TaskConfig.ActionType.HIDE_POST_TASK:
+        TaskConfig_ActionType.HIDE_POST_TASK:
             _action_hide_post(action)
-        TaskConfig.ActionType.REPLACE_POST_TREND:
+        TaskConfig_ActionType.REPLACE_POST_TREND:
             _action_replace_trend(action)
-        TaskConfig.ActionType.UNLOCK_MILESTONES_TASK:
+        TaskConfig_ActionType.UNLOCK_MILESTONES_TASK:
             _action_unlock_milestone(action)
         # ===== 书籍出版、IP授权、开源项目(委托给子模块)=====
-        TaskConfig.ActionType.START_BOOK_WRITE:
+        TaskConfig_ActionType.START_BOOK_WRITE:
             BookPublishMgr.action_start_book_write() if BookPublishMgr else null
-        TaskConfig.ActionType.BOOK_PROGRESS:
+        TaskConfig_ActionType.BOOK_PROGRESS:
             BookPublishMgr.action_book_progress(action.get("progress", 1)) if BookPublishMgr else null
-        TaskConfig.ActionType.BOOK_PHASE_CHANGE:
+        TaskConfig_ActionType.BOOK_PHASE_CHANGE:
             BookPublishMgr.action_book_phase_change(action.get("phase", 0)) if BookPublishMgr else null
-        TaskConfig.ActionType.TRIGGER_IP_AUTH:
+        TaskConfig_ActionType.TRIGGER_IP_AUTH:
             IPAuthMgr.action_trigger_ip_auth(action.get("ip_type", "movie")) if IPAuthMgr else null
-        TaskConfig.ActionType.IP_MONTHLY_INCOME:
+        TaskConfig_ActionType.IP_MONTHLY_INCOME:
             IPAuthMgr.action_ip_monthly_income() if IPAuthMgr else null
-        TaskConfig.ActionType.START_OPEN_SOURCE_PROJECT:
+        TaskConfig_ActionType.START_OPEN_SOURCE_PROJECT:
             OpenSourceMgr.action_start_open_source_project() if OpenSourceMgr else null
-        TaskConfig.ActionType.OPEN_SOURCE_PROGRESS:
+        TaskConfig_ActionType.OPEN_SOURCE_PROGRESS:
             OpenSourceMgr.action_os_progress(action.get("progress", 1)) if OpenSourceMgr else null
-        TaskConfig.ActionType.OPEN_SOURCE_ACQUISITION:
+        TaskConfig_ActionType.OPEN_SOURCE_ACQUISITION:
             OpenSourceMgr.action_open_source_acquisition() if OpenSourceMgr else null
         _:
             push_warning("[TaskManager] Unhandled action type: %s" % action_type)

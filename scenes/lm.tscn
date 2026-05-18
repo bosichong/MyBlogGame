@@ -426,15 +426,18 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button" type="Button" parent="bg"]
+[node name="close_btn" type="Button" parent="bg"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -72.0
-offset_bottom = 30.0
+offset_left = -35.0
+offset_top = 8.0
+offset_right = -10.0
+offset_bottom = 33.0
 grow_horizontal = 0
-text = "关闭窗口"
+text = "X"
+theme_type_variation = "Button"
 
 [node name="AcceptDialog" type="AcceptDialog" parent="."]
 
@@ -448,4 +451,4 @@ text = "关闭窗口"
 [connection signal="pressed" from="bg/选项组/sc1/VBoxContainer/hbox/zl/VBoxContainer/Button" to="." method="_join_lm"]
 [connection signal="pressed" from="bg/选项组/sc1/VBoxContainer/hbox/zl2/VBoxContainer/Button" to="." method="_on_exit_lm"]
 [connection signal="pressed" from="bg/选项组/sc1/VBoxContainer/hbox/zl2/VBoxContainer/HBoxContainer/jz_btu" to="." method="_on_jz_btu_pressed"]
-[connection signal="pressed" from="bg/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="bg/close_btn" to="." method="_on_button_pressed"]

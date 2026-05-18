@@ -16,4 +16,5 @@ var item = {
     "money": 0,
     "is_money": false,
     "stamina": 50,
+    "article_level": 4,
 }

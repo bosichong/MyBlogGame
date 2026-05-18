@@ -1,5 +1,5 @@
 extends Node2D
-const S03_SCENE_PATH = "res://scenes/s003/s_003.tscn"
+const S04_SCENE_PATH = "res://scenes/s004/s_004.tscn"
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -25,4 +25,10 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
         
 func _on_dialog_confirmed():
     # 只有当用户点击确认时才执行跳转
-    Utils.goto_scene(S03_SCENE_PATH)
+    Utils.goto_scene(S04_SCENE_PATH)
+
+
+
+func _on_跳过游戏_pressed() -> void:
+    # 只有当用户点击确认时才执行跳转
+    Utils.goto_scene(S04_SCENE_PATH)

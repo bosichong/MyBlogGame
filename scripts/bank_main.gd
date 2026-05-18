@@ -15,6 +15,42 @@ func _process(delta: float) -> void:
 func on_show_panel():
     upd_total_bank_assets()
     upd_dqck_tab()
+    _show_bank_panel()
+
+func _show_bank_panel():
+    $bg/选项组/sc1.visible = true
+    $bg/选项组/sc2.visible = false
+    $bg/选项组/sc3.visible = false
+
+func _on_caipiao_pressed() -> void:
+    $bg/选项组/sc1.visible = false
+    $bg/选项组/sc2.visible = true
+    $bg/选项组/sc3.visible = false
+    _show_caipiao_notice()
+
+func _on_gupiao_pressed() -> void:
+    $bg/选项组/sc1.visible = false
+    $bg/选项组/sc2.visible = false
+    $bg/选项组/sc3.visible = true
+    _show_gupiao_notice()
+
+func _show_caipiao_notice():
+    Utils.clear_children($bg/选项组/sc2/VBoxContainer)
+    var lab = Label.new()
+    lab.text = "彩票系统正在建设中..."
+    lab.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    lab.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    lab.add_theme_font_size_override("font_size", 32)
+    $bg/选项组/sc2/VBoxContainer.add_child(lab)
+
+func _show_gupiao_notice():
+    Utils.clear_children($bg/选项组/sc3/VBoxContainer)
+    var lab = Label.new()
+    lab.text = "股票交易系统正在建设中..."
+    lab.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    lab.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    lab.add_theme_font_size_override("font_size", 32)
+    $bg/选项组/sc3/VBoxContainer.add_child(lab)
   
 func upd_dqck_tab():
     var tab = $"bg/选项组/sc1/VBoxContainer/ScrollContainer/dqck"

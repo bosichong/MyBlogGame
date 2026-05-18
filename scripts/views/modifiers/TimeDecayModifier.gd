@@ -1,19 +1,19 @@
 ## 时间衰减修饰器
-## 新文章14天内正常访问量，之后随机零星访问，3年后不再增加
+## 新文章14天内正常访问量，之后随机零星访问，半年后不再增加
 class_name TimeDecayModifier
 extends ViewsModifier
 
 ## 配置参数
 var new_article_days: int = 14          # 新文章期（天）
-var active_article_years: int = 3       # 有效文章年限
-var random_visit_chance: float = 0.3    # 随机访问概率（30%）
-var min_random_views: int = 1           # 随机访问最小值
-var max_random_views: int = 5           # 随机访问最大值
+var active_article_years: float = 0.5   # 有效文章年限（半年）
+var random_visit_chance: float = 0.3     # 随机访问概率（30%）
+var min_random_views: int = 1            # 随机访问最小值
+var max_random_views: int = 5            # 随机访问最大值
 
 func _init():
     modifier_name = "time_decay"
     display_name = "时间衰减"
-    description = "新文章14天内正常，之后随机零星访问，3年后不再增加"
+    description = "新文章14天内正常，之后随机零星访问，半年后不再增加"
     priority = 100
     type = Type.DECAY
 

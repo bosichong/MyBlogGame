@@ -1,0 +1,331 @@
+[gd_scene format=3 uid="uid://d3d3b4rpyytcl"]
+
+[ext_resource type="Theme" uid="uid://cp1t7xqq6k8jr" path="res://scenes/程菜单.tres" id="1_theme"]
+[ext_resource type="Script" uid="uid://beim0rxwbrw0j" path="res://scripts/blog_dashboard.gd" id="2_script"]
+
+[node name="blog_dashboard" type="Control" unique_id=1477194934]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 960.0
+offset_bottom = 480.0
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Background" type="ColorRect" parent="." unique_id=182621014]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.196078)
+
+[node name="bg" type="Panel" parent="." unique_id=1280825772]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 930.0
+offset_bottom = 450.0
+
+[node name="ColorRect" type="ColorRect" parent="bg" unique_id=590531709]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.666667)
+
+[node name="按钮组" type="Panel" parent="bg" unique_id=857533761]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 120.0
+grow_vertical = 2
+
+[node name="vb" type="VBoxContainer" parent="bg/按钮组" unique_id=41861606]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="mc1" type="MarginContainer" parent="bg/按钮组/vb" unique_id=1910588015]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b1" type="Button" parent="bg/按钮组/vb/mc1" unique_id=1494987074]
+layout_mode = 2
+toggle_mode = true
+text = "数据看板"
+
+[node name="mc2" type="MarginContainer" parent="bg/按钮组/vb" unique_id=1451501809]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b2" type="Button" parent="bg/按钮组/vb/mc2" unique_id=671574647]
+layout_mode = 2
+toggle_mode = true
+text = "创作数据"
+
+[node name="mc3" type="MarginContainer" parent="bg/按钮组/vb" unique_id=531188009]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b3" type="Button" parent="bg/按钮组/vb/mc3" unique_id=259659347]
+layout_mode = 2
+toggle_mode = true
+text = "友链管理"
+
+[node name="mc4" type="MarginContainer" parent="bg/按钮组/vb" unique_id=1579384382]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b4" type="Button" parent="bg/按钮组/vb/mc4" unique_id=1048475373]
+layout_mode = 2
+toggle_mode = true
+text = "评论管理"
+
+[node name="面板组" type="Panel" parent="bg" unique_id=2146058191]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 142.0
+offset_right = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="dashboard_panel" type="PanelContainer" parent="bg/面板组" unique_id=2172401]
+layout_mode = 0
+offset_top = 10.0
+offset_right = 760.0
+offset_bottom = 410.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/面板组/dashboard_panel" unique_id=1187154962]
+layout_mode = 2
+
+[node name="title" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer" unique_id=1244235510]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.827451, 0.352941, 0, 1)
+text = "📊 博客数据看板"
+
+[node name="stats_grid" type="GridContainer" parent="bg/面板组/dashboard_panel/VBoxContainer" unique_id=1750436082]
+layout_mode = 2
+theme_override_constants/h_separation = 20
+columns = 8
+
+[node name="total_views_label" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=828521473]
+layout_mode = 2
+text = "总访问量"
+
+[node name="total_views_value" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=419700700]
+layout_mode = 2
+text = "0"
+
+[node name="today_views_label" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=1281818055]
+layout_mode = 2
+text = "今日访问"
+
+[node name="today_views_value" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=1960719867]
+layout_mode = 2
+text = "0"
+
+[node name="articles_label" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=1548174739]
+layout_mode = 2
+text = "文章数量"
+
+[node name="articles_value" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=382994410]
+layout_mode = 2
+text = "0"
+
+[node name="comments_label" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=1533827703]
+layout_mode = 2
+text = "评论数量"
+
+[node name="comments_value" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=2012357039]
+layout_mode = 2
+text = "0"
+
+[node name="friendlinks_label" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=2137693473]
+layout_mode = 2
+text = "友链数量"
+
+[node name="friendlinks_value" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=627880159]
+layout_mode = 2
+text = "0"
+
+[node name="seo_label" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=1264988772]
+layout_mode = 2
+text = "SEO值"
+
+[node name="seo_value" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=741311754]
+layout_mode = 2
+text = "0"
+
+[node name="design_label" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=1416736285]
+layout_mode = 2
+text = "设计值"
+
+[node name="design_value" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer/stats_grid" unique_id=623866812]
+layout_mode = 2
+text = "0"
+
+[node name="separator" type="HSeparator" parent="bg/面板组/dashboard_panel/VBoxContainer" unique_id=134893416]
+layout_mode = 2
+
+[node name="trend_title" type="Label" parent="bg/面板组/dashboard_panel/VBoxContainer" unique_id=1360617494]
+layout_mode = 2
+text = "最近7天访问趋势"
+
+[node name="trend_container" type="VBoxContainer" parent="bg/面板组/dashboard_panel/VBoxContainer" unique_id=1500358815]
+layout_mode = 2
+
+[node name="articles_panel" type="PanelContainer" parent="bg/面板组" unique_id=285720610]
+visible = false
+layout_mode = 0
+offset_top = 10.0
+offset_right = 760.0
+offset_bottom = 410.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/面板组/articles_panel" unique_id=355120626]
+layout_mode = 2
+
+[node name="title" type="Label" parent="bg/面板组/articles_panel/VBoxContainer" unique_id=347055075]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.827451, 0.352941, 0, 1)
+text = "📊 创作数据"
+
+[node name="count_label" type="Label" parent="bg/面板组/articles_panel/VBoxContainer" unique_id=834075339]
+layout_mode = 2
+text = "文章列表 (0篇)"
+
+[node name="articles_scroll" type="ScrollContainer" parent="bg/面板组/articles_panel/VBoxContainer" unique_id=2093379369]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="articles_list" type="VBoxContainer" parent="bg/面板组/articles_panel/VBoxContainer/articles_scroll" unique_id=204183090]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="friendlinks_panel" type="PanelContainer" parent="bg/面板组" unique_id=1716068320]
+visible = false
+layout_mode = 0
+offset_top = 10.0
+offset_right = 760.0
+offset_bottom = 410.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="bg/面板组/friendlinks_panel" unique_id=789877180]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/面板组/friendlinks_panel/ScrollContainer" unique_id=532219998]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="title" type="Label" parent="bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer" unique_id=963339115]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.827451, 0.352941, 0, 1)
+text = "🔗 友链管理"
+
+[node name="count_label" type="Label" parent="bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer" unique_id=2069484276]
+layout_mode = 2
+text = "友链列表 (0个)"
+
+[node name="friendlinks_scroll" type="ScrollContainer" parent="bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer" unique_id=847181878]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="friendlinks_list" type="VBoxContainer" parent="bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer/friendlinks_scroll" unique_id=212080848]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="total_bonus" type="Label" parent="bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer" unique_id=662143492]
+layout_mode = 2
+text = "总加成：流量+0/日  SEO+0"
+
+[node name="apply_button" type="Button" parent="bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer" unique_id=497789981]
+layout_mode = 2
+text = "📤 申请友链"
+
+[node name="pending_title" type="Label" parent="bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer" unique_id=897698307]
+layout_mode = 2
+text = "待处理申请:"
+
+[node name="pending_scroll" type="ScrollContainer" parent="bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer" unique_id=1917385306]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="pending_list" type="VBoxContainer" parent="bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer/pending_scroll" unique_id=1114394688]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="settings_container" type="PanelContainer" parent="bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer" unique_id=1456209423]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="comments_panel" type="PanelContainer" parent="bg/面板组" unique_id=476242473]
+visible = false
+layout_mode = 0
+offset_top = 10.0
+offset_right = 760.0
+offset_bottom = 410.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/面板组/comments_panel" unique_id=2008996413]
+layout_mode = 2
+
+[node name="title" type="Label" parent="bg/面板组/comments_panel/VBoxContainer" unique_id=9703403]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.827451, 0.352941, 0, 1)
+text = "💬 评论管理"
+
+[node name="count_label" type="Label" parent="bg/面板组/comments_panel/VBoxContainer" unique_id=1650347786]
+layout_mode = 2
+text = "评论列表 (0条)"
+
+[node name="comments_scroll" type="ScrollContainer" parent="bg/面板组/comments_panel/VBoxContainer" unique_id=173207269]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="comments_list" type="VBoxContainer" parent="bg/面板组/comments_panel/VBoxContainer/comments_scroll" unique_id=1920530164]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="close_btn" type="Button" parent="bg" unique_id=904667105]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -35.0
+offset_top = 8.0
+offset_right = -10.0
+offset_bottom = 33.0
+grow_horizontal = 0
+theme_type_variation = &"Button"
+text = "X"
+
+[connection signal="pressed" from="bg/按钮组/vb/mc1/b1" to="." method="_on_b_1_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc2/b2" to="." method="_on_b_2_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc3/b3" to="." method="_on_b_3_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc4/b4" to="." method="_on_b_4_pressed"]
+[connection signal="pressed" from="bg/close_btn" to="." method="_on_close_button_pressed"]

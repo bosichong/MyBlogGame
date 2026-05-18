@@ -16,5 +16,5 @@ var item = {
     "isVisible": false,
     "disabled": true,
     "money": 100,
-    "stamina": 50,
+    "stamina": 15,
 }

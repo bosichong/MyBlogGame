@@ -9,6 +9,8 @@ var data_configs = {
     "recreation": "res://data/recreation.gd",
     "learning_skills": "res://data/learning_skills.gd",
     "title_templates": "res://data/title_templates.gd",
+    "lm_members": "res://data/lm_members.gd",
+    "comment_templates": "res://data/comment_templates.gd",
 }
 
 # ===== 存储所有加载的数据 =====
@@ -20,6 +22,8 @@ var data_container: DataContainer = DataContainer.new()
 # ===== 管理器 =====
 var save_manager: SaveManager = SaveManager.new()
 var config_manager: ConfigManager = ConfigManager.new()
+var friend_link_manager: FriendLinkManager = FriendLinkManager.new()
+var comment_manager: CommentManager = CommentManager.new()
 
 # ===== 信号 =====
 signal money_changed(new_money: float)
@@ -39,6 +43,8 @@ func _init():
 func _ready():
     add_child(save_manager)
     add_child(config_manager)
+    add_child(friend_link_manager)
+    add_child(comment_manager)
     connect_data_signals()
     config_manager.load_all_configs()
     data_container.static_config = config_manager.get_static_config()
@@ -69,6 +75,12 @@ func get_title_templates():
 
 func get_milestones():
     return loaded_data.get("milestones")
+
+func get_lm_members():
+    var lm_data = loaded_data.get("lm_members")
+    if lm_data:
+        return lm_data.lm_list.duplicate()
+    return []
 
 # 兼容旧代码的属性访问
 var blog_categories:
@@ -208,6 +220,21 @@ func get_task() -> TaskData:
 
 func get_league() -> LeagueData:
     return data_container.get_league()
+
+func get_friend_link() -> FriendLinkData:
+    return data_container.get_friend_link()
+
+func get_comment() -> CommentData:
+    return data_container.get_comment()
+
+func get_friend_link_manager() -> FriendLinkManager:
+    return friend_link_manager
+
+func get_friend_link_bonus() -> Dictionary:
+    return friend_link_manager.get_total_bonus()
+
+func get_comment_manager() -> CommentManager:
+    return comment_manager
 
 func get_static_config() -> StaticConfig:
     return data_container.get_static_config()

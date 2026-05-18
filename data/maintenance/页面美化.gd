@@ -2,14 +2,17 @@ extends Node
 
 ## 页面美化
 ## 网站维护
-## 解锁条件：绘画等级1
 
 var item = {
     "name": "页面美化",
-    "tip": "需要绘画等级1后解锁，漂亮的页面会增加访问量。",
-    "isVisible": false,
-    "disabled": true,
+    "tip": "提升博客设计值，增加访问量加成。设计值满级100点。",
+    "unlock_condition": "",
+    "type": "网站维护",
+    "type1": "设计",
+    "isVisible": true,
+    "disabled": false,
     "pressed": false,
     "money": 0,
+    "is_money": false,
     "stamina": 10,
 }

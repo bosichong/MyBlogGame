@@ -5,10 +5,12 @@ var tmp_v = 23
 ## 访问量计算器
 var views_calculator: ViewsCalculator = null
 
-## 付费文章周收入累积（按类型分别统计）
-var weekly_paid_income: float = 0
-var weekly_novel_income: float = 0       # 小说连载收入
-var weekly_hacker_income: float = 0      # 付费黑客攻防收入
+signal sg_paid_income_settled(msg: String)  # 付费文章收入结算信号
+
+## 付费文章月收入累积（按类型分别统计）
+var monthly_paid_income: float = 0
+var monthly_novel_income: float = 0       # 小说连载收入
+var monthly_hacker_income: float = 0      # 付费黑客攻防收入
 ## 上次结算时付费文章总访问量（用于计算新增访问量）
 var last_settle_paid_views: int = 0
 var last_settle_novel_views: int = 0      # 小说连载上次结算访问量
@@ -33,13 +35,13 @@ func calculate_paid_income(new_views: int, avg_quality: float) -> int:
 enum Blog_Type {
     文学,
     编程,
-    艺术,
+    # 艺术,  # 已禁用
     综合,
 }
 # 核心属性 - 博客作者的五个关键能力
 ## 最高等级
 const MAX_LEVEL = 100
-## 级能最高等级
+## 技能最高等级
 const MAX_SKILL_LEVEL = 100
 
 # ===== 向后兼容的属性访问 =====
@@ -79,13 +81,13 @@ var code_ability: float:
         if GDManager:
             GDManager.get_blogger().code_ability = value
 
-## 绘画能力:最后可以为原画师和大画家。
-var drawing_ability: float:
-    get:
-        return GDManager.get_blogger().drawing_ability if GDManager else tmp_v
-    set(value):
-        if GDManager:
-            GDManager.get_blogger().drawing_ability = value
+## 绘画能力:最后可以为原画师和大画家。【已禁用】
+# var drawing_ability: float:
+#     get:
+#         return GDManager.get_blogger().drawing_ability if GDManager else tmp_v
+#     set(value):
+#         if GDManager:
+#             GDManager.get_blogger().drawing_ability = value
 
 ## 体力值:创作文章,维护博客,社交需要体力值。
 var stamina : int:
@@ -191,10 +193,18 @@ var blog_data: Dictionary:
     get:
         if GDManager:
             var blogger = GDManager.get_blogger()
+            if not blogger:
+                return {}
+            # 获取7天数据（从 Tongji 节点）
+            var weekly_views_data = []
+            var tongji_node = get_node_or_null("/root/Tongji")
+            if tongji_node:
+                weekly_views_data = tongji_node.get_weekly_views()
+            
             return {
                 "blog_name": blogger.blog_name,
                 "blog_author": blogger.blog_author,
-                "blog_type": blogger.blog_type,
+                "blog_url": blogger.blog_url,
                 "safety_value": blogger.safety_value,
                 "seo_value": blogger.seo_value,
                 "design_value": blogger.design_value,
@@ -207,6 +217,7 @@ var blog_data: Dictionary:
                 "month_views": blogger.month_views,
                 "year_views": blogger.year_views,
                 "posts": blogger.posts,
+                "weekly_views_data": weekly_views_data,
             }
         return {}
     set(value):
@@ -214,7 +225,7 @@ var blog_data: Dictionary:
             var blogger = GDManager.get_blogger()
             blogger.blog_name = value.get("blog_name", "我的博客")
             blogger.blog_author = value.get("blog_author", "J.sky")
-            blogger.blog_type = value.get("blog_type", 1)
+            blogger.blog_url = value.get("blog_type", "suiyan.cc")
             blogger.safety_value = value.get("safety_value", 100)
             blogger.seo_value = value.get("seo_value", 100)
             blogger.design_value = value.get("design_value", 100)
@@ -245,7 +256,7 @@ var tmp_m: int:
 
 var tmp_y: int:
     get:
-        return GDManager.get_blogger().tmp_year if GDManager else 2005
+        return GDManager.get_blogger().tmp_year if GDManager else 2000
     set(value):
         if GDManager:
             GDManager.get_blogger().tmp_year = value
@@ -324,6 +335,8 @@ func daily_activities():
                 exp_gained += maintain_website_seo(task) # 进行网站seo优化
             if task == "页面美化":
                 exp_gained += maintain_design_web(task) # 进行网站页面美化
+            if task == "友链维护":
+                exp_gained += maintain_friendlink(task) # 进行友链维护
         elif Utils.check_name_exists(Utils.recreation, task):
             if task == "休息":
                 exp_gained += recreation_rest(task) # 休息一天
@@ -337,10 +350,11 @@ func daily_activities():
                 continue
             exp_gained += learningToSkills(task)
 
-    # 如果当天没有任务,不再自动恢复体力(已改为每日自然恢复)
-    if Blogger.blog_calendar[day].tasks.is_empty():
-        print("当天没有任务,体力不自动恢复")
-
+    # 每天体力恢复为满值
+    var blogger_data = GDManager.get_blogger()
+    var max_stamina = Utils.get_max_stamina(blogger_data.level)
+    blogger_data.stamina = max_stamina
+    
     #exp_gained += calculate_promotion_exp() # 推广EXP
     #exp_gained += calculate_interaction_exp() # 读者互动EXP
     #exp_gained += calculate_skill_learning_exp() # 技能学习EXP
@@ -354,16 +368,19 @@ func week_activites():
 
     var blogger = GDManager.get_blogger()
     blogger.safety_value = Utils.decrease_value_safely(blogger.safety_value, 1, 3)
-    blogger.seo_value = Utils.decrease_value_safely(blogger.seo_value, 0, 2)
+
+    # SEO值衰减，有友链则最低值提高（每增加1个友链，最低值+1，最多+20）
+    var friend_link_count = GDManager.get_friend_link_manager().get_active_links().size() if GDManager else 0
+    var seo_min_with_friend = 5 + mini(friend_link_count, 20)  # 友链加成：每1个友链+1，最低5+1=6，最多5+20=25
+    blogger.seo_value = Utils.decrease_value_safely(blogger.seo_value, 0, 2, seo_min_with_friend)
+
     blogger.design_value = Utils.decrease_value_safely(blogger.design_value, 1, 3)
     blogger.rss = Utils.decrease_rss(blogger.rss)
     del_fa()
 
-    # 判断绘画技能值>=25时,开启页面美化
-    var tmp_design = Utils.find_category_by_name(Utils.website_maintenance, "页面美化", true)
-    if not tmp_design.is_empty() and tmp_design.disabled:
-        if blogger.drawing_ability >= 25:
-            tmp_design.disabled = false
+    # 判断绘画技能值>=25时,开启页面美化【已禁用】
+    # if blogger.drawing_ability >= 25:
+    #     tmp_design.disabled = false
 
 ## 博客文章收藏量在三个月后始递减
 func del_fa():
@@ -449,9 +466,8 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             print("[出书笔记] 《%s》" % title)
         
         blogger.posts.append(new_post)
-        blogger.add_post(new_post)
+        # blogger.add_post(new_post)  # 已通过 posts.append 添加，无需重复
 
-    print("新博客文章发布: ", title, ",分类: ", d.name, ",ID: ", post_id)
     return new_post
 
 ## 处理小说连载批次逻辑
@@ -615,7 +631,6 @@ func simulate_new_blog_post(category) -> int:
         blogger.stamina -= actual_cost  # 使用实际消耗
         # 增加写作能力（每次写博客成功都会增加）
         add_writing_ability_points()
-        print("[写博客] 消耗体力:", actual_cost, ",剩余体力:", blogger.stamina)
         return int(new_post.quality*0.2)# 简化计算,实际应更复杂
     else:
         # 不再自动恢复体力,直接拒绝
@@ -656,6 +671,11 @@ func update_blog_views() -> int:
     # 使用新计算器计算访问量
     var result = views_calculator.calculate_daily(blogger_data)
     blogger.today_views = result.views
+    
+    # 添加友链流量加成
+    var fl_bonus = GDManager.get_friend_link_bonus() if GDManager else {}
+    var views_add = fl_bonus.get("views_bonus", 0)
+    blogger.today_views += views_add
 
     # 计算付费文章收入(按周结算)
     var today_money = 0
@@ -689,7 +709,7 @@ func update_blog_views() -> int:
                 avg_quality += post.get("quality", 50)
             avg_quality = avg_quality / novel_posts.size()
             today_novel_money = calculate_paid_income(novel_new_views, avg_quality)
-            weekly_novel_income += today_novel_money
+            monthly_novel_income += today_novel_money
     
     if hacker_posts.size() > 0:
         var hacker_new_views = hacker_views - last_settle_hacker_views
@@ -699,40 +719,35 @@ func update_blog_views() -> int:
                 avg_quality += post.get("quality", 50)
             avg_quality = avg_quality / hacker_posts.size()
             today_hacker_money = calculate_paid_income(hacker_new_views, avg_quality)
-            weekly_hacker_income += today_hacker_money
+            monthly_hacker_income += today_hacker_money
     
     today_money = today_novel_money + today_hacker_money
     
-    # 调试日志
-    if paid_posts.size() > 0:
-        print("[付费文章] 共", paid_posts.size(), "篇, 小说:", novel_posts.size(), "篇(新增:", novel_views - last_settle_novel_views, "), 黑客:", hacker_posts.size(), "篇(新增:", hacker_views - last_settle_hacker_views, "), 本周收入:", today_money)
+    # 累积每月收入
+    monthly_paid_income += today_money
     
-    # 累积每周收入
-    weekly_paid_income += today_money
-    
-    # 每周结算（第7天）
-    if TimerManager.current_day == 7 and weekly_paid_income > 0:
-        blogger.money += weekly_paid_income
+    # 每月结算（第4周第7天）
+    if TimerManager.current_week == 4 and TimerManager.current_day == 7 and monthly_paid_income > 0:
+        blogger.money += monthly_paid_income
         
-        # 在游戏界面显示收入到账弹窗
-        var main = get_tree().root.get_node("Main")
-        if main and main.has_method("show_popup_message"):
-            var msg = ""
-            if weekly_novel_income > 0:
-                msg += "小说连载收入: %.0f 元\n" % weekly_novel_income
-            if weekly_hacker_income > 0:
-                msg += "付费黑客攻防收入: %.0f 元\n" % weekly_hacker_income
-            if weekly_novel_income > 0 or weekly_hacker_income > 0:
-                msg += "付费文章总收入: %.0f 元，已入账" % weekly_paid_income
-            main.show_popup_message("付费文章收入到账", msg)
+        # 通过信号发送收入到账信息
+        var msg = ""
+        if monthly_novel_income > 0:
+            msg += "小说连载收入: %.0f 元\n" % monthly_novel_income
+        if monthly_hacker_income > 0:
+            msg += "付费黑客攻防收入: %.0f 元\n" % monthly_hacker_income
+        if monthly_novel_income > 0 or monthly_hacker_income > 0:
+            msg += "付费文章总收入: %.0f 元，已入账" % monthly_paid_income
+        msg = msg.trim_suffix("\n")
+        emit_signal("sg_paid_income_settled", msg)
         
         # 分别打印不同来源的收入
-        if weekly_novel_income > 0:
-            print("[小说连载收入] 本周收入: ", weekly_novel_income, " 元，已入账")
-        if weekly_hacker_income > 0:
-            print("[付费黑客攻防收入] 本周收入: ", weekly_hacker_income, " 元，已入账")
-        if weekly_novel_income > 0 or weekly_hacker_income > 0:
-            print("[付费文章总收入] ", weekly_paid_income, " 元")
+        if monthly_novel_income > 0:
+            print("[小说连载收入] 本月收入: ", monthly_novel_income, " 元，已入账")
+        if monthly_hacker_income > 0:
+            print("[付费黑客攻防收入] 本月收入: ", monthly_hacker_income, " 元，已入账")
+        if monthly_novel_income > 0 or monthly_hacker_income > 0:
+            print("[付费文章总收入] ", monthly_paid_income, " 元")
         # 更新上次结算访问量
         last_settle_novel_views = novel_views
         last_settle_hacker_views = hacker_views
@@ -741,16 +756,24 @@ func update_blog_views() -> int:
             if post.get("type1", "") == "付费":
                 total_paid_views += post.get("views", 0)
         last_settle_paid_views = total_paid_views
-        weekly_paid_income = 0
-        weekly_novel_income = 0
-        weekly_hacker_income = 0
+        monthly_paid_income = 0
+        monthly_novel_income = 0
+        monthly_hacker_income = 0
 
     # 广告收入和影响
     if AdManager.ad_2:
         blogger.today_views = AdManager.update_ad(blogger.today_views)
 
     # 更新统计
-    Tongji.t_d.append([Utils.format_date(), blogger.today_views])
+    var tongji = get_node_or_null("/root/Tongji")
+    if tongji:
+        tongji.record_daily(Utils.format_date(), blogger.today_views, blogger.posts.size(), {})
+    
+    # 同步到 StatisticsData（用于保存）
+    if GDManager:
+        var stats_data = GDManager.get_statistics()
+        if stats_data:
+            stats_data.record_daily_stat(Utils.format_date(), blogger.today_views, 0.0)
 
     # 更新收藏数(基于今日访问量)
     for post in blogger.posts:
@@ -767,12 +790,21 @@ func update_blog_views() -> int:
             post.favorites = post.get("favorites", 0) + new_favorites
             blogger.favorites += new_favorites
 
+    # 生成评论(基于每篇文章的访问量)
+    if GDManager:
+        var comment_manager = GDManager.get_comment_manager()
+        if comment_manager:
+            var comment_result = comment_manager.check_all_articles()
+            if comment_result.get("comments_generated", 0) > 0:
+                print("[评论生成] 今日生成了 ", comment_result.get("comments_generated"), " 条评论")
+                comment_manager.sync_all_posts()
+
     # 周/月/年统计
     if tmp_w == TimerManager.current_week:
         blogger.week_views += blogger.today_views
         if TimerManager.current_day == 7:
-            var date = str(TimerManager.current_year) + "-" + str(TimerManager.current_month) + "-" + str(TimerManager.current_week)
-            Tongji.t_w.append([date, blogger.week_views])
+            if tongji:
+                tongji.record_weekly(TimerManager.current_year, TimerManager.current_week)
     else:
         blogger.week_views = blogger.today_views
         tmp_w = TimerManager.current_week
@@ -780,8 +812,8 @@ func update_blog_views() -> int:
     if tmp_m == TimerManager.current_month:
         blogger.month_views += blogger.today_views
         if TimerManager.current_week == 4 and TimerManager.current_day == 7:
-            var date = str(TimerManager.current_year) + "-" + str(TimerManager.current_month)
-            Tongji.t_m.append([date, blogger.month_views])
+            if tongji:
+                tongji.record_monthly(TimerManager.current_year, TimerManager.current_month)
     else:
         blogger.month_views = blogger.today_views
         tmp_m = TimerManager.current_month
@@ -789,8 +821,8 @@ func update_blog_views() -> int:
     if tmp_y == TimerManager.current_year:
         blogger.year_views += blogger.today_views
         if TimerManager.current_month == 12 and TimerManager.current_week == 4 and TimerManager.current_day == 7:
-            var date = str(TimerManager.current_year)
-            Tongji.t_y.append([date, blogger.year_views])
+            if tongji:
+                tongji.record_yearly(TimerManager.current_year)
     else:
         blogger.year_views = blogger.today_views
         tmp_y = TimerManager.current_year
@@ -884,8 +916,9 @@ func maintain_website_seo(category: String) -> int:
         return 0
 
     blogger.stamina -= actual_cost #消耗体力值(使用实际消耗)
-    var seo_add = blogger.level + int((blogger.writing_ability + blogger.technical_ability) / 3)
-    blogger.seo_value = clamp(blogger.seo_value + seo_add, 0, 200)
+    var seo_add = 10
+    blogger.seo_value = clamp(blogger.seo_value + seo_add, 0, 100)
+
     # 增加技术能力（每次维护成功都会增加）
     add_technical_ability_points()
     emit_signal("signal_website_seo","网站seo值+" + str(seo_add))
@@ -907,11 +940,42 @@ func maintain_design_web(category: String) -> int:
         return 0
 
     blogger.stamina -= actual_cost #消耗体力值(使用实际消耗)
-    blogger.design_value += Utils.add_property(blogger.design_value,int(blogger.drawing_ability/4))
-    # 增加技术能力（每次维护成功都会增加）
+    var design_add = min(10, 100 - blogger.design_value)
+    blogger.design_value = clamp(blogger.design_value + design_add, 0, 100)
     add_technical_ability_points()
-    emit_signal("signal_design_web","页面美化值+10")
-    return 10
+    emit_signal("signal_design_web","页面美化值+" + str(design_add))
+    return design_add
+
+# 信号量
+signal signal_friendlink_maintenance(msg: String)
+signal signal_friendlink_no_stamina(msg: String)
+func maintain_friendlink(category: String) -> int:
+    if not GDManager:
+        return 0
+    
+    var blogger = GDManager.get_blogger()
+    var d = Utils.find_category_by_name(Utils.website_maintenance, category)
+    var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
+    
+    if blogger.stamina < actual_cost:
+        emit_signal("signal_friendlink_no_stamina", "体力不足,无法进行友链维护!需要" + str(actual_cost) + "体力")
+        return 0
+    
+    blogger.stamina -= actual_cost
+    add_technical_ability_points()
+    
+    var fl_manager = GDManager.get_friend_link_manager()
+    if fl_manager:
+        var result = fl_manager.do_maintenance()
+        var approved = result.get("approved_requests", 0)
+        var rejected = result.get("rejected_requests", 0)
+        var total = approved + rejected
+        if total > 0:
+            emit_signal("signal_friendlink_maintenance", "处理申请:%d个 通过:%d个 拒绝:%d个" % [total, approved, rejected])
+            print("[友链维护] 处理申请:%d个 通过:%d个 拒绝:%d个" % [total, approved, rejected])
+        return 10
+    
+    return 0
 
 ## 休闲娱乐 -> 休息
 signal s_recrecreation_rest(msg)
@@ -947,10 +1011,10 @@ func playgame(category : String) -> int:
 
 
 
-enum  Skills {
+enum Skills {
     LITERATURE,#文学
     CODE,      #编程
-    DRAW,      #绘画
+    # DRAW,      #绘画  # 已禁用
 }
 
 signal skill_level_up(type: int, lv: float)
@@ -1052,8 +1116,9 @@ func get_ability_by_type(skill_type: String) -> float:
             return float(blogger.code_ability)
         "literature":
             return float(blogger.literature_ability)
-        "draw":
-            return float(blogger.drawing_ability)
+        "draw":  # 【已禁用】
+            # return float(blogger.drawing_ability)
+            return 0.0
     return 0.0
 
 
@@ -1069,9 +1134,10 @@ func set_ability_by_type(skill_type: String, value: float):
         "literature":
             blogger.literature_ability = value
             blogger.set_ability("literature", value)
-        "draw":
-            blogger.drawing_ability = value
-            blogger.set_ability("drawing", value)
+        "draw":  # 【已禁用】
+            # blogger.drawing_ability = value
+            # blogger.set_ability("drawing", value)
+            pass
 
 
 ## 技能类型转枚举
@@ -1081,8 +1147,9 @@ func get_skill_type_enum(skill_type: String) -> int:
             return Skills.CODE
         "literature":
             return Skills.LITERATURE
-        "draw":
-            return Skills.DRAW
+        "draw":  # 已禁用
+            # return Skills.DRAW
+            return 0
     return 0
 
 

@@ -6,6 +6,7 @@ extends Node
 
 var item = {
     "name": "开Party",
+    "tip": "花费1000元举办派对，社交放松，恢复150体力，冷却3天！",
     "isVisible": true,
     "disabled": false,
     "pressed": false,

@@ -7,7 +7,7 @@ class_name BloggerData
 # ============================================
 
 ## 等级（1-100）
-var level: int = 8
+var level: int = 1
 
 ## 经验值
 var exp: int = 0
@@ -30,13 +30,13 @@ var writing_ability: float = 0
 var technical_ability: float = 0
 
 ## 编程能力：影响编程教程、黑客攻防等技术文章质量
-var code_ability: float = 91
+var code_ability: float = 1
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 91
+var literature_ability: float = 1
 
 ## 绘画能力：影响艺术类文章质量（插画壁纸、绘画教程等）
-var drawing_ability: float = 0
+var drawing_ability: float = 0  # 【已禁用】
 
 # ============================================
 # 资源
@@ -65,8 +65,8 @@ var blog_name: String = "我的博客"
 ## 博主昵称
 var blog_author: String = "J.sky"
 
-## 博客类型（0=文学, 1=编程, 2=艺术, 3=综合）
-var blog_type: int = 1
+## 博客网址
+var blog_url: String = "suiyan.cc"
 
 # ============================================
 # 博客属性值（范围0-200）
@@ -80,9 +80,9 @@ var safety_value: int = 100
 ## 影响基础访问量和搜索引擎收录
 ## 新网站SEO效果差，初始值设为50
 ## 通过"SEO优化"任务逐步提升
-var seo_value: int = 50
+var seo_value: int = 5
 
-## 设计值（0-200）
+## 设计值（0-100）
 ## 影响访问量加成和页面美化效果
 ## 通过"页面美化"任务提升
 var design_value: int = 60
@@ -132,13 +132,13 @@ var posts: Array[Dictionary] = []
 ## 每日任务安排
 ## 每天可以安排多个任务（写作、维护、休息、学习等）
 var calendar: Array[Dictionary] = [
-    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周一
-    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周二
-    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周三
-    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周四
-    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周五
-    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周六
-    {"tasks": ["和宠物玩", "吃烧烤"]},      # 周日
+    {"tasks": ["生活日记"]},      # 周一
+    {"tasks": ["生活日记"]},      # 周二
+    {"tasks": ["生活日记"]},      # 周三
+    {"tasks": ["生活日记"]},      # 周四
+    {"tasks": ["生活日记"]},      # 周五
+    {"tasks": ["生活日记"]},      # 周六
+    {"tasks": ["生活日记"]},      # 周日
 ]
 
 # ============================================
@@ -152,7 +152,7 @@ var tmp_week: int = 1
 var tmp_month: int = 1
 
 ## 当前年份（游戏起始年份）
-var tmp_year: int = 2005
+var tmp_year: int = 2000
 
 ## 最后一篇文章的质量分
 var last_post_quality: int = 0
@@ -251,8 +251,9 @@ func set_ability(ability_type: String, new_value: float):
             code_ability = new_value
         "literature":
             literature_ability = new_value
-        "drawing":
-            drawing_ability = new_value
+        "drawing":  # 【已禁用】
+            # drawing_ability = new_value
+            pass
     emit_signal("ability_changed", ability_type, new_value)
 
 ## 添加新文章

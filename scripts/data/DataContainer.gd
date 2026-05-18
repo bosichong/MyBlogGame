@@ -26,6 +26,12 @@ func get_task() -> TaskData:
 func get_league() -> LeagueData:
     return runtime_data.league
 
+func get_friend_link() -> FriendLinkData:
+    return runtime_data.friend_link
+
+func get_comment() -> CommentData:
+    return runtime_data.comment
+
 # ===== 静态配置访问 =====
 
 func get_static_config() -> StaticConfig:

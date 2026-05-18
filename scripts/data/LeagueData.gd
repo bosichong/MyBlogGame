@@ -11,6 +11,8 @@ var rank_art: Array[Dictionary] = []
 
 var donation_ranking: Array[Array] = []
 
+var lm_members: Array[Dictionary] = []
+
 signal league_joined
 signal donation_made(amount: float)
 signal rank_updated
@@ -97,3 +99,60 @@ func get_total_donations_this_month() -> float:
             total += donation["amount"]
 
     return total
+
+func init_lm_members():
+    var static_members = GDManager.get_lm_members() if GDManager else []
+    lm_members = []
+    for m in static_members:
+        lm_members.append({
+            "id": m.get("id"),
+            "blog_name": m.get("blog_name"),
+            "blog_author": m.get("blog_author"),
+            "lv": m.get("lv"),
+            "type": m.get("type"),
+            "quality": m.get("quality"),
+            "url": m.get("url"),
+            "connectivity": true,
+            "is_friend_link": false,
+            "add_date": "",
+            "last_check": ""
+        })
+
+func get_friend_links() -> Array[Dictionary]:
+    return lm_members.filter(func(m): return m.get("is_friend_link", false))
+
+func get_member(id: int) -> Dictionary:
+    for m in lm_members:
+        if m.get("id") == id:
+            return m
+    return {}
+
+func update_member(id: int, data: Dictionary):
+    for i in range(lm_members.size()):
+        if lm_members[i].get("id") == id:
+            for key in data:
+                lm_members[i][key] = data[key]
+            return
+    lm_members.append(data)
+
+func remove_member_by_id(target_id: int) -> bool:
+    for i in range(lm_members.size()):
+        if lm_members[i].get("id") == target_id:
+            lm_members.remove_at(i)
+            return true
+    return false
+
+func mark_friend_link(id: int, is_link: bool):
+    var member = get_member(id)
+    if member.size() > 0:
+        member["is_friend_link"] = is_link
+        if is_link:
+            member["add_date"] = Time.get_date_string_from_system()
+        else:
+            member["add_date"] = ""
+
+func get_member_level(id: int) -> int:
+    var member = get_member(id)
+    if member.size() > 0:
+        return member.get("lv", 1)
+    return 1

@@ -1,6 +1,6 @@
 extends Control
 
-@onready var m_vb = $"Panel/注册/ScrollContainer/VBoxContainer/HBoxContainer"
+@onready var m_vb = $"bg/选项组/sc1/VBoxContainer/ScrollContainer/m_hbox"
 
 signal close_mialestones
 

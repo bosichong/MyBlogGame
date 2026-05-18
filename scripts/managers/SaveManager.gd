@@ -138,7 +138,9 @@ func serialize_runtime_data(runtime_data: RuntimeData) -> Dictionary:
         "ad": serialize_ad_data(runtime_data.ad),
         "statistics": serialize_statistics_data(runtime_data.statistics),
         "task": serialize_task_data(runtime_data.task),
-        "league": serialize_league_data(runtime_data.league)
+        "league": serialize_league_data(runtime_data.league),
+        "friend_link": serialize_friendlink_data(runtime_data.friend_link),
+        "comment": serialize_comment_data(runtime_data.comment),
     }
 
 func deserialize_runtime_data(data: Dictionary) -> RuntimeData:
@@ -158,6 +160,10 @@ func deserialize_runtime_data(data: Dictionary) -> RuntimeData:
         deserialize_task_data(runtime_data.task, data["task"])
     if data.has("league"):
         deserialize_league_data(runtime_data.league, data["league"])
+    if data.has("friend_link"):
+        deserialize_friendlink_data(runtime_data.friend_link, data["friend_link"])
+    if data.has("comment"):
+        deserialize_comment_data(runtime_data.comment, data["comment"])
 
     return runtime_data
 
@@ -171,7 +177,7 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "technical_ability": data.technical_ability,
         "code_ability": data.code_ability,
         "literature_ability": data.literature_ability,
-        "drawing_ability": data.drawing_ability,
+        # "drawing_ability": data.drawing_ability,  # 【已禁用】
         "stamina": data.stamina,
         "money": data.money,
         "social_ability": data.social_ability,
@@ -206,7 +212,7 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.technical_ability = dict.get("technical_ability", 23)
     data.code_ability = dict.get("code_ability", 23)
     data.literature_ability = dict.get("literature_ability", 23)
-    data.drawing_ability = dict.get("drawing_ability", 23)
+    # data.drawing_ability = dict.get("drawing_ability", 23)  # 【已禁用】
     data.stamina = dict.get("stamina", 100)
     data.money = dict.get("money", 100000.0)
     data.social_ability = dict.get("social_ability", 5)
@@ -228,7 +234,7 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.calendar = dict.get("calendar", [])
     data.tmp_week = dict.get("tmp_week", 1)
     data.tmp_month = dict.get("tmp_month", 1)
-    data.tmp_year = dict.get("tmp_year", 2005)
+    data.tmp_year = dict.get("tmp_year", 2000)
     data.last_post_quality = dict.get("last_post_quality", 0)
 
 func serialize_time_data(data: TimeData) -> Dictionary:
@@ -245,15 +251,15 @@ func serialize_time_data(data: TimeData) -> Dictionary:
     }
 
 func deserialize_time_data(data: TimeData, dict: Dictionary):
-    data.current_year = dict.get("current_year", 2005)
+    data.current_year = dict.get("current_year", 2000)
     data.current_month = dict.get("current_month", 1)
     data.current_week = dict.get("current_week", 1)
     data.current_day = dict.get("current_day", 1)
     data.current_quarter = dict.get("current_quarter", 1)
     data.time_scale = dict.get("time_scale", 1.0)
     data.is_paused = dict.get("is_paused", false)
-    data.game_start_date = dict.get("game_start_date", "2005-1-1-1")
-    data.current_date_str = dict.get("current_date_str", "2005-1-1-1")
+    data.game_start_date = dict.get("game_start_date", "2000-1-1-1")
+    data.current_date_str = dict.get("current_date_str", "2000-1-1-1")
 
 func serialize_bank_data(data: BankData) -> Dictionary:
     return {
@@ -348,7 +354,8 @@ func serialize_league_data(data: LeagueData) -> Dictionary:
         "rank_literature": data.rank_literature,
         "rank_tech": data.rank_tech,
         "rank_art": data.rank_art,
-        "donation_ranking": data.donation_ranking
+        "donation_ranking": data.donation_ranking,
+        "lm_members": data.lm_members
     }
 
 func deserialize_league_data(data: LeagueData, dict: Dictionary):
@@ -360,6 +367,66 @@ func deserialize_league_data(data: LeagueData, dict: Dictionary):
     data.rank_tech = dict.get("rank_tech", [])
     data.rank_art = dict.get("rank_art", [])
     data.donation_ranking = dict.get("donation_ranking", [])
+
+    if dict.has("lm_members") and dict["lm_members"].size() > 0:
+        data.lm_members = dict["lm_members"]
+    else:
+        data.init_lm_members()
+
+    if data.is_joined:
+        var fl_manager = GDManager.get_friend_link_manager() if GDManager else null
+        if fl_manager:
+            fl_manager.on_league_joined()
+
+func serialize_friendlink_data(data: FriendLinkData) -> Dictionary:
+    return {
+        "pending_requests": data.pending_requests,
+        "last_maintenance_date": data.last_maintenance_date,
+        "auto_settings": data.auto_settings,
+        "is_league_member": data.is_league_member,
+    }
+
+func deserialize_friendlink_data(data: FriendLinkData, dict: Dictionary):
+    data.pending_requests = dict.get("pending_requests", [])
+    data.last_maintenance_date = dict.get("last_maintenance_date", "")
+    data.auto_settings = dict.get("auto_settings", {
+        "min_level_diff": 5,
+        "auto_delete_invalid": true,
+        "auto_delete_spam": true,
+    })
+    data.is_league_member = dict.get("is_league_member", false)
+
+    var old_links = dict.get("links", [])
+    if old_links.size() > 0:
+        _migrate_friend_links(old_links)
+
+func _migrate_friend_links(old_links: Array):
+    var league = GDManager.get_league() if GDManager else null
+    if not league:
+        return
+
+    for link in old_links:
+        var member_id = link.get("member_id")
+        var member = league.get_member(member_id)
+        if member.size() > 0:
+            member["is_friend_link"] = true
+            member["connectivity"] = true
+            member["add_date"] = link.get("add_date", "")
+            member["last_check"] = link.get("last_check_date", "")
+    print("[存档迁移] 已迁移 %d 个友链到 LeagueData.lm_members" % old_links.size())
+
+func serialize_comment_data(data: CommentData) -> Dictionary:
+    return {
+        "comments": data.comments,
+        "auto_settings": data.auto_settings,
+    }
+
+func deserialize_comment_data(data: CommentData, dict: Dictionary):
+    data.comments = dict.get("comments", [])
+    data.auto_settings = dict.get("auto_settings", {
+        "auto_approve": false,
+        "auto_delete_spam": true,
+    })
 
 # ===== 元数据 =====
 

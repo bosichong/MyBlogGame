@@ -1,65 +1,47 @@
 ## SEO基础访问量修饰器
-## 新网站SEO效果差，半年后逐步提升
+## 根据SEO值和文章等级计算基础访问量
 class_name SEOBaseModifier
 extends ViewsModifier
 
 func _init():
     modifier_name = "seo_base"
     display_name = "SEO基础访问量"
-    description = "根据SEO值和网站年龄计算基础访问量（占50%）"
+    description = "根据SEO值和文章等级计算基础访问量"
     priority = 0
     type = Type.BASE
 
 func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
     var seo = blogger.get("seo_value", 50)
-    var game_start_year = blogger.get("tmp_year", 2005)
-    
-    # 获取当前游戏时间（通过TimerManager）
-    var current_year = TimerManager.current_year if TimerManager else 2005
-    var current_month = TimerManager.current_month if TimerManager else 1
-    var current_week = TimerManager.current_week if TimerManager else 1
-    
-    # 计算网站年龄（月数）
-    var months = (current_year - game_start_year) * 12 + (current_month - 1)
-    
-    # 网站年龄系数（新网站SEO效果差）
-    # 前3个月：30%，3-6个月：50%，6-12个月：70%，1年后：100%
-    var age_factor = 1.0
-    if months < 3:
-        age_factor = 0.3
-    elif months < 6:
-        age_factor = 0.5
-    elif months < 12:
-        age_factor = 0.7
-    else:
-        age_factor = 1.0
-    
-    # 基础访问量（占50%，预留任务加成空间）
-    var base = randi_range(20, 50)
-    
-    # SEO系数：SEO值 × 年龄系数
-    # 新手期 SEO=50, 年龄<3月: 50/100 × 0.3 = 0.15
-    # 半年后 SEO=70, 年龄=6月: 70/100 × 0.5 = 0.35
-    # 1年后 SEO=100, 年龄=12月: 100/100 × 0.7 = 0.7
-    # 满级期 SEO=200, 年龄>12月: 200/100 × 1.0 = 2.0
-    
-    var seo_factor = (float(seo) / 100.0) * age_factor
-    
-    # 立方增长，让后期爆发
-    seo_factor = pow(seo_factor, 2.5)
-    
-    # 计算结果
-    var result = int(float(base) * seo_factor * 10.0)
-    
-    return max(result, 2)  # 最低2
 
-## 获取网站年龄系数说明
-func get_age_factor_description(months: int) -> String:
-    if months < 3:
-        return "新站期(30%效果)"
-    elif months < 6:
-        return "成长期(50%效果)"
-    elif months < 12:
-        return "稳定期(70%效果)"
-    else:
-        return "成熟期(100%效果)"
+    var article_level = post.get("article_level", 1)
+
+    var config = GameBalanceConfig.get_views_config()
+    var seo_max = config.get("seo_max", 100)
+    var base_values = config.get("article_base_values", {})
+    var base_value = base_values.get(article_level, 10)
+
+    # 计算公式：(SEO值 / SEO满值) × 文章等级基础值
+    var seo_factor = float(seo) / float(seo_max)
+    var min_base = base_value / 3  # 最低为基础值的1/3
+    var actual_base = randi_range(min_base, base_value)  # 随机在 1/3 到最大值 之间
+    var result = int(seo_factor * actual_base)
+
+    # 最低访问量保证
+    var min_views = base_value / 10
+    return max(result, max(min_views, 1))
+
+
+## 获取访问量计算说明（调试用）
+static func get_calculation_description(post: Dictionary, blogger: Dictionary) -> String:
+    var seo = blogger.get("seo_value", 50)
+    var article_level = post.get("article_level", 1)
+    var config = GameBalanceConfig.get_views_config()
+    var seo_max = config.get("seo_max", 100)
+    var seo_base = config.get("seo_base", 50)
+    var base_values = config.get("article_base_values", {})
+    var base_value = base_values.get(article_level, 10)
+
+    var seo_factor = float(seo) / float(seo_max)
+    var result = int(seo_factor * (seo_base + base_value))
+
+    return "SEO=%d/%d × (基数%d + 基础值%d) = %d" % [seo, seo_max, seo_base, base_value, result]
