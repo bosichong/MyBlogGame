@@ -13,22 +13,22 @@ func _init():
 func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
     var seo = blogger.get("seo_value", 50)
 
-    var article_level = post.get("article_level", 1)
+    var article_level = post.get("article_level", 2)
 
     var config = GameBalanceConfig.get_views_config()
     var seo_max = config.get("seo_max", 100)
     var base_values = config.get("article_base_values", {})
     var base_value = base_values.get(article_level, 10)
 
-    # 计算公式：(SEO值 / SEO满值) × 文章等级基础值
     var seo_factor = float(seo) / float(seo_max)
-    var min_base = base_value / 3  # 最低为基础值的1/3
-    var actual_base = randi_range(min_base, base_value)  # 随机在 1/3 到最大值 之间
+    var min_base = base_value / 3
+    var actual_base = randi_range(min_base, base_value)
     var result = int(seo_factor * actual_base)
 
-    # 最低访问量保证
     var min_views = base_value / 10
-    return max(result, max(min_views, 1))
+    var final_views = max(result, max(min_views, 1))
+    
+    return final_views
 
 
 ## 获取访问量计算说明（调试用）

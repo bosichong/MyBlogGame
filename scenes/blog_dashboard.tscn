@@ -298,15 +298,34 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.827451, 0.352941, 0, 1)
 text = "💬 评论管理"
 
-[node name="count_label" type="Label" parent="bg/面板组/comments_panel/VBoxContainer" unique_id=1650347786]
+[node name="tabs_container" type="HBoxContainer" parent="bg/面板组/comments_panel/VBoxContainer" unique_id=1000001]
 layout_mode = 2
-text = "评论列表 (0条)"
 
-[node name="comments_scroll" type="ScrollContainer" parent="bg/面板组/comments_panel/VBoxContainer" unique_id=173207269]
+[node name="pending_tab" type="Button" parent="bg/面板组/comments_panel/VBoxContainer/tabs_container" unique_id=1000002]
+layout_mode = 2
+toggle_mode = true
+text = "全部评论 (0)"
+
+[node name="approved_tab" type="Button" parent="bg/面板组/comments_panel/VBoxContainer/tabs_container" unique_id=1000003]
+layout_mode = 2
+toggle_mode = true
+text = "垃圾评论 (0)"
+
+[node name="pending_scroll" type="ScrollContainer" parent="bg/面板组/comments_panel/VBoxContainer" unique_id=173207269]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="comments_list" type="VBoxContainer" parent="bg/面板组/comments_panel/VBoxContainer/comments_scroll" unique_id=1920530164]
+[node name="pending_list" type="VBoxContainer" parent="bg/面板组/comments_panel/VBoxContainer/pending_scroll" unique_id=1000004]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="approved_scroll" type="ScrollContainer" parent="bg/面板组/comments_panel/VBoxContainer" unique_id=1000005]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="approved_list" type="VBoxContainer" parent="bg/面板组/comments_panel/VBoxContainer/approved_scroll" unique_id=1000006]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

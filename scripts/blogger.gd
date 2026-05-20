@@ -400,7 +400,7 @@ func add_new_blog_post(title: String, d) -> Dictionary:
     tmp_quality = Utils.get_quality(d.name)
 
     # 生成唯一文章ID
-    var post_id = "post_" + str(Time.get_ticks_msec()) + "_" + str(randi() % 10000)
+    var post_id = Time.get_ticks_msec() + (randi() % 10000)
 
     # 判断是否是任务型文章
     var task_type = ""
@@ -408,7 +408,9 @@ func add_new_blog_post(title: String, d) -> Dictionary:
         task_type = "第一篇博文"
     elif d.name == "年度总结":
         task_type = "年度总结"
-
+    
+    var article_level = d.get("article_level", 2)
+    
     var new_post: Dictionary = {
         "id": post_id,              # 文章唯一ID
         "title": title,
@@ -422,6 +424,7 @@ func add_new_blog_post(title: String, d) -> Dictionary:
         "is_money": d.get("is_money", false),  # 是否收费(从配置读取)
         "date": blog_date,
         "quality": tmp_quality,
+        "article_level": article_level,  # 文章等级
     }
 
     if GDManager:
@@ -778,8 +781,8 @@ func update_blog_views() -> int:
     # 更新收藏数(基于今日访问量)
     for post in blogger.posts:
         var post_views_today = 0
-        var post_id = post.get("id", "")
-        if post_id != "" and views_calculator:
+        var post_id = post.get("id", 0)
+        if post_id != 0 and views_calculator:
             var stats = views_calculator.get_post_stats(post_id)
             var daily = stats.get("daily_views", [])
             if daily.size() > 0:
@@ -794,10 +797,8 @@ func update_blog_views() -> int:
     if GDManager:
         var comment_manager = GDManager.get_comment_manager()
         if comment_manager:
-            var comment_result = comment_manager.check_all_articles()
-            if comment_result.get("comments_generated", 0) > 0:
-                print("[评论生成] 今日生成了 ", comment_result.get("comments_generated"), " 条评论")
-                comment_manager.sync_all_posts()
+            comment_manager.check_all_articles()
+            comment_manager.sync_all_posts()
 
     # 周/月/年统计
     if tmp_w == TimerManager.current_week:
@@ -1202,4 +1203,3 @@ func add_technical_ability_points() -> void:
         blogger.technical_ability += increment
         blogger.technical_ability = min(float(blogger.technical_ability), 100.0)
         blogger.technical_ability = round(blogger.technical_ability * 10) / 10.0
-        print("[技术能力] +%.1f，当前：%.1f" % [increment, blogger.technical_ability])

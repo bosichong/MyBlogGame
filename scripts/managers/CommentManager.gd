@@ -34,14 +34,17 @@ func _get_comment_data() -> CommentData:
         return GDManager.data_container.get_comment()
     return null
 
-func get_comments(post_id: int = -1) -> Array:
+func get_comments(post_id = -1) -> Array:
     if not _data:
         return []
-    if post_id < 0:
+    if post_id == -1:
         return _data.comments
     return _data.comments.filter(func(c): return c.get("post_id") == post_id)
 
-func get_comment_count(post_id: int = -1) -> int:
+func get_comment_count(post_id) -> int:
+    return get_comments(post_id).size()
+
+func get_comment_count_int(post_id: int) -> int:
     return get_comments(post_id).size()
 
 func should_generate_comment(post_id: int, article_views: int) -> bool:
@@ -91,28 +94,59 @@ func get_spam_comments() -> Array:
         return []
     return _data.comments.filter(func(c): return c.get("status") == "spam")
 
-func get_comment_quality(comment_id: int) -> int:
-    for comment in _data.comments:
-        if comment.get("id") == comment_id:
-            return comment.get("quality", 1)
-    return 1
-
 func generate_league_comment(post_id: int, article_quality: int, article_type: String = "") -> Dictionary:
     var templates = _league_templates_by_type.get(article_type, _league_templates_by_type.get("综合类", []))
     if templates.is_empty():
         return {}
     var template = templates[randi() % templates.size()]
     var content = _fill_template(template, article_quality)
-    return {
+    
+    var member = select_league_member(article_type)
+    
+    var comment: Dictionary = {
         "id": _generate_comment_id(),
         "source": "league",
         "content": content,
         "post_id": post_id,
         "article_type": article_type,
         "quality": 2,
-        "status": "pending",
+        "status": "normal",
         "date": Time.get_date_string_from_system(),
     }
+    
+    if not member.is_empty():
+        comment["author_name"] = member.get("name", "匿名用户")
+        comment["author_level"] = member.get("lv", 1)
+        comment["author_type"] = member.get("type", "")
+    
+    return comment
+
+func generate_negative_comment(post_id: int, article_type: String = "") -> Dictionary:
+    var templates_data = GDManager.get_data("comment_templates") if GDManager else null
+    var content = "内容太水了，没有一点深度"
+    if templates_data and templates_data.has_method("get_random_negative_template"):
+        content = templates_data.get_random_negative_template()
+    
+    var member = select_league_member(article_type)
+    
+    var comment: Dictionary = {
+        "id": _generate_comment_id(),
+        "source": "league",
+        "content": content,
+        "post_id": post_id,
+        "article_type": article_type,
+        "quality": 1,
+        "status": "spam",
+        "is_spam": true,
+        "date": Time.get_date_string_from_system(),
+    }
+    
+    if not member.is_empty():
+        comment["author_name"] = member.get("name", "匿名用户")
+        comment["author_level"] = member.get("lv", 1)
+        comment["author_type"] = member.get("type", "")
+    
+    return comment
 
 func generate_friendlink_comment(post_id: int, article_type: String = "") -> Dictionary:
     var templates = Strs.comment_templates.get("friendlink", [])
@@ -162,7 +196,6 @@ func _generate_comment_id() -> int:
 func do_maintenance() -> Dictionary:
     var result = {
         "success": true,
-        "auto_approved": 0,
         "deleted_spam": 0,
         "special_events": 0,
         "messages": [],
@@ -173,44 +206,26 @@ func do_maintenance() -> Dictionary:
         result["messages"].append("评论数据不存在")
         return result
     
-    result["auto_approved"] = auto_approve_comments()
     result["deleted_spam"] = auto_delete_spam()
     result["special_events"] = process_special_events()
     
     emit_signal("maintenance_completed", result)
     return result
 
-func auto_approve_comments() -> int:
-    var approved_count = 0
-    for comment in _data.comments:
-        if comment.get("status") == "pending":
-            comment["status"] = "normal"
-            approved_count += 1
-    return approved_count
-
 func auto_delete_spam() -> int:
-    var deleted_count = 0
-    var to_remove = []
+    var hidden_count = 0
     
     for comment in _data.comments:
-        if comment.get("status") == "spam":
-            to_remove.append(comment.get("id"))
+        if comment.get("is_spam", false) and comment.get("status") != "hidden":
+            comment["status"] = "hidden"
+            hidden_count += 1
     
-    for comment_id in to_remove:
-        _data.remove_comment(comment_id)
-        deleted_count += 1
-    
-    if deleted_count > 0 and GDManager:
-        var blogger = GDManager.get_blogger()
-        if blogger:
-            blogger.seo_value = mini(blogger.seo_value + 5, 100)
-    
-    return deleted_count
+    return hidden_count
 
 func process_special_events() -> int:
     return 0
 
-func check_article_comments(post_id: int, article_views: int, article_quality: int, article_type: String = "") -> int:
+func check_article_comments(post_id, article_views: int, article_quality: int, article_type: String = "") -> int:
     if not _data:
         return 0
     
@@ -219,20 +234,31 @@ func check_article_comments(post_id: int, article_views: int, article_quality: i
     var current = get_comment_count(post_id)
     var max_allowed = get_max_comments(article_views)
     
-    while current < threshold and current < max_allowed:
-        var comment = generate_league_comment(post_id, article_quality, article_type)
-        if not comment.is_empty():
-            add_comment(comment)
-            generated_count += 1
-            current += 1
-        else:
-            break
+    var members = GDManager.get_lm_members() if GDManager else []
+    if members.is_empty():
+        return 0
     
-    if article_quality >= 95 and current < max_allowed:
-        var friendlink_comment = generate_friendlink_comment(post_id, article_type)
-        if not friendlink_comment.is_empty():
-            add_comment(friendlink_comment)
-            generated_count += 1
+    var raw_prob = float(article_quality) / 200.0
+    var generate_prob = max(min(raw_prob, 0.5), 0.25)
+    
+    while current < threshold and current < max_allowed:
+        if randf() > generate_prob:
+            current += 1
+            continue
+        
+        if randf() <= 0.9:
+            var comment = generate_league_comment(post_id, article_quality, article_type)
+            if not comment.is_empty():
+                add_comment(comment)
+                generated_count += 1
+        else:
+            var negative_comment = generate_negative_comment(post_id, article_type)
+            if not negative_comment.is_empty():
+                add_comment(negative_comment)
+                generated_count += 1
+                print("[评论生成] 生成了一条垃圾评论: %s" % negative_comment.get("content", ""))
+        
+        current += 1
     
     return generated_count
 
@@ -251,7 +277,7 @@ func check_all_articles() -> Dictionary:
         return result
     
     for post in blogger.posts:
-        var post_id = int(post.get("id", 0))
+        var post_id = post.get("id", 0)
         var views = post.get("views", 0)
         var quality = post.get("quality", 0)
         var article_type = post.get("type", "综合类")
@@ -270,13 +296,10 @@ func select_league_member(article_type: String = "") -> Dictionary:
     if members.is_empty():
         return {}
     
-    var candidates = members.filter(func(m):
-        var level = m.get("lv", 0)
-        return level >= 10
-    )
+    var candidates = members
     
     if candidates.is_empty():
-        return candidates[randi() % candidates.size()] if candidates.size() > 0 else {}
+        return {}
     
     return candidates[randi() % candidates.size()]
 
@@ -289,10 +312,10 @@ func set_auto_settings(settings: Dictionary) -> void:
     if _data:
         _data.set_auto_settings(settings)
 
-func get_traffic_bonus() -> int:
+func get_traffic_bonus(post_id: int = -1) -> int:
     if not _data:
         return 0
-    return _data.get_traffic_bonus()
+    return _data.get_traffic_bonus(post_id)
 
 func sync_to_post(post_id: int, comment_count: int) -> bool:
     if not GDManager:
@@ -303,7 +326,7 @@ func sync_to_post(post_id: int, comment_count: int) -> bool:
         return false
     
     for post in blogger.posts:
-        if int(post.get("id", 0)) == post_id:
+        if post.get("id") == post_id:
             post["comments"] = comment_count
             return true
     

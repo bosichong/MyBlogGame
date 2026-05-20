@@ -7,7 +7,7 @@ class_name BloggerData
 # ============================================
 
 ## 等级（1-100）
-var level: int = 1
+var level: int = 91
 
 ## 经验值
 var exp: int = 0
@@ -24,16 +24,16 @@ var attribute_points: int = 0
 # ============================================
 
 ## 写作能力：影响所有文章的质量分
-var writing_ability: float = 0
+var writing_ability: float = 90
 
 ## 技术能力：影响技术类文章质量和网站维护效果
-var technical_ability: float = 0
+var technical_ability: float = 90
 
 ## 编程能力：影响编程教程、黑客攻防等技术文章质量
-var code_ability: float = 1
+var code_ability: float = 91
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 1
+var literature_ability: float = 91
 
 ## 绘画能力：影响艺术类文章质量（插画壁纸、绘画教程等）
 var drawing_ability: float = 0  # 【已禁用】
@@ -80,7 +80,7 @@ var safety_value: int = 100
 ## 影响基础访问量和搜索引擎收录
 ## 新网站SEO效果差，初始值设为50
 ## 通过"SEO优化"任务逐步提升
-var seo_value: int = 5
+var seo_value: int = 50
 
 ## 设计值（0-100）
 ## 影响访问量加成和页面美化效果
@@ -130,15 +130,15 @@ var posts: Array[Dictionary] = []
 # ============================================
 
 ## 每日任务安排
-## 每天可以安排多个任务（写作、维护、休息、学习等）
+## 每天可以安排多个任务（写作，维护、休息，学习等）
 var calendar: Array[Dictionary] = [
-    {"tasks": ["生活日记"]},      # 周一
-    {"tasks": ["生活日记"]},      # 周二
-    {"tasks": ["生活日记"]},      # 周三
-    {"tasks": ["生活日记"]},      # 周四
-    {"tasks": ["生活日记"]},      # 周五
-    {"tasks": ["生活日记"]},      # 周六
-    {"tasks": ["生活日记"]},      # 周日
+    {"tasks": []},      # 周一
+    {"tasks": []}, 
+    {"tasks": []}, 
+    {"tasks": []}, 
+    {"tasks": []}, 
+    {"tasks": []}, 
+    {"tasks": []}, 
 ]
 
 # ============================================

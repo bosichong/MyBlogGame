@@ -76,11 +76,11 @@ static func get_views_config() -> Dictionary:
         "seo_max": 100,
         "seo_min": 20,
         "article_base_values": {
-            1: 5,
-            2: 12,
-            3: 20,
-            4: 40,
-            5: 80,
+            1: 20,
+            2: 200,
+            3: 800,
+            4: 1200,
+            5: 2000,
         }
     }
 

@@ -33,10 +33,29 @@ var friendlink_templates: Array = [
     "内容越来越丰富了，加油！",
 ]
 
+var negative_templates: Array = [
+    "这篇写得什么乱七八糟的，浪费时间",
+    "完全不同意你的观点，逻辑有问题",
+    "代码有bug，照着做了一遍结果报错",
+    "内容太水了，没有一点深度",
+    "你这篇文章就是抄袭的吧？",
+    "说得好像很专业，其实根本没用",
+    "看了半天没看懂在讲什么",
+    "这种低级错误也能犯？",
+    "写得真烂，还不如我看别家的",
+    "浪费我时间，内容跟标题完全不符",
+    "观点太片面了，考虑过其他情况吗？",
+    "代码写得跟屎一样，性能肯定有问题",
+    "讲得不够详细，新手根本学不会",
+    "内容不够严谨，有几处明显错误",
+    "排版太乱了，读起来很累",
+]
+
 func get_templates() -> Dictionary:
     return {
         "league_by_type": league_templates_by_type,
         "friendlink": friendlink_templates,
+        "negative": negative_templates,
     }
 
 func get_league_templates_by_type(article_type: String) -> Array:
@@ -55,3 +74,8 @@ func get_random_friendlink_template() -> String:
     if friendlink_templates.is_empty():
         return ""
     return friendlink_templates[randi() % friendlink_templates.size()]
+
+func get_random_negative_template() -> String:
+    if negative_templates.is_empty():
+        return "内容太水了，没有一点深度"
+    return negative_templates[randi() % negative_templates.size()]

@@ -46,6 +46,7 @@ func _register_default_modifiers() -> void:
     modifier_manager.register(TaskBonusModifier.new())  # 任务加成
     
     # 限制层
+    modifier_manager.register(SpamPenaltyModifier.new())  # 负面评论惩罚
     modifier_manager.register(HostLimitModifier.new())
     modifier_manager.register(SuspendPenaltyModifier.new())
     modifier_manager.register(AdImpactModifier.new())
@@ -96,8 +97,8 @@ func calculate_daily(blogger_data: Dictionary) -> Dictionary:
                     sources[key] += result.sources[key]
         
         # 记录单篇文章统计
-        var post_id = post.get("id", "")
-        if post_id != "":
+        var post_id = post.get("id", 0)
+        if post_id != 0:
             post_stats_manager.record_post_views(post_id, result.views, result.sources)
     
     # 3. 记录总体统计
@@ -226,7 +227,7 @@ func get_trend(days: int = 30) -> Array:
     return stats_manager.get_trend(days)
 
 ## 获取单篇文章统计
-func get_post_stats(post_id: String) -> Dictionary:
+func get_post_stats(post_id) -> Dictionary:
     return post_stats_manager.get_post_stats(post_id)
 
 ## 获取热门文章

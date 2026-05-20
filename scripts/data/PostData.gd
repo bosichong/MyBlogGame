@@ -2,7 +2,7 @@
 class_name PostData
 
 ## 唯一标识
-var id: String = ""
+var id: int = 0
 
 ## 文章标题
 var title: String = ""
@@ -70,7 +70,7 @@ func to_dict() -> Dictionary:
 ## 从字典加载
 static func from_dict(data: Dictionary) -> PostData:
     var post = PostData.new()
-    post.id = data.get("id", "")
+    post.id = data.get("id", 0)
     post.title = data.get("title", "")
     post.category = data.get("category", "")
     post.task_type = data.get("task_type", "")

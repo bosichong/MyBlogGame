@@ -62,8 +62,12 @@ func set_auto_settings(settings: Dictionary) -> void:
 func get_auto_settings() -> Dictionary:
     return auto_settings
 
-func get_traffic_bonus() -> int:
-    var count = get_total_count()
+func get_traffic_bonus(post_id: int = -1) -> int:
+    var count: int
+    if post_id >= 0:
+        count = get_comments_by_post(post_id).size()
+    else:
+        count = get_total_count()
     if count >= 100:
         return 1000
     elif count >= 50:

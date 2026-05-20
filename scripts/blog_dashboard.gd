@@ -41,8 +41,12 @@ signal close_blog_dashboard
 @onready var pending_container = $bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer/pending_scroll/pending_list
 
 ## 评论管理节点引用
-@onready var comments_count_label = $bg/面板组/comments_panel/VBoxContainer/count_label
-@onready var comments_list_container = $bg/面板组/comments_panel/VBoxContainer/comments_scroll/comments_list
+@onready var pending_tab = $bg/面板组/comments_panel/VBoxContainer/tabs_container/pending_tab
+@onready var approved_tab = $bg/面板组/comments_panel/VBoxContainer/tabs_container/approved_tab
+@onready var pending_list = $bg/面板组/comments_panel/VBoxContainer/pending_scroll/pending_list
+@onready var approved_list = $bg/面板组/comments_panel/VBoxContainer/approved_scroll/approved_list
+
+var _current_comment_tab: int = 0
 
 var current_panel_index: int = 0
 
@@ -63,6 +67,12 @@ func _ready() -> void:
     # 连接友链申请按钮
     if apply_button:
         apply_button.pressed.connect(_on_apply_friendlink_pressed)
+    
+    # 连接评论标签页按钮
+    if pending_tab:
+        pending_tab.pressed.connect(_on_pending_tab_pressed)
+    if approved_tab:
+        approved_tab.pressed.connect(_on_approved_tab_pressed)
     
     # 初始化自动设置UI
     _init_auto_settings_ui()
@@ -181,8 +191,8 @@ func refresh_articles() -> void:
     var unique_posts = []
     var seen_ids = {}
     for post in posts:
-        var post_id = post.get("id", "")
-        if post_id != "" and not seen_ids.has(post_id):
+        var post_id = post.get("id", 0)
+        if post_id != 0 and not seen_ids.has(post_id):
             seen_ids[post_id] = true
             unique_posts.append(post)
     
@@ -661,86 +671,118 @@ func _on_apply_dialog_confirmed(dialog: ConfirmationDialog, vbox: VBoxContainer)
 
 ## ==================== 评论管理 ====================
 
+func _on_pending_tab_pressed() -> void:
+    _current_comment_tab = 0
+    pending_tab.set_pressed(true)
+    approved_tab.set_pressed(false)
+    $bg/面板组/comments_panel/VBoxContainer/pending_scroll.visible = true
+    $bg/面板组/comments_panel/VBoxContainer/approved_scroll.visible = false
+    refresh_comments()
+
+func _on_approved_tab_pressed() -> void:
+    _current_comment_tab = 1
+    pending_tab.set_pressed(false)
+    approved_tab.set_pressed(true)
+    $bg/面板组/comments_panel/VBoxContainer/pending_scroll.visible = false
+    $bg/面板组/comments_panel/VBoxContainer/approved_scroll.visible = true
+    refresh_comments()
+
 func refresh_comments() -> void:
-    if not Blogger:
-        return
-    
-    var blog_data = Blogger.blog_data
-    var posts = blog_data.get("posts", [])
     var comment_manager = GDManager.get_comment_manager() if GDManager else null
     
-    var total_comments = 0
-    var post_comments = {}
+    var all_comments = []
+    var spam_comments = []
     
-    for post in posts:
-        var post_id = int(post.get("id", 0))
-        var comments_count = post.get("comments", 0)
-        total_comments += comments_count
-        
-        if comments_count > 0 and comment_manager:
-            var real_comments = comment_manager.get_comments(post_id)
-            var display_comments = []
-            for comment in real_comments:
-                display_comments.append({
-                    "commenter": "访客",
-                    "content": comment.get("content", ""),
-                    "date": comment.get("date", ""),
-                    "status": comment.get("status", "normal"),
-                    "source": comment.get("source", "league"),
-                })
-            if display_comments.is_empty():
-                for i in range(min(comments_count, 3)):
-                    display_comments.append({
-                        "commenter": "访客%d" % (i + 1),
-                        "content": "评论内容示例 %d" % (i + 1),
-                        "date": post.get("date", ""),
-                    })
-            post_comments[post_id] = {
-                "title": post.get("title", "无标题"),
-                "comments": display_comments,
-            }
-        elif comments_count > 0:
-            var comments = []
-            for i in range(min(comments_count, 3)):
-                comments.append({
-                    "commenter": "访客%d" % (i + 1),
-                    "content": "评论内容示例 %d" % (i + 1),
-                    "date": post.get("date", ""),
-                })
-            post_comments[post_id] = {
-                "title": post.get("title", "无标题"),
-                "comments": comments,
-            }
+    if comment_manager:
+        all_comments = comment_manager.get_comments()
+        spam_comments = all_comments.filter(func(c): return c.get("is_spam", false) and c.get("status") == "spam")
     
-    comments_count_label.text = "评论列表 (%d条)" % total_comments
+    pending_tab.text = "全部评论 (%d)" % all_comments.size()
+    approved_tab.text = "垃圾评论 (%d)" % spam_comments.size()
     
-    for child in comments_list_container.get_children():
+    if _current_comment_tab == 0:
+        _display_comments_list(pending_list, all_comments, "全部")
+    else:
+        _display_comments_list(approved_list, spam_comments, "垃圾评论")
+
+func _display_comments_list(container: VBoxContainer, comments: Array, list_type: String) -> void:
+    for child in container.get_children():
         child.queue_free()
     
-    for post_id in post_comments:
-        var post_data = post_comments[post_id]
+    var display_limit = 20
+    var display_comments = comments.slice(0, display_limit)
+    
+    if display_comments.is_empty():
+        var empty_label = Label.new()
+        empty_label.text = "暂无%s评论" % list_type
+        empty_label.add_theme_font_size_override("font_size", 14)
+        empty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+        container.add_child(empty_label)
+        return
+    
+    if comments.size() > display_limit:
+        var hint_label = Label.new()
+        hint_label.text = "（显示前%d条，共%d条）" % [display_limit, comments.size()]
+        hint_label.add_theme_font_size_override("font_size", 12)
+        hint_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
+        container.add_child(hint_label)
+    
+    var blogger = GDManager.get_blogger()
+    var posts_map = {}
+    if blogger:
+        for post in blogger.posts:
+            var post_id = post.get("id", 0)
+            posts_map[post_id] = post.get("title", "无标题")
+    
+    var grouped_comments: Dictionary = {}
+    for comment in display_comments:
+        var post_id = comment.get("post_id", 0)
+        if not grouped_comments.has(post_id):
+            grouped_comments[post_id] = []
+        grouped_comments[post_id].append(comment)
+    
+    for post_id in grouped_comments:
+        var post_title = posts_map.get(post_id, "未知文章")
         
         var title_panel = PanelContainer.new()
+        title_panel.custom_minimum_size.y = 25
         var title_label = Label.new()
-        title_label.text = "📌 《%s》" % post_data.title
+        title_label.text = "📌 《%s》" % post_title
+        title_label.add_theme_color_override("font_color", Color(0.8, 0.6, 0.2))
         title_panel.add_child(title_label)
-        comments_list_container.add_child(title_panel)
+        container.add_child(title_panel)
         
-        for comment in post_data.comments:
+        for comment in grouped_comments[post_id]:
             var comment_item = _create_comment_item(comment, post_id)
-            comments_list_container.add_child(comment_item)
+            container.add_child(comment_item)
 
 func _create_comment_item(comment: Dictionary, post_id: int) -> Control:
     var panel = PanelContainer.new()
-    panel.custom_minimum_size.y = 40
+    panel.custom_minimum_size.y = 35
     
     var hbox = HBoxContainer.new()
+    hbox.add_theme_constant_override("separation", 10)
     panel.add_child(hbox)
     
-    var commenter_label = Label.new()
-    commenter_label.text = "○ %s: \"%s\" %s" % [comment.get("commenter", "匿名"), comment.get("content", ""), comment.get("date", "")]
-    commenter_label.size_flags_horizontal = 3
-    hbox.add_child(commenter_label)
+    var source = comment.get("source", "league")
+    var source_icon = "🔵" if source == "league" else "🔗"
+    
+    var commenter_name = comment.get("author_name", "匿名用户")
+    var author_level = comment.get("author_level", 1)
+    var content = comment.get("content", "")
+    var date = comment.get("date", "")
+    
+    var info_label = Label.new()
+    info_label.text = "%s %s(lv%d): \"%s\" %s" % [source_icon, commenter_name, author_level, content, date]
+    info_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    info_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+    hbox.add_child(info_label)
+    
+    if comment.get("is_spam", false):
+        var spam_label = Label.new()
+        spam_label.text = "⚠️待处理"
+        spam_label.add_theme_color_override("font_color", Color(1, 0.5, 0))
+        hbox.add_child(spam_label)
     
     return panel
 
