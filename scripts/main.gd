@@ -45,6 +45,9 @@ func _ready() -> void:
         # 友链维护
         Blogger.signal_friendlink_maintenance.connect(signal_friendlink_maintenance)
         Blogger.signal_friendlink_no_stamina.connect(signal_friendlink_no_stamina)
+        
+        # 评论管理
+        Blogger.signal_comment_maintenance.connect(signal_comment_maintenance)
     
     # ===== 主机域名系统信号 =====
     if Yun:
@@ -402,6 +405,12 @@ func signal_friendlink_maintenance(msg):
     info_display.add_message(msg)
 
 func signal_friendlink_no_stamina(msg):
+    info_display.add_message(msg)
+
+func signal_comment_maintenance(msg):
+    info_display.add_message(msg)
+
+func signal_comment_no_stamina(msg):
     info_display.add_message(msg)
 
 

@@ -337,6 +337,8 @@ func daily_activities():
                 exp_gained += maintain_design_web(task) # 进行网站页面美化
             if task == "友链维护":
                 exp_gained += maintain_friendlink(task) # 进行友链维护
+            if task == "评论管理":
+                exp_gained += maintain_comment(task) # 进行评论管理
         elif Utils.check_name_exists(Utils.recreation, task):
             if task == "休息":
                 exp_gained += recreation_rest(task) # 休息一天
@@ -974,6 +976,36 @@ func maintain_friendlink(category: String) -> int:
         if total > 0:
             emit_signal("signal_friendlink_maintenance", "处理申请:%d个 通过:%d个 拒绝:%d个" % [total, approved, rejected])
             print("[友链维护] 处理申请:%d个 通过:%d个 拒绝:%d个" % [total, approved, rejected])
+        return 10
+    
+    return 0
+
+signal signal_comment_maintenance(msg: String)
+func maintain_comment(category: String) -> int:
+    if not GDManager:
+        return 0
+    
+    var blogger = GDManager.get_blogger()
+    var d = Utils.find_category_by_name(Utils.website_maintenance, category)
+    var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
+    
+    if blogger.stamina < actual_cost:
+        emit_signal("signal_comment_no_stamina", "体力不足,无法进行评论管理!需要" + str(actual_cost) + "体力")
+        return 0
+    
+    blogger.stamina -= actual_cost
+    add_technical_ability_points()
+    
+    var comment_manager = GDManager.get_comment_manager()
+    if comment_manager:
+        var result = comment_manager.do_maintenance()
+        var deleted = result.get("deleted_spam", 0)
+        if deleted > 0:
+            emit_signal("signal_comment_maintenance", "删除垃圾评论:%d条" % deleted)
+            print("[评论管理] 删除垃圾评论:%d条" % deleted)
+        else:
+            emit_signal("signal_comment_maintenance", "没有垃圾评论需要处理")
+            print("[评论管理] 没有垃圾评论需要处理")
         return 10
     
     return 0

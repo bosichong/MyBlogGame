@@ -507,7 +507,7 @@ func _init_auto_settings_ui() -> void:
     vbox.add_child(hbox1)
     
     var level_label = Label.new()
-    level_label.text = "主动申请等级下限:"
+    level_label.text = "被动申请等级下限:"
     level_label.custom_minimum_size.x = 100
     hbox1.add_child(level_label)
     

@@ -115,7 +115,7 @@ func generate_league_comment(post_id: int, article_quality: int, article_type: S
     }
     
     if not member.is_empty():
-        comment["author_name"] = member.get("name", "匿名用户")
+        comment["author_name"] = member.get("blog_author", "匿名用户")
         comment["author_level"] = member.get("lv", 1)
         comment["author_type"] = member.get("type", "")
     
@@ -142,7 +142,7 @@ func generate_negative_comment(post_id: int, article_type: String = "") -> Dicti
     }
     
     if not member.is_empty():
-        comment["author_name"] = member.get("name", "匿名用户")
+        comment["author_name"] = member.get("blog_author", "匿名用户")
         comment["author_level"] = member.get("lv", 1)
         comment["author_type"] = member.get("type", "")
     
@@ -153,7 +153,10 @@ func generate_friendlink_comment(post_id: int, article_type: String = "") -> Dic
     if templates.is_empty():
         templates = ["老朋友的文章一如既往精彩！", "恭喜完成这个系列，写得很好。", "内容越来越丰富了，加油！"]
     var template = templates[randi() % templates.size()]
-    return {
+    
+    var member = select_league_member(article_type)
+    
+    var comment: Dictionary = {
         "id": _generate_comment_id(),
         "source": "friendlink",
         "content": template,
@@ -163,6 +166,13 @@ func generate_friendlink_comment(post_id: int, article_type: String = "") -> Dic
         "status": "pending",
         "date": Time.get_date_string_from_system(),
     }
+    
+    if not member.is_empty():
+        comment["author_name"] = member.get("blog_author", "匿名用户")
+        comment["author_level"] = member.get("lv", 1)
+        comment["author_type"] = member.get("type", "")
+    
+    return comment
 
 func generate_task_comment(post_id: int, content: String, source: String = "league") -> Dictionary:
     return {
@@ -256,7 +266,7 @@ func check_article_comments(post_id, article_views: int, article_quality: int, a
             if not negative_comment.is_empty():
                 add_comment(negative_comment)
                 generated_count += 1
-                print("[评论生成] 生成了一条垃圾评论: %s" % negative_comment.get("content", ""))
+                #print("[垃圾评论] ID=%d | 作者=%s | 文章=%d | 内容=%s" % [c_id, author, post_id, negative_comment.get("content", "")])
         
         current += 1
     
