@@ -14,7 +14,7 @@ func _on_timer_timeout() -> void:
     if anim_player:
         anim_player.stop()
         var title = "系统提示！" 
-        var content = "经过一番折腾，博客终于搭建了，那么，2000年1月1日"+Blogger.blog_data.blog_name+"正式上线了！"
+        var content = "经过一番折腾，博客终于搭建了，那么，" + str(TimeData.GAME_START_YEAR) + "年1月1日"+Blogger.blog_data.blog_name+"正式上线了！"
         $AcceptDialog.title = title
         $AcceptDialog.dialog_text = content
         $AcceptDialog.set_size(Vector2i(400,200))

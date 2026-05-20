@@ -1,6 +1,8 @@
 class_name TimeData
 
-var current_year: int = 2000
+const GAME_START_YEAR: int = 2002
+
+var current_year: int = GAME_START_YEAR
 var current_month: int = 1
 var current_week: int = 1
 var current_day: int = 1
@@ -10,10 +12,10 @@ var time_scale: float = 1.0
 var is_paused: bool = false
 
 ## 游戏起始日期（格式：年-月-周-日）
-var game_start_date: String = "2000-1-1-1"
+var game_start_date: String = "2002-1-1-1"
 
 ## 当前日期字符串
-var current_date_str: String = "2000-1-1-1"
+var current_date_str: String = "2002-1-1-1"
 
 signal day_passed
 signal week_passed
@@ -32,7 +34,7 @@ const QUARTERS_IN_YEAR = 4
 
 ## 获取从游戏开始到现在的总天数
 func get_total_days() -> int:
-    return (current_year - 2000) * 12 * 4 * 7 + \
+    return (current_year - GAME_START_YEAR) * 12 * 4 * 7 + \
            (current_month - 1) * 4 * 7 + \
            (current_week - 1) * 7 + \
            current_day

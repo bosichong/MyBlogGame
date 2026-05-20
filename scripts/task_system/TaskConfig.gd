@@ -112,9 +112,9 @@ const CONDITIONS: Dictionary = {
     "open_source_project_started": {"type": ConditionType.CUSTOM, "check_func": "check_open_source_project"},
     
     # 时间条件（配合 event_date 使用）
-    # 注意：游戏起始年份为 2000 年
-    # 第一篇博文：游戏开始即可解锁（2000年1月第1周第1天）
-    "time_first_post_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2000], "m": [1], "w": [1], "d": [3]}},
+    # 注意：游戏起始年份为 2002 年（可通过 TimeData.GAME_START_YEAR 获取）
+    # 第一篇博文：游戏开始即可解锁（2002年1月第1周第1天）
+    "time_first_post_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [TimeData.GAME_START_YEAR], "m": [1], "w": [1], "d": [3]}},
     "time_year_summary_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [12], "w": [2], "d": [1]}},
     "time_year_summary_lock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [12], "w": [4], "d": [7]}},
     "time_trend_change": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [1, 6], "w": [2], "d": [1]}},

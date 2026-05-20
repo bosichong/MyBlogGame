@@ -12,8 +12,8 @@ const DOMAIN_RENEWAL_COST = 80.0  # 可以根据实际需求修改这个数值
 # 域名信息
 var domain_info = {
     "name": "suiyan.cc",
-    "start_time": "2000-1-1-1",  # YYYY-M-W-D
-    "end_time": "2001-1-1-1",    # YYYY-M-W-D
+    "start_time": str(TimeData.GAME_START_YEAR) + "-1-1-1",  # YYYY-M-W-D
+    "end_time": str(TimeData.GAME_START_YEAR + 1) + "-1-1-1",    # YYYY-M-W-D
     "is_active": true
 }
 
@@ -137,16 +137,6 @@ func get_domain_end_time() -> String:
 #服务器相关
 ######################
 
-
-
-# 服务器套餐费用常量（年费）
-const FREE_PACKAGE_COST = 0.0
-const BASIC_PACKAGE_COST = 500.0       # 基础套餐：500元/年
-const STANDARD_PACKAGE_COST = 3000.0   # 标准套餐：3000元/年
-const PREMIUM_PACKAGE_COST = 10000.0   # 高级套餐：1万元/年
-const ENTERPRISE_PACKAGE_COST = 100000.0  # 企业套餐：10万元/年
-const ULTIMATE_PACKAGE_COST = 500000.0    # 终极套餐：50万元/年
-
 # 套餐类型枚举
 enum PackageType {
     FREE = 0,
@@ -154,37 +144,57 @@ enum PackageType {
     STANDARD = 2,
     PREMIUM = 3,
     ENTERPRISE = 4,
-    ULTIMATE = 5  # 新增终极套餐
+    ULTIMATE = 5
 }
 
-# 套餐名称映射
-var package_names = {
-    PackageType.FREE: "免费套餐",
-    PackageType.BASIC: "基础套餐",
-    PackageType.STANDARD: "标准套餐",
-    PackageType.PREMIUM: "高级套餐",
-    PackageType.ENTERPRISE: "企业套餐",
-    PackageType.ULTIMATE: "终极套餐"  # 新增
-}
-
-# 套餐访问量限制（单位：万次/月）
-var package_traffic_limits = {
-    PackageType.FREE: 1,        # 1万次/月
-    PackageType.BASIC: 30,      # 30万次/月
-    PackageType.STANDARD: 300,  # 300万次/月
-    PackageType.PREMIUM: 3000,  # 3000万次/月
-    PackageType.ENTERPRISE: 30000,  # 3亿次/月
-    PackageType.ULTIMATE: -1    # 无限制（-1表示无上限）
+# 套餐配置统一管理 - 所有套餐信息集中在一处，方便修改
+const PACKAGE_DEFINITIONS: Dictionary = {
+    PackageType.FREE: {
+        "name": "免费套餐",
+        "cost": 0.0,
+        "traffic_limit": 1,
+        "description": "入门级套餐，适合体验"
+    },
+    PackageType.BASIC: {
+        "name": "基础套餐",
+        "cost": 300.0,
+        "traffic_limit": 3,
+        "description": "适合个人博主日常使用"
+    },
+    PackageType.STANDARD: {
+        "name": "标准套餐",
+        "cost": 1000.0,
+        "traffic_limit": 10,
+        "description": "适合有一定影响力的博主"
+    },
+    PackageType.PREMIUM: {
+        "name": "高级套餐",
+        "cost": 5000.0,
+        "traffic_limit": 50,
+        "description": "适合知名博主和大V"
+    },
+    PackageType.ENTERPRISE: {
+        "name": "企业套餐",
+        "cost": 10000.0,
+        "traffic_limit": 100,
+        "description": "适合企业和机构"
+    },
+    PackageType.ULTIMATE: {
+        "name": "终极套餐",
+        "cost": 50000.0,
+        "traffic_limit": -1,
+        "description": "顶级配置，无访问量上限"
+    }
 }
 
 # 服务器套餐信息
 var server_package = {
     "type": PackageType.FREE,
-    "name": "免费套餐",
-    "start_time": "2000-1-1-1",  # YYYY-M-W-D
-    "end_time": "2001-1-1-1",    # YYYY-M-W-D
+    "name": PACKAGE_DEFINITIONS[PackageType.FREE]["name"],
+    "start_time": str(TimeData.GAME_START_YEAR) + "-1-1-1",
+    "end_time": str(TimeData.GAME_START_YEAR + 1) + "-1-1-1",
     "is_active": true,
-    "monthly_traffic_limit": 1    # 万次/月
+    "monthly_traffic_limit": PACKAGE_DEFINITIONS[PackageType.FREE]["traffic_limit"]
 }
 
 # ===== 欠费暂停追踪变量 =====
@@ -215,11 +225,11 @@ var recovery_current_day: int = 0
 func initialize_free_package():
     """初始化免费套餐 - 赠送一年使用期"""
     var current_date = Utils.format_date()
-    server_package.start_time = "2000-1-1-1"
-    server_package.end_time = "2001-1-1-1"
+    server_package.start_time = str(TimeData.GAME_START_YEAR) + "-1-1-1"
+    server_package.end_time = str(TimeData.GAME_START_YEAR + 1) + "-1-1-1"
     server_package.type = PackageType.FREE
-    server_package.name = package_names[PackageType.FREE]
-    server_package.monthly_traffic_limit = package_traffic_limits[PackageType.FREE]
+    server_package.name = PACKAGE_DEFINITIONS[PackageType.FREE]["name"]
+    server_package.monthly_traffic_limit = PACKAGE_DEFINITIONS[PackageType.FREE]["traffic_limit"]
     server_package.is_active = true
 
 
@@ -238,9 +248,9 @@ func check_server_package_expiration(today: String):
 func downgrade_to_free_package():
     """降级到免费套餐"""
     server_package.type = PackageType.FREE
-    server_package.name = package_names[PackageType.FREE]
-    server_package.monthly_traffic_limit = package_traffic_limits[PackageType.FREE]
-    server_package.is_active = false  # 到期后变为非激活状态
+    server_package.name = PACKAGE_DEFINITIONS[PackageType.FREE]["name"]
+    server_package.monthly_traffic_limit = PACKAGE_DEFINITIONS[PackageType.FREE]["traffic_limit"]
+    server_package.is_active = false
 
 func upgrade_server_package(new_package_type: PackageType) -> Dictionary:
     """
@@ -266,15 +276,15 @@ func upgrade_server_package(new_package_type: PackageType) -> Dictionary:
     if price_difference <= 0:
         # 降级操作
         server_package.type = new_package_type
-        server_package.name = package_names[new_package_type]
-        server_package.monthly_traffic_limit = package_traffic_limits[new_package_type]
+        server_package.name = PACKAGE_DEFINITIONS[new_package_type]["name"]
+        server_package.monthly_traffic_limit = PACKAGE_DEFINITIONS[new_package_type]["traffic_limit"]
         server_package.is_active = true
         
         return {
             "success": true,
             "message": "套餐降级成功",
-            "old_package": package_names[server_package.type],
-            "new_package": package_names[new_package_type],
+            "old_package": PACKAGE_DEFINITIONS[server_package.type]["name"],
+            "new_package": PACKAGE_DEFINITIONS[new_package_type]["name"],
             "end_time": server_package.end_time
         }
     
@@ -300,15 +310,15 @@ func upgrade_server_package(new_package_type: PackageType) -> Dictionary:
     
     # 升级套餐信息
     server_package.type = new_package_type
-    server_package.name = package_names[new_package_type]
-    server_package.monthly_traffic_limit = package_traffic_limits[new_package_type]
+    server_package.name = PACKAGE_DEFINITIONS[new_package_type]["name"]
+    server_package.monthly_traffic_limit = PACKAGE_DEFINITIONS[new_package_type]["traffic_limit"]
     server_package.is_active = true
     
     return {
         "success": true,
         "message": "套餐升级成功，已支付 %.2f 元" % upgrade_cost,
-        "old_package": package_names[server_package.type],
-        "new_package": package_names[new_package_type],
+        "old_package": PACKAGE_DEFINITIONS[server_package.type]["name"],
+        "new_package": PACKAGE_DEFINITIONS[new_package_type]["name"],
         "end_time": server_package.end_time,
         "remaining_balance": Blogger.money
     }
@@ -376,14 +386,9 @@ func renew_server_package(duration_years: int = 1) -> Dictionary:
 
 func get_package_cost(package_type: PackageType) -> float:
     """获取套餐费用"""
-    match package_type:
-        PackageType.FREE: return FREE_PACKAGE_COST
-        PackageType.BASIC: return BASIC_PACKAGE_COST
-        PackageType.STANDARD: return STANDARD_PACKAGE_COST
-        PackageType.PREMIUM: return PREMIUM_PACKAGE_COST
-        PackageType.ENTERPRISE: return ENTERPRISE_PACKAGE_COST
-        PackageType.ULTIMATE: return ULTIMATE_PACKAGE_COST
-        _: return FREE_PACKAGE_COST
+    if PACKAGE_DEFINITIONS.has(package_type):
+        return PACKAGE_DEFINITIONS[package_type]["cost"]
+    return PACKAGE_DEFINITIONS[PackageType.FREE]["cost"]
 
 func get_server_package_status() -> Dictionary:
     """获取服务器套餐状态"""
@@ -417,22 +422,13 @@ func get_monthly_traffic_limit() -> int:
 
 func get_package_traffic_limit(package_type: PackageType) -> int:
     """获取指定套餐的月访问量限制"""
-    return package_traffic_limits.get(package_type, 1)
+    if PACKAGE_DEFINITIONS.has(package_type):
+        return PACKAGE_DEFINITIONS[package_type]["traffic_limit"]
+    return PACKAGE_DEFINITIONS[PackageType.FREE]["traffic_limit"]
 
 func get_all_package_info() -> Dictionary:
     """获取所有套餐信息"""
-    return {
-        "package_names": package_names,
-        "package_traffic_limits": package_traffic_limits,
-        "package_costs": {
-            PackageType.FREE: FREE_PACKAGE_COST,
-            PackageType.BASIC: BASIC_PACKAGE_COST,
-            PackageType.STANDARD: STANDARD_PACKAGE_COST,
-            PackageType.PREMIUM: PREMIUM_PACKAGE_COST,
-            PackageType.ENTERPRISE: ENTERPRISE_PACKAGE_COST,
-            PackageType.ULTIMATE: ULTIMATE_PACKAGE_COST
-        }
-    }
+    return PACKAGE_DEFINITIONS
 
 ########## 安全防护
 # 安全防护价格常量

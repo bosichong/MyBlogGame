@@ -44,7 +44,7 @@ func on_show_panel():
     $"bg/选项组/sc3/VBoxContainer/Label2".set_autowrap_mode(TextServer.AUTOWRAP_WORD_SMART)
     $"bg/选项组/sc3/VBoxContainer/Label5".text = Strs.yun.网络安全简介
     $"bg/选项组/sc3/VBoxContainer/Label5".set_autowrap_mode(TextServer.AUTOWRAP_WORD_SMART)
-    create_package_ui()
+    create_package_list_ui(gc)
     
     # ===== 显示暂停状态 =====
     var suspend_info = Yun.get_suspend_info()
@@ -176,7 +176,7 @@ func _on_xfzj_pressed() -> void:
 
 # UI界面代码
 
-func create_package_ui():
+func create_package_list_ui(gc: GridContainer):
     """创建套餐UI界面"""
     # 清空现有内容
     for child in gc.get_children():
@@ -184,14 +184,16 @@ func create_package_ui():
     
     # 获取所有套餐信息
     var all_packages = Yun.get_all_package_info()
-    var package_names = all_packages["package_names"]
-    var package_costs = all_packages["package_costs"]
-    var package_limits = all_packages["package_traffic_limits"]
     
     # 为每个套餐创建UI组件（包含终极套餐）
     for package_type in range(6):  # 0-5，包含ULTIMATE
-        create_single_package_ui(package_type, package_names[package_type], 
-                                package_costs[package_type], package_limits[package_type])
+        var package_info = all_packages[package_type]
+        create_single_package_ui(
+            package_type, 
+            package_info["name"],
+            package_info["cost"], 
+            package_info["traffic_limit"]
+        )
 
 
 func create_single_package_ui(package_type: int, package_name: String, 
@@ -280,7 +282,7 @@ func _on_change_package_pressed(package_type: int):
 
 func _on_refresh_ui():
     """刷新UI界面"""
-    create_package_ui()
+    create_package_list_ui(gc)
 
 
 

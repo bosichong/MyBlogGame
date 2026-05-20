@@ -152,7 +152,7 @@ var tmp_week: int = 1
 var tmp_month: int = 1
 
 ## 当前年份（游戏起始年份）
-var tmp_year: int = 2000
+var tmp_year: int = TimeData.GAME_START_YEAR
 
 ## 最后一篇文章的质量分
 var last_post_quality: int = 0

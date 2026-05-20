@@ -356,11 +356,11 @@ func _calculate_elapsed_days(request_data: Dictionary, time_data) -> int:
     var current_week = time_data.current_week
     var current_day = time_data.current_day
 
-    var apply_total_days = (apply_game_year - 2000) * 12 * 4 * 7 + \
+    var apply_total_days = (apply_game_year - TimeData.GAME_START_YEAR) * 12 * 4 * 7 + \
                            (apply_game_month - 1) * 4 * 7 + \
                            (apply_game_week - 1) * 7 + \
                            apply_game_day
-    var current_total_days = (current_year - 2000) * 12 * 4 * 7 + \
+    var current_total_days = (current_year - TimeData.GAME_START_YEAR) * 12 * 4 * 7 + \
                              (current_month - 1) * 4 * 7 + \
                              (current_week - 1) * 7 + \
                              current_day

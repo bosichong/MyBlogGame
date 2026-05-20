@@ -256,7 +256,7 @@ var tmp_m: int:
 
 var tmp_y: int:
     get:
-        return GDManager.get_blogger().tmp_year if GDManager else 2000
+        return GDManager.get_blogger().tmp_year if GDManager else TimeData.GAME_START_YEAR
     set(value):
         if GDManager:
             GDManager.get_blogger().tmp_year = value

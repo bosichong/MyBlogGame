@@ -33,7 +33,7 @@ var current_quarter: int:
 
 var current_year: int:
     get:
-        return GDManager.get_time().current_year if GDManager else 2000
+        return GDManager.get_time().current_year if GDManager else TimeData.GAME_START_YEAR
     set(value):
         if GDManager:
             GDManager.get_time().current_year = value
