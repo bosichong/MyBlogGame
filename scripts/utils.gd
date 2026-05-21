@@ -21,7 +21,7 @@ func _init():
 
 ## 返回文章质量
 func get_quality(category: String) -> int:
-    var literary = ["年度总结", "春节特辑", "五一特辑", "国庆特辑", "生活日记", "爆款网文", "散文随笔", "文学周刊", "小说连载(收费)"]
+    var literary = ["年度总结", "春节特辑", "五一特辑", "国庆特辑", "生活日记", "爆款网文", "散文随笔", "文学周刊", "小说连载(收费)", "哲学批判", "观影读书"]
     var tech = ["编程教程", "程序员周刊", "付费黑客攻防"]
     # var art = ["插画壁纸", "绘画基础教程", "商业插画高级教程", "艺术周刊", "动漫连载(收费)"]  # 艺术已禁用
     
@@ -52,6 +52,19 @@ func get_quality(category: String) -> int:
         return 0
 
 
+## 根据年份获取时代标签
+func get_era_key(year: int) -> String:
+    if year <= 2005:
+        return "era_2002_2005"
+    elif year <= 2010:
+        return "era_2006_2010"
+    elif year <= 2015:
+        return "era_2011_2015"
+    elif year <= 2020:
+        return "era_2016_2020"
+    else:
+        return "era_2021_2025"
+
 ## 生成随机标题
 func generate_random_title(category: String) -> String:
     var prefixes = GDManager.get_title_templates().prefixes
@@ -59,7 +72,14 @@ func generate_random_title(category: String) -> String:
     
     if not contains_weekly_shorter(category):
         var prefix = prefixes[randi() % prefixes.size()]
-        var topic_list = topics.get(category, ["未知主题"])
+        var topic_list
+        if category == "极客前沿" or category == "观影读书":
+            var era_key = get_era_key(TimerManager.current_year)
+            topic_list = topics.get(category, {}).get(era_key, ["未知主题"])
+        else:
+            topic_list = topics.get(category, ["未知主题"])
+            if topic_list.size() == 0:
+                topic_list = ["未知主题"]
         var topic = topic_list[randi() % topic_list.size()]
         if category == "年度总结":
             return prefix + str(TimerManager.current_year) + "年" + topic
@@ -104,7 +124,12 @@ func create_checkbox(node, KEY, text, array, callback):
     node.add_child(label)
     node.add_child(fc)
     
-    for cat in array:
+    # 文章类型按等级降序排序（高等级在前）
+    var sorted_array = array.duplicate()
+    if array.size() > 0 and array[0].has("article_level"):
+        sorted_array.sort_custom(func(a, b): return a.get("article_level", 0) > b.get("article_level", 0))
+    
+    for cat in sorted_array:
         if should_add_category(cat["name"], KEY + 1):
             add_checkbox(fc, cat, KEY, callback)
 

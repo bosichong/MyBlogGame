@@ -499,12 +499,12 @@ const TASKS: Array = [
     },
     {
         "id": "code_post_unlock_60",
-        "description": "编程能力值达到60，解锁高级编程教程文章类型",
+        "description": "编程能力值达到60，解锁极客前沿文章类型",
         "conditions": ["code_value_ge_60"],
         "trigger_type": "skill_up",
         "is_repeatable": false,
         "actions": [
-            {"type": ActionType.UNLOCK_POST_TASK, "post_type": "高级编程教程"},
+            {"type": ActionType.UNLOCK_POST_TASK, "post_type": "极客前沿"},
         ],
     },
     {
