@@ -416,10 +416,10 @@ func add_new_blog_post(title: String, d) -> Dictionary:
     var new_post: Dictionary = {
         "id": post_id,              # 文章唯一ID
         "title": title,
-        "category": d.name,
+        "post_category": d.name,   # 博文分类名（如：生活日记、小说连载）
+        "article_category": d.category,  # 文章大类（文学/技术/艺术）
         "task_type": task_type,     # 任务类型(第一篇博文、年度总结等)
-        "type": d.type,             # 博文种类
-        "type1": d.type1,           # 博文种类
+        "content_type": d.content_type,  # 内容形式（免费/付费/周刊等）
         "views": 0,                 # 总访问量
         "comments": 0,              # 评论
         "favorites": 0,             # 收藏
@@ -693,7 +693,7 @@ func update_blog_views() -> int:
     var novel_views = 0
     var hacker_views = 0
     for post in blogger.posts:
-        if post.get("type1", "") == "付费":
+        if post.get("content_type", "") == "付费":
             paid_posts.append(post)
             var post_views = post.get("views", 0)
             current_total_views += post_views
@@ -758,7 +758,7 @@ func update_blog_views() -> int:
         last_settle_hacker_views = hacker_views
         var total_paid_views = 0
         for post in blogger.posts:
-            if post.get("type1", "") == "付费":
+            if post.get("content_type", "") == "付费":
                 total_paid_views += post.get("views", 0)
         last_settle_paid_views = total_paid_views
         monthly_paid_income = 0

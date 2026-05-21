@@ -11,6 +11,18 @@
 
 [sub_resource type="Animation" id="Animation_heusd"]
 length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node/01:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
 [sub_resource type="Animation" id="Animation_yu87a"]
 resource_name = "play"
@@ -22,10 +34,10 @@ tracks/0/path = NodePath("Node/01:self_modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 3, 6),
+"times": PackedFloat32Array(3, 6, 60),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -195,6 +207,18 @@ tracks/14/keys = {
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("Node/01:visible_ratio")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ql46m"]
 _data = {
@@ -208,16 +232,17 @@ script = ExtResource("1_heusd")
 [node name="Node" type="Node2D" parent="." unique_id=755296338]
 position = Vector2(33, 446)
 
-[node name="01" type="Label" parent="Node" unique_id=793208365]
+[node name="01" type="RichTextLabel" parent="Node" unique_id=918995861]
 self_modulate = Color(1, 1, 1, 0)
 offset_right = 500.0
 offset_bottom = 23.0
-theme_override_fonts/font = ExtResource("3_tu51s")
-text = "2004年12月，冬夜......"
+text = "2001年12月，冬夜......"
 vertical_alignment = 1
+visible_characters = 0
+visible_ratio = 0.0
 
 [node name="02" type="Label" parent="Node" unique_id=1123716978]
-self_modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0.02333337)
 offset_right = 500.0
 offset_bottom = 23.0
 theme_override_fonts/font = ExtResource("3_tu51s")
@@ -329,7 +354,7 @@ offset_bottom = 317.0
 theme_override_colors/font_color = Color(1.44392e-06, 0.502224, 0.691956, 1)
 theme_override_fonts/font = ExtResource("3_tu51s")
 theme_override_font_sizes/font_size = 10
-text = "Hi，最近在干嘛？还是在网上无聊的闲逛吗？快看看我的新窝：浮生志。对了，江湖主机最近在搞活动，有免费的域名主机可以申请，快去搞一个博客吧，
+text = "Hi，最近在干嘛？还是在网上无聊的闲逛吗？快看看我的新窝：浮生志。对了，云起网络最近在搞活动，有免费的域名主机可以申请，快去搞一个博客吧，
 
 另外，你点击[申请免费域名主机]即可参与这个活动啦！比忘了！记得来我的博客踩踩记得给我留言，祝好运！"
 autowrap_mode = 1

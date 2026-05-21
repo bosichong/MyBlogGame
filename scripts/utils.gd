@@ -8,7 +8,7 @@ var website_maintenance
 var recreation
 var learning_skills
 
-var post_trend = {"type": "文学", "views_add": 0.1}
+var post_trend = {"category": "文学", "views_add": 0.1}
 var bc_type = ["文学", "技术"]  # 艺术已禁用
 
 func _init():

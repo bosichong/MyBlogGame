@@ -7,17 +7,17 @@ var id: int = 0
 ## 文章标题
 var title: String = ""
 
-## 文章分类
+## 文章分类名（如：生活日记、小说连载）
 var category: String = ""
 
 ## 任务类型（普通/节日/活动等）
 var task_type: String = ""
 
-## 文章类型（文学/技术/艺术）
-var type: String = ""
+## 文章大类（文学/技术/艺术）
+var article_category: String = ""
 
-## 付费类型
-var type1: String = ""
+## 内容形式（免费/付费/周刊等）
+var content_type: String = ""
 
 ## 质量分
 var quality: int = 100
@@ -38,12 +38,12 @@ var date: String = ""
 var is_money: bool = false
 
 ## 初始化
-func _init(p_title: String = "", p_category: String = "", p_type: String = "", p_type1: String = ""):
+func _init(p_title: String = "", p_category: String = "", p_article_category: String = "", p_content_type: String = ""):
     id = _generate_id()
     title = p_title
     category = p_category
-    type = p_type
-    type1 = p_type1
+    article_category = p_article_category
+    content_type = p_content_type
     date = Utils.format_date()
 
 ## 生成唯一ID
@@ -57,8 +57,8 @@ func to_dict() -> Dictionary:
         "title": title,
         "category": category,
         "task_type": task_type,
-        "type": type,
-        "type1": type1,
+        "article_category": article_category,
+        "content_type": content_type,
         "quality": quality,
         "views": views,
         "favorites": favorites,
@@ -74,8 +74,8 @@ static func from_dict(data: Dictionary) -> PostData:
     post.title = data.get("title", "")
     post.category = data.get("category", "")
     post.task_type = data.get("task_type", "")
-    post.type = data.get("type", "")
-    post.type1 = data.get("type1", "")
+    post.article_category = data.get("article_category", "")
+    post.content_type = data.get("content_type", "")
     post.quality = data.get("quality", 100)
     post.views = data.get("views", 0)
     post.favorites = data.get("favorites", 0)

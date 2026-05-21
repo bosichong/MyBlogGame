@@ -290,7 +290,7 @@ func check_all_articles() -> Dictionary:
         var post_id = post.get("id", 0)
         var views = post.get("views", 0)
         var quality = post.get("quality", 0)
-        var article_type = post.get("type", "综合类")
+        var article_type = post.get("article_category", "综合类")
         
         result["articles_checked"] += 1
         var generated = check_article_comments(post_id, views, quality, article_type)

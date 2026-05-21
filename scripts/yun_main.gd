@@ -38,7 +38,7 @@ func _ready() -> void:
 
     
 func on_show_panel():
-    jh_label.text = Strs.yun.江湖主机域名简介
+    jh_label.text = Strs.yun.云起网络域名简介
     jh_label.set_autowrap_mode(TextServer.AUTOWRAP_WORD_SMART)
     $"bg/选项组/sc3/VBoxContainer/Label2".text = Strs.yun.数据安全简介
     $"bg/选项组/sc3/VBoxContainer/Label2".set_autowrap_mode(TextServer.AUTOWRAP_WORD_SMART)

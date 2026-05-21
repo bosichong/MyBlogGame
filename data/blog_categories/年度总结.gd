@@ -7,8 +7,8 @@ extends Node
 var item = {
     "name": "年度总结",
     "tip": "每年结束后的总结文章，回顾一年的收获与成长！",
-    "type": "文学",
-    "type1": "免费",
+    "category": "文学",
+    "content_type": "免费",
     "unlock_post_tip": "一年过去了！可以发布年度总结了！",
     "lock_post_tip": "发布年度总结已发布或最佳发布时间已过，年度博文类型发布已锁定。",
     "isVisible": true,

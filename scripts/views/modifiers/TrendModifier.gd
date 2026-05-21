@@ -15,7 +15,7 @@ func _init():
     type = Type.BOOST
 
 func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
-    var post_type = post.get("type", "")
+    var post_type = post.get("article_category", "")
     
     # 文章类型必须匹配热门风向标
     if post_type != current_trend_type:

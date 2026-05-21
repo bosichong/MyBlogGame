@@ -282,12 +282,12 @@ func _get_post_count_by_type(post_type: String) -> int:
 
     var count = 0
     for post in blogger_data.posts:
-        # 检查多个可能的字段:category、type、type1、task_type
-        if post.get("category", "") == post_type:
+        # 检查多个可能的字段:category、post_category、article_category、content_type、task_type
+        if post.get("post_category", "") == post_type:
             count += 1
-        elif post.get("type", "") == post_type:
+        elif post.get("article_category", "") == post_type:
             count += 1
-        elif post.get("type1", "") == post_type:
+        elif post.get("content_type", "") == post_type:
             count += 1
         elif post.get("task_type", "") == post_type:
             count += 1
@@ -566,8 +566,8 @@ func _action_replace_trend(_action: Dictionary) -> void:
         return
 
     var random_index = randi() % Utils.bc_type.size()
-    Utils.post_trend.type = Utils.bc_type[random_index]
-    var tip = Strs.task_str.热点风向[Utils.post_trend.type][random_index] if Strs else ""
+    Utils.post_trend.category = Utils.bc_type[random_index]
+    var tip = Strs.task_str.热点风向[Utils.post_trend.category][random_index] if Strs else ""
     emit_signal("sg_task_show_popup_msg", "提示", tip)
 
 ## 动作:解锁成就
