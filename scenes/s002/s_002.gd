@@ -6,14 +6,15 @@ const SCENE_PATH = "res://scenes/s003/s_003.tscn"
 
 var current_button_group: ButtonGroup
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
     pass
 
 func _on_startgame_pressed() -> void:
-    Blogger.blog_data.blog_author = username
-    Blogger.blog_data.blog_name = username
-    Blogger.blog_data.blog_url = url
+    var blogger = GDManager.get_blogger()
+    if blogger:
+        blogger.blog_name = blogname.text if blogname.text != "" else "我的博客"
+        blogger.blog_author = username.text if username.text != "" else "匿名"
+        blogger.blog_url = url.text if url.text != "" else "suiyan.cc"
     Utils.goto_scene(SCENE_PATH)
     
     

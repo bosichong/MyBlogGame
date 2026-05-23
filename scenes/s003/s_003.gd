@@ -1,34 +1,37 @@
 extends Node2D
 const S04_SCENE_PATH = "res://scenes/s004/s_004.tscn"
 
-# Called when the node enters the scene tree for the first time.
+var blog_domain: String = "suiyan.cc"
+
 func _ready() -> void:
-    # 连接确认信号
     $AcceptDialog.confirmed.connect(_on_dialog_confirmed)
+    call_deferred("_update_email_domain")
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-    pass
-
-
+func _update_email_domain() -> void:
+    var blogger = GDManager.get_blogger()
+    if blogger and blogger.blog_url:
+        blog_domain = blogger.blog_url
+        print(blog_domain)
+    var con2_label = $"email_阿浮/con2"
+    if con2_label:
+        con2_label.text = "您好！\n\n我们正在推广独立博客服务，现送出100个免费域名和主机套餐。\n\n您的域名：%s\n主机：免费套餐（1年）\n\n点击下方按钮立即申请，开启您的博客之旅！" % blog_domain
+        print(con2_label.text)
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
     if anim_name == "play":
         print("动画播放完了。")
-        var title = "系统提示！" 
-        var content = "看起来很不错的样子！那么，闲着也是无聊，我也去搞一个博客玩玩。"
+        var title = "博客启蒙"
+        var content = "免费域名和主机？这封邮件，改变了一切。\n\n我决定，去申请一个属于自己的博客。"
         $AcceptDialog.title = title
         $AcceptDialog.dialog_text = content
         $AcceptDialog.set_size(Vector2i(400,200))
-        $AcceptDialog.popup_centered()  
-        
-        
+        $AcceptDialog.popup_centered()
+
 func _on_dialog_confirmed():
-    # 只有当用户点击确认时才执行跳转
+    if StoryProgress:
+        StoryProgress.set_completed(1, "prologue_completed")
     Utils.goto_scene(S04_SCENE_PATH)
 
-
-
 func _on_跳过游戏_pressed() -> void:
-    # 只有当用户点击确认时才执行跳转
+    if StoryProgress:
+        StoryProgress.set_completed(1, "prologue_completed")
     Utils.goto_scene(S04_SCENE_PATH)

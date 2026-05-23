@@ -23,6 +23,66 @@ tracks/0/keys = {
 "update": 0,
 "values": [0.0]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node/02:visible_ratio")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Node/03:visible_ratio")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Node/04:visible_ratio")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Node/05:visible_ratio")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Node/06:visible_ratio")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
 [sub_resource type="Animation" id="Animation_yu87a"]
 resource_name = "play"
@@ -46,10 +106,10 @@ tracks/1/path = NodePath("Node/02:self_modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(6, 9, 12),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(9, 12),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -58,10 +118,10 @@ tracks/2/path = NodePath("Node/03:self_modulate")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(12, 15, 18),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(15, 18),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -70,10 +130,10 @@ tracks/3/path = NodePath("Node/04:self_modulate")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(18, 21, 24),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(21, 24),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -82,10 +142,10 @@ tracks/4/path = NodePath("Node/05:self_modulate")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(24, 27, 30),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(27, 30),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -94,10 +154,10 @@ tracks/5/path = NodePath("Node/06:self_modulate")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
-"times": PackedFloat32Array(30, 33, 36),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(33, 36),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 tracks/6/type = "value"
 tracks/6/imported = false
@@ -219,6 +279,66 @@ tracks/15/keys = {
 "update": 0,
 "values": [0.0, 1.0]
 }
+tracks/16/type = "value"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("Node/02:visible_ratio")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {
+"times": PackedFloat32Array(6.2235065, 9.003506),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/17/type = "value"
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/path = NodePath("Node/03:visible_ratio")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/keys = {
+"times": PackedFloat32Array(12.377723, 14.987113),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/18/type = "value"
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/path = NodePath("Node/04:visible_ratio")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/keys = {
+"times": PackedFloat32Array(18.56186, 20.98341),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/19/type = "value"
+tracks/19/imported = false
+tracks/19/enabled = true
+tracks/19/path = NodePath("Node/05:visible_ratio")
+tracks/19/interp = 1
+tracks/19/loop_wrap = true
+tracks/19/keys = {
+"times": PackedFloat32Array(24.756153, 26.97514),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/20/type = "value"
+tracks/20/imported = false
+tracks/20/enabled = true
+tracks/20/path = NodePath("Node/06:visible_ratio")
+tracks/20/interp = 1
+tracks/20/loop_wrap = true
+tracks/20/keys = {
+"times": PackedFloat32Array(30.583004, 32.65684),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ql46m"]
 _data = {
@@ -236,50 +356,55 @@ position = Vector2(33, 446)
 self_modulate = Color(1, 1, 1, 0)
 offset_right = 500.0
 offset_bottom = 23.0
-text = "2001年12月，冬夜......"
+text = "2001年12月，冬夜,窗外是北风，家里是暖的。"
 vertical_alignment = 1
 visible_characters = 0
 visible_ratio = 0.0
 
-[node name="02" type="Label" parent="Node" unique_id=1123716978]
-self_modulate = Color(1, 1, 1, 0.02333337)
-offset_right = 500.0
-offset_bottom = 23.0
-theme_override_fonts/font = ExtResource("3_tu51s")
-text = "宽带是快了，但内容好像变慢了。"
-vertical_alignment = 1
-
-[node name="03" type="Label" parent="Node" unique_id=1757028593]
+[node name="02" type="RichTextLabel" parent="Node" unique_id=1723267642]
 self_modulate = Color(1, 1, 1, 0)
 offset_right = 500.0
 offset_bottom = 23.0
-theme_override_fonts/font = ExtResource("3_tu51s")
-text = "连续刷完了今天所有的 BBS 热帖，那些文字太零散，太快餐。"
+text = "我已经在那几个论坛泡了一整年，那些帖子，短的像烟，长的像废话。"
 vertical_alignment = 1
+visible_characters = 0
+visible_ratio = 0.0
 
-[node name="04" type="Label" parent="Node" unique_id=1285291982]
+[node name="03" type="RichTextLabel" parent="Node" unique_id=294336210]
+self_modulate = Color(1, 1, 1, 0)
+offset_right = 636.0
+offset_bottom = 23.0
+text = "我试着写过几篇文章，发上去，不出两天就沉了。每一层楼都在吵架，每一帖都在灌水。"
+vertical_alignment = 1
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="04" type="RichTextLabel" parent="Node" unique_id=1211544385]
+self_modulate = Color(1, 1, 1, 0)
+offset_right = 576.0
+offset_bottom = 23.0
+text = "我用心写的东西，放在哪里都不对。这个互联网很大，却没有我的位置。"
+vertical_alignment = 1
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="05" type="RichTextLabel" parent="Node" unique_id=1230515485]
 self_modulate = Color(1, 1, 1, 0)
 offset_right = 500.0
 offset_bottom = 23.0
-theme_override_fonts/font = ExtResource("3_tu51s")
-text = "我想写的那篇文章，如果发到论坛，不出一个小时就会被淹没在无聊的口水贴里。"
+text = "每天上线，漫游，下线。"
 vertical_alignment = 1
+visible_characters = 0
+visible_ratio = 0.0
 
-[node name="05" type="Label" parent="Node" unique_id=744918181]
+[node name="06" type="RichTextLabel" parent="Node" unique_id=870006474]
 self_modulate = Color(1, 1, 1, 0)
 offset_right = 500.0
 offset_bottom = 23.0
-theme_override_fonts/font = ExtResource("3_tu51s")
-text = "这个浩瀚互联网，好像缺少了一个真正属于我自己的角落。"
+text = "我在等什么？"
 vertical_alignment = 1
-
-[node name="06" type="Label" parent="Node" unique_id=1962562389]
-self_modulate = Color(1, 1, 1, 0)
-offset_right = 500.0
-offset_bottom = 23.0
-theme_override_fonts/font = ExtResource("3_tu51s")
-text = "每天都在重复登录和漫游，我到底在等什么？"
-vertical_alignment = 1
+visible_characters = 0
+visible_ratio = 0.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=985888547]
 libraries/ = SubResource("AnimationLibrary_ql46m")
@@ -293,7 +418,6 @@ position = Vector2(480, 203)
 texture = ExtResource("1_10thn")
 
 [node name="emailui" type="Node2D" parent="." unique_id=1881266222]
-modulate = Color(1, 1, 1, 0)
 
 [node name="ui" type="Sprite2D" parent="emailui" unique_id=970590273]
 position = Vector2(499, 240)
@@ -317,10 +441,9 @@ offset_bottom = 199.0
 theme_override_colors/font_color = Color(7.70092e-07, 0.668736, 0.918941, 1)
 theme_override_fonts/font = ExtResource("3_tu51s")
 theme_override_font_sizes/font_size = 10
-text = "Hi!最近还好吗？我的博客搭建好了！----2004年12月28日"
+text = "云起网络：免费域名+主机，送给你。----2001年12月28日"
 
 [node name="email_阿浮" type="Node2D" parent="." unique_id=1886630196]
-modulate = Color(1, 1, 1, 0)
 
 [node name="email3" type="Sprite2D" parent="email_阿浮" unique_id=752753462]
 position = Vector2(504, 241)
@@ -334,7 +457,7 @@ offset_bottom = 199.0
 theme_override_colors/font_color = Color(0, 0.670588, 0.917647, 1)
 theme_override_fonts/font = ExtResource("3_tu51s")
 theme_override_font_sizes/font_size = 14
-text = "来自:阿浮的邮件"
+text = "来自:云起网络官方"
 
 [node name="con" type="Label" parent="email_阿浮" unique_id=1266080899]
 offset_left = 377.0
@@ -344,7 +467,7 @@ offset_bottom = 222.0
 theme_override_colors/font_color = Color(1.44392e-06, 0.502224, 0.691956, 1)
 theme_override_fonts/font = ExtResource("3_tu51s")
 theme_override_font_sizes/font_size = 10
-text = "Hi!最近还好吗？我的博客搭建好了！----2004年12月28日"
+text = "致：想表达自己的人"
 
 [node name="con2" type="Label" parent="email_阿浮" unique_id=1528361041]
 offset_left = 377.0
@@ -354,19 +477,24 @@ offset_bottom = 317.0
 theme_override_colors/font_color = Color(1.44392e-06, 0.502224, 0.691956, 1)
 theme_override_fonts/font = ExtResource("3_tu51s")
 theme_override_font_sizes/font_size = 10
-text = "Hi，最近在干嘛？还是在网上无聊的闲逛吗？快看看我的新窝：浮生志。对了，云起网络最近在搞活动，有免费的域名主机可以申请，快去搞一个博客吧，
+text = "您好！
 
-另外，你点击[申请免费域名主机]即可参与这个活动啦！比忘了！记得来我的博客踩踩记得给我留言，祝好运！"
+我们正在推广独立博客服务，现送出100个免费域名和主机套餐。
+
+您的域名：suiyan.cc
+主机：免费套餐（1年）
+
+点击下方按钮立即申请，开启您的博客之旅！"
 autowrap_mode = 1
 
 [node name="zhizhen" type="Sprite2D" parent="." unique_id=1483522992]
 modulate = Color(1, 1, 1, 0)
-position = Vector2(704, 347)
+position = Vector2(512, 199)
 texture = ExtResource("4_jqnny")
 
 [node name="shou" type="Sprite2D" parent="." unique_id=1707369288]
 modulate = Color(1, 1, 1, 0)
-position = Vector2(512, 199)
+position = Vector2(498, 184)
 texture = ExtResource("5_sfyrg")
 
 [node name="AcceptDialog" type="AcceptDialog" parent="." unique_id=95419943]

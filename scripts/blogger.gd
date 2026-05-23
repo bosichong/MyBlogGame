@@ -225,7 +225,7 @@ var blog_data: Dictionary:
             var blogger = GDManager.get_blogger()
             blogger.blog_name = value.get("blog_name", "我的博客")
             blogger.blog_author = value.get("blog_author", "J.sky")
-            blogger.blog_url = value.get("blog_type", "suiyan.cc")
+            blogger.blog_url = value.get("blog_url", "suiyan.cc")
             blogger.safety_value = value.get("safety_value", 100)
             blogger.seo_value = value.get("seo_value", 100)
             blogger.design_value = value.get("design_value", 100)
