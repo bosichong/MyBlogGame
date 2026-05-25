@@ -32,6 +32,9 @@ func get_friend_link() -> FriendLinkData:
 func get_comment() -> CommentData:
     return runtime_data.comment
 
+func get_story_progress() -> StoryProgress:
+    return runtime_data.story_progress
+
 # ===== 静态配置访问 =====
 
 func get_static_config() -> StaticConfig:

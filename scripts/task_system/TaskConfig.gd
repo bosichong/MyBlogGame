@@ -47,6 +47,9 @@ enum ActionType {
     START_OPEN_SOURCE_PROJECT,  # 开始开源项目
     OPEN_SOURCE_PROGRESS,    # 开源项目进度
     OPEN_SOURCE_ACQUISITION, # 开源项目被收购
+    UNLOCK_INITIAL_TASKS,    # 解锁初始16个任务选项（日常创作、网站维护、休闲娱乐、自律学习）
+    START_GAME_TIME,         # 启动游戏时间（从暂停状态恢复）
+    SET_STORY_MILESTONE,    # 设置剧情里程碑（chapter: int, milestone: String）
 }
 
 ## ============================================================
@@ -70,17 +73,6 @@ const CONDITIONS: Dictionary = {
     "code_value_ge_90": {"type": 0, "skill": "CODE", "op": 3, "value": 90},
     "code_value_ge_100": {"type": 0, "skill": "CODE", "op": 3, "value": 100},
     
-    # 技能数值条件 - 绘画（每20能力值一个等级）【已禁用】
-    # "draw_value_ge_20": {"type": ConditionType.SKILL_VALUE, "skill": "DRAW", "op": CompareOp.GE, "value": 20},
-    # "draw_value_ge_40": {"type": ConditionType.SKILL_VALUE, "skill": "DRAW", "op": CompareOp.GE, "value": 40},
-    # "draw_value_ge_60": {"type": ConditionType.SKILL_VALUE, "skill": "DRAW", "op": CompareOp.GE, "value": 60},
-    # "draw_value_ge_80": {"type": ConditionType.SKILL_VALUE, "skill": "DRAW", "op": CompareOp.GE, "value": 80},
-    # "draw_value_ge_100": {"type": ConditionType.SKILL_VALUE, "skill": "DRAW", "op": CompareOp.GE, "value": 100},
-    
-    # 复合条件 - IP授权（需要两项都满足）【已禁用绘画部分】
-    # "literature_value_ge_100_and_novel_50": {"type": ConditionType.CUSTOM, "check_func": "check_literature_ip_auth"},
-    # "draw_value_ge_100_and_anime_50": {"type": ConditionType.CUSTOM, "check_func": "check_draw_ip_auth"},
-    
     # 玩家等级条件（使用GE避免跳级漏触发）
     "player_ge_10": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.GE, "value": 10},
     "player_ge_20": {"type": ConditionType.PLAYER_LEVEL, "op": CompareOp.GE, "value": 20},
@@ -100,10 +92,6 @@ const CONDITIONS: Dictionary = {
     "labor_day_eq_3": {"type": ConditionType.POST_COUNT, "post_type": "五一特辑", "op": CompareOp.GE, "value": 3},
     "national_day_eq_7": {"type": ConditionType.POST_COUNT, "post_type": "国庆特辑", "op": CompareOp.GE, "value": 7},
     "novel_serial_ge_50": {"type": ConditionType.POST_COUNT, "post_type": "小说连载(付费)", "op": CompareOp.GE, "value": 50},
-    # 动漫连载条件【已禁用】
-    # "anime_serial_ge_50": {"type": ConditionType.POST_COUNT, "post_type": "动漫连载(收费)", "op": CompareOp.GE, "value": 50},
-    # "anime_serial_ge_60": {"type": ConditionType.POST_COUNT, "post_type": "动漫连载(收费)", "op": CompareOp.GE, "value": 60},
-    # "anime_serial_ge_70": {"type": ConditionType.POST_COUNT, "post_type": "动漫连载(收费)", "op": CompareOp.GE, "value": 70},
     
     # 写书状态条件
     "book_writing_started": {"type": ConditionType.CUSTOM, "check_func": "check_book_writing"},
@@ -112,9 +100,9 @@ const CONDITIONS: Dictionary = {
     "open_source_project_started": {"type": ConditionType.CUSTOM, "check_func": "check_open_source_project"},
     
     # 时间条件（配合 event_date 使用）
-    # 注意：游戏起始年份为 2002 年（可通过 TimeData.GAME_START_YEAR 获取）
-    # 第一篇博文：游戏开始即可解锁（2002年1月第1周第1天）
-    "time_first_post_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [TimeData.GAME_START_YEAR], "m": [1], "w": [1], "d": [3]}},
+    # 注意：游戏起始年份为 2001 年（可通过 TimeData.GAME_START_YEAR 获取）
+    # 第一篇博文：游戏开始即可解锁（2001年12月第4周第7天，周日）
+    "time_first_post_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [TimeData.GAME_START_YEAR], "m": [12], "w": [4], "d": [7]}},
     "time_year_summary_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [12], "w": [2], "d": [1]}},
     "time_year_summary_lock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [12], "w": [4], "d": [7]}},
     "time_trend_change": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [1, 6], "w": [2], "d": [1]}},
@@ -157,16 +145,6 @@ const SKILL_PROGRESS_CONFIG: Dictionary = {
             100: {"lock": "成为黑客", "unlock": null},
         }
     },
-    # "DRAW": {  # 【已禁用】
-    #     "skill_enum": "DRAW",
-    #     "progress": {
-    #         20: {"lock": "画渣上路", "unlock": "手绘基础"},
-    #         40: {"lock": "手绘基础", "unlock": "板绘达人"},
-    #         60: {"lock": "板绘达人", "unlock": "美术总监"},
-    #         80: {"lock": "美术总监", "unlock": "游戏原画"},
-    #     }
-    # },
-    #},
 }
 
 ## ============================================================
@@ -332,78 +310,6 @@ const TASKS: Array = [
         ],
     },
 
-    # ====================【已禁用】====================
-    # 绘画文章解锁任务
-    # ====================
-    # {
-    #     "id": "draw_post_unlock_20",
-    #     "description": "绘画能力值达到20，解锁绘画基础教程文章类型",
-    #     "conditions": ["draw_value_ge_20"],
-    #     "trigger_type": "skill_up",
-    #     "is_repeatable": false,
-    #     "actions": [
-    #         {"type": ActionType.UNLOCK_POST_TASK, "post_type": "绘画基础教程"},
-    #     ],
-    # },
-    # {
-    #     "id": "draw_post_unlock_40",
-    #     "description": "绘画能力值达到40，解锁商业插画高级教程文章类型",
-    #     "conditions": ["draw_value_ge_40"],
-    #     "trigger_type": "skill_up",
-    #     "is_repeatable": false,
-    #     "actions": [
-    #         {"type": ActionType.UNLOCK_POST_TASK, "post_type": "商业插画高级教程"},
-    #     ],
-    # },
-    # {
-    #     "id": "draw_post_unlock_60",
-    #     "description": "绘画能力值达到60，解锁艺术周刊文章类型",
-    #     "conditions": ["draw_value_ge_60"],
-    #     "trigger_type": "skill_up",
-    #     "is_repeatable": false,
-    #     "actions": [
-    #         {"type": ActionType.UNLOCK_POST_TASK, "post_type": "艺术周刊"},
-    #     ],
-    # },
-    # {
-    #     "id": "draw_post_unlock_80",
-    #     "description": "绘画能力值达到80，解锁动漫连载(收费)文章类型",
-    #     "conditions": ["draw_value_ge_80"],
-    #     "trigger_type": "skill_up",
-    #     "is_repeatable": false,
-    #     "actions": [
-    #         {"type": ActionType.UNLOCK_POST_TASK, "post_type": "动漫连载(收费)"},
-    #     ],
-    # },
-
-    # ====================【已禁用】====================
-    # 动画影视创作解锁任务
-    # ====================
-    # {
-    #     "id": "animation_movie_unlock",
-    #     "description": "绘画能力达到100级且动漫连载发布超过50篇，解锁动画影视创作！",
-    #     "conditions": ["draw_value_ge_100", "anime_serial_ge_50"],
-    #     "trigger_type": "post_event",
-    #     "is_repeatable": false,
-    #     "actions": [
-    #         {"type": ActionType.UNLOCK_POST_TASK, "post_type": "动画影视创作"},
-    #     ],
-    # },
-    
-    # ====================【已禁用】====================
-    # 动漫IP授权解锁任务
-    # ====================
-    # {
-    #     "id": "anime_ip_authorization_unlock",
-    #     "description": "绘画能力达到100级且动漫连载发布超过50篇，触发动漫IP授权事件！",
-    #     "conditions": ["draw_value_ge_100", "anime_serial_ge_50"],
-    #     "trigger_type": "post_event",
-    #     "is_repeatable": false,
-    #     "actions": [
-    #         {"type": ActionType.TRIGGER_ANIME_IP_AUTH},
-    #     ],
-    # },
-    
     # ====================
     # 出书笔记解锁任务
     # ====================
@@ -542,62 +448,6 @@ const TASKS: Array = [
         ],
     },
     
-    # 绘画技能线【已禁用】
-    # {
-    #     "id": "draw_unlock_20",
-    #     "description": "绘画能力值达到20，解锁绘画2级技能",
-    #     "conditions": ["draw_value_ge_20"],
-    #     "trigger_type": "skill_up",
-    #     "is_repeatable": false,
-    #     "actions": [
-    #         {"type": ActionType.SKILL_LEVEL_LOCK, "skill_name": "画渣上路"},
-    #         {"type": ActionType.SKILL_LEVEL_UNLOCK, "skill_name": "手绘基础"},
-    #     ],
-    # },
-    # {
-    #     "id": "draw_unlock_40",
-    #     "description": "绘画能力值达到40，解锁绘画3级技能",
-    #     "conditions": ["draw_value_ge_40"],
-    #     "trigger_type": "skill_up",
-    #     "is_repeatable": false,
-    #     "actions": [
-    #         {"type": ActionType.SKILL_LEVEL_LOCK, "skill_name": "手绘基础"},
-    #         {"type": ActionType.SKILL_LEVEL_UNLOCK, "skill_name": "板绘达人"},
-    #     ],
-    # },
-    # {
-    #     "id": "draw_unlock_60",
-    #     "description": "绘画能力值达到60，解锁绘画4级技能",
-    #     "conditions": ["draw_value_ge_60"],
-    #     "trigger_type": "skill_up",
-    #     "is_repeatable": false,
-    #     "actions": [
-    #         {"type": ActionType.SKILL_LEVEL_LOCK, "skill_name": "板绘达人"},
-    #         {"type": ActionType.SKILL_LEVEL_UNLOCK, "skill_name": "游戏原画"},
-    #     ],
-    # },
-    # {
-    #     "id": "draw_unlock_80",
-    #     "description": "绘画能力值达到80，解锁绘画5级技能（最高级）",
-    #     "conditions": ["draw_value_ge_80"],
-    #     "trigger_type": "skill_up",
-    #     "is_repeatable": false,
-    #     "actions": [
-    #         {"type": ActionType.SKILL_LEVEL_LOCK, "skill_name": "游戏原画"},
-    #         {"type": ActionType.SKILL_LEVEL_UNLOCK, "skill_name": "美术总监"},
-    #     ],
-    # },
-    # {
-    #     "id": "draw_unlock_100",
-    #     "description": "绘画能力值达到100，已达到最高境界",
-    #     "conditions": ["draw_value_ge_100"],
-    #     "trigger_type": "skill_up",
-    #     "is_repeatable": false,
-    #     "actions": [
-    #         {"type": ActionType.SKILL_LEVEL_LOCK, "skill_name": "美术总监"},
-    #     ],
-    # },
-    
     # ====================
     # 博文发布任务
     # ====================
@@ -620,6 +470,19 @@ const TASKS: Array = [
         "trigger_type": "post_event",  # 发布时触发
         "actions": [
             {"type": ActionType.HIDE_POST_TASK, "post_type": "第一篇博文"},
+        ],
+    },
+    {
+        "id": "unlock_blogging_start",
+        "description": "第一篇博文发布成功，博客运营正式开始！",
+        "conditions": ["first_post_eq_1"],
+        "is_repeatable": false,
+        "trigger_type": "post_event",
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "first_article_posted"},
+            {"type": ActionType.UNLOCK_INITIAL_TASKS},
+            {"type": ActionType.SHOW_NOTIFICATION, "message": "博客的运营，正式开始！"},
+            {"type": ActionType.START_GAME_TIME},
         ],
     },
     {

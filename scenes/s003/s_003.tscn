@@ -258,7 +258,7 @@ tracks/13/keys = {
 tracks/14/type = "value"
 tracks/14/imported = false
 tracks/14/enabled = true
-tracks/14/path = NodePath("email_阿浮:modulate")
+tracks/14/path = NodePath("email_ts:modulate")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {
@@ -443,13 +443,13 @@ theme_override_fonts/font = ExtResource("3_tu51s")
 theme_override_font_sizes/font_size = 10
 text = "云起网络：免费域名+主机，送给你。----2001年12月28日"
 
-[node name="email_阿浮" type="Node2D" parent="." unique_id=1886630196]
+[node name="email_ts" type="Node2D" parent="." unique_id=1886630196]
 
-[node name="email3" type="Sprite2D" parent="email_阿浮" unique_id=752753462]
+[node name="email3" type="Sprite2D" parent="email_ts" unique_id=752753462]
 position = Vector2(504, 241)
 texture = ExtResource("4_sfyrg")
 
-[node name="tit" type="Label" parent="email_阿浮" unique_id=166188821]
+[node name="tit" type="Label" parent="email_ts" unique_id=166188821]
 offset_left = 377.0
 offset_top = 176.0
 offset_right = 479.0
@@ -459,7 +459,7 @@ theme_override_fonts/font = ExtResource("3_tu51s")
 theme_override_font_sizes/font_size = 14
 text = "来自:云起网络官方"
 
-[node name="con" type="Label" parent="email_阿浮" unique_id=1266080899]
+[node name="con" type="Label" parent="email_ts" unique_id=1266080899]
 offset_left = 377.0
 offset_top = 199.0
 offset_right = 479.0
@@ -469,7 +469,7 @@ theme_override_fonts/font = ExtResource("3_tu51s")
 theme_override_font_sizes/font_size = 10
 text = "致：想表达自己的人"
 
-[node name="con2" type="Label" parent="email_阿浮" unique_id=1528361041]
+[node name="con2" type="Label" parent="email_ts" unique_id=1528361041]
 offset_left = 377.0
 offset_top = 235.0
 offset_right = 777.0

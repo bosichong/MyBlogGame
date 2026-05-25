@@ -141,6 +141,7 @@ func serialize_runtime_data(runtime_data: RuntimeData) -> Dictionary:
         "league": serialize_league_data(runtime_data.league),
         "friend_link": serialize_friendlink_data(runtime_data.friend_link),
         "comment": serialize_comment_data(runtime_data.comment),
+        "story_progress": serialize_story_progress_data(runtime_data.story_progress),
     }
 
 func deserialize_runtime_data(data: Dictionary) -> RuntimeData:
@@ -164,6 +165,8 @@ func deserialize_runtime_data(data: Dictionary) -> RuntimeData:
         deserialize_friendlink_data(runtime_data.friend_link, data["friend_link"])
     if data.has("comment"):
         deserialize_comment_data(runtime_data.comment, data["comment"])
+    if data.has("story_progress"):
+        deserialize_story_progress_data(runtime_data.story_progress, data["story_progress"])
 
     return runtime_data
 
@@ -177,7 +180,6 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "technical_ability": data.technical_ability,
         "code_ability": data.code_ability,
         "literature_ability": data.literature_ability,
-        # "drawing_ability": data.drawing_ability,  # 【已禁用】
         "stamina": data.stamina,
         "money": data.money,
         "social_ability": data.social_ability,
@@ -212,7 +214,6 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.technical_ability = dict.get("technical_ability", 23)
     data.code_ability = dict.get("code_ability", 23)
     data.literature_ability = dict.get("literature_ability", 23)
-    # data.drawing_ability = dict.get("drawing_ability", 23)  # 【已禁用】
     data.stamina = dict.get("stamina", 100)
     data.money = dict.get("money", 100000.0)
     data.social_ability = dict.get("social_ability", 5)
@@ -427,6 +428,12 @@ func deserialize_comment_data(data: CommentData, dict: Dictionary):
         "auto_approve": false,
         "auto_delete_spam": true,
     })
+
+func serialize_story_progress_data(data: StoryProgress) -> Dictionary:
+    return data.to_dict()
+
+func deserialize_story_progress_data(data: StoryProgress, dict: Dictionary):
+    data.from_dict(dict)
 
 # ===== 元数据 =====
 

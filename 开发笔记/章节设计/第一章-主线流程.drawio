@@ -1,141 +1,213 @@
-<mxfile host="app.diagrams.net" modified="2025-01-01T00:00:00.000Z" agent="Claude" version="21.0.0">
-  <diagram name="第一章-主线流程" id="ch1-flow">
-    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+<mxfile host="app.diagrams.net" modified="2026-05-25T12:00:00.000Z" agent="Claude" version="21.0.0">
+  <diagram name="第一章-启动流程" id="ch1-startup">
+    <mxGraphModel dx="1400" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
       <root>
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
 
         <!-- 标题 -->
-        <mxCell id="title" value="第一章：博客启蒙期（2002-2005）主线流程" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="500" y="20" width="600" height="40" as="geometry"/>
+        <mxCell id="title" value="第一章：博客启蒙期（2001-2005）主线流程" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=22;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="500" y="20" width="500" height="40" as="geometry"/>
         </mxCell>
 
-        <!-- 开场动画 -->
-        <mxCell id="n1" value="开场动画&#xa;2001年12月，冬夜" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="640" y="80" width="160" height="50" as="geometry"/>
+        <!-- s001 主菜单 -->
+        <mxCell id="n1" value="s001：主菜单&#xa;功能：新建游戏 | 读取存档 | 退出" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="80" width="200" height="60" as="geometry"/>
         </mxCell>
 
-        <!-- 任务1 -->
-        <mxCell id="n2" value="任务1：云起网络赠送&#xa;触发：自动 | 奖励：域名+主机" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="640" y="160" width="160" height="50" as="geometry"/>
+        <!-- 分支1：新建游戏 -->
+        <mxCell id="n2" value="点击【新建游戏】" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="340" y="165" width="120" height="25" as="geometry"/>
         </mxCell>
 
-        <!-- 任务2 -->
-        <mxCell id="n3" value="任务2：博客正式上线&#xa;触发：自动 | 解锁：写文章功能" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="640" y="240" width="160" height="50" as="geometry"/>
+        <!-- s002 创建博客 -->
+        <mxCell id="n3" value="s002：创建博客&#xa;填写：博客名、作者、域名" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="280" y="220" width="200" height="60" as="geometry"/>
         </mxCell>
 
-        <!-- 任务3 -->
-        <mxCell id="n4" value="任务3：第一篇博文&#xa;触发：主动 | 体力-20 | 奖励：经验+10、称号" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="640" y="320" width="160" height="50" as="geometry"/>
+        <!-- s003 开场动画 -->
+        <mxCell id="n4" value="s003：开场动画&#xa;2001年12月，冬夜（周日）&#xa;邮件：云起网络赠送域名主机" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="280" y="320" width="200" height="70" as="geometry"/>
         </mxCell>
 
-        <!-- 任务4 -->
-        <mxCell id="n5" value="任务4：百度首次收录&#xa;触发：发布第5篇后事件 | 奖励：访问量+100" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="640" y="400" width="160" height="50" as="geometry"/>
+        <!-- 里程碑：prologue_completed -->
+        <mxCell id="m1" value="✓ prologue_completed&#xa;开场动画完成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="280" y="420" width="200" height="40" as="geometry"/>
         </mxCell>
 
-        <!-- 任务5 -->
-        <mxCell id="n6" value="任务5：网站备案&#xa;触发：2002年事件 | 体力-10" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="640" y="480" width="160" height="50" as="geometry"/>
+        <!-- s004 博客搭建 -->
+        <mxCell id="n5" value="s004：博客搭建动画&#xa;博客正式上线提示&#xa;域名+主机：2001-12-4-7 至 2002-12-4-7" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="280" y="500" width="240" height="70" as="geometry"/>
         </mxCell>
 
-        <!-- 任务6 -->
-        <mxCell id="n7" value="任务6：开通RSS订阅&#xa;触发：主动 | 体力-10 | 解锁：订阅者系统" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="640" y="560" width="160" height="50" as="geometry"/>
+        <!-- 暂停状态 -->
+        <mxCell id="pause1" value="⏸ 游戏时间暂停&#xa;time_stop = true" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#e91e63;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="280" y="610" width="200" height="45" as="geometry"/>
         </mxCell>
 
-        <!-- 任务7 -->
-        <mxCell id="n8" value="任务7：加入博客联盟&#xa;触发：主动 | 体力-10 | 奖励：友链+1、访问量+50" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="640" y="640" width="160" height="50" as="geometry"/>
+        <!-- 初始任务锁定 -->
+        <mxCell id="lock1" value="🔒 16个日常任务初始禁用&#xa;（生活日记、网站运维、安全维护等）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#e91e63;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="280" y="680" width="240" height="45" as="geometry"/>
         </mxCell>
 
-        <!-- 任务8 -->
-        <mxCell id="n9" value="任务8：加入广告联盟&#xa;触发：主动 | 体力-10 | 解锁：广告投放" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="640" y="720" width="160" height="50" as="geometry"/>
+        <!-- 第一篇博文任务 -->
+        <mxCell id="n6" value="main：游戏主场景&#xa;选择「第一篇博文」任务&#xa;时间：2001-12-4-1（周一）&#xa;体力-20" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#4caf50;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="280" y="820" width="240" height="80" as="geometry"/>
         </mxCell>
 
-        <!-- 任务9 -->
-        <mxCell id="n10" value="任务9：第一笔广告收益&#xa;触发：加入广告联盟30天后 | 奖励：+12.5元" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="640" y="800" width="160" height="50" as="geometry"/>
+        <!-- 触发事件 -->
+        <mxCell id="trigger1" value="📤 发布第一篇博文&#xa;触发 post_event&#xa;条件：first_post_eq_1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1bee7;strokeColor=#9c27b0;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="600" y="820" width="200" height="55" as="geometry"/>
         </mxCell>
 
-        <!-- 任务10 -->
-        <mxCell id="n11" value="任务10：年度总结2005&#xa;触发：2005年12月 | 体力-30 | 奖励：经验+20" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="640" y="880" width="160" height="50" as="geometry"/>
+        <!-- 解锁结果 -->
+        <mxCell id="unlock1" value="✅ 解锁结果：&#xa;1. UNLOCK_INITIAL_TASKS&#xa;   → 16个任务变为可选&#xa;2. START_GAME_TIME&#xa;   → time_stop = false&#xa;3. SHOW_NOTIFICATION&#xa;   → 显示解锁提示" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c5ecd6;strokeColor=#4caf50;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="860" y="780" width="220" height="100" as="geometry"/>
         </mxCell>
 
-        <!-- 任务11 -->
-        <mxCell id="n12" value="任务11：博客优秀大奖2005&#xa;触发：任务10完成后 | 奖励：称号" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="640" y="960" width="160" height="50" as="geometry"/>
+        <!-- 正式进入游戏 -->
+        <mxCell id="n7" value="🎮 游戏正式开始&#xa;博客的运营，正式开始！" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=center;verticalAlign=middle;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="920" width="220" height="50" as="geometry"/>
         </mxCell>
 
-        <!-- 第一章结束 -->
-        <mxCell id="n13" value="第一章 完" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=center;verticalAlign=middle;fontSize=14;fontStyle=2;" vertex="1" parent="1">
-          <mxGeometry x="640" y="1040" width="160" height="50" as="geometry"/>
+        <!-- 分支2：读取存档 -->
+        <mxCell id="n8" value="点击【读取存档】&#xa;↓&#xa;加载存档数据&#xa;↓&#xa;直接进入主场景" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="600" y="165" width="200" height="90" as="geometry"/>
         </mxCell>
 
-        <!-- 连接线 -->
-        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n1" target="n2">
+        <!-- 退出游戏 -->
+        <mxCell id="n9" value="点击【退出游戏】&#xa;→ 游戏退出" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontColor=#999999;" vertex="1" parent="1">
+          <mxGeometry x="880" y="165" width="140" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- 连接线：主菜单 → 新建游戏 -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n1" target="n2">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n2" target="n3">
+
+        <!-- 连接线：新建游戏 → s002 -->
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n2" target="n3">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n3" target="n4">
+
+        <!-- 连接线：s002 → s003 -->
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n3" target="n4">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n4" target="n5">
+
+        <!-- 连接线：s003 → 里程碑 -->
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n4" target="m1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n5" target="n6">
+
+        <!-- 连接线：里程碑 → s004 -->
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9673a6;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="m1" target="n5">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n6" target="n7">
+
+        <!-- 连接线：s004 → 暂停状态 -->
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n5" target="pause1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n7" target="n8">
+
+        <!-- 连接线：暂停状态 → 任务锁定 -->
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e91e63;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="pause1" target="lock1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n8" target="n9">
+
+        <!-- 连接线：任务锁定 → 第一篇博文 -->
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e91e63;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="lock1" target="n6">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n9" target="n10">
+
+        <!-- 连接线：第一篇博文 → 触发事件 -->
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4caf50;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n6" target="trigger1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n10" target="n11">
+
+        <!-- 连接线：触发事件 → 解锁结果 -->
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9c27b0;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="trigger1" target="unlock1">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n11" target="n12">
+
+        <!-- 连接线：解锁结果 → 正式进入游戏 -->
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=3;endArrow=classic;endFill=1;" edge="1" parent="1" source="unlock1" target="n7">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n12" target="n13">
+
+        <!-- 连接线：主菜单 → 读取存档 -->
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n1" target="n8">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 连接线：读取存档 → main（快捷） -->
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=3;endArrow=classic;endFill=1;dashed=1;" edge="1" parent="1" source="n8" target="n7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="700"/>
+              <mxPoint x="700" y="700"/>
+              <mxPoint x="700" y="700"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 连接线：主菜单 → 退出游戏 -->
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#999999;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n1" target="n9">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
 
         <!-- 图例 -->
-        <mxCell id="legend" value="图例" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+        <mxCell id="legend_title" value="图例" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="60" y="80" width="60" height="20" as="geometry"/>
         </mxCell>
-        <mxCell id="leg1" value="自动触发" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+        <mxCell id="leg1" value="系统入口/菜单" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
           <mxGeometry x="60" y="110" width="100" height="28" as="geometry"/>
         </mxCell>
-        <mxCell id="leg2" value="玩家主动" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+        <mxCell id="leg2" value="玩家主动操作" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
           <mxGeometry x="60" y="145" width="100" height="28" as="geometry"/>
         </mxCell>
-        <mxCell id="leg3" value="事件触发" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+        <mxCell id="leg3" value="剧情/动画场景" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
           <mxGeometry x="60" y="180" width="100" height="28" as="geometry"/>
         </mxCell>
-        <mxCell id="leg4" value="章节终点" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+        <mxCell id="leg4" value="里程碑" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
           <mxGeometry x="60" y="215" width="100" height="28" as="geometry"/>
         </mxCell>
-
-        <!-- 章节目标面板 -->
-        <mxCell id="goal_title" value="章节目标" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="60" y="270" width="100" height="20" as="geometry"/>
+        <mxCell id="leg5" value="游戏终点/主场景" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="250" width="100" height="28" as="geometry"/>
         </mxCell>
-        <mxCell id="goal_bg" value="等级 ≥10&#xa;文章数 ≥100篇&#xa;访问量 ≥5万&#xa;文学技能 ≥20&#xa;编程技能 ≥20&#xa;博客联盟 ≥1个&#xa;友链 ≥1个" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;fontSize=11;fontColor=#333333;spacing=8;spacingTop=8;" vertex="1" parent="1">
-          <mxGeometry x="60" y="295" width="140" height="160" as="geometry"/>
+        <mxCell id="leg6" value="系统暂停/锁定" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#e91e63;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="60" y="285" width="100" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg7" value="快捷路径" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#b85450;align=center;verticalAlign=middle;fontSize=10;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="320" width="100" height="28" as="geometry"/>
+        </mxCell>
+
+        <!-- 说明面板 -->
+        <mxCell id="note_title" value="流程说明" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="60" y="370" width="100" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="note_bg" value="【新建游戏流程】&#xa;1. s001主菜单点击【新建游戏】&#xa;2. s002填写博客信息&#xa;3. s003开场动画（2001年12月，周日）&#xa;4. 触发 prologue_completed 里程碑&#xa;5. s004博客搭建动画&#xa;6. 进入 main 主场景（时间暂停）&#xa;7. 选择「第一篇博文」任务&#xa;8. 发布后触发解锁事件&#xa;&#xa;【读取存档流程】&#xa;1. s001主菜单点击【读取存档】&#xa;2. 加载存档数据&#xa;3. 直接进入 main 主场景&#xa;&#xa;【退出游戏】&#xa;直接退出游戏程序" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;fontSize=10;fontColor=#333333;spacing=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="60" y="395" width="200" height="260" as="geometry"/>
+        </mxCell>
+
+        <!-- 时间说明 -->
+        <mxCell id="time_note" value="⏰ 时间系统&#xa;━━━━━━━━━━━━━━━&#xa;起始时间：2001-12-4-7&#xa;（2001年12月第4周周日）&#xa;━━━━━━━━━━━━━━━&#xa;域名/主机到期：&#xa;2002-12-4-7&#xa;━━━━━━━━━━━━━━━&#xa;第一篇博文触发：&#xa;2001-12-4-1（周一）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#2196f3;align=left;verticalAlign=top;fontSize=10;fontColor=#1565c0;spacing=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="60" y="680" width="180" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- 初始任务列表 -->
+        <mxCell id="task_list" value="📋 初始禁用的16个任务&#xa;━━━━━━━━━━━━━━━&#xa;【日常创作】4个&#xa;生活日记、网站运维&#xa;观影读书、Coding笔记&#xa;&#xa;【网站维护】5个&#xa;安全维护、SEO优化&#xa;页面美化、友链维护&#xa;评论管理&#xa;&#xa;【休闲娱乐】5个&#xa;打游戏、吃烧烤&#xa;和宠物玩、自驾游、开Party&#xa;&#xa;【自律学习】2个&#xa;文学入门、自学编程" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#ff9800;align=left;verticalAlign=top;fontSize=9;fontColor=#e65100;spacing=3;spacingTop=3;" vertex="1" parent="1">
+          <mxGeometry x="560" y="940" width="280" height="180" as="geometry"/>
+        </mxCell>
+
+        <!-- 任务ID -->
+        <mxCell id="task_id" value="任务ID：unlock_blogging_start&#xa;条件：first_post_eq_1&#xa;触发：post_event" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8eaf6;strokeColor=#3f51b5;align=center;verticalAlign=middle;fontSize=9;" vertex="1" parent="1">
+          <mxGeometry x="560" y="920" width="280" height="35" as="geometry"/>
+        </mxCell>
+
+        <!-- 箭头指向 main -->
+        <mxCell id="arrow_label" value="← 快捷路径" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=9;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="800" y="920" width="80" height="20" as="geometry"/>
         </mxCell>
 
       </root>

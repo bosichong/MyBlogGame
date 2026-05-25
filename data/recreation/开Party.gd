@@ -8,7 +8,7 @@ var item = {
     "name": "开Party",
     "tip": "花费1000元举办派对，社交放松，恢复150体力，冷却3天！",
     "isVisible": true,
-    "disabled": false,
+    "disabled": true,
     "pressed": false,
     "money": 1000,
     "stamina": 150,

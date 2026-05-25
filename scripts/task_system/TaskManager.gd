@@ -78,10 +78,6 @@ func _force_check_skill_tasks() -> void:
     var code_level = Blogger.get_ability_by_type("code") if Blogger.has_method("get_ability_by_type") else 0
     check_tasks_by_trigger("skill_up", {"skill_type": Blogger.Skills.CODE, "level": code_level})
 
-    # 检查绘画技能 - 已禁用
-    # var draw_level = Blogger.get_ability_by_type("draw") if Blogger.has_method("get_ability_by_type") else 0
-    # check_tasks_by_trigger("skill_up", {"skill_type": Blogger.Skills.DRAW, "level": draw_level})
-
     # 检查时间任务
     _check_time_tasks()
 
@@ -341,7 +337,6 @@ func _get_skill_enum(skill_name: String) -> int:
     match skill_name.to_upper():
         "LITERATURE": return Blogger.Skills.LITERATURE
         "CODE": return Blogger.Skills.CODE
-        # "DRAW": return Blogger.Skills.DRAW  # 已禁用
         _:
             return -1
 
@@ -350,7 +345,6 @@ func _get_skill_string(skill_name: String) -> String:
     match skill_name.to_upper():
         "LITERATURE": return "literature"
         "CODE": return "code"
-        "DRAW": return "draw"
         _:
             return ""
 
@@ -365,10 +359,6 @@ func check_book_writing(_context: Dictionary) -> bool:
 ## 检查文学IP授权条件
 func check_literature_ip_auth(_context: Dictionary) -> bool:
     return IPAuthMgr.check_literature_ip_auth(_context) if IPAuthMgr else false
-
-## 检查绘画IP授权条件
-func check_draw_ip_auth(_context: Dictionary) -> bool:
-    return IPAuthMgr.check_draw_ip_auth(_context) if IPAuthMgr else false
 
 ## 检查是否正在开发开源项目
 func check_open_source_project(_context: Dictionary) -> bool:
@@ -433,6 +423,12 @@ func _execute_action(action: Dictionary) -> void:
             OpenSourceMgr.action_os_progress(action.get("progress", 1)) if OpenSourceMgr else null
         TaskConfig_ActionType.OPEN_SOURCE_ACQUISITION:
             OpenSourceMgr.action_open_source_acquisition() if OpenSourceMgr else null
+        TaskConfig_ActionType.UNLOCK_INITIAL_TASKS:
+            _action_unlock_initial_tasks()
+        TaskConfig_ActionType.START_GAME_TIME:
+            _action_start_game_time()
+        TaskConfig_ActionType.SET_STORY_MILESTONE:
+            _action_set_story_milestone(action)
         _:
             push_warning("[TaskManager] Unhandled action type: %s" % action_type)
 
@@ -594,6 +590,97 @@ func _action_unlock_milestone(action: Dictionary) -> void:
         return
 
     m.unlocked = true
+
+## 动作:解锁初始任务选项
+func _action_unlock_initial_tasks() -> void:
+    if not Utils:
+        push_error("[TaskManager] Utils not available")
+        return
+    
+    # 日常创作
+    _set_category_disabled("生活日记", false)
+    _set_category_disabled("网站运维", false)
+    _set_category_disabled("观影读书", false)
+    _set_category_disabled("Coding笔记", false)
+    
+    # 网站维护
+    _set_maintenance_disabled("安全维护", false)
+    _set_maintenance_disabled("SEO优化", false)
+    _set_maintenance_disabled("页面美化", false)
+    _set_maintenance_disabled("友链维护", false)
+    _set_maintenance_disabled("评论管理", false)
+    
+    # 休闲娱乐
+    _set_recreation_disabled("打游戏", false)
+    _set_recreation_disabled("吃烧烤", false)
+    _set_recreation_disabled("和宠物玩", false)
+    _set_recreation_disabled("城市周边自驾游", false)
+    _set_recreation_disabled("开Party", false)
+    
+    # 自律学习
+    _set_skill_disabled("文学入门", false)
+    _set_skill_disabled("自学编程", false)
+    
+    emit_signal("sg_task_show_popup_msg", "🎉 博客的运营，正式开始！", """
+========================================
+📝 日常创作已解锁：生活日记、网站运维、观影读书、Coding笔记
+🔧 网站维护已解锁：安全维护、SEO优化、页面美化、友链维护、评论管理
+🎮 休闲娱乐已解锁：打游戏、吃烧烤，和宠物玩、城市周边自驾游，开Party
+📚 自律学习已解锁：文学入门、自学编程
+========================================
+    """.dedent().strip_edges())
+
+## 动作:启动游戏时间（弹窗关闭后生效）
+func _action_start_game_time() -> void:
+    # 不在这里启动，等弹窗关闭后在 main.gd 中启动
+    print("[游戏时间] 博客的运营正式开始，等待弹窗确认...")
+
+## 动作:设置剧情里程碑
+func _action_set_story_milestone(action: Dictionary) -> void:
+    var chapter = action.get("chapter", 1)
+    var milestone = action.get("milestone", "")
+    if milestone.is_empty():
+        push_error("[TaskManager] SET_STORY_MILESTONE: milestone is empty")
+        return
+    if GDManager:
+        GDManager.get_story_progress().set_completed(chapter, milestone)
+        var sp = GDManager.get_story_progress()
+        var chapter_name = sp.get_chapter_name(chapter)
+        var desc = sp.get_milestone_description(chapter, milestone)
+        print("[StoryProgress] %s" % chapter_name)
+        print("[StoryProgress]   ✓ 里程碑已完成: %s" % desc)
+
+## 设置分类项目禁用状态
+func _set_category_disabled(name: String, disabled: bool) -> void:
+    if not Utils:
+        return
+    var d = Utils.find_category_by_name(Utils.possible_categories, name, true)
+    if not d.is_empty():
+        d["disabled"] = disabled
+
+## 设置维护项目禁用状态
+func _set_maintenance_disabled(name: String, disabled: bool) -> void:
+    if not Utils:
+        return
+    var d = Utils.find_category_by_name(Utils.website_maintenance, name, true)
+    if not d.is_empty():
+        d["disabled"] = disabled
+
+## 设置娱乐项目禁用状态
+func _set_recreation_disabled(name: String, disabled: bool) -> void:
+    if not Utils:
+        return
+    var d = Utils.find_category_by_name(Utils.recreation, name, true)
+    if not d.is_empty():
+        d["disabled"] = disabled
+
+## 设置技能项目禁用状态
+func _set_skill_disabled(name: String, disabled: bool) -> void:
+    if not Utils:
+        return
+    var d = Utils.find_category_by_name(Utils.learning_skills, name, true)
+    if not d.is_empty():
+        d["disabled"] = disabled
 
 ## ============================================================
 ## 月结算接口（委托给子模块）

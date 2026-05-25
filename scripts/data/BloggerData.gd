@@ -7,7 +7,7 @@ class_name BloggerData
 # ============================================
 
 ## 等级（1-100）
-var level: int = 91
+var level: int = 1
 
 ## 经验值
 var exp: int = 0
@@ -24,19 +24,16 @@ var attribute_points: int = 0
 # ============================================
 
 ## 写作能力：影响所有文章的质量分
-var writing_ability: float = 90
+var writing_ability: float = 0
 
 ## 技术能力：影响技术类文章质量和网站维护效果
-var technical_ability: float = 90
+var technical_ability: float = 0
 
 ## 编程能力：影响编程教程、黑客攻防等技术文章质量
-var code_ability: float = 91
+var code_ability: float = 0
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 91
-
-## 绘画能力：影响艺术类文章质量（插画壁纸、绘画教程等）
-var drawing_ability: float = 0  # 【已禁用】
+var literature_ability: float = 0
 
 # ============================================
 # 资源
@@ -240,7 +237,7 @@ func set_level(new_level: int):
     emit_signal("level_changed", level)
 
 ## 设置能力值
-## ability_type: "writing", "technical", "code", "literature", "drawing"
+## ability_type: "writing", "technical", "code", "literature"
 func set_ability(ability_type: String, new_value: float):
     match ability_type:
         "writing":
@@ -251,9 +248,6 @@ func set_ability(ability_type: String, new_value: float):
             code_ability = new_value
         "literature":
             literature_ability = new_value
-        "drawing":  # 【已禁用】
-            # drawing_ability = new_value
-            pass
     emit_signal("ability_changed", ability_type, new_value)
 
 ## 添加新文章

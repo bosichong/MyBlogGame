@@ -31,8 +31,6 @@ func get_quality(category: String) -> int:
         return int(Blogger.writing_ability * 0.5 + Blogger.technical_ability * 0.5 + Blogger.code_ability * 0.5 + Blogger.literature_ability * 0.5)
     elif category in tech:
         return int(Blogger.writing_ability * 0.5 + Blogger.code_ability + Blogger.literature_ability * 0.5)
-    # elif category in art:  # 艺术已禁用
-    #     return int(Blogger.writing_ability * 0.5 + Blogger.drawing_ability + Blogger.literature_ability * 0.5)
     elif category == "出书笔记":
         # 出书笔记：写作能力 + 文学能力
         return int(Blogger.writing_ability + Blogger.literature_ability)

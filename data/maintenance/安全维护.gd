@@ -10,7 +10,7 @@ var item = {
     "category": "网站维护",
     "content_type": "安全",
     "isVisible": true,
-    "disabled": false,
+    "disabled": true,
     "pressed": false,
     "money": 10,
     "is_money": true,

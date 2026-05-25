@@ -14,7 +14,7 @@ var item = {
     "unlock_post_tip": "可以开始学习文学知识了",
     "lock_post_tip": "文学1级学习已经完成",
     "isVisible": true,
-    "disabled": false,
+    "disabled": true,
     "money": 10,
     "stamina": 10,
 }

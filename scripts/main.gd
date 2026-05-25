@@ -154,8 +154,6 @@ func update_ui():
     $ui/r_panel/top/codeProgressBar.set_value_no_signal(Blogger.code_ability) 
     $ui/r_panel/top/literatureProgressBar.show_percentage = false
     $ui/r_panel/top/literatureProgressBar.set_value_no_signal(Blogger.literature_ability) 
-    $ui/r_panel/top/drawingProgressBar.show_percentage = false
-    # $ui/r_panel/top/drawingProgressBar.set_value_no_signal(Blogger.drawing_ability)  # 【已禁用】 
 
 ## 游戏时间倍数运行控制
 func time_stop_bt():
@@ -445,7 +443,13 @@ func _on_paid_income_settled(msg):
     info_display.add_message(msg)
 
 func _close_ac():
-    TimerManager.start_timer()
+    print("[DEBUG] _close_ac 被调用")
+    print("[DEBUG] 恢复前: time_stop = %s" % TimerManager.time_stop)
+    # 先启动时间
+    TimerManager.timer.start()
+    TimerManager.time_stop = false
+    print("[DEBUG] 恢复后: time_stop = %s" % TimerManager.time_stop)
+    print("[游戏时间] 博客的运营正式开始，时间开始运行！")
 
 func sg_task_info_display_msg(msg):
     info_display.add_message(msg)
@@ -458,7 +462,13 @@ func _on_skill_learned(skill_name: String, tip: String):
         $日程.up_data()
 
 func sg_task_show_popup_msg(title: String, content: String):
-    show_popup_message(title,content)
+    # 强制暂停时间（不管当前状态）
+    print("[DEBUG] sg_task_show_popup_msg 被调用")
+    print("[DEBUG] time_stop = %s, timer paused = %s" % [TimerManager.time_stop, TimerManager.timer.is_paused()])
+    TimerManager.timer.stop()
+    TimerManager.time_stop = true
+    print("[DEBUG] 暂停后: time_stop = %s, timer paused = %s" % [TimerManager.time_stop, TimerManager.timer.is_paused()])
+    show_popup_message(title, content)
 
 # ===== 主机域名系统信号处理 =====
 

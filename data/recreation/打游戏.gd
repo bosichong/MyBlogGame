@@ -8,7 +8,7 @@ var item = {
     "name": "打游戏",
     "tip": "花费50元打游戏娱乐，放松身心，恢复80体力！",
     "isVisible": true,
-    "disabled": false,
+    "disabled": true,
     "pressed": false,
     "money": 50,
     "stamina": 80,

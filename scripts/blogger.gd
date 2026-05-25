@@ -32,12 +32,7 @@ func calculate_paid_income(new_views: int, avg_quality: float) -> int:
     # 收入 = 订阅人数 × 固定价格
     return int(subscribers * PAID_SUBSCRIPTION_PRICE)
 
-enum Blog_Type {
-    文学,
-    编程,
-    # 艺术,  # 已禁用
-    综合,
-}
+
 # 核心属性 - 博客作者的五个关键能力
 ## 最高等级
 const MAX_LEVEL = 100
@@ -45,6 +40,15 @@ const MAX_LEVEL = 100
 const MAX_SKILL_LEVEL = 100
 
 # ===== 向后兼容的属性访问 =====
+
+
+
+enum Blog_Type {
+    文学,
+    编程,
+    # 艺术,  # 已禁用
+    综合,
+}
 
 ## 博客属性
 var myblog_type = Blog_Type.文学
@@ -80,14 +84,6 @@ var code_ability: float:
     set(value):
         if GDManager:
             GDManager.get_blogger().code_ability = value
-
-## 绘画能力:最后可以为原画师和大画家。【已禁用】
-# var drawing_ability: float:
-#     get:
-#         return GDManager.get_blogger().drawing_ability if GDManager else tmp_v
-#     set(value):
-#         if GDManager:
-#             GDManager.get_blogger().drawing_ability = value
 
 ## 体力值:创作文章,维护博客,社交需要体力值。
 var stamina : int:
@@ -379,10 +375,6 @@ func week_activites():
     blogger.design_value = Utils.decrease_value_safely(blogger.design_value, 1, 3)
     blogger.rss = Utils.decrease_rss(blogger.rss)
     del_fa()
-
-    # 判断绘画技能值>=25时,开启页面美化【已禁用】
-    # if blogger.drawing_ability >= 25:
-    #     tmp_design.disabled = false
 
 ## 博客文章收藏量在三个月后始递减
 func del_fa():
@@ -1047,7 +1039,6 @@ func playgame(category : String) -> int:
 enum Skills {
     LITERATURE,#文学
     CODE,      #编程
-    # DRAW,      #绘画  # 已禁用
 }
 
 signal skill_level_up(type: int, lv: float)
@@ -1149,9 +1140,6 @@ func get_ability_by_type(skill_type: String) -> float:
             return float(blogger.code_ability)
         "literature":
             return float(blogger.literature_ability)
-        "draw":  # 【已禁用】
-            # return float(blogger.drawing_ability)
-            return 0.0
     return 0.0
 
 
@@ -1167,10 +1155,6 @@ func set_ability_by_type(skill_type: String, value: float):
         "literature":
             blogger.literature_ability = value
             blogger.set_ability("literature", value)
-        "draw":  # 【已禁用】
-            # blogger.drawing_ability = value
-            # blogger.set_ability("drawing", value)
-            pass
 
 
 ## 技能类型转枚举
@@ -1180,9 +1164,6 @@ func get_skill_type_enum(skill_type: String) -> int:
             return Skills.CODE
         "literature":
             return Skills.LITERATURE
-        "draw":  # 已禁用
-            # return Skills.DRAW
-            return 0
     return 0
 
 

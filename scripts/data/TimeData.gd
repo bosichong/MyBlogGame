@@ -1,21 +1,21 @@
 class_name TimeData
 
-const GAME_START_YEAR: int = 2002
+const GAME_START_YEAR: int = 2001
 
 var current_year: int = GAME_START_YEAR
-var current_month: int = 1
-var current_week: int = 1
-var current_day: int = 1
+var current_month: int = 12
+var current_week: int = 4
+var current_day: int = 7
 var current_quarter: int = 1
 
 var time_scale: float = 1.0
 var is_paused: bool = false
 
 ## 游戏起始日期（格式：年-月-周-日）
-var game_start_date: String = "2002-1-1-1"
+var game_start_date: String = "2001-12-4-7"
 
 ## 当前日期字符串
-var current_date_str: String = "2002-1-1-1"
+var current_date_str: String = "2001-12-4-7"
 
 signal day_passed
 signal week_passed

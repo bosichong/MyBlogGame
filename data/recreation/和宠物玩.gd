@@ -8,7 +8,7 @@ var item = {
     "name": "和宠物玩",
     "tip": "免费和自家宠物一起玩耍，放松心情，恢复40体力！",
     "isVisible": true,
-    "disabled": false,
+    "disabled": true,
     "pressed": false,
     "money": 0,
     "stamina": 40,

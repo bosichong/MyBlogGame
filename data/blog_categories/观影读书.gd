@@ -9,7 +9,7 @@ var item = {
     "category": "文学",
     "content_type": "免费",
     "isVisible": true,
-    "disabled": false,
+    "disabled": true,
     "pressed": false,
     "money": 0,
     "is_money": false,

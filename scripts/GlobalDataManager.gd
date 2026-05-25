@@ -227,6 +227,9 @@ func get_friend_link() -> FriendLinkData:
 func get_comment() -> CommentData:
     return data_container.get_comment()
 
+func get_story_progress() -> StoryProgress:
+    return data_container.get_story_progress()
+
 func get_friend_link_manager() -> FriendLinkManager:
     return friend_link_manager
 

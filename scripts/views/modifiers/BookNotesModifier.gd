@@ -34,36 +34,31 @@ func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
 func _calculate_avg_skill_score(blogger: Dictionary) -> float:
     var literature = blogger.get("literature_level", 0.0)
     var code = blogger.get("code_level", 0.0)
-    # var draw = blogger.get("draw_level", 0.0)  # 【已禁用】
     
     # 如果博客数据没有直接的技能值，尝试从Blogger获取
     if Blogger and Blogger.has_method("get_ability_by_type"):
         literature = Blogger.get_ability_by_type("literature")
         code = Blogger.get_ability_by_type("code")
-        # draw = Blogger.get_ability_by_type("draw")  # 【已禁用】
     
-    # 综合评分 = (文学 + 编程) / 2 （绘画已禁用）
+    # 综合评分 = 两项技能平均值
     return (literature + code) / 2.0
 
 ## 获取综合评分信息（用于UI显示）
 func get_skill_score_info(blogger: Dictionary) -> Dictionary:
     var literature = 0.0
     var code = 0.0
-    # var draw = 0.0  # 【已禁用】
     
     if Blogger and Blogger.has_method("get_ability_by_type"):
         literature = Blogger.get_ability_by_type("literature")
         code = Blogger.get_ability_by_type("code")
-        # draw = Blogger.get_ability_by_type("draw")  # 【已禁用】
     
-    # 综合评分 = (文学 + 编程) / 2 （绘画已禁用）
+    # 综合评分 = 两项技能平均值
     var avg_score = (literature + code) / 2.0
     var bonus_ratio = avg_score / 50.0
     
     return {
         "literature": literature,
         "code": code,
-        "draw": 0,  # 已禁用
         "avg_score": avg_score,
         "bonus_ratio": bonus_ratio,
         "bonus_percent": int(bonus_ratio * 100)

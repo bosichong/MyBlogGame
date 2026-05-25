@@ -46,7 +46,7 @@ const six_months = 6 # 半年
 const months_in_year = 12 # 每年12个月
 ## 创建一个系统的时间timer
 var timer : Timer
-var time_stop : bool = false # 时间是否停止
+var time_stop : bool = true # 时间是否停止（初始为true，游戏开始时暂停）
 
 # 信号
 signal day_passed
@@ -64,6 +64,7 @@ signal s_ad_money_2 # 每月第二周第一天发放佣金
 func _ready() -> void:
     timer = Timer.new()
     timer.wait_time = 1 # *秒模拟一天
+    timer.one_shot = true  # 单次触发模式，启动后只执行一次
     add_child(timer)
     timer.timeout.connect(_on_day_passed)
     
@@ -75,8 +76,10 @@ func _ready() -> void:
 # 定时器触发
 ## 每天更新事件，游戏的核心更新信号量
 func _on_day_passed():
+    print("[DEBUG] _on_day_passed 被调用, time_stop = %s" % time_stop)
     # 如果时间已停止（游戏结束），不再处理
     if time_stop:
+        print("[DEBUG] 时间已停止，跳过")
         return
     
     if GDManager:
@@ -88,6 +91,10 @@ func _on_day_passed():
             emit_signal("s_ad_money_1")
         if time_data.current_week == 2 and time_data.current_day == 1:
             emit_signal("s_ad_money_2")
+    
+    # ONE_SHOT 模式：手动重新启动 timer
+    if not time_stop:
+        timer.start()
     
     
 
@@ -135,12 +142,12 @@ func is_match(value: int, array: Array) -> bool:
 
 # 安全地停止 Timer
 func stop_timer():
-    if not TimerManager.time_stop:
-        TimerManager.timer.stop()
-        TimerManager.time_stop = true
+    if not time_stop:
+        timer.stop()
+        time_stop = true
 
 # 安全地启动 Timer
 func start_timer():
-    if TimerManager.time_stop:
-        TimerManager.timer.start()
-        TimerManager.time_stop = false
+    if time_stop:
+        timer.start()
+        time_stop = false

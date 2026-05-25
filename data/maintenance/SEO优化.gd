@@ -10,7 +10,7 @@ var item = {
     "category": "网站维护",
     "content_type": "SEO",
     "isVisible": true,
-    "disabled": false,
+    "disabled": true,
     "pressed": false,
     "money": 0,
     "is_money": false,

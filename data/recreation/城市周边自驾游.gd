@@ -8,7 +8,7 @@ var item = {
     "name": "城市周边自驾游",
     "tip": "花费500元周边自驾游，放松心情，呼吸新鲜空气，恢复120体力！",
     "isVisible": true,
-    "disabled": false,
+    "disabled": true,
     "pressed": false,
     "money": 500,
     "stamina": 120,

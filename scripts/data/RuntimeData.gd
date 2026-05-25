@@ -9,6 +9,7 @@ var task: TaskData = TaskData.new()
 var league: LeagueData = LeagueData.new()
 var friend_link: FriendLinkData = FriendLinkData.new()
 var comment: CommentData = CommentData.new()
+var story_progress: StoryProgress = StoryProgress.new()
 
 func reset():
 	blogger = BloggerData.new()
@@ -20,3 +21,4 @@ func reset():
 	league = LeagueData.new()
 	friend_link = FriendLinkData.new()
 	comment = CommentData.new()
+	story_progress = StoryProgress.new()
