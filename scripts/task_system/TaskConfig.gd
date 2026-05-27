@@ -38,7 +38,6 @@ enum ActionType {
     MODIFY_ATTRIBUTE,        # 修改属性
     UNLOCK_MILESTONES_TASK,  # 解锁成就
     CHANGE_SCENE,            # 切换场景
-    SHOW_NOTIFICATION,       # 显示通知
     CUSTOM_ACTION,           # 自定义动作
     START_BOOK_WRITE,        # 开始写书（出版畅销书）
     BOOK_PROGRESS,           # 写书进度更新
@@ -52,6 +51,8 @@ enum ActionType {
     UNLOCK_INITIAL_TASKS,    # 解锁初始16个任务选项（日常创作、网站维护、休闲娱乐、自律学习）
     START_GAME_TIME,         # 启动游戏时间（从暂停状态恢复）
     SET_STORY_MILESTONE,    # 设置剧情里程碑（chapter: int, milestone: String）
+    SHOW_NOTIFICATION,       # 显示信息通知（显示在信息区域）
+    SHOW_POPUP_NOTIFICATION, # 显示弹窗通知（弹出窗口）
     SEO_NOTIFICATION,        # SEO提示弹窗+升级奖励
 }
 
@@ -66,7 +67,7 @@ const CONDITIONS: Dictionary = {
     # SEO收录状态条件（未收录时触发）
     "sousuo_not_indexed": {"type": ConditionType.CUSTOM, "check_func": "check_sousuo_not_indexed"},
     
-    # 里程碑已完成条件（用于跳过剧情）
+# 里程碑已完成条件（用于跳过剧情）
     "first_article_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_posted", "completed": false},
     "first_article_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_posted", "completed": true},
 
@@ -488,13 +489,28 @@ const TASKS: Array = [
     {
         "id": "unlock_blogging_start",
         "description": "第一篇博文发布成功，博客运营正式开始！",
-        "conditions": ["first_post_eq_1"],
+        "conditions": ["first_post_eq_1", "first_article_not_done"],
         "is_repeatable": false,
         "trigger_type": "post_event",
         "actions": [
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "first_article_posted"},
             {"type": ActionType.UNLOCK_INITIAL_TASKS},
-            {"type": ActionType.SHOW_NOTIFICATION, "message": "博客的运营，正式开始！"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🎉 博客的运营，正式开始！", "content": "========================================\n📝 日常创作已解锁：生活日记、网站运维、观影读书、Coding笔记\n🔧 网站维护已解锁：安全维护、SEO优化、页面美化、友链维护、评论管理\n🎮 休闲娱乐已解锁：打游戏、吃烧烤，和宠物玩、城市周边自驾游，开Party\n📚 自律学习已解锁：文学入门、自学编程\n========================================"},
+            {"type": ActionType.START_GAME_TIME},
+        ],
+    },
+    
+    # ====================
+    # 跳过第一篇博文时解锁日常任务（调试用）
+    # ====================
+    {
+        "id": "unlock_initial_tasks_debug",
+        "description": "调试跳过：first_article_posted=true 时直接解锁16个日常任务",
+        "conditions": ["first_article_completed"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.UNLOCK_INITIAL_TASKS},
             {"type": ActionType.START_GAME_TIME},
         ],
     },

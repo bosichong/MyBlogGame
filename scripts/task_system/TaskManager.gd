@@ -477,6 +477,10 @@ func _execute_action(action: Dictionary) -> void:
             _action_start_game_time()
         TaskConfig_ActionType.SET_STORY_MILESTONE:
             _action_set_story_milestone(action)
+        TaskConfig_ActionType.SHOW_NOTIFICATION:
+            _action_show_notification(action)
+        TaskConfig_ActionType.SHOW_POPUP_NOTIFICATION:
+            _action_show_popup_notification(action)
         TaskConfig_ActionType.SEO_NOTIFICATION:
             _action_seo_notification()
         _:
@@ -670,20 +674,24 @@ func _action_unlock_initial_tasks() -> void:
     # 自律学习
     _set_skill_disabled("文学入门", false)
     _set_skill_disabled("自学编程", false)
-    
-    emit_signal("sg_task_show_popup_msg", "🎉 博客的运营，正式开始！", """
-========================================
-📝 日常创作已解锁：生活日记、网站运维、观影读书、Coding笔记
-🔧 网站维护已解锁：安全维护、SEO优化、页面美化、友链维护、评论管理
-🎮 休闲娱乐已解锁：打游戏、吃烧烤，和宠物玩、城市周边自驾游，开Party
-📚 自律学习已解锁：文学入门、自学编程
-========================================
-    """.dedent().strip_edges())
 
 ## 动作:启动游戏时间（弹窗关闭后生效）
 func _action_start_game_time() -> void:
     # 不在这里启动，等弹窗关闭后在 main.gd 中启动
     print("[游戏时间] 博客的运营正式开始，等待弹窗确认...")
+
+## 动作:显示信息通知
+func _action_show_notification(action: Dictionary) -> void:
+    var message = action.get("message", "")
+    if not message.is_empty():
+        emit_signal("sg_task_info_display_msg", message)
+
+## 动作:显示弹窗通知
+func _action_show_popup_notification(action: Dictionary) -> void:
+    var title = action.get("title", "通知")
+    var content = action.get("content", "")
+    if not content.is_empty():
+        emit_signal("sg_task_show_popup_msg", title, content)
 
 ## 动作:SEO收录通知（弹窗+升级奖励）
 func _action_seo_notification() -> void:
