@@ -73,16 +73,16 @@ var blog_url: String = "suiyan.cc"
 ## 影响网站被攻击的概率，低于50容易出问题
 var safety_value: int = 100
 
-## SEO值（0-200）
+## SEO值（0-100）
 ## 影响基础访问量和搜索引擎收录
 ## 新网站SEO效果差，初始值设为50
 ## 通过"SEO优化"任务逐步提升
-var seo_value: int = 50
+var seo_value: int = 10
 
 ## 设计值（0-100）
 ## 影响访问量加成和页面美化效果
 ## 通过"页面美化"任务提升
-var design_value: int = 60
+var design_value: int = 50
 
 ## UI值（暂未使用）
 var ui_value: int = 0

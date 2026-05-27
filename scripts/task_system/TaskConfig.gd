@@ -20,8 +20,10 @@ enum ConditionType {
     SKILL_VALUE,     # 技能数值（能力值 0-100）
     SKILL_LEVEL,     # 技能等级（学习阶段 1-4）
     PLAYER_LEVEL,    # 玩家等级
-    POST_COUNT,      # 发布次数
+    POST_COUNT,      # 发布次数（按类型）
+    ARTICLE_COUNT,   # 文章总数（所有文章）
     TIME_MATCH,      # 时间匹配
+    MILESTONE_COMPLETED,  # 里程碑已完成（用于跳过剧情）
     CUSTOM,          # 自定义条件（通过函数名调用）
 }
 
@@ -50,6 +52,7 @@ enum ActionType {
     UNLOCK_INITIAL_TASKS,    # 解锁初始16个任务选项（日常创作、网站维护、休闲娱乐、自律学习）
     START_GAME_TIME,         # 启动游戏时间（从暂停状态恢复）
     SET_STORY_MILESTONE,    # 设置剧情里程碑（chapter: int, milestone: String）
+    SEO_NOTIFICATION,        # SEO提示弹窗+升级奖励
 }
 
 ## ============================================================
@@ -57,6 +60,16 @@ enum ActionType {
 ## ============================================================
 
 const CONDITIONS: Dictionary = {
+    # 文章总数条件
+    "article_count_ge_10": {"type": ConditionType.ARTICLE_COUNT, "op": CompareOp.GE, "value": 10},
+    
+    # SEO收录状态条件（未收录时触发）
+    "sousuo_not_indexed": {"type": ConditionType.CUSTOM, "check_func": "check_sousuo_not_indexed"},
+    
+    # 里程碑已完成条件（用于跳过剧情）
+    "first_article_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_posted", "completed": false},
+    "first_article_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_posted", "completed": true},
+
     # 技能数值条件 - 文学（每20能力值一个等级）
     "literature_value_ge_20": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 20},
     "literature_value_ge_40": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 40},
@@ -131,8 +144,8 @@ const SKILL_PROGRESS_CONFIG: Dictionary = {
             20: {"lock": "文学入门", "unlock": "写作新手"},
             40: {"lock": "写作新手", "unlock": "创作达人"},
             60: {"lock": "创作达人", "unlock": "人气作家"},
-            80: {"lock": "人气作家", "unlock": "文学大师"},
-            100: {"lock": "文学大师", "unlock": null},
+            80: {"lock": "人气作家", "unlock": "哲辩大师"},
+            100: {"lock": "哲辩大师", "unlock": null},
         }
     },
     "CODE": {
@@ -198,7 +211,7 @@ const TASKS: Array = [
         "is_repeatable": false,
         "actions": [
             {"type": ActionType.SKILL_LEVEL_LOCK, "skill_name": "人气作家"},
-            {"type": ActionType.SKILL_LEVEL_UNLOCK, "skill_name": "文学大师"},
+            {"type": ActionType.SKILL_LEVEL_UNLOCK, "skill_name": "哲辩大师"},
         ],
     },
     {
@@ -457,7 +470,7 @@ const TASKS: Array = [
         "description": "经过一阵子的折腾，博客终于正式上线了！当你准备好就可以发表博客的第一篇博文了！",
         "conditions": ["time_first_post_unlock"],
         "is_repeatable": false,
-        "trigger_type": "time_check",  # 需要定时检查
+        "trigger_type": "time_check",
         "actions": [
             {"type": ActionType.UNLOCK_POST_TASK, "post_type": "第一篇博文"},
         ],
@@ -467,7 +480,7 @@ const TASKS: Array = [
         "description": "你已经发布了博客第一篇博文，博客第一篇博文类型发布已锁定。",
         "conditions": ["first_post_eq_1"],
         "is_repeatable": false,
-        "trigger_type": "post_event",  # 发布时触发
+        "trigger_type": "post_event",
         "actions": [
             {"type": ActionType.HIDE_POST_TASK, "post_type": "第一篇博文"},
         ],
@@ -748,6 +761,21 @@ const TASKS: Array = [
         "duration_days": true,
         "actions": [
             {"type": ActionType.REPLACE_POST_TREND},
+        ],
+    },
+
+    # ====================
+    # SEO收录任务（文章数量达到10时触发，且未被收录）
+    # ====================
+    {
+        "id": "seo_indexed_notification",
+        "description": "博客文章被搜索引擎收录，提醒玩家SEO的重要性",
+        "conditions": ["article_count_ge_10", "sousuo_not_indexed"],
+        "trigger_type": "post_event",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SEO_NOTIFICATION},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "sousuo_indexed"},
         ],
     },
 ]

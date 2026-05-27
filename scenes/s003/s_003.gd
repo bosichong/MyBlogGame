@@ -34,6 +34,4 @@ func _on_dialog_confirmed():
 func _on_跳过游戏_pressed() -> void:
     GDManager.get_story_progress().set_completed(1, "prologue_completed")
     print("[StoryProgress] 里程碑已更新: prologue_completed = true")
-    GDManager.get_story_progress().set_completed(1, "blog_online")
-    print("[StoryProgress] 里程碑已更新: blog_online = true")
     Utils.goto_scene(S04_SCENE_PATH)

@@ -71,6 +71,7 @@ func _ready() -> void:
     $blog_dashboard.connect("close_blog_dashboard", _on_close_blog_dashboard)
     $m_main.connect("close_mialestones",_on_close_mialestones)
     $AcceptDialog.confirmed.connect(_close_ac)
+    $AcceptDialog.canceled.connect(_close_ac)
 
     TaskManager.connect("sg_task_info_display_msg",sg_task_info_display_msg)
     TaskManager.connect("schedule_refresh_needed", _on_schedule_refresh_needed)
@@ -443,12 +444,8 @@ func _on_paid_income_settled(msg):
     info_display.add_message(msg)
 
 func _close_ac():
-    print("[DEBUG] _close_ac 被调用")
-    print("[DEBUG] 恢复前: time_stop = %s" % TimerManager.time_stop)
-    # 先启动时间
     TimerManager.timer.start()
     TimerManager.time_stop = false
-    print("[DEBUG] 恢复后: time_stop = %s" % TimerManager.time_stop)
     print("[游戏时间] 博客的运营正式开始，时间开始运行！")
 
 func sg_task_info_display_msg(msg):
@@ -462,12 +459,6 @@ func _on_skill_learned(skill_name: String, tip: String):
         $日程.up_data()
 
 func sg_task_show_popup_msg(title: String, content: String):
-    # 强制暂停时间（不管当前状态）
-    print("[DEBUG] sg_task_show_popup_msg 被调用")
-    print("[DEBUG] time_stop = %s, timer paused = %s" % [TimerManager.time_stop, TimerManager.timer.is_paused()])
-    TimerManager.timer.stop()
-    TimerManager.time_stop = true
-    print("[DEBUG] 暂停后: time_stop = %s, timer paused = %s" % [TimerManager.time_stop, TimerManager.timer.is_paused()])
     show_popup_message(title, content)
 
 # ===== 主机域名系统信号处理 =====

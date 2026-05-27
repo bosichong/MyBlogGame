@@ -214,8 +214,12 @@ func _check_single_condition(cond, context: Dictionary) -> bool:
             return _check_player_level_condition(condition, context)
         TaskConfig_ConditionType.POST_COUNT:
             return _check_post_count_condition(condition, context)
+        TaskConfig_ConditionType.ARTICLE_COUNT:
+            return _check_article_count_condition(condition, context)
         TaskConfig_ConditionType.TIME_MATCH:
             return _check_time_condition(condition, context)
+        TaskConfig_ConditionType.MILESTONE_COMPLETED:
+            return _check_milestone_condition(condition, context)
         TaskConfig_ConditionType.CUSTOM:
             return _check_custom_condition(condition, context)
         _:
@@ -267,6 +271,22 @@ func _check_post_count_condition(cond: Dictionary, _context: Dictionary) -> bool
     var current_value = _get_post_count_by_type(post_type)
     return _compare(current_value, op, target_value)
 
+## 文章总数条件检查
+func _check_article_count_condition(cond: Dictionary, _context: Dictionary) -> bool:
+    var op = cond.get("op", TaskConfig_CompareOp.GE)
+    var target_value = cond.get("value", 0)
+    var current_value = _get_total_article_count()
+    return _compare(current_value, op, target_value)
+
+## 获取文章总数
+func _get_total_article_count() -> int:
+    if not GDManager:
+        return 0
+    var blogger_data = GDManager.get_blogger()
+    if blogger_data == null:
+        return 0
+    return blogger_data.posts.size()
+
 ## 获取指定类型博文发布次数
 func _get_post_count_by_type(post_type: String) -> int:
     if not GDManager:
@@ -296,6 +316,26 @@ func _check_time_condition(cond: Dictionary, _context: Dictionary) -> bool:
         return false
 
     return TimerManager.is_time_match(event_date) if TimerManager else false
+
+## 里程碑条件检查（用于跳过剧情调试）
+## completed=false: 里程碑未完成时条件为真
+## completed=true: 里程碑已完成时条件为真
+func _check_milestone_condition(cond: Dictionary, _context: Dictionary) -> bool:
+    var chapter = cond.get("chapter", 1)
+    var milestone = cond.get("milestone", "")
+    var should_be_completed = cond.get("completed", false)
+    
+    if milestone.is_empty():
+        push_error("[TaskManager] MILESTONE_COMPLETED: milestone is empty")
+        return false
+    
+    if GDManager:
+        var sp = GDManager.get_story_progress()
+        if sp:
+            var is_completed = sp.is_completed(chapter, milestone)
+            return is_completed == should_be_completed
+    
+    return false
 
 ## 自定义条件检查
 func _check_custom_condition(cond: Dictionary, context: Dictionary) -> bool:
@@ -364,6 +404,14 @@ func check_literature_ip_auth(_context: Dictionary) -> bool:
 func check_open_source_project(_context: Dictionary) -> bool:
     return OpenSourceMgr.check_open_source_project(_context) if OpenSourceMgr else false
 
+## 检查搜索引擎是否未收录
+func check_sousuo_not_indexed(_context: Dictionary) -> bool:
+    if GDManager:
+        var sp = GDManager.get_story_progress()
+        if sp:
+            return not sp.is_completed(1, "sousuo_indexed")
+    return false
+
 ## ============================================================
 ## 任务执行
 ## ============================================================
@@ -429,6 +477,8 @@ func _execute_action(action: Dictionary) -> void:
             _action_start_game_time()
         TaskConfig_ActionType.SET_STORY_MILESTONE:
             _action_set_story_milestone(action)
+        TaskConfig_ActionType.SEO_NOTIFICATION:
+            _action_seo_notification()
         _:
             push_warning("[TaskManager] Unhandled action type: %s" % action_type)
 
@@ -634,6 +684,27 @@ func _action_unlock_initial_tasks() -> void:
 func _action_start_game_time() -> void:
     # 不在这里启动，等弹窗关闭后在 main.gd 中启动
     print("[游戏时间] 博客的运营正式开始，等待弹窗确认...")
+
+## 动作:SEO收录通知（弹窗+升级奖励）
+func _action_seo_notification() -> void:
+    var title = "搜索引擎收录通知"
+    var content = """您的博客文章已被搜索引擎收录！
+
+📊 SEO值越高，搜索排名越靠前，访问量越大
+💡 建议每周进行一次SEO维护
+
+🎁 任务奖励：等级直升1级！"""
+
+    emit_signal("sg_task_show_popup_msg", title, content)
+
+    if GDManager:
+        var blogger_data = GDManager.get_blogger()
+        if blogger_data:
+            var current_level = blogger_data.level
+            var new_level = min(current_level + 1, 100)
+            if new_level > current_level:
+                blogger_data.set_level(new_level)
+                print("[SEO任务] 玩家等级提升: %d -> %d" % [current_level, new_level])
 
 ## 动作:设置剧情里程碑
 func _action_set_story_milestone(action: Dictionary) -> void:

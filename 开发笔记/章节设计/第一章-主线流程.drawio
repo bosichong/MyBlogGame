@@ -70,6 +70,46 @@
           <mxGeometry x="860" y="920" width="220" height="50" as="geometry"/>
         </mxCell>
 
+        <!-- SEO收录任务分支 -->
+        <mxCell id="seo1" value="📰 日常创作阶段&#xa;发布文章，累计10篇&#xa;触发条件：article_count_ge_10&#xa;且 sousuo_indexed = false" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1976d2;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="820" width="220" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- SEO触发事件 -->
+        <mxCell id="seo_trigger" value="📤 发布第10篇文章&#xa;触发 post_event&#xa;条件：article_count_ge_10&#xa;+ sousuo_not_indexed" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1bee7;strokeColor=#9c27b0;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="920" width="220" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- SEO解锁结果 -->
+        <mxCell id="seo_unlock" value="✅ SEO收录任务完成：&#xa;1. SEO_NOTIFICATION&#xa;   → 显示SEO重要性提示&#xa;2. SET_STORY_MILESTONE&#xa;   → sousuo_indexed = true&#xa;3. 等级直升1级" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c5ecd6;strokeColor=#4caf50;align=left;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="1020" width="220" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- SEO里程碑 -->
+        <mxCell id="seo_milestone" value="✓ sousuo_indexed&#xa;搜索引擎首次收录" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;verticalAlign=middle;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="1130" width="220" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- 连接线：正式进入游戏 → SEO任务 -->
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4caf50;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="n7" target="seo1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 连接线：SEO任务 → 触发事件 -->
+        <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1976d2;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="seo1" target="seo_trigger">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 连接线：触发事件 → 解锁结果 -->
+        <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9c27b0;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="seo_trigger" target="seo_unlock">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- 连接线：解锁结果 → 里程碑 -->
+        <mxCell id="e18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4caf50;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="seo_unlock" target="seo_milestone">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
         <!-- 分支2：读取存档 -->
         <mxCell id="n8" value="点击【读取存档】&#xa;↓&#xa;加载存档数据&#xa;↓&#xa;直接进入主场景" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
           <mxGeometry x="600" y="165" width="200" height="90" as="geometry"/>
@@ -186,8 +226,8 @@
         <mxCell id="note_title" value="流程说明" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
           <mxGeometry x="60" y="370" width="100" height="20" as="geometry"/>
         </mxCell>
-        <mxCell id="note_bg" value="【新建游戏流程】&#xa;1. s001主菜单点击【新建游戏】&#xa;2. s002填写博客信息&#xa;3. s003开场动画（2001年12月，周日）&#xa;4. 触发 prologue_completed 里程碑&#xa;5. s004博客搭建动画&#xa;6. 进入 main 主场景（时间暂停）&#xa;7. 选择「第一篇博文」任务&#xa;8. 发布后触发解锁事件&#xa;&#xa;【读取存档流程】&#xa;1. s001主菜单点击【读取存档】&#xa;2. 加载存档数据&#xa;3. 直接进入 main 主场景&#xa;&#xa;【退出游戏】&#xa;直接退出游戏程序" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;fontSize=10;fontColor=#333333;spacing=4;spacingTop=4;" vertex="1" parent="1">
-          <mxGeometry x="60" y="395" width="200" height="260" as="geometry"/>
+        <mxCell id="note_bg" value="【新建游戏流程】&#xa;1. s001主菜单点击【新建游戏】&#xa;2. s002填写博客信息&#xa;3. s003开场动画（2001年12月，周日）&#xa;4. 触发 prologue_completed 里程碑&#xa;5. s004博客搭建动画&#xa;6. 进入 main 主场景（时间暂停）&#xa;7. 选择「第一篇博文」任务&#xa;8. 发布后触发解锁事件&#xa;9. 游戏正式开始&#xa;&#xa;【SEO收录任务流程】&#xa;1. 日常创作发布文章&#xa;2. 累计发布10篇文章后&#xa;3. 触发 SEO收录任务&#xa;4. 显示SEO重要性提示&#xa;5. 设置 sousuo_indexed = true&#xa;6. 获得等级直升1级奖励&#xa;&#xa;【读取存档流程】&#xa;1. s001主菜单点击【读取存档】&#xa;2. 加载存档数据&#xa;3. 直接进入 main 主场景&#xa;&#xa;【退出游戏】&#xa;直接退出游戏程序" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;fontSize=10;fontColor=#333333;spacing=4;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="60" y="395" width="200" height="320" as="geometry"/>
         </mxCell>
 
         <!-- 时间说明 -->
