@@ -216,6 +216,8 @@ func _check_single_condition(cond, context: Dictionary) -> bool:
             return _check_post_count_condition(condition, context)
         TaskConfig_ConditionType.ARTICLE_COUNT:
             return _check_article_count_condition(condition, context)
+        TaskConfig_ConditionType.SEO_VALUE:
+            return _check_seo_value_condition(condition, context)
         TaskConfig_ConditionType.TIME_MATCH:
             return _check_time_condition(condition, context)
         TaskConfig_ConditionType.MILESTONE_COMPLETED:
@@ -277,6 +279,21 @@ func _check_article_count_condition(cond: Dictionary, _context: Dictionary) -> b
     var target_value = cond.get("value", 0)
     var current_value = _get_total_article_count()
     return _compare(current_value, op, target_value)
+
+## SEO值条件检查
+func _check_seo_value_condition(cond: Dictionary, _context: Dictionary) -> bool:
+    var op = cond.get("op", TaskConfig_CompareOp.EQ)
+    var target_value = cond.get("value", 0)
+    var current_value = _get_seo_value()
+    return _compare(current_value, op, target_value)
+
+## 获取SEO值
+func _get_seo_value() -> int:
+    if GDManager:
+        var blogger_data = GDManager.get_blogger()
+        if blogger_data:
+            return blogger_data.seo_value
+    return 0
 
 ## 获取文章总数
 func _get_total_article_count() -> int:
@@ -404,6 +421,14 @@ func check_literature_ip_auth(_context: Dictionary) -> bool:
 func check_open_source_project(_context: Dictionary) -> bool:
     return OpenSourceMgr.check_open_source_project(_context) if OpenSourceMgr else false
 
+## 检查博客联盟是否未加入
+func check_blog_union_not_joined(_context: Dictionary) -> bool:
+    if GDManager:
+        var sp = GDManager.get_story_progress()
+        if sp:
+            return not sp.is_completed(1, "blog_union_joined")
+    return false
+
 ## 检查搜索引擎是否未收录
 func check_sousuo_not_indexed(_context: Dictionary) -> bool:
     if GDManager:
@@ -481,6 +506,8 @@ func _execute_action(action: Dictionary) -> void:
             _action_show_notification(action)
         TaskConfig_ActionType.SHOW_POPUP_NOTIFICATION:
             _action_show_popup_notification(action)
+        TaskConfig_ActionType.UPDATE_BLOG_UNION_BUTTON:
+            _action_update_blog_union_button()
         TaskConfig_ActionType.SEO_NOTIFICATION:
             _action_seo_notification()
         _:
@@ -693,6 +720,11 @@ func _action_show_popup_notification(action: Dictionary) -> void:
     if not content.is_empty():
         emit_signal("sg_task_show_popup_msg", title, content)
 
+## 动作:更新博客联盟按钮状态
+func _action_update_blog_union_button() -> void:
+    if get_tree().get_root().has_node("main/ui/bottom"):
+        get_tree().get_root().get_node("main/ui/bottom").update_story_progress()
+
 ## 动作:SEO收录通知（弹窗+升级奖励）
 func _action_seo_notification() -> void:
     var title = "搜索引擎收录通知"
@@ -728,6 +760,13 @@ func _action_set_story_milestone(action: Dictionary) -> void:
         var desc = sp.get_milestone_description(chapter, milestone)
         print("[StoryProgress] %s" % chapter_name)
         print("[StoryProgress]   ✓ 里程碑已完成: %s" % desc)
+        
+        if milestone == "blog_union_joined":
+            _update_blog_union_button_now()
+
+func _update_blog_union_button_now() -> void:
+    if get_tree().get_root().has_node("Main/ui/bottom"):
+        get_tree().get_root().get_node("Main/ui/bottom").update_story_progress()
 
 ## 设置分类项目禁用状态
 func _set_category_disabled(name: String, disabled: bool) -> void:

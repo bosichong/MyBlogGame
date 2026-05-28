@@ -10,7 +10,18 @@ signal open_blog_dashboard
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-    pass
+    var btn = $h2/Button4
+    if btn and GDManager:
+        var sp = GDManager.get_story_progress()
+        if sp:
+            btn.disabled = not sp.is_completed(1, "blog_union_joined")
+
+func update_story_progress() -> void:
+    var btn = $h2/Button4
+    if btn and GDManager:
+        var sp = GDManager.get_story_progress()
+        if sp:
+            btn.disabled = not sp.is_completed(1, "blog_union_joined")
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

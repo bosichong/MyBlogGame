@@ -161,8 +161,8 @@ func create_all_checkbox(node, KEY, callback):
     var items = [
         {"text": "内容创作安排", "ary": possible_categories},
         {"text": "网站维护", "ary": website_maintenance},
-        {"text": "休闲娱乐", "ary": recreation},
         {"text": "自律学习", "ary": learning_skills},
+        {"text": "休闲娱乐", "ary": recreation},
     ]
     for item in items:
         create_checkbox(node, KEY, item["text"], item["ary"], callback)

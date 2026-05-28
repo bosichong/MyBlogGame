@@ -8,9 +8,10 @@ var chapter1 = {
     "blog_online": false,              # [已实现] 博客正式上线：获得域名suiyan.cc和免费主机
     "first_article_posted": false,    # [已实现] 第一篇博文发布：写下《你好，世界》
     "sousuo_indexed": false,          # [已实现] 搜索引擎首次收录：博客被搜索引擎发现
+    "blog_union_joined": false,       # 加入博客联盟
     "icp_filing_done": false,        # 网站备案完成：响应国家备案制度
     "rss_enabled": false,             # 开通RSS订阅：获得第一批订阅者
-    "blog_union_joined": false,       # 加入博客联盟：认识第一个博友星光博客
+    
     "first_friend_link": false,       # 第一个友链：与星光博客交换链接
     "ad_union_joined": false,         # 加入广告联盟：开始博客商业化尝试
     "first_income": false,            # 第一笔广告收益：收到12.5元

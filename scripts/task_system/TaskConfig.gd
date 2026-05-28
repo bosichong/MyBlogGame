@@ -22,6 +22,7 @@ enum ConditionType {
     PLAYER_LEVEL,    # 玩家等级
     POST_COUNT,      # 发布次数（按类型）
     ARTICLE_COUNT,   # 文章总数（所有文章）
+    SEO_VALUE,       # SEO值
     TIME_MATCH,      # 时间匹配
     MILESTONE_COMPLETED,  # 里程碑已完成（用于跳过剧情）
     CUSTOM,          # 自定义条件（通过函数名调用）
@@ -54,6 +55,7 @@ enum ActionType {
     SHOW_NOTIFICATION,       # 显示信息通知（显示在信息区域）
     SHOW_POPUP_NOTIFICATION, # 显示弹窗通知（弹出窗口）
     SEO_NOTIFICATION,        # SEO提示弹窗+升级奖励
+    UPDATE_BLOG_UNION_BUTTON, # 更新博客联盟按钮状态
 }
 
 ## ============================================================
@@ -64,10 +66,16 @@ const CONDITIONS: Dictionary = {
     # 文章总数条件
     "article_count_ge_10": {"type": ConditionType.ARTICLE_COUNT, "op": CompareOp.GE, "value": 10},
     
+    # SEO值条件
+    "seo_value_eq_100": {"type": ConditionType.SEO_VALUE, "op": CompareOp.EQ, "value": 100},
+    
+    # 博客联盟状态条件
+    "blog_union_not_joined": {"type": ConditionType.CUSTOM, "check_func": "check_blog_union_not_joined"},
+    
     # SEO收录状态条件（未收录时触发）
     "sousuo_not_indexed": {"type": ConditionType.CUSTOM, "check_func": "check_sousuo_not_indexed"},
     
-# 里程碑已完成条件（用于跳过剧情）
+    # 里程碑已完成条件（用于跳过剧情）
     "first_article_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_posted", "completed": false},
     "first_article_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_posted", "completed": true},
 
@@ -512,6 +520,21 @@ const TASKS: Array = [
         "actions": [
             {"type": ActionType.UNLOCK_INITIAL_TASKS},
             {"type": ActionType.START_GAME_TIME},
+        ],
+    },
+    
+    # ====================
+    # 博客联盟解锁任务
+    # ====================
+    {
+        "id": "blog_union_unlock",
+        "description": "SEO值达到100，解锁博客联盟",
+        "conditions": ["seo_value_eq_100", "blog_union_not_joined"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "博客江湖邀请", "content": "恭喜！您的博客SEO值已达到100！\n\n博客江湖是全球最大的中文独立博客联盟，致力于汇聚天下独立博客。\n\n【加入好处】\n• 认识志同道合的博友\n• 获得友链推荐\n• 参与联盟活动\n• 提升博客影响力\n\n点击确定加入博客江湖！"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "blog_union_joined"},
         ],
     },
     {
