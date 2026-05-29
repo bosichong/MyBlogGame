@@ -77,6 +77,10 @@ func _ready() -> void:
     TaskManager.connect("schedule_refresh_needed", _on_schedule_refresh_needed)
     TaskManager.connect("sg_task_show_popup_msg",sg_task_show_popup_msg)
     
+    var fl_manager = GDManager.friend_link_manager if GDManager else null
+    if fl_manager:
+        fl_manager.connect("link_added", _on_friend_link_added)
+    
     # 延迟检查初始任务，确保所有节点的 _ready() 都执行完毕
     call_deferred("_check_initial_tasks")
     
@@ -291,6 +295,10 @@ func _on_month_passed():
     if Blogger.views_calculator:
         Blogger.views_calculator.monthly_update(TimerManager.current_year, TimerManager.current_month)
     
+    # 每年6月第2周第1天，联盟成员年度升级
+    if TimerManager.current_month == 6 and TimerManager.current_week == 2 and TimerManager.current_day == 1:
+        Lm.yearly_upgrade()
+    
     # 书籍销售月结算
     var sales_result = TaskManager.settle_monthly_book_sales()
     if sales_result.total_income > 0:
@@ -329,7 +337,7 @@ func _on_month_passed():
 
 func _on_quarter_passed():
     Lm.up_jhph()
-    Lm.quarter_activities()
+    # yearly_upgrade 已移至 _on_month_passed 中（6月第2周第1天）
 
     
 
@@ -412,6 +420,9 @@ func signal_comment_maintenance(msg):
 func signal_comment_no_stamina(msg):
     info_display.add_message(msg)
 
+func _on_friend_link_added(link_data: Dictionary) -> void:
+    if TaskManager:
+        TaskManager.check_tasks_by_trigger("friendlink_added", {"link_data": link_data})
 
 ## 显示通用弹窗
 func show_popup_message(title: String, content: String) -> void:

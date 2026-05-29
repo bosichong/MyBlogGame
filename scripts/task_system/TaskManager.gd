@@ -367,6 +367,21 @@ func _check_custom_condition(cond: Dictionary, context: Dictionary) -> bool:
 
     return call(func_name, context)
 
+## 友链添加条件检查（用于 friendlink_added 触发类型）
+func check_friend_link_added(context: Dictionary) -> bool:
+    return true
+
+## 获取友链博客名称（用于弹窗内容替换）
+func get_link_blog_name(link_data: Dictionary) -> String:
+    if link_data.has("blog_name"):
+        return link_data.get("blog_name", "未知博客")
+    var member_id = link_data.get("member_id", 0)
+    var static_members = GDManager.get_lm_members() if GDManager else []
+    for m in static_members:
+        if m.get("id") == member_id:
+            return m.get("blog_name", "未知博客")
+    return "未知博客"
+
 ## 通用比较函数
 func _compare(current, op: int, target) -> bool:
     match op:
@@ -442,7 +457,7 @@ func check_sousuo_not_indexed(_context: Dictionary) -> bool:
 ## ============================================================
 
 ## 执行任务
-func _execute_task_at(index: int, _context: Dictionary) -> void:
+func _execute_task_at(index: int, context: Dictionary) -> void:
     if index < 0 or index >= task_states.size():
         push_error("[TaskManager] Invalid task index: %s" % index)
         return
@@ -455,10 +470,10 @@ func _execute_task_at(index: int, _context: Dictionary) -> void:
 
     # 执行所有动作
     for action in task.get("actions", []):
-        _execute_action(action)
+        _execute_action(action, context)
 
 ## 执行动作
-func _execute_action(action: Dictionary) -> void:
+func _execute_action(action: Dictionary, context: Dictionary = {}) -> void:
     var action_type = action.get("type")
     if action_type == null:
         push_error("[TaskManager] Action missing 'type' field")
@@ -505,7 +520,7 @@ func _execute_action(action: Dictionary) -> void:
         TaskConfig_ActionType.SHOW_NOTIFICATION:
             _action_show_notification(action)
         TaskConfig_ActionType.SHOW_POPUP_NOTIFICATION:
-            _action_show_popup_notification(action)
+            _action_show_popup_notification(action, context)
         TaskConfig_ActionType.UPDATE_BLOG_UNION_BUTTON:
             _action_update_blog_union_button()
         TaskConfig_ActionType.SEO_NOTIFICATION:
@@ -714,10 +729,13 @@ func _action_show_notification(action: Dictionary) -> void:
         emit_signal("sg_task_info_display_msg", message)
 
 ## 动作:显示弹窗通知
-func _action_show_popup_notification(action: Dictionary) -> void:
+func _action_show_popup_notification(action: Dictionary, context: Dictionary = {}) -> void:
     var title = action.get("title", "通知")
     var content = action.get("content", "")
     if not content.is_empty():
+        var link_data = context.get("link_data", {})
+        var link_blog_name = get_link_blog_name(link_data)
+        content = content.replace("{link_blog_name}", link_blog_name)
         emit_signal("sg_task_show_popup_msg", title, content)
 
 ## 动作:更新博客联盟按钮状态

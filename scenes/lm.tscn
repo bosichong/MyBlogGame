@@ -318,7 +318,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="bg/选项组/sc2/VBoxContainer/hbox/jhb3/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-text = "艺术江湖榜"
+text = "捐赠江湖榜"
 
 [node name="pb" type="VBoxContainer" parent="bg/选项组/sc2/VBoxContainer/hbox/jhb3"]
 layout_mode = 2

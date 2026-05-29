@@ -119,6 +119,12 @@ func do_maintenance() -> Dictionary:
         if should_approve and league:
             league.mark_friend_link(member_id, true)
             result["approved_requests"] += 1
+            var blog_name = "未知博客"
+            for m in league.lm_members:
+                if m.get("id") == member_id:
+                    blog_name = m.get("blog_name", "未知博客")
+                    break
+            emit_signal("link_added", {"member_id": member_id, "level": request_level, "blog_name": blog_name})
             if is_passive:
                 result["messages"].append("通过了被动申请：等级%d" % request_level)
             else:
@@ -295,6 +301,9 @@ func add_passive_requests() -> Array[Dictionary]:
         print("[友链] 联盟成员为空，跳过被动申请")
         return []
 
+    var blogger = GDManager.get_blogger()
+    var player_level = blogger.level if blogger else 1
+
     var eligible_members: Array[Dictionary] = []
     for member in league.lm_members:
         var member_id = member.get("id")
@@ -302,39 +311,40 @@ func add_passive_requests() -> Array[Dictionary]:
             continue
         if _data.has_pending_request(member_id):
             continue
+        var member_level = member.get("lv", 1)
+        if member_level > player_level - 5:
+            continue
         eligible_members.append(member)
 
     if eligible_members.size() == 0:
+        print("[友链] 没有符合等级条件的成员，跳过被动申请")
         return []
 
     eligible_members.shuffle()
 
-    var requests_count = randi_range(1, 3)
-    var actual_count = mini(requests_count, eligible_members.size())
     var new_requests: Array[Dictionary] = []
     var game_time = GDManager.get_time()
 
-    for i in range(actual_count):
-        var member = eligible_members[i]
-        var member_id = member.get("id")
-        var member_level = member.get("lv", 1)
+    var member = eligible_members[0]
+    var member_id = member.get("id")
+    var member_level = member.get("lv", 1)
 
-        var request_data = {
-            "member_id": member_id,
-            "request_date": game_time.current_date_str if game_time else Time.get_date_string_from_system(),
-            "level": member_level,
-            "is_passive": true,
-            "wait_days": 0,
-            "apply_date": game_time.current_date_str if game_time else Time.get_date_string_from_system(),
-            "apply_game_year": game_time.current_year if game_time else 0,
-            "apply_game_month": game_time.current_month if game_time else 0,
-            "apply_game_week": game_time.current_week if game_time else 1,
-            "apply_game_day": game_time.current_day if game_time else 0,
-        }
+    var request_data = {
+        "member_id": member_id,
+        "request_date": game_time.current_date_str if game_time else Time.get_date_string_from_system(),
+        "level": member_level,
+        "is_passive": true,
+        "wait_days": 0,
+        "apply_date": game_time.current_date_str if game_time else Time.get_date_string_from_system(),
+        "apply_game_year": game_time.current_year if game_time else 0,
+        "apply_game_month": game_time.current_month if game_time else 0,
+        "apply_game_week": game_time.current_week if game_time else 1,
+        "apply_game_day": game_time.current_day if game_time else 0,
+    }
 
-        _data.add_pending_request(request_data)
-        new_requests.append(request_data)
-        emit_signal("request_received", request_data)
+    _data.add_pending_request(request_data)
+    new_requests.append(request_data)
+    emit_signal("request_received", request_data)
 
     print("[友链] 生成了 %d 个被动申请" % new_requests.size())
     return new_requests

@@ -1,5 +1,5 @@
 ## 被动友链申请事件
-## 每月第1周第3天触发，从低等级联盟成员中随机生成1-3个被动申请
+## 每月第1周第3天触发，从等级≤玩家等级-5的成员中随机选取1个被动申请
 class_name FriendLinkPassiveEvent
 extends ViewsEvent
 
@@ -7,7 +7,7 @@ extends ViewsEvent
 func _init():
     event_id = "friendlink_passive"
     event_name = "友链申请"
-    description = "低等级联盟成员向您发起友链申请"
+    description = "等级≤玩家等级-5的联盟成员向您发起友链申请"
     duration = 0  # 仅触发，不持续
 
 func check_trigger(blogger: Dictionary) -> bool:

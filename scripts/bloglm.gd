@@ -95,20 +95,28 @@ func donate_lm():
         var m = randi_range(10, donate_min)
         donate_data.insert(0, [id, m])
 
-func quarter_activities():
+func yearly_upgrade():
     var league = _get_league_data()
     if not league:
         return
 
     for blog in league.lm_members:
-        if blog.get("id", 0) <= 4:
-            blog["lv"] = blog.get("lv", 1) + 1
-            blog["quality"] = blog.get("quality", 1) + 1
-        elif blog.get("id", 0) == 888:
-            pass
+        if blog.get("id", 0) == 888:
+            continue
+        var blog_id = blog.get("id", 0)
+        var base_add = 1
+        var rand_max = 0
+        
+        if blog_id <= 4:
+            rand_max = 3
+        elif blog_id <= 20:
+            rand_max = 2
         else:
-            blog["lv"] = increase_level(blog.get("lv", 1), 1)
-            blog["quality"] = increase_level(blog.get("quality", 1), 1)
+            rand_max = 1
+        
+        var boost = randi_range(0, rand_max)
+        blog["lv"] = blog.get("lv", 1) + base_add + boost
+        blog["quality"] = blog.get("quality", 1) + base_add + boost
 
 func increase_level(lv: int, k: int) -> int:
     if k < 1:

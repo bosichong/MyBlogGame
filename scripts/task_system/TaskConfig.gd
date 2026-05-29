@@ -75,6 +75,10 @@ const CONDITIONS: Dictionary = {
     # SEO收录状态条件（未收录时触发）
     "sousuo_not_indexed": {"type": ConditionType.CUSTOM, "check_func": "check_sousuo_not_indexed"},
     
+    # 友链相关条件
+    "first_friend_link_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_friend_link", "completed": false},
+    "friend_link_added": {"type": ConditionType.CUSTOM, "check_func": "check_friend_link_added"},
+    
     # 里程碑已完成条件（用于跳过剧情）
     "first_article_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_posted", "completed": false},
     "first_article_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_posted", "completed": true},
@@ -535,6 +539,19 @@ const TASKS: Array = [
         "actions": [
             {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "博客江湖邀请", "content": "恭喜！您的博客SEO值已达到100！\n\n博客江湖是全球最大的中文独立博客联盟，致力于汇聚天下独立博客。\n\n【加入好处】\n• 认识志同道合的博友\n• 获得友链推荐\n• 参与联盟活动\n• 提升博客影响力\n\n点击确定加入博客江湖！"},
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "blog_union_joined"},
+        ],
+    },
+    {
+        "id": "first_friend_link",
+        "description": "获得第一个友情链接",
+        "conditions": ["first_friend_link_not_done", "friend_link_added"],
+        "is_repeatable": false,
+        "trigger_type": "friendlink_added",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, 
+             "title": "第一个友链！🎉", 
+             "content": "{link_blog_name} 已成为您的第一个友链！\n\n📌 友情链接的好处：\n• 提升博客SEO值\n• 增加网站访问流量\n• 结识志同道合的博友\n\n好好维护这份友谊吧！"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "first_friend_link"},
         ],
     },
     {

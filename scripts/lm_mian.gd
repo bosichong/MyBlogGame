@@ -55,11 +55,11 @@ func on_show_panel():
     var jhpb_js = $"bg/选项组/sc2/VBoxContainer/hbox/jhb2/pb"
     create_phb(Lm.jhph_js,jhpb_js)
     
-    var jhpb_ys = $"bg/选项组/sc2/VBoxContainer/hbox/jhb3/pb"
-    create_phb(Lm.jhph_ys,jhpb_ys)
-    
-    var jhpb_jz = $"bg/选项组/sc1/VBoxContainer/hbox/jzb/pb"
+    var jhpb_jz = $"bg/选项组/sc2/VBoxContainer/hbox/jhb3/pb"
     create_labels_jz(Lm.jhph_jz,jhpb_jz)
+    
+    var jzb_node = $"bg/选项组/sc1/VBoxContainer/hbox/jzb/pb"
+    create_labels_jz(Lm.jhph_jz,jzb_node)
     
     var jzjl = $"bg/选项组/sc4/VBoxContainer/VBoxContainer/ScrollContainer/VBoxContainer"
     create_jzjl(Lm.donate_data,jzjl)
