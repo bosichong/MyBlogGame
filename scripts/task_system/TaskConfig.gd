@@ -144,6 +144,9 @@ const CONDITIONS: Dictionary = {
     # 国庆特辑时间条件（每年10月）
     "time_national_day_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [10], "w": [1], "d": [1]}},
     "time_national_day_lock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [10], "w": [2], "d": [7]}},
+    
+    # 广告联盟第一笔收益条件
+    "first_ad_income_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_income", "completed": false},
 }
 
 ## ============================================================
@@ -552,6 +555,19 @@ const TASKS: Array = [
              "title": "第一个友链！🎉", 
              "content": "{link_blog_name} 已成为您的第一个友链！\n\n📌 友情链接的好处：\n• 提升博客SEO值\n• 增加网站访问流量\n• 结识志同道合的博友\n\n好好维护这份友谊吧！"},
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "first_friend_link"},
+        ],
+    },
+    {
+        "id": "first_ad_income",
+        "description": "加入广告联盟并收到第一笔广告收益",
+        "conditions": ["first_ad_income_not_done"],
+        "is_repeatable": false,
+        "trigger_type": "ad_income_paid",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, 
+             "title": "广告联盟第一笔收益", 
+             "content": "恭喜您收到广告联盟的第一笔佣金 {income_amount} 元！\n\n🎉 这是博客商业化的重要一步！\n\n💡 如何提高广告收益：\n您的广告收入与访问量挂钩，访问量越高，点击率和佣金收益就越高。\n\n📊 收益加成参考：\n• 周访问量 ≤ 1000：基础收益\n• 周访问量 1000-3000：额外 +5%\n• 周访问量 3000-5000：额外 +10%\n• 周访问量 5000-10000：额外 +15%\n• 周访问量 > 10000：额外 +20% 以上\n\n建议：坚持创作优质内容，提升访问量！"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "first_income"},
         ],
     },
     {

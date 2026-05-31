@@ -17,8 +17,10 @@ func _ready() -> void:
         # 广告联盟佣金结算和发放通知
         AdManager.connect("sig_ad_commission_settled",on_sig_ad_commission_settled)
         AdManager.connect("sig_ad_commission_paid",on_sig_ad_commission_paid)
-
-
+        
+        # 广告联盟佣金发放触发任务系统
+        AdManager.connect("sig_ad_commission_paid", TaskManager._on_ad_income_paid)
+        
         #休息信号
         Blogger.s_recrecreation_rest.connect(s_recrecreation_rest)
         Blogger.s_playgame.connect(s_playgame)

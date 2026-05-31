@@ -124,6 +124,20 @@ func _on_level_up(level: int) -> void:
 func _on_blog_post(category: String) -> void:
     check_tasks_by_trigger("post_event", {"post_type": category})
 
+## 广告联盟佣金发放信号
+func _on_ad_income_paid(msg: String) -> void:
+    var income_amount = _parse_income_from_msg(msg)
+    check_tasks_by_trigger("ad_income_paid", {"msg": msg, "income_amount": income_amount})
+
+## 从消息中解析收入金额
+func _parse_income_from_msg(msg: String) -> String:
+    var regex = RegEx.new()
+    regex.compile(r"(\d+\.\d+)")
+    var result = regex.search(msg)
+    if result:
+        return result.get_string(1)
+    return "0.00"
+
 ## 每日任务检查
 func day_task_func() -> void:
     check_tasks_by_trigger("time_check", {})
@@ -736,6 +750,8 @@ func _action_show_popup_notification(action: Dictionary, context: Dictionary = {
         var link_data = context.get("link_data", {})
         var link_blog_name = get_link_blog_name(link_data)
         content = content.replace("{link_blog_name}", link_blog_name)
+        var income_amount = context.get("income_amount", "0.00")
+        content = content.replace("{income_amount}", income_amount)
         emit_signal("sg_task_show_popup_msg", title, content)
 
 ## 动作:更新博客联盟按钮状态
