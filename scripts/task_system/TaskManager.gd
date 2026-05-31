@@ -138,6 +138,10 @@ func _parse_income_from_msg(msg: String) -> String:
         return result.get_string(1)
     return "0.00"
 
+## RSS订阅首次触发信号
+func _on_rss_first_subscriber(rss_count: int) -> void:
+    check_tasks_by_trigger("rss_subscribe", {"rss_count": rss_count})
+
 ## 每日任务检查
 func day_task_func() -> void:
     check_tasks_by_trigger("time_check", {})

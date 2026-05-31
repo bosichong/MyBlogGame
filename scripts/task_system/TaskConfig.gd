@@ -147,6 +147,9 @@ const CONDITIONS: Dictionary = {
     
     # 广告联盟第一笔收益条件
     "first_ad_income_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_income", "completed": false},
+    
+    # RSS订阅条件
+    "rss_enabled_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "rss_enabled", "completed": false},
 }
 
 ## ============================================================
@@ -568,6 +571,19 @@ const TASKS: Array = [
              "title": "广告联盟第一笔收益", 
              "content": "恭喜您收到广告联盟的第一笔佣金 {income_amount} 元！\n\n🎉 这是博客商业化的重要一步！\n\n💡 如何提高广告收益：\n您的广告收入与访问量挂钩，访问量越高，点击率和佣金收益就越高。\n\n📊 收益加成参考：\n• 周访问量 ≤ 1000：基础收益\n• 周访问量 1000-3000：额外 +5%\n• 周访问量 3000-5000：额外 +10%\n• 周访问量 5000-10000：额外 +15%\n• 周访问量 > 10000：额外 +20% 以上\n\n建议：坚持创作优质内容，提升访问量！"},
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "first_income"},
+        ],
+    },
+    {
+        "id": "rss_enabled",
+        "description": "开通RSS订阅：获得第一批订阅者",
+        "conditions": ["rss_enabled_not_done"],
+        "is_repeatable": false,
+        "trigger_type": "rss_subscribe",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, 
+             "title": "第一批订阅者来了！", 
+             "content": "🎉 恭喜您获得了第一批 RSS 订阅者！\n\n📖 RSS 订阅是什么？\nRSS（简易信息聚合）是一种让读者自动收到博客更新的服务。订阅后，您的文章会自动推送到读者的阅读器。\n\n📈 RSS 订阅有什么好处？\n• 稳定订阅者：订阅者可以定期收到您的文章更新\n• 增加访问量：每次更新都可能带来访问\n• 提高忠诚度：订阅用户更容易持续关注\n\n💡 如何获得更多订阅？\n访问量越高，主动订阅 RSS 的读者就越多。坚持创作优质内容是获得订阅的最佳方式！"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "rss_enabled"},
         ],
     },
     {

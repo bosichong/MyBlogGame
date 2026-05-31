@@ -823,8 +823,12 @@ func update_blog_views() -> int:
         tmp_y = TimerManager.current_year
 
     blogger.views += blogger.today_views
+    var old_rss = blogger.rss
     blogger.rss += Utils.update_rss(blogger.today_views)
-
+    
+    if TaskManager and old_rss == 0 and blogger.rss > 0:
+        TaskManager._on_rss_first_subscriber(blogger.rss)
+    
     return calculate_article_exp(blogger.today_views)
 
 
