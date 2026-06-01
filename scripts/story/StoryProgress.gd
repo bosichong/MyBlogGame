@@ -9,10 +9,11 @@ var chapter1 = {
     "first_article_posted": false,    # [已实现] 第一篇博文发布：写下《你好，世界》
     "sousuo_indexed": false,          # [已实现] 搜索引擎首次收录：博客被搜索引擎发现
     "blog_union_joined": true,       # [已实现] 加入博客联盟
-    "icp_filing_done": false,        # 网站备案完成：响应国家备案制度
-    "rss_enabled": false,             # 开通RSS订阅：获得第一批订阅者
     "first_friend_link": false,       # [已实现]第一个友链
+    "rss_enabled": false,             # [已实现] 开通RSS订阅：获得第一批订阅者
+    "first_article_favorited": false,  # [已实现] 第一次文章收藏：获得第一篇文章收藏
     "first_income": false,            # [已实现]加入广告联盟并收到第一笔广告收益
+    "icp_filing_done": false,        # [已实现]网站备案完成：响应国家备案制度
     "year_summary_2005": false,       # 2005年度总结：三年回顾
     "award_2005": false,              # 博客优秀大奖（2005）：获得提名，称号"博客新星"
 }

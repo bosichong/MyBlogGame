@@ -53,6 +53,8 @@ enum ActionType {
     START_GAME_TIME,         # 启动游戏时间（从暂停状态恢复）
     SET_STORY_MILESTONE,    # 设置剧情里程碑（chapter: int, milestone: String）
     SHOW_NOTIFICATION,       # 显示信息通知（显示在信息区域）
+    UNLOCK_WEBSITE_MAINTENANCE,  # 解锁网站维护任务
+    SET_ICP_FILING_NUMBER,   # 设置ICP备案号
     SHOW_POPUP_NOTIFICATION, # 显示弹窗通知（弹出窗口）
     SEO_NOTIFICATION,        # SEO提示弹窗+升级奖励
     UPDATE_BLOG_UNION_BUTTON, # 更新博客联盟按钮状态
@@ -145,11 +147,20 @@ const CONDITIONS: Dictionary = {
     "time_national_day_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [10], "w": [1], "d": [1]}},
     "time_national_day_lock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [10], "w": [2], "d": [7]}},
     
+    # ICP备案时间条件（2002年1月第三周第一天）
+    "time_icp_filing": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2004], "m": [1], "w": [3], "d": [1]}},
+    
+    # ICP备案进行中条件
+    "icp_filing_in_progress": {"type": ConditionType.CUSTOM, "check_func": "check_icp_filing_in_progress"},
+    
     # 广告联盟第一笔收益条件
     "first_ad_income_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_income", "completed": false},
     
     # RSS订阅条件
     "rss_enabled_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "rss_enabled", "completed": false},
+    
+    # 第一次文章收藏条件
+    "first_article_favorited_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_favorited", "completed": false},
 }
 
 ## ============================================================
@@ -584,6 +595,46 @@ const TASKS: Array = [
              "title": "第一批订阅者来了！", 
              "content": "🎉 恭喜您获得了第一批 RSS 订阅者！\n\n📖 RSS 订阅是什么？\nRSS（简易信息聚合）是一种让读者自动收到博客更新的服务。订阅后，您的文章会自动推送到读者的阅读器。\n\n📈 RSS 订阅有什么好处？\n• 稳定订阅者：订阅者可以定期收到您的文章更新\n• 增加访问量：每次更新都可能带来访问\n• 提高忠诚度：订阅用户更容易持续关注\n\n💡 如何获得更多订阅？\n访问量越高，主动订阅 RSS 的读者就越多。坚持创作优质内容是获得订阅的最佳方式！"},
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "rss_enabled"},
+        ],
+    },
+    {
+        "id": "first_article_favorited",
+        "description": "第一次文章收藏：获得第一篇文章收藏",
+        "conditions": ["first_article_favorited_not_done"],
+        "is_repeatable": false,
+        "trigger_type": "article_favorited",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, 
+             "title": "博客有文章被收藏了！🎉", 
+             "content": "📌 文章收藏是什么？\n当读者觉得您的文章有价值时，会点击收藏按钮保存文章，方便日后再次阅读。\n\n📈 收藏有什么好处？\n• 增加访问量：收藏者会定期回访查看您的文章\n• 提升文章权重：收藏数多的文章更容易获得搜索引擎推荐\n• 增强用户粘性：收藏者更容易成为您的忠实读者\n\n💡 如何提高文章收藏量？\n• 创作优质内容：内容有价值，读者才愿意收藏\n• 保持更新频率：定期更新让读者期待\n• 写系列文章：完整的系列更容易被收藏\n• 标题吸引人：好标题能提高点击率和收藏率\n\n继续加油，您的博客越来越受欢迎了！"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "first_article_favorited"},
+        ],
+    },
+    {
+        "id": "icp_filing_notification",
+        "description": "ICP备案通知：2002年管局要求个人网站备案",
+        "conditions": ["time_icp_filing"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, 
+             "title": "📋 ICP备案通知", 
+             "content": "📢 重要通知：互联网安全整治行动\n\n根据国家互联网信息办公室的统一部署，各省市通信管理局开始对个人网站实施ICP备案制度。\n\n📌 备案要求：\n• 所有个人独立博客网站必须进行ICP备案\n• 未备案的网站将被强制关闭\n\n⚠️ 重要提醒：\n如果不完成备案，您的博客网站将被关闭，游戏将无法继续！\n\n💡 请在日常管理中尽快进行网站备案操作，备案只需进行一次。"},
+            {"type": ActionType.UNLOCK_WEBSITE_MAINTENANCE, "task_name": "网站备案"},
+        ],
+    },
+    {
+        "id": "icp_filing_complete",
+        "description": "ICP备案完成：获得备案号",
+        "conditions": ["icp_filing_in_progress"],
+        "is_repeatable": false,
+        "trigger_type": "icp_filing_complete",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, 
+             "title": "✅ ICP备案成功！", 
+             "content": "🎉 恭喜！您的博客网站ICP备案已通过审核！\n\n📋 备案号：ICP备88888888号\n\n📌 备案信息：\n• 个人博客网站已获得合法运营资质\n• 网站可以正常对外提供服务\n• 备案信息可在工信部网站查询\n\n💡 备案成功后，请妥善保管备案号，以备后续查验。"},
+            {"type": ActionType.SET_ICP_FILING_NUMBER},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "icp_filing_done"},
         ],
     },
     {

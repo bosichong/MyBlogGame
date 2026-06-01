@@ -202,7 +202,10 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "tmp_week": data.tmp_week,
         "tmp_month": data.tmp_month,
         "tmp_year": data.tmp_year,
-        "last_post_quality": data.last_post_quality
+        "last_post_quality": data.last_post_quality,
+        "icp_filing_number": data.icp_filing_number,
+        "icp_filing_in_progress": data.icp_filing_in_progress,
+        "icp_filing_start_date": data.icp_filing_start_date,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -237,6 +240,9 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.tmp_month = dict.get("tmp_month", 1)
     data.tmp_year = dict.get("tmp_year", TimeData.GAME_START_YEAR)
     data.last_post_quality = dict.get("last_post_quality", 0)
+    data.icp_filing_number = dict.get("icp_filing_number", "")
+    data.icp_filing_in_progress = dict.get("icp_filing_in_progress", false)
+    data.icp_filing_start_date = dict.get("icp_filing_start_date", "")
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {

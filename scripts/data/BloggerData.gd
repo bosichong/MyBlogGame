@@ -7,7 +7,7 @@ class_name BloggerData
 # ============================================
 
 ## 等级（1-100）
-var level: int = 21
+var level: int = 31
 
 ## 经验值
 var exp: int = 0
@@ -64,6 +64,15 @@ var blog_author: String = "J.sky"
 
 ## 博客网址
 var blog_url: String = "suiyan.cc"
+
+## ICP备案号
+var icp_filing_number: String = ""
+
+## ICP备案是否进行中
+var icp_filing_in_progress: bool = false
+
+## ICP备案开始日期
+var icp_filing_start_date: String = ""
 
 # ============================================
 # 博客属性值（范围0-200）

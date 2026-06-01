@@ -335,6 +335,8 @@ func daily_activities():
                 exp_gained += maintain_friendlink(task) # 进行友链维护
             if task == "评论管理":
                 exp_gained += maintain_comment(task) # 进行评论管理
+            if task == "网站备案":
+                exp_gained += execute_icp_filing(task) # 执行ICP备案
         elif Utils.check_name_exists(Utils.recreation, task):
             if task == "休息":
                 exp_gained += recreation_rest(task) # 休息一天
@@ -773,6 +775,7 @@ func update_blog_views() -> int:
             stats_data.record_daily_stat(Utils.format_date(), blogger.today_views, 0.0)
 
     # 更新收藏数(基于今日访问量)
+    var old_favorites = blogger.favorites  # 保存更新前的收藏数
     for post in blogger.posts:
         var post_views_today = 0
         var post_id = post.get("id", 0)
@@ -786,7 +789,14 @@ func update_blog_views() -> int:
             var new_favorites = Utils.update_favorites(post_views_today, post.get("quality", 100))
             post.favorites = post.get("favorites", 0) + new_favorites
             blogger.favorites += new_favorites
-
+    
+    # 检查是否第一次有文章被收藏
+    if TaskManager and old_favorites == 0 and blogger.favorites > 0:
+        TaskManager._on_article_first_favorited(blogger.favorites)
+    
+    # 检查ICP备案进度
+    check_icp_filing_progress()
+    
     # 生成评论(基于每篇文章的访问量)
     if GDManager:
         var comment_manager = GDManager.get_comment_manager()
@@ -975,6 +985,69 @@ func maintain_friendlink(category: String) -> int:
         return 10
     
     return 0
+
+## 执行ICP备案
+func execute_icp_filing(category: String) -> int:
+    if not GDManager:
+        return 0
+    
+    var blogger = GDManager.get_blogger()
+    var d = Utils.find_category_by_name(Utils.website_maintenance, category)
+    
+    # 检查配置是否存在
+    if d.is_empty():
+        print("[网站备案] 配置不存在: " + category)
+        return 0
+    
+    var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
+    
+    if blogger.stamina < actual_cost:
+        print("[网站备案] 体力不足,无法进行ICP备案!需要" + str(actual_cost) + "体力")
+        return 0
+    
+    # 检查是否已经在进行备案
+    if blogger.icp_filing_in_progress:
+        print("[网站备案] 备案正在进行中,请等待14天")
+        return 0
+    
+    # 开始备案流程
+    blogger.stamina -= actual_cost
+    blogger.money -= d.money
+    blogger.icp_filing_in_progress = true
+    blogger.icp_filing_start_date = Utils.format_date()
+    
+    # 隐藏网站备案选项（只执行一次）
+    d.isVisible = false
+    d.disabled = true
+    Utils.replace_task_value(Blogger.blog_calendar, "网站备案", "休息") if Utils else null
+    
+    print("[网站备案] 备案申请已提交,开始等待审核(14天)")
+    print("[网站备案] 开始日期: " + blogger.icp_filing_start_date)
+    
+    return 0
+
+## 检查ICP备案进度
+func check_icp_filing_progress() -> void:
+    if not GDManager:
+        return
+    
+    var blogger = GDManager.get_blogger()
+    
+    # 检查是否正在进行ICP备案
+    if not blogger.icp_filing_in_progress:
+        return
+    
+    # 计算已过去的天数
+    var start_date = blogger.icp_filing_start_date
+    if start_date.is_empty():
+        return
+    
+    var days_passed = Utils.calculate_new_game_time_difference(start_date, Utils.format_date())
+    
+    # 检查是否已满14天
+    if days_passed >= 14:
+        if TaskManager:
+            TaskManager._on_icp_filing_complete()
 
 signal signal_comment_maintenance(msg: String)
 func maintain_comment(category: String) -> int:

@@ -87,8 +87,9 @@ func check_initial_tasks() -> void:
 
 ## 重置任务状态(从配置复制)
 func reset_task_states() -> void:
-    # 如果任务状态已经有数据,不重复初始化(保留已完成的进度)
+    # 如果任务状态已经有数据,需要检查是否有新任务需要添加
     if task_states.size() > 0:
+        _add_missing_tasks()
         return
 
     # 清空本地任务状态
@@ -104,6 +105,34 @@ func reset_task_states() -> void:
         task_states.append(state)
 
     # 同步到 GDManager(如果可用)
+    if GDManager:
+        var task_data = GDManager.get_task()
+        task_data.task_states = task_states.duplicate(true)
+
+## 添加缺失的新任务（用于兼容旧存档）
+func _add_missing_tasks() -> void:
+    var config_tasks = get_task_config().TASKS
+    var existing_ids = []
+    
+    # 获取已存在的任务ID列表
+    for state in task_states:
+        var task_id = state.get("id", "")
+        if not task_id.is_empty():
+            existing_ids.append(task_id)
+    
+    # 检查配置中的任务是否都存在于 task_states 中
+    for task in config_tasks:
+        var task_id = task.get("id", "")
+        if not existing_ids.has(task_id):
+            # 发现新任务，添加到 task_states
+            var state = task.duplicate(true)
+            if not state.has("is_active"):
+                state.is_active = true
+            if not state.has("is_completed"):
+                state.is_completed = false
+            task_states.append(state)
+    
+    # 同步到 GDManager
     if GDManager:
         var task_data = GDManager.get_task()
         task_data.task_states = task_states.duplicate(true)
@@ -141,6 +170,14 @@ func _parse_income_from_msg(msg: String) -> String:
 ## RSS订阅首次触发信号
 func _on_rss_first_subscriber(rss_count: int) -> void:
     check_tasks_by_trigger("rss_subscribe", {"rss_count": rss_count})
+
+## 文章首次被收藏触发信号
+func _on_article_first_favorited(favorites_count: int) -> void:
+    check_tasks_by_trigger("article_favorited", {"favorites_count": favorites_count})
+
+## ICP备案完成触发信号
+func _on_icp_filing_complete() -> void:
+    check_tasks_by_trigger("icp_filing_complete", {})
 
 ## 每日任务检查
 func day_task_func() -> void:
@@ -508,6 +545,8 @@ func _execute_action(action: Dictionary, context: Dictionary = {}) -> void:
             _action_lock_post(action)
         TaskConfig_ActionType.HIDE_POST_TASK:
             _action_hide_post(action)
+        TaskConfig_ActionType.UNLOCK_WEBSITE_MAINTENANCE:
+            _action_unlock_website_maintenance(action)
         TaskConfig_ActionType.REPLACE_POST_TREND:
             _action_replace_trend(action)
         TaskConfig_ActionType.UNLOCK_MILESTONES_TASK:
@@ -539,6 +578,8 @@ func _execute_action(action: Dictionary, context: Dictionary = {}) -> void:
             _action_show_notification(action)
         TaskConfig_ActionType.SHOW_POPUP_NOTIFICATION:
             _action_show_popup_notification(action, context)
+        TaskConfig_ActionType.SET_ICP_FILING_NUMBER:
+            _action_icp_filing_complete(action)
         TaskConfig_ActionType.UPDATE_BLOG_UNION_BUTTON:
             _action_update_blog_union_button()
         TaskConfig_ActionType.SEO_NOTIFICATION:
@@ -616,7 +657,49 @@ func _action_unlock_post(action: Dictionary) -> void:
     var tip = d.get("unlock_post_tip", "解锁新文章类型:【%s】" % post_type)
     emit_signal("sg_task_info_display_msg", tip)
 
-## 动作:锁定博文类型
+## 动作:解锁网站维护任务
+func _action_unlock_website_maintenance(action: Dictionary) -> void:
+    var task_name = action.get("task_name", "")
+    if task_name.is_empty():
+        push_error("[TaskManager] UNLOCK_WEBSITE_MAINTENANCE missing task_name")
+        return
+
+    if not Utils:
+        push_error("[TaskManager] Utils 未初始化")
+        return
+
+    # 在 website_maintenance 中查找
+    var d = Utils.find_category_by_name(Utils.website_maintenance, task_name, true)
+    if d.is_empty():
+        push_error("[TaskManager] Website maintenance task not found: %s" % task_name)
+        return
+
+    # 解锁任务
+    d.disabled = false
+    d.isVisible = true
+
+    # 显示解锁提示
+    var tip = d.get("unlock_tip", "解锁新网站维护任务:【%s】" % task_name)
+    emit_signal("sg_task_info_display_msg", tip)
+    emit_signal("schedule_refresh_needed")
+
+## 动作:ICP备案完成
+func _action_icp_filing_complete(action: Dictionary) -> void:
+    if not GDManager:
+        push_error("[TaskManager] GDManager 未初始化")
+        return
+    
+    var blogger = GDManager.get_blogger()
+    
+    # 标记备案完成
+    blogger.icp_filing_in_progress = false
+    
+    # 保存备案号
+    blogger.icp_filing_number = "ICP备88888888号"
+    
+    print("[TaskManager] ICP备案完成，备案号: " + blogger.icp_filing_number)
+
+## 动作:隐藏网站维护任务
 func _action_lock_post(action: Dictionary) -> void:
     var post_type = action.get("post_type", "")
     if post_type.is_empty():
@@ -849,3 +932,10 @@ func settle_monthly_book_sales() -> Dictionary:
 ## 每月结算开源项目赞助收入
 func settle_monthly_open_source() -> Dictionary:
     return OpenSourceMgr.settle_monthly_open_source() if OpenSourceMgr else {"total_income": 0}
+
+## 自定义条件检查:ICP备案进行中
+func check_icp_filing_in_progress(context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var blogger = GDManager.get_blogger()
+    return blogger.icp_filing_in_progress
