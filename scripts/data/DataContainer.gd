@@ -35,6 +35,11 @@ func get_comment() -> CommentData:
 func get_story_progress() -> StoryProgress:
     return runtime_data.story_progress
 
+func get_yearly_summary() -> YearlySummaryData:
+    if not runtime_data.yearly_summary:
+        runtime_data.yearly_summary = YearlySummaryData.new()
+    return runtime_data.yearly_summary
+
 # ===== 静态配置访问 =====
 
 func get_static_config() -> StaticConfig:

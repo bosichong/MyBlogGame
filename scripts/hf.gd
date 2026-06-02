@@ -22,6 +22,4 @@ func _process(delta: float) -> void:
     pass
 func _on_checkbox_toggled(button_pressed, option):
     if button_pressed:
-        print("选项 '" + option + "' 被选中")
         AdManager.ad_set = option
-        print(AdManager.ad_set)

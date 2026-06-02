@@ -22,5 +22,3 @@ func _load_all_maintenance():
                         items.append(instance.get("item"))
             file_name = dir.get_next()
         dir.list_dir_end()
-    
-    print("[WebsiteMaintenance] 加载了 ", items.size(), " 个维护项目")

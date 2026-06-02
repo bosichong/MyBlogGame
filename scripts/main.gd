@@ -98,7 +98,7 @@ func _check_initial_tasks() -> void:
             TimerManager.timer.start()
 
     else:
-        print("未能获取 TimerManager 实例")
+        push_error("未能获取 TimerManager 实例")
 
     # 连接GDManager的自动保存信号（已禁用）
     # if GDManager and GDManager.save_manager:
@@ -459,7 +459,6 @@ func _on_paid_income_settled(msg):
 func _close_ac():
     TimerManager.timer.start()
     TimerManager.time_stop = false
-    print("[游戏时间] 博客的运营正式开始，时间开始运行！")
 
 func sg_task_info_display_msg(msg):
     info_display.add_message(msg)

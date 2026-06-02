@@ -1,6 +1,21 @@
 extends Node
 ## 游戏的任务管理器,负责检查和执行任务
 
+# 弹窗模板常量
+const YEARLY_SUMMARY_TEMPLATE_CONTENT = """📊 今年数据变化（vs {year}年初）
+━━━━━━━━━━━━━━━━━━━━━━━━━
+📈 等级：{level_before} → {level_after}（{level_change}）
+💰 资产：{money_before} → {money_after}（{money_change}）
+👀 总访问量：{views_before} → {views_after}（{views_change}）
+📨 RSS订阅：{rss_before} → {rss_after}（{rss_change}）
+⭐ 文章收藏：{favorites_before} → {favorites_after}（{favorites_change}）
+
+📝 今年发布了 {posts_total} 篇文章
+{posts_categories}
+
+🏆 这一年你辛苦了！继续加油！
+"""
+
 # 延迟加载 TaskConfig（用于运行时访问）
 var TaskConfig = null
 func get_task_config():
@@ -605,8 +620,11 @@ func _action_skill_lock(action: Dictionary) -> void:
 
     d.isVisible = false
     d.disabled = true
-    Utils.replace_task_value(Blogger.blog_calendar, skill_name, "休息") if Utils else null
+    
+    _remove_task_from_calendar(skill_name)
+    
     emit_signal("sg_task_info_display_msg", d.get("lock_post_tip", ""))
+    emit_signal("schedule_refresh_needed")
 
 ## 动作:解锁技能
 func _action_skill_unlock(action: Dictionary) -> void:
@@ -696,8 +714,6 @@ func _action_icp_filing_complete(action: Dictionary) -> void:
     
     # 保存备案号
     blogger.icp_filing_number = "ICP备88888888号"
-    
-    print("[TaskManager] ICP备案完成，备案号: " + blogger.icp_filing_number)
 
 ## 动作:隐藏网站维护任务
 func _action_lock_post(action: Dictionary) -> void:
@@ -717,7 +733,9 @@ func _action_lock_post(action: Dictionary) -> void:
 
     if not d.get("disabled", false):
         d.disabled = true
-        Utils.replace_task_value(Blogger.blog_calendar, post_type, "休息") if Utils else null
+        
+        _remove_task_from_calendar(post_type)
+        
         emit_signal("sg_task_info_display_msg", d.get("lock_post_tip", ""))
         emit_signal("schedule_refresh_needed")
 
@@ -740,15 +758,9 @@ func _action_hide_post(action: Dictionary) -> void:
     # 隐藏并锁定
     d.isVisible = false
     d.disabled = true
-
-    # 如果是第一篇博文,从所有日程中移除这个任务
-    if post_type == "第一篇博文":
-        for day_task in Blogger.blog_calendar:
-            if post_type in day_task.tasks:
-                day_task.tasks.erase(post_type)
-    else:
-        Utils.replace_task_value(Blogger.blog_calendar, post_type, "休息") if Utils else null
-
+    
+    _remove_task_from_calendar(post_type)
+    
     emit_signal("sg_task_info_display_msg", d.get("lock_post_tip", ""))
     emit_signal("schedule_refresh_needed")
 
@@ -821,7 +833,7 @@ func _action_unlock_initial_tasks() -> void:
 ## 动作:启动游戏时间（弹窗关闭后生效）
 func _action_start_game_time() -> void:
     # 不在这里启动，等弹窗关闭后在 main.gd 中启动
-    print("[游戏时间] 博客的运营正式开始，等待弹窗确认...")
+    pass
 
 ## 动作:显示信息通知
 func _action_show_notification(action: Dictionary) -> void:
@@ -833,6 +845,15 @@ func _action_show_notification(action: Dictionary) -> void:
 func _action_show_popup_notification(action: Dictionary, context: Dictionary = {}) -> void:
     var title = action.get("title", "通知")
     var content = action.get("content", "")
+    var template = action.get("template", "")
+    
+    # 模板处理
+    if not template.is_empty():
+        var rendered = _render_popup_template(template, title, context)
+        if not rendered.is_empty():
+            title = rendered.get("title", title)
+            content = rendered.get("content", content)
+    
     if not content.is_empty():
         var link_data = context.get("link_data", {})
         var link_blog_name = get_link_blog_name(link_data)
@@ -840,6 +861,35 @@ func _action_show_popup_notification(action: Dictionary, context: Dictionary = {
         var income_amount = context.get("income_amount", "0.00")
         content = content.replace("{income_amount}", income_amount)
         emit_signal("sg_task_show_popup_msg", title, content)
+
+## 渲染弹窗模板
+func _render_popup_template(template_name: String, default_title: String, context: Dictionary) -> Dictionary:
+    match template_name:
+        "yearly_summary":
+            return _render_yearly_summary_template(default_title, context)
+        _:
+            return {}
+
+## 渲染年度总结模板
+func _render_yearly_summary_template(default_title: String, context: Dictionary) -> Dictionary:
+    if not GDManager:
+        return {}
+    var time = GDManager.get_time()
+    if not time:
+        return {}
+    
+    var year = context.get("year", time.current_year)
+    var data = YearlySummaryFormatter.build_template_data(year)
+    if data.is_empty():
+        return {}
+    
+    var title = default_title
+    var content = YEARLY_SUMMARY_TEMPLATE_CONTENT
+    
+    return {
+        "title": YearlySummaryFormatter.render(title, data),
+        "content": YearlySummaryFormatter.render(content, data)
+    }
 
 ## 动作:更新博客联盟按钮状态
 func _action_update_blog_union_button() -> void:
@@ -865,7 +915,15 @@ func _action_seo_notification() -> void:
             var new_level = min(current_level + 1, 100)
             if new_level > current_level:
                 blogger_data.set_level(new_level)
-                print("[SEO任务] 玩家等级提升: %d -> %d" % [current_level, new_level])
+
+## 从玩家日程中移除指定任务（所有日期）
+func _remove_task_from_calendar(task_name: String) -> void:
+    if not Blogger:
+        return
+    
+    for day_task in Blogger.blog_calendar:
+        if task_name in day_task.tasks:
+            day_task.tasks.erase(task_name)
 
 ## 动作:设置剧情里程碑
 func _action_set_story_milestone(action: Dictionary) -> void:
@@ -876,12 +934,7 @@ func _action_set_story_milestone(action: Dictionary) -> void:
         return
     if GDManager:
         GDManager.get_story_progress().set_completed(chapter, milestone)
-        var sp = GDManager.get_story_progress()
-        var chapter_name = sp.get_chapter_name(chapter)
-        var desc = sp.get_milestone_description(chapter, milestone)
-        print("[StoryProgress] %s" % chapter_name)
-        print("[StoryProgress]   ✓ 里程碑已完成: %s" % desc)
-        
+
         if milestone == "blog_union_joined":
             _update_blog_union_button_now()
 

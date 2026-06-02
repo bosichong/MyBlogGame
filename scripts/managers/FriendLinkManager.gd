@@ -112,7 +112,6 @@ func do_maintenance() -> Dictionary:
 
         var should_approve = true
         var min_level_threshold = settings.get("min_level_diff", 5)
-        print("[友链审核] request_level=%d, min_level_threshold=%d" % [request_level, min_level_threshold])
         if request_level < min_level_threshold:
             should_approve = false
 
@@ -293,12 +292,10 @@ func check_pending_requests() -> Array[Dictionary]:
 
 func add_passive_requests() -> Array[Dictionary]:
     if not _data.is_league_member:
-        print("[友链] 未加入联盟，跳过被动申请")
         return []
 
     var league = _get_league_data()
     if not league or league.lm_members.is_empty():
-        print("[友链] 联盟成员为空，跳过被动申请")
         return []
 
     var blogger = GDManager.get_blogger()
@@ -317,7 +314,6 @@ func add_passive_requests() -> Array[Dictionary]:
         eligible_members.append(member)
 
     if eligible_members.size() == 0:
-        print("[友链] 没有符合等级条件的成员，跳过被动申请")
         return []
 
     eligible_members.shuffle()
@@ -345,8 +341,6 @@ func add_passive_requests() -> Array[Dictionary]:
     _data.add_pending_request(request_data)
     new_requests.append(request_data)
     emit_signal("request_received", request_data)
-
-    print("[友链] 生成了 %d 个被动申请" % new_requests.size())
     return new_requests
 
 func _calculate_elapsed_days(request_data: Dictionary, time_data) -> int:

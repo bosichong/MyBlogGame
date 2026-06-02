@@ -23,5 +23,3 @@ func _load_all_categories():
                         categories.append(instance.get("item"))
             file_name = dir.get_next()
         dir.list_dir_end()
-    
-    print("[BlogCategories] 加载了 ", categories.size(), " 个分类")

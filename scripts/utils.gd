@@ -420,6 +420,4 @@ func get_rank_title(level: int, ranks: Array) -> String:
 func goto_scene(path: String):
     var err = get_tree().change_scene_to_file(path)
     if err != OK:
-        print("场景切换失败：", err)
-    else:
-        print("场景跳转成功：", path)
+        push_error("场景切换失败: %s, err=%d" % [path, err])

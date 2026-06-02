@@ -10,6 +10,7 @@ var league: LeagueData = LeagueData.new()
 var friend_link: FriendLinkData = FriendLinkData.new()
 var comment: CommentData = CommentData.new()
 var story_progress: StoryProgress = StoryProgress.new()
+var yearly_summary: YearlySummaryData = YearlySummaryData.new()
 
 func reset():
 	blogger = BloggerData.new()
@@ -22,3 +23,4 @@ func reset():
 	friend_link = FriendLinkData.new()
 	comment = CommentData.new()
 	story_progress = StoryProgress.new()
+	yearly_summary = YearlySummaryData.new()

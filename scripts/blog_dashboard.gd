@@ -208,14 +208,14 @@ func refresh_articles() -> void:
     var os_count = 0
     
     for post in unique_posts:
-        var category = post.get("category", "未分类")
+        var category = post.get("post_category", "未分类")
         if category_stats.has(category):
             category_stats[category] += 1
         else:
             category_stats[category] = 1
-        
+
         # 特殊内容统计
-        if category == "小说连载_付费" or category == "小说连载":
+        if category == "小说连载(付费)":
             novel_count += 1
         elif category == "出书笔记" or category == "出版畅销书":
             book_count += 1
@@ -417,7 +417,6 @@ func _delete_friendlink(member_id: int) -> void:
     var fl_manager = GDManager.get_friend_link_manager()
     if fl_manager:
         fl_manager.delete_link(member_id)
-        print("已删除友链ID: %d" % member_id)
         refresh_friendlinks()
 
 func refresh_pending_requests() -> void:

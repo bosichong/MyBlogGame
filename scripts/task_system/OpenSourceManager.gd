@@ -56,7 +56,6 @@ func action_os_progress(progress: int) -> void:
             if os_notes != null and os_notes.disabled:
                 os_notes.disabled = false
                 os_notes.isVisible = true
-                print("[开源项目] 第一次创建项目，已解锁开源维护笔记类型")
                 emit_info_msg.call("📝 已解锁「开源维护笔记」类型，记录项目开发过程")
     
     if os_state.get("is_developing", false):
@@ -136,10 +135,7 @@ func _check_os_phase_complete(os_state: Dictionary) -> void:
 
 ## 禁用开源项目分类（审核期间不再创建新项目）
 func _disable_os_project_category() -> void:
-    # 清空日程中的项目任务（改为休息），但保持分类可用
-    if Utils and Blogger != null:
-        Utils.replace_task_value(Blogger.blog_calendar, "开源项目", "休息")
-    print("[开源项目] 进入审核阶段，日程任务已改为休息")
+    pass
 
 ## 隐藏开源维护笔记分类（赞助完成后调用）
 func _hide_os_notes_category() -> void:
@@ -147,10 +143,6 @@ func _hide_os_notes_category() -> void:
     if os_notes != null:
         os_notes.disabled = true
         os_notes.isVisible = false
-        # 取消勾选日程中的开源维护笔记任务
-        if Utils and Blogger != null:
-            Utils.replace_task_value(Blogger.blog_calendar, "开源维护笔记", "休息")
-        print("[开源项目] 已隐藏开源维护笔记类型")
 
 ## 每日更新项目阶段进度（审核期每天调用）
 func update_os_phase() -> void:
@@ -192,7 +184,6 @@ func update_os_phase() -> void:
                     var legal_progress = progress - edit_days
                     emit_info_msg.call("⚖️ %s 法务团队审核中...\n📝 合同条款审查 (%d/%d天)" % [sponsor_name, legal_progress, publish_days])
         
-        print("[开源项目] 阶段进度: %s, 第%d天" % [phase_name, os_state.phase_day])
         _check_os_phase_complete(os_state)
 
 ## 获取随机赞助厂商（知名大厂）
@@ -272,8 +263,7 @@ func _complete_os_project(os_state: Dictionary) -> void:
         # 重置项目名和文章计数，为下一个项目做准备
         blogger.set("os_project_name", "")
         blogger.set("os_article_count", 0)
-        print("[开源项目] 重置项目名和文章计数，准备创建新项目")
-        
+
         # 赞助完成后，锁定并隐藏开源维护笔记
         _hide_os_notes_category()
     
@@ -329,7 +319,6 @@ func _reset_os_state() -> void:
         "total_sponsor_income": 0,
         "stars": 0,
     }
-    print("[开源项目] current_project_state 已重置")
 
 ## 每月结算项目赞助收入
 func settle_monthly_open_source() -> Dictionary:
@@ -391,5 +380,3 @@ func action_open_source_acquisition() -> void:
     var os_state = _get_or_create_os_state()
     if os_state.get("is_developing", false) and os_state.get("current_phase", 0) >= 3:
         _complete_os_project(os_state)
-    else:
-        print("[开源项目] 当前阶段无法完成赞助，需要先完成开发")

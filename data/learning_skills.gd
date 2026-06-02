@@ -22,5 +22,3 @@ func _load_all_skills():
                         items.append(instance.get("item"))
             file_name = dir.get_next()
         dir.list_dir_end()
-    
-    print("[LearningSkills] 加载了 ", items.size(), " 个技能")

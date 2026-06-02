@@ -104,8 +104,6 @@ func _on_checkbox_toggled(button_pressed: bool, option: String) -> void:
         var new_cost = Utils.get_task_stamina_cost(option)
         var total = current_used + new_cost
 
-        print("DEBUG: option='%s', cost=%d, current_used=%d, total=%d, max=%d" % [option, new_cost, current_used, total, max_stamina])
-
         if total > max_stamina:
             var remaining = max_stamina - current_used
             var message = "体力不足！\n\n"
@@ -122,17 +120,12 @@ func _on_checkbox_toggled(button_pressed: bool, option: String) -> void:
             stamina_popup.dialog_text = message
             stamina_popup.popup_centered()
 
-            print("警告：体力不足！需要 %d，最大 %d" % [total, max_stamina])
             return
 
-        print("选项 '" + option + "' 被选中")
         if option not in Blogger.blog_calendar[KEY].tasks:
             Blogger.blog_calendar[KEY].tasks.append(option)
     else:
-        print("选项 '" + option + "' 被取消")
         Blogger.blog_calendar[KEY].tasks.erase(option)
-
-    print("当前任务：", Blogger.blog_calendar[KEY].tasks, "，体力消耗：", Utils.calculate_day_stamina(Blogger.blog_calendar[KEY].tasks))
 
     _update_schedule_preview()
     _update_stamina_display()

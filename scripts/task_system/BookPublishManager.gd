@@ -49,7 +49,6 @@ func action_book_progress(progress: int) -> void:
             if book_notes != null and book_notes.disabled:
                 book_notes.disabled = false
                 book_notes.isVisible = true
-                print("[出版畅销书] 第一次写书，已解锁出书笔记类型")
     
     if book_state.get("is_writing", false):
         book_state.write_days += 1
@@ -116,18 +115,13 @@ func _check_book_phase_complete(book_state: Dictionary) -> void:
                 _complete_book_publish(book_state)
 
 func _disable_book_publish_category() -> void:
-    if Utils and Blogger != null:
-        Utils.replace_task_value(Blogger.blog_calendar, "出版畅销书", "休息")
-    print("[出版畅销书] 进入审核阶段，日程任务已改为休息")
+    pass
 
 func _hide_book_notes_category() -> void:
     var book_notes = Utils.find_category_by_name(Utils.possible_categories, "出书笔记", true) if Utils else null
     if book_notes != null:
         book_notes.disabled = true
         book_notes.isVisible = false
-        if Utils and Blogger != null:
-            Utils.replace_task_value(Blogger.blog_calendar, "出书笔记", "休息")
-        print("[出版畅销书] 已隐藏出书笔记类型")
 
 func update_book_phase() -> void:
     var book_state = _get_or_create_book_state()
@@ -160,8 +154,7 @@ func update_book_phase() -> void:
             3:
                 # 出版上市阶段
                 emit_info_msg.call("📚 《%s》出版准备中..." % book_name)
-        
-        print("[出版畅销书] 阶段进度: %s, 第%d天" % [phase_name, book_state.phase_day])
+
         _check_book_phase_complete(book_state)
 
 func _get_random_publisher() -> Dictionary:
@@ -206,8 +199,7 @@ func _complete_book_publish(book_state: Dictionary) -> void:
         
         blogger.book_title = ""
         blogger.book_article_count = 0
-        print("[出版畅销书] 重置书名和文章计数，准备写新书")
-        
+
         _hide_book_notes_category()
     
     _reset_book_state()
@@ -266,7 +258,6 @@ func _reset_book_state() -> void:
         "sales_months": 0,
         "total_sales_income": 0,
     }
-    print("[出版畅销书] current_book_state 已重置")
 
 func settle_monthly_book_sales() -> Dictionary:
     if not _book_publish_instance:

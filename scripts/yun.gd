@@ -673,7 +673,6 @@ func start_recovery(penalty: float, total_days: int, start_date: String):
     recovery_total_days = total_days
     recovery_start_time = start_date
     recovery_current_day = 0
-    print("[恢复系统] 开始恢复，惩罚系数: %d%%，恢复天数: %d" % [int(penalty * 100), total_days])
 
 func clear_suspend_status():
     """清除暂停状态"""
@@ -681,7 +680,6 @@ func clear_suspend_status():
     suspend_start_time = ""
     suspend_days = 0
     suspend_source = ""
-    print("[暂停解除] 博客恢复运营")
 
 func update_recovery_progress(today: String):
     """每日更新恢复进度"""
@@ -699,7 +697,6 @@ func update_recovery_progress(today: String):
         recovery_total_days = 0
         recovery_start_time = ""
         recovery_current_day = 0
-        print("[恢复完成] 访问量已完全恢复")
     else:
         # 按进度减少惩罚
         var progress = float(recovery_current_day) / float(recovery_total_days)
@@ -714,7 +711,6 @@ func update_recovery_progress(today: String):
             initial_penalty = 0.5
         
         recovery_penalty = initial_penalty * (1.0 - progress)
-        print("[恢复进度] 第%d天/%d天，当前惩罚: %d%%" % [recovery_current_day, recovery_total_days, int(recovery_penalty * 100)])
 
 func get_recovery_info() -> Dictionary:
     """获取恢复状态信息"""

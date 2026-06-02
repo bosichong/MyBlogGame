@@ -142,6 +142,7 @@ func serialize_runtime_data(runtime_data: RuntimeData) -> Dictionary:
         "friend_link": serialize_friendlink_data(runtime_data.friend_link),
         "comment": serialize_comment_data(runtime_data.comment),
         "story_progress": serialize_story_progress_data(runtime_data.story_progress),
+        "yearly_summary": serialize_yearly_summary_data(runtime_data.yearly_summary),
     }
 
 func deserialize_runtime_data(data: Dictionary) -> RuntimeData:
@@ -167,6 +168,14 @@ func deserialize_runtime_data(data: Dictionary) -> RuntimeData:
         deserialize_comment_data(runtime_data.comment, data["comment"])
     if data.has("story_progress"):
         deserialize_story_progress_data(runtime_data.story_progress, data["story_progress"])
+    if data.has("yearly_summary"):
+        deserialize_yearly_summary_data(runtime_data.yearly_summary, data["yearly_summary"])
+    else:
+        # 老存档兼容：初始化当前年份的快照
+        if GDManager and runtime_data.time and runtime_data.blogger:
+            var current_year = runtime_data.time.current_year
+            if not runtime_data.yearly_summary.has_snapshot(current_year):
+                runtime_data.yearly_summary.record_yearly_snapshot(current_year, runtime_data.blogger)
 
     return runtime_data
 
@@ -420,7 +429,6 @@ func _migrate_friend_links(old_links: Array):
             member["connectivity"] = true
             member["add_date"] = link.get("add_date", "")
             member["last_check"] = link.get("last_check_date", "")
-    print("[存档迁移] 已迁移 %d 个友链到 LeagueData.lm_members" % old_links.size())
 
 func serialize_comment_data(data: CommentData) -> Dictionary:
     return {
@@ -440,6 +448,15 @@ func serialize_story_progress_data(data: StoryProgress) -> Dictionary:
 
 func deserialize_story_progress_data(data: StoryProgress, dict: Dictionary):
     data.from_dict(dict)
+
+func serialize_yearly_summary_data(data: YearlySummaryData) -> Dictionary:
+    return {
+        "yearly_snapshots": data.yearly_snapshots.duplicate(true)
+    }
+
+func deserialize_yearly_summary_data(data: YearlySummaryData, dict: Dictionary):
+    if dict.has("yearly_snapshots"):
+        data.yearly_snapshots = dict["yearly_snapshots"].duplicate(true)
 
 # ===== 元数据 =====
 

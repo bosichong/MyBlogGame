@@ -262,7 +262,6 @@ func day_fs():
 # 将全年累计的 savings_balance_interest 加入 savings_balance
 func year_fs():
     if savings_balance_interest <= 0:
-        print("ℹ️ 活期年利息结算: 无累计利息。")
         return
     
     savings_balance += savings_balance_interest

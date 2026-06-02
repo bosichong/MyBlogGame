@@ -665,8 +665,10 @@ const TASKS: Array = [
         "conditions": ["year_summary_eq_1"],
         "is_repeatable": true,
         "trigger_type": "post_event",
+        "post_type_filter": "年度总结",
         "duration_days": true,
         "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "template": "yearly_summary", "title": "🎉 {year}年度总结已发布！"},
             {"type": ActionType.LOCK_POST_TASK, "post_type": "年度总结"},
         ],
     },

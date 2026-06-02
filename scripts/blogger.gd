@@ -346,7 +346,6 @@ func daily_activities():
             # 检查技能是否已解锁(未禁用)
             var skill = Utils.find_category_by_name(Utils.learning_skills, task, true)
             if skill.is_empty() or skill.get("disabled", false):
-                print("技能【%s】已禁用,跳过" % task)
                 continue
             exp_gained += learningToSkills(task)
 
@@ -404,6 +403,7 @@ func add_new_blog_post(title: String, d) -> Dictionary:
         task_type = "第一篇博文"
     elif d.name == "年度总结":
         task_type = "年度总结"
+        _remove_from_calendar("年度总结")
     
     var article_level = d.get("article_level", 2)
     
@@ -445,8 +445,6 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             var article_num = blogger.book_article_count
             title = "%s 第%d篇" % [blogger.book_title, article_num]
             new_post.title = title
-            print("[出版畅销书] 《%s》 已发布第%d篇" % [blogger.book_title, article_num])
-        
         # ===== 开源项目逻辑 =====
         elif d.name == "开源项目":
             _handle_os_project(blogger)
@@ -456,18 +454,23 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             var article_num = blogger.os_article_count
             title = "%s 第%d篇" % [blogger.os_project_name, article_num]
             new_post.title = title
-            print("[开源项目] 《%s》 已发布第%d篇" % [blogger.os_project_name, article_num])
-        
+
         # ===== 出书笔记逻辑 =====
         elif d.name == "出书笔记":
             title = _generate_book_note_title(blogger)
             new_post.title = title
-            print("[出书笔记] 《%s》" % title)
         
         blogger.posts.append(new_post)
         # blogger.add_post(new_post)  # 已通过 posts.append 添加，无需重复
 
     return new_post
+
+## 从日程中移除指定任务
+func _remove_from_calendar(task_name: String) -> void:
+    var day = TimerManager.current_day - 1
+    if day >= 0 and day < Blogger.blog_calendar.size():
+        if task_name in Blogger.blog_calendar[day].tasks:
+            Blogger.blog_calendar[day].tasks.erase(task_name)
 
 ## 处理小说连载批次逻辑
 func _handle_novel_batch(blogger):
@@ -476,15 +479,13 @@ func _handle_novel_batch(blogger):
         _assign_novel_title(blogger)
     
     blogger.novel_batch_count += 1
-    print("[小说连载] 《%s》 批次%d, 第%d篇" % [blogger.novel_batch_title, blogger.novel_batch, blogger.novel_batch_count])
-    
+
     # 检查是否达到100篇，自动开新批次
     if blogger.novel_batch_count >= 100:
         blogger.novel_batch += 1
         blogger.novel_batch_count = 0
         blogger.novel_batch_ip_triggered = false
         _assign_novel_title(blogger)  # 分配新主题
-        print("[小说连载] 《%s》完结，新批次《%s》开启" % [blogger.novel_batch_title, blogger.novel_batch_title])
     
     # 检查是否触发IP授权（>=50篇且未触发过）
     elif blogger.novel_batch_count >= 5 and not blogger.novel_batch_ip_triggered:  # 测试用5篇
@@ -568,12 +569,10 @@ func _try_trigger_ip_auth(blogger):
     
     # 检查文学等级是否达到85
     if literature_level < 85:
-        print("[IP授权] 跳过检查 - 文学等级%d/85，未达到85级" % literature_level)
         return
-    
+
     var random_val = randi() % 100
-    print("[IP授权] 检查触发... 批次:%d, 篇数:%d, 文学等级:%d, 随机值:%d/100 (需<99)" % [blogger.novel_batch, blogger.novel_batch_count, literature_level, random_val])
-    
+
     if random_val < 99:  # 99%概率（测试用）
         # 计算收益
         var literature_value = blogger.literature_ability
@@ -584,9 +583,7 @@ func _try_trigger_ip_auth(blogger):
         # 发放收益
         blogger.money += total_reward
         blogger.reputation += 500
-        
-        print("[IP授权] 🎉 触发成功！基础收益: %.0f元, 文学加成: %.0f%%, 总收益: %.0f元" % [base_reward, literature_value, total_reward])
-        
+
         # 弹窗提示
         _show_ip_auth_popup(total_reward, literature_value)
         
@@ -597,15 +594,12 @@ func _show_ip_auth_popup(reward: float, literature_bonus: float):
     var main = get_tree().root.get_node("Main")
     if main and main.has_method("show_popup_message"):
         main.show_popup_message("IP授权收益到账！", "您的作品被影视公司看中！\n\n基础收益: 100000元\n文学加成: %.0f%%\n总收益: %.0f元\n\n声望 +500" % [literature_bonus, reward])
-    else:
-        print("[IP授权] ❌ 未触发！下次篇数达到50时再检查（每批次只触发一次）" )
 
 signal sg_new_blog_post(category: String)
 ## 模拟当天发布新博客文章
 func simulate_new_blog_post(category) -> int:
     # ===== 欠费暂停检查 =====
     if Yun.is_blog_suspended():
-        print("[暂停状态] 博客因欠费暂停运营,无法写新文章")
         emit_signal("no_stamina_signal", "博客因欠费暂停运营,请先续费域名或主机!")
         return 0
 
@@ -616,7 +610,6 @@ func simulate_new_blog_post(category) -> int:
     var blogger = GDManager.get_blogger()
     var d = Utils.find_category_by_name(Utils.possible_categories, category)
     if d.is_empty():
-        print("[警告] 分类 %s 未找到或已被禁用" % category)
         return 0
     var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
 
@@ -633,7 +626,6 @@ func simulate_new_blog_post(category) -> int:
         return int(new_post.quality*0.2)# 简化计算,实际应更复杂
     else:
         # 不再自动恢复体力,直接拒绝
-        print("体力不足,无法写博客")
         emit_signal("no_stamina_signal", "体力不足,无法写博客!需要" + str(actual_cost) + "体力")
         return 0
 
@@ -645,7 +637,6 @@ func update_blog_views() -> int:
 
     # ===== 欠费暂停检查 =====
     if Yun.is_blog_suspended():
-        print("[暂停状态] 博客因欠费暂停运营,访问量不增加")
         return 0
 
     # 确保计算器已初始化
@@ -739,14 +730,7 @@ func update_blog_views() -> int:
             msg += "付费文章总收入: %.0f 元，已入账" % monthly_paid_income
         msg = msg.trim_suffix("\n")
         emit_signal("sg_paid_income_settled", msg)
-        
-        # 分别打印不同来源的收入
-        if monthly_novel_income > 0:
-            print("[小说连载收入] 本月收入: ", monthly_novel_income, " 元，已入账")
-        if monthly_hacker_income > 0:
-            print("[付费黑客攻防收入] 本月收入: ", monthly_hacker_income, " 元，已入账")
-        if monthly_novel_income > 0 or monthly_hacker_income > 0:
-            print("[付费文章总收入] ", monthly_paid_income, " 元")
+
         # 更新上次结算访问量
         last_settle_novel_views = novel_views
         last_settle_hacker_views = hacker_views
@@ -853,11 +837,9 @@ func calculate_article_exp(views) -> int:
 func calculate_promotion_exp() -> int:
     var promotion_cost: int = 10 # 推广花费,可根据社交能力调整
     if money < promotion_cost:
-        print("金钱不足,无法进行推广")
         return 0
 
     money -= promotion_cost
-    print("花费金钱进行推广: ", promotion_cost, ",当前金钱: ", money)
 
     var new_readers := social_ability * 5 # 占位符;新读者数
     # 基础EXP + 效果奖励
@@ -981,7 +963,6 @@ func maintain_friendlink(category: String) -> int:
         var total = approved + rejected
         if total > 0:
             emit_signal("signal_friendlink_maintenance", "处理申请:%d个 通过:%d个 拒绝:%d个" % [total, approved, rejected])
-            print("[友链维护] 处理申请:%d个 通过:%d个 拒绝:%d个" % [total, approved, rejected])
         return 10
     
     return 0
@@ -996,34 +977,27 @@ func execute_icp_filing(category: String) -> int:
     
     # 检查配置是否存在
     if d.is_empty():
-        print("[网站备案] 配置不存在: " + category)
         return 0
-    
+
     var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
-    
+
     if blogger.stamina < actual_cost:
-        print("[网站备案] 体力不足,无法进行ICP备案!需要" + str(actual_cost) + "体力")
         return 0
-    
+
     # 检查是否已经在进行备案
     if blogger.icp_filing_in_progress:
-        print("[网站备案] 备案正在进行中,请等待14天")
         return 0
-    
+
     # 开始备案流程
     blogger.stamina -= actual_cost
     blogger.money -= d.money
     blogger.icp_filing_in_progress = true
     blogger.icp_filing_start_date = Utils.format_date()
-    
+
     # 隐藏网站备案选项（只执行一次）
     d.isVisible = false
     d.disabled = true
-    Utils.replace_task_value(Blogger.blog_calendar, "网站备案", "休息") if Utils else null
-    
-    print("[网站备案] 备案申请已提交,开始等待审核(14天)")
-    print("[网站备案] 开始日期: " + blogger.icp_filing_start_date)
-    
+
     return 0
 
 ## 检查ICP备案进度
@@ -1071,12 +1045,8 @@ func maintain_comment(category: String) -> int:
         var deleted = result.get("deleted_spam", 0)
         if deleted > 0:
             emit_signal("signal_comment_maintenance", "删除垃圾评论:%d条" % deleted)
-            print("[评论管理] 删除垃圾评论:%d条" % deleted)
-        else:
-            emit_signal("signal_comment_maintenance", "没有垃圾评论需要处理")
-            print("[评论管理] 没有垃圾评论需要处理")
-        return 10
-    
+            return 10
+
     return 0
 
 ## 休闲娱乐 -> 休息
@@ -1131,7 +1101,6 @@ func learningToSkills(category: String) -> int:
     var d = Utils.find_category_by_name(Utils.learning_skills, category, true)
 
     if d.is_empty():
-        print("未找到技能: ", category)
         return 0
 
     # 从数据获取技能类型
@@ -1155,7 +1124,6 @@ func learningToSkills(category: String) -> int:
 
     # 检查是否已达到上限
     if current_ability >= MAX_SKILL_LEVEL:
-        print("能力值已满!")
         return 0
 
     # 消耗资源(使用实际体力消耗)
@@ -1171,9 +1139,6 @@ func learningToSkills(category: String) -> int:
 
     # 更新能力值
     set_ability_by_type(skill_type, current_ability)
-
-    # 打印学习结果
-    print("[技能学习] ", category, " | ", skill_type, " 能力值: ", old_ability, " -> ", current_ability, " (+", add_value, ")")
 
     # 检查并解锁下一级技能
     try_unlock_next_skill(d, current_ability)

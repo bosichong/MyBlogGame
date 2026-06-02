@@ -49,6 +49,14 @@ func _ready():
     config_manager.load_all_configs()
     data_container.static_config = config_manager.get_static_config()
 
+    # 初始化当前年份的快照（新游戏）
+    var yearly = data_container.get_yearly_summary()
+    var time = data_container.get_time()
+    var blogger = data_container.get_blogger()
+    if yearly and time and blogger:
+        if not yearly.has_snapshot(time.current_year):
+            yearly.record_yearly_snapshot(time.current_year, blogger)
+
 func _load_all_data():
     for data_name in data_configs:
         var script_path = data_configs[data_name]
@@ -113,9 +121,8 @@ func load_data(name: String, script_path: String):
         var script = load(script_path)
         var data_instance = script.new()
         loaded_data[name] = data_instance
-        print("Loaded data: ", name)
     else:
-        print("Warning: Data file not found: ", script_path)
+        push_warning("Data file not found: %s" % script_path)
 
 func reload_data(name: String):
     if name in data_configs:
@@ -181,6 +188,13 @@ func _on_time_quarter_passed():
     emit_signal("quarter_passed")
 
 func _on_time_year_passed():
+    # 记录新一年的快照数据（用于年度总结）
+    var yearly = data_container.get_yearly_summary()
+    var time = data_container.get_time()
+    var blogger = data_container.get_blogger()
+    if yearly and time and blogger:
+        if not yearly.has_snapshot(time.current_year):
+            yearly.record_yearly_snapshot(time.current_year, blogger)
     emit_signal("year_passed")
 
 func _on_bank_balance_changed(new_balance: float):
@@ -197,6 +211,13 @@ func _on_save_completed(slot: int, success: bool):
 
 func _on_load_completed(slot: int, success: bool):
     if success:
+        # 老存档兼容：确保当前年份有快照
+        var yearly = data_container.get_yearly_summary()
+        var time = data_container.get_time()
+        var blogger = data_container.get_blogger()
+        if yearly and time and blogger:
+            if not yearly.has_snapshot(time.current_year):
+                yearly.record_yearly_snapshot(time.current_year, blogger)
         emit_signal("game_loaded", slot)
 
 # ===== 数据访问快捷方法 =====
@@ -229,6 +250,9 @@ func get_comment() -> CommentData:
 
 func get_story_progress() -> StoryProgress:
     return data_container.get_story_progress()
+
+func get_yearly_summary() -> YearlySummaryData:
+    return data_container.get_yearly_summary()
 
 func get_friend_link_manager() -> FriendLinkManager:
     return friend_link_manager

@@ -56,7 +56,7 @@ func _register_default_events() -> void:
     event_manager.register(ViralEvent.new())
     event_manager.register(FeaturedEvent.new())
     event_manager.register(ActivityEvent.new())
-    event_manager.register(FriendLinkPassiveEvent.new())
+    # event_manager.register(FriendLinkPassiveEvent.new()) # 暂时禁用，等类加载完成
 
 ## 每日计算（在blogger.gd中调用）
 ## 注意：会直接修改 posts 中每篇文章的 views 字段

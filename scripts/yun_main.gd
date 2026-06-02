@@ -150,7 +150,7 @@ func _on_xfbut_pressed() -> void:
     on_show_panel()
     
     if rst.success:
-        show_popup_message("续费成功", rst.message + "\n域名: " + rst.domain_name + "\n到期时间: " + rst.new_end_time + "\n剩余余额: " + str(rst.remaining_balance))
+        show_popup_message("续费成功", rst.message + "\n域名: " + rst.domain_name + "\n到期时间: " + rst.new_end_time + "\n剩余余额: %.2f" % rst.remaining_balance)
     else:
         show_popup_message("续费失败", rst.message)
     
@@ -168,7 +168,7 @@ func _on_xfzj_pressed() -> void:
     on_show_panel()
     
     if rst.success:
-        show_popup_message("续费成功", rst.message + "\n套餐: " + rst.package_name + "\n续费年限: " + str(rst.duration_years) + "年\n到期时间: " + rst.new_end_time + "\n剩余余额: " + str(rst.remaining_balance))
+        show_popup_message("续费成功", rst.message + "\n套餐: " + rst.package_name + "\n续费年限: " + str(rst.duration_years) + "年\n到期时间: " + rst.new_end_time + "\n剩余余额: %.2f" % rst.remaining_balance)
     else:
         show_popup_message("续费失败", rst.message)
 
@@ -271,14 +271,13 @@ func _on_change_package_pressed(package_type: int):
     if result.success:
             # 升级成功，重新创建UI界面
         on_show_panel()
-            
+
          # 显示成功消息
-        print("套餐升级成功: %s" % result.message)
         # 这里可以添加弹窗或其他UI反馈
     else:
         # 升级失败，显示错误信息
-        print("套餐升级失败: %s" % result.message)
         # 这里可以添加弹窗或其他UI反馈
+        pass
 
 func _on_refresh_ui():
     """刷新UI界面"""

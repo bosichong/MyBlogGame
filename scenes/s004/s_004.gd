@@ -8,7 +8,6 @@ func _ready() -> void:
 
 
 func _on_timer_timeout() -> void:
-    print("end..........")
     var other_node = get_node('bg/s_004_01')
     var anim_player = other_node.get_node("AnimationPlayer")
     if anim_player:
@@ -24,5 +23,4 @@ func _on_timer_timeout() -> void:
 func _on_dialog_confirmed():
     # 只有当用户点击确认时才执行跳转
     GDManager.get_story_progress().set_completed(1, "blog_online")
-    print("[StoryProgress] 里程碑已更新: blog_online = true")
     Utils.goto_scene(SCENE_PATH)

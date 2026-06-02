@@ -165,8 +165,7 @@ func _join_lm() -> void:
     Lm.join_lm()
     $"bg/选项组/sc1/VBoxContainer/hbox/zl".visible = false
     $"bg/选项组/sc1/VBoxContainer/hbox/zl2".visible = true
-    var rst = Lm.find_by_id(888)
-    print(rst)
+    Lm.find_by_id(888)
     on_show_panel()
 
 
