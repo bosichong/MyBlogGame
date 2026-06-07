@@ -1,0 +1,233 @@
+[gd_scene format=3 uid="uid://ddbfvyn1ya0r4"]
+
+[ext_resource type="Script" uid="uid://dsxkvt260kwhl" path="res://优秀博客大奖赛/2010/ts_2010_pingxuan.gd" id="1_l7117"]
+[ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="2_l7117"]
+
+[sub_resource type="Animation" id="Animation_8d3v2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("01:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("02:visible_ratio")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("03:visible_ratio")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("04:visible_ratio")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("05:visible_ratio")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("入围名单:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_qspfu"]
+resource_name = "main"
+length = 23.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("01:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 1.5000001, 3.5, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("02:visible_ratio")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 4, 4.5, 6.5, 7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("03:visible_ratio")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 7, 7.5, 11.266666, 11.666666),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("04:visible_ratio")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 11.666666, 12.166666, 17, 17.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("05:visible_ratio")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 17.5, 18, 21.266666, 21.766666),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("入围名单:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 11.566668, 12.133334, 17.400002, 18.066668),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sh8cx"]
+_data = {
+&"RESET": SubResource("Animation_8d3v2"),
+&"main": SubResource("Animation_qspfu")
+}
+
+[node name="Ts2005Pingxuan" type="Node2D" unique_id=1521015679]
+script = ExtResource("1_l7117")
+
+[node name="01" type="RichTextLabel" parent="." unique_id=1037505400]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 500.0
+offset_bottom = 455.0
+text = "第2届优秀博客大赛评选开始了。"
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="02" type="RichTextLabel" parent="." unique_id=1803567681]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 832.0
+offset_bottom = 455.0
+text = "评审团收到了来自中文博客圈数百份提名。"
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="03" type="RichTextLabel" parent="." unique_id=1753201945]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 752.0
+offset_bottom = 455.0
+text = "八年间，博客圈从论坛时代走入社交媒体时代，坚持下来的博主越来越少。"
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="04" type="RichTextLabel" parent="." unique_id=262936621]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 500.0
+offset_bottom = 455.0
+text = "评审团从 200+ 提名中，选出 20 位入围者。"
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="05" type="RichTextLabel" parent="." unique_id=1685236201]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 616.0
+offset_bottom = 455.0
+text = "最终结果将于 12 月颁奖典礼上正式公布。"
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="入围名单" type="RichTextLabel" parent="." unique_id=716461017]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 160.0
+offset_top = 80.0
+offset_right = 860.0
+offset_bottom = 380.0
+grow_horizontal = 2
+theme_override_fonts/normal_font = ExtResource("2_l7117")
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "加载中名单中......
+"
+fit_content = true
+scroll_active = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1257695947]
+libraries/ = SubResource("AnimationLibrary_sh8cx")
+autoplay = &"main"
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

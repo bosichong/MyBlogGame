@@ -1,0 +1,190 @@
+[gd_scene format=3 uid="uid://cb80rchpffdg"]
+
+[ext_resource type="Script" uid="uid://ba4m2rhy0pcir" path="res://优秀博客大奖赛/2005/ts_2005_pingxuan.gd" id="1_qspfu"]
+
+[sub_resource type="Animation" id="Animation_8d3v2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("01:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("02:visible_ratio")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("03:visible_ratio")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("04:visible_ratio")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("05:visible_ratio")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_qspfu"]
+resource_name = "main"
+length = 23.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("01:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 1.5000001, 3.5, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("02:visible_ratio")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 4, 4.5, 6.5, 7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("03:visible_ratio")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 7, 7.5, 11.266666, 11.666666),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("04:visible_ratio")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 11.666666, 12.166666, 17, 17.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("05:visible_ratio")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 17.5, 18, 21.266666, 21.766666),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sh8cx"]
+_data = {
+&"RESET": SubResource("Animation_8d3v2"),
+&"main": SubResource("Animation_qspfu")
+}
+
+[node name="Ts2005Pingxuan" type="Node2D" unique_id=1521015679]
+script = ExtResource("1_qspfu")
+
+[node name="01" type="RichTextLabel" parent="." unique_id=1037505400]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 500.0
+offset_bottom = 455.0
+text = "第1届优秀博客大赛评选开始了。"
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="02" type="RichTextLabel" parent="." unique_id=1803567681]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 500.0
+offset_bottom = 455.0
+text = "评审团收到了来自中文博客圈数百份提名。"
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="03" type="RichTextLabel" parent="." unique_id=1753201945]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 752.0
+offset_bottom = 455.0
+text = "这是博客联盟第一次举办这样的评选。三年来，无数博主在网络上坚持记录，您也是其中之一。"
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="04" type="RichTextLabel" parent="." unique_id=262936621]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 500.0
+offset_bottom = 455.0
+text = "评审团在 200+ 提名中，遴选了 50 位获得提名的博主。"
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="05" type="RichTextLabel" parent="." unique_id=1685236201]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 500.0
+offset_bottom = 455.0
+text = "最终结果将于 12 月颁奖典礼上正式公布。"
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1257695947]
+libraries/ = SubResource("AnimationLibrary_sh8cx")
+autoplay = &"main"
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

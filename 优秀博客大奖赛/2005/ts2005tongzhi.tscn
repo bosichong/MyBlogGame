@@ -1,0 +1,165 @@
+[gd_scene format=3 uid="uid://0uc31bx1m5y3"]
+
+[ext_resource type="Script" uid="uid://bseptx7w7vij" path="res://优秀博客大奖赛/2005/ts_2005_tongzhi.gd" id="1_2ftj6"]
+[ext_resource type="Texture2D" uid="uid://do0ukex12h06a" path="res://assets/scens/s003/email2.png" id="1_m54h2"]
+[ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="2_2ftj6"]
+[ext_resource type="Texture2D" uid="uid://bn02govqswnuy" path="res://assets/scens/s003/email3.png" id="3_alrwd"]
+[ext_resource type="Texture2D" uid="uid://cu65sg6tpyng7" path="res://assets/scens/s003/email.png" id="4_v11dm"]
+
+[sub_resource type="Animation" id="Animation_gu5nn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("email_ico:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("emailui:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_x7pta"]
+resource_name = "main"
+length = 10.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("email_ico:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 1.2, 1.4000001, 1.6000001, 1.8000001, 2.5000002, 3.0000002),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("emailui:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 3.0300002, 3.5633335),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7f2gj"]
+_data = {
+&"RESET": SubResource("Animation_gu5nn"),
+&"main": SubResource("Animation_x7pta")
+}
+
+[node name="Ts2005tongzhi" type="Node2D" unique_id=983999548]
+script = ExtResource("1_2ftj6")
+metadata/_edit_horizontal_guides_ = [240.0]
+metadata/_edit_vertical_guides_ = [480.0]
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=347086768]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 960.0
+offset_bottom = 480.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6666667)
+metadata/_edit_lock_ = true
+
+[node name="emailui" type="Node2D" parent="." unique_id=892557905]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(-16, 0)
+
+[node name="ui" type="Sprite2D" parent="emailui" unique_id=1028483272]
+position = Vector2(499, 240)
+texture = ExtResource("1_m54h2")
+
+[node name="列表" type="Label" parent="emailui" unique_id=921665209]
+visible = false
+offset_left = 238.0
+offset_top = 167.0
+offset_right = 302.0
+offset_bottom = 190.0
+theme_override_colors/font_color = Color(0, 0.34902, 0.6, 1)
+theme_override_fonts/font = ExtResource("2_2ftj6")
+theme_override_font_sizes/font_size = 14
+text = "邮件列表"
+
+[node name="email_title" type="Label" parent="emailui" unique_id=1423121991]
+visible = false
+offset_left = 377.0
+offset_top = 176.0
+offset_right = 638.0
+offset_bottom = 199.0
+theme_override_colors/font_color = Color(7.70092e-07, 0.668736, 0.918941, 1)
+theme_override_fonts/font = ExtResource("2_2ftj6")
+theme_override_font_sizes/font_size = 10
+text = "云起网络：免费域名+主机，送给你。----2001年12月28日"
+
+[node name="email3" type="Sprite2D" parent="emailui" unique_id=881723464]
+position = Vector2(504, 241)
+texture = ExtResource("3_alrwd")
+
+[node name="tit" type="Label" parent="emailui" unique_id=2064013669]
+offset_left = 377.0
+offset_top = 176.0
+offset_right = 700.0
+offset_bottom = 199.0
+theme_override_colors/font_color = Color(0, 0.670588, 0.917647, 1)
+theme_override_fonts/font = ExtResource("2_2ftj6")
+theme_override_font_sizes/font_size = 14
+text = "中文博客联盟【第 1 届中文优秀博客大奖】评选通知"
+
+[node name="con2" type="Label" parent="emailui" unique_id=978802944]
+offset_left = 376.0
+offset_top = 216.0
+offset_right = 776.0
+offset_bottom = 383.0
+theme_override_colors/font_color = Color(1.44392e-06, 0.502224, 0.691956, 1)
+theme_override_fonts/font = ExtResource("2_2ftj6")
+theme_override_font_sizes/font_size = 10
+text = "亲爱的博主朋友：
+
+您好！
+第 1 届「中文优秀博客大奖」评选活动现已启动。本届主题为「内容更新频率」，评选标准为「三年持续更新」。
+经联盟评审团初筛，您的博客已获得提名。
+恭喜您获得本届大奖提名，希望您继续坚持！
+颁奖时间：2005 年 12 月
+颁奖地点：线上公告（无现场）
+中文博客联盟  2005 年 11 月"
+autowrap_mode = 1
+
+[node name="Button" type="Button" parent="emailui" unique_id=1439150922]
+offset_left = 712.0
+offset_top = 88.0
+offset_right = 784.0
+offset_bottom = 119.0
+text = "退出邮箱"
+
+[node name="email_ico" type="Sprite2D" parent="." unique_id=768855555]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(480, 240)
+texture = ExtResource("4_v11dm")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=504074145]
+libraries/ = SubResource("AnimationLibrary_7f2gj")
+autoplay = &"main"
+
+[connection signal="pressed" from="emailui/Button" to="." method="_on_button_pressed"]

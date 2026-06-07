@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://s6mbksej2dge"]
+
+[ext_resource type="Script" uid="uid://bhosxpxoeukgg" path="res://优秀博客大奖赛/ts_main.gd" id="1_e2nrp"]
+
+[node name="TsMain" type="Node2D" unique_id=738044249]
+script = ExtResource("1_e2nrp")
+
+[node name="Button" type="Button" parent="." unique_id=425114294]
+offset_left = 56.0
+offset_top = 48.0
+offset_right = 277.0
+offset_bottom = 79.0
+text = "2005第一届优秀博客大赛通知"
+
+[node name="Button2" type="Button" parent="." unique_id=1172978804]
+offset_left = 312.0
+offset_top = 48.0
+offset_right = 533.0
+offset_bottom = 79.0
+text = "2005第一届优秀博客大赛评选"
+
+[node name="Button3" type="Button" parent="." unique_id=339223736]
+offset_left = 560.0
+offset_top = 48.0
+offset_right = 781.0
+offset_bottom = 79.0
+text = "2005第一届优秀博客大赛揭晓"
+
+[node name="Button4" type="Button" parent="." unique_id=775697253]
+offset_left = 56.0
+offset_top = 144.0
+offset_right = 277.0
+offset_bottom = 175.0
+text = "2010第一届优秀博客大赛通知"
+
+[node name="Button5" type="Button" parent="." unique_id=974939917]
+offset_left = 312.0
+offset_top = 144.0
+offset_right = 533.0
+offset_bottom = 175.0
+text = "2010第一届优秀博客大赛评选"
+
+[node name="Button6" type="Button" parent="." unique_id=1917409707]
+offset_left = 560.0
+offset_top = 144.0
+offset_right = 781.0
+offset_bottom = 175.0
+text = "2010第一届优秀博客大赛揭晓"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="Button3" to="." method="_on_button_3_pressed"]
+[connection signal="pressed" from="Button4" to="." method="_on_button_4_pressed"]
+[connection signal="pressed" from="Button5" to="." method="_on_button_5_pressed"]
+[connection signal="pressed" from="Button6" to="." method="_on_button_6_pressed"]
