@@ -124,6 +124,9 @@ const CONDITIONS: Dictionary = {
     
     # 写书状态条件
     "book_writing_started": {"type": ConditionType.CUSTOM, "check_func": "check_book_writing"},
+
+    # 2005年度总结条件（仅2005年发布的年度总结）
+    "year_summary_2005_posted": {"type": ConditionType.CUSTOM, "check_func": "check_year_summary_2005"},
     
     # 开源项目状态条件
     "open_source_project_started": {"type": ConditionType.CUSTOM, "check_func": "check_open_source_project"},
@@ -671,6 +674,18 @@ const TASKS: Array = [
         "actions": [
             {"type": ActionType.SHOW_POPUP_NOTIFICATION, "template": "yearly_summary", "title": "🎉 {year}年度总结已发布！"},
             {"type": ActionType.LOCK_POST_TASK, "post_type": "年度总结"},
+        ],
+    },
+    {
+        "id": "chapter1_end_2005_review",
+        "description": "2005年度总结发布，完成三年回顾，第一章结束",
+        "conditions": ["year_summary_2005_posted"],
+        "trigger_type": "post_event",
+        "post_type_filter": "年度总结",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "year_summary_2005"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 三年回顾", "content": "从2001年冬夜那封邮件开始，你的博客已经走过了三年时光。\n\n你从一个对互联网充满好奇的年轻人，成长为一名被行业认可的博主。\n\n这不是结束，而是新的开始——故事，才刚刚开始。"},
         ],
     },
     

@@ -1015,6 +1015,13 @@ func settle_monthly_book_sales() -> Dictionary:
 func settle_monthly_open_source() -> Dictionary:
     return OpenSourceMgr.settle_monthly_open_source() if OpenSourceMgr else {"total_income": 0}
 
+## 自定义条件检查:2005年度总结已发布
+func check_year_summary_2005(context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var time = GDManager.get_time()
+    return time != null and time.current_year == 2005
+
 ## 自定义条件检查:ICP备案进行中
 func check_icp_filing_in_progress(context: Dictionary) -> bool:
     if not GDManager:
