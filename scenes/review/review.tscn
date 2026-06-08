@@ -1,10 +1,24 @@
-[gd_scene load_steps=2 format=3 uid="uid://djqyi3mkciwh2"]
+[gd_scene format=3 uid="uid://djqyi3mkciwh2"]
 
-[ext_resource type="Script" path="res://scenes/review/review.gd" id="1_7r4hb"]
+[ext_resource type="Script" uid="uid://e46vrpwcvku" path="res://scenes/review/review.gd" id="1_7r4hb"]
+[ext_resource type="Texture2D" uid="uid://yu65bfhg3de" path="res://assets/启动画面.png" id="1_o6k8v"]
 
-[node name="Review" type="Node2D"]
+[node name="Review" type="Node2D" unique_id=180038036]
+script = ExtResource("1_7r4hb")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=2062579712]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 960.0
+offset_bottom = 480.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Background" type="TextureRect" parent="Panel" unique_id=1997117373]
+modulate = Color(1, 1, 1, 0.20392157)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,46 +26,38 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+texture = ExtResource("1_o6k8v")
 stretch_mode = 2
 
-[node name="Clipper" type="Control" parent="."]
+[node name="BackButton" type="Button" parent="Panel" unique_id=863590117]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-clip_contents = true
-
-[node name="ScrollLabel" type="RichTextLabel" parent="Clipper"]
-layout_mode = 1
-anchors_preset = 0
-offset_left = 200.0
-offset_top = 0.0
-offset_right = -200.0
-offset_bottom = 0.0
-mouse_filter = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-autowrap_mode = 0
-bbcode_enabled = true
-scroll_active = false
-text = ""
-
-[node name="BackButton" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 8
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -110.0
-offset_top = -60.0
-offset_right = 110.0
-offset_bottom = -10.0
+offset_left = -44.0
+offset_top = -31.0
+offset_right = 44.0
 grow_horizontal = 2
 grow_vertical = 0
+size_flags_vertical = 8
 text = "返回主场景"
 
-[connection signal="pressed" from="BackButton" to="." method="back_to_main"]
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel" unique_id=785952593]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -295.5
+offset_top = -150.0
+offset_right = 295.5
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+scroll_active = false
+text = "文字加载中"
+
+[connection signal="pressed" from="Panel/BackButton" to="." method="back_to_main"]

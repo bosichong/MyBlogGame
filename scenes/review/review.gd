@@ -7,10 +7,11 @@ var review_title: String = ""
 var from_year: int = 0
 var to_year: int = 0
 
-@onready var scroll_label: RichTextLabel = $Clipper/ScrollLabel
-@onready var back_button: Button = $BackButton
+@onready var scroll_label: RichTextLabel = $Panel/RichTextLabel
+@onready var back_button: Button = $Panel/BackButton
 
 func _ready() -> void:
+    scroll_label.scroll_active = false
     if TaskManager:
         var params = TaskManager.pending_scene_params
         from_year = params.get("from_year", 0)
@@ -37,22 +38,40 @@ func _make_test_events() -> Array[Dictionary]:
         {"time": "2004-09", "title": "第一笔广告收入", "description": "收到第一笔广告收益12.5元"},
         {"time": "2005-01", "title": "友链交换", "description": "与星光博客交换友链"},
         {"time": "2005-08", "title": "网站备案完成", "description": "响应国家备案制度"},
-        {"time": "2005-11", "title": "博客优秀大奖提名", "description": "获得提名，称号"博客新星""},
+        {"time": "2005-11", "title": "博客优秀大奖提名", "description": "获得提名，称号[博客新星]"},
     ]
 
 func _build_scroll_text() -> void:
-    var text = "[center][b]%s[/b]\n%d - %d[/center]\n\n" % [review_title, from_year, to_year]
+    scroll_label.clear()
+
+    scroll_label.push_center()
+    scroll_label.push_bold()
+    scroll_label.push_font_size(24)
+    scroll_label.add_text(review_title)
+    scroll_label.pop()
+    scroll_label.pop()
+    scroll_label.pop()
+    scroll_label.add_text("\n")
+    scroll_label.push_center()
+    scroll_label.add_text("%d - %d" % [from_year, to_year])
+    scroll_label.pop()
+
+    scroll_label.add_text("\n\n")
 
     for e in review_events:
         var time = e.get("time", "")
         var title = e.get("title", "")
         var desc = e.get("description", "")
-        text += "[b]%s[/b]  %s\n" % [time, title]
-        if not desc.is_empty():
-            text += "  %s\n" % desc
-        text += "\n"
 
-    scroll_label.text = text
+        scroll_label.push_bold()
+        scroll_label.add_text("%s  %s" % [time, title])
+        scroll_label.pop()
+        scroll_label.add_text("\n")
+
+        if not desc.is_empty():
+            scroll_label.add_text("  %s\n" % desc)
+
+        scroll_label.add_text("\n")
 
 func _start_scroll() -> void:
     await get_tree().process_frame
@@ -71,7 +90,9 @@ func _start_scroll() -> void:
     tween.tween_property(scroll_label, "position:y", end_y, duration)
 
 func back_to_main() -> void:
-    Utils.goto_scene(MAIN_SCENE_PATH)
+    #Utils.goto_scene(MAIN_SCENE_PATH)
+    
+    pass 
 
 func get_review_events() -> Array[Dictionary]:
     return review_events
