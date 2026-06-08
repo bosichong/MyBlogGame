@@ -63,6 +63,7 @@ func _build_scroll_text() -> void:
         var title = e.get("title", "")
         var desc = e.get("description", "")
 
+        scroll_label.push_paragraph(HORIZONTAL_ALIGNMENT_CENTER)
         scroll_label.push_bold()
         scroll_label.add_text("%s  %s" % [time, title])
         scroll_label.pop()
@@ -72,6 +73,7 @@ func _build_scroll_text() -> void:
             scroll_label.add_text("  %s\n" % desc)
 
         scroll_label.add_text("\n")
+        scroll_label.pop()
 
 func _start_scroll() -> void:
     await get_tree().process_frame

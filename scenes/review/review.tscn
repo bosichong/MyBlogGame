@@ -7,6 +7,7 @@
 script = ExtResource("1_7r4hb")
 
 [node name="Panel" type="Panel" parent="." unique_id=2062579712]
+clip_contents = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -16,7 +17,6 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-clip_contents = true
 
 [node name="Background" type="TextureRect" parent="Panel" unique_id=1997117373]
 modulate = Color(1, 1, 1, 0.20392157)
@@ -29,6 +29,18 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("1_o6k8v")
 stretch_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel" unique_id=785952593]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 40.0
+offset_right = -40.0
+offset_bottom = 9999.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "文字加载中"
+scroll_active = false
 
 [node name="BackButton" type="Button" parent="Panel" unique_id=863590117]
 layout_mode = 1
@@ -44,20 +56,5 @@ grow_horizontal = 2
 grow_vertical = 0
 size_flags_vertical = 8
 text = "返回主场景"
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Panel" unique_id=785952593]
-layout_mode = 1
-anchors_preset = 9
-anchor_left = 0.0
-anchor_right = 1.0
-anchor_bottom = 0.0
-offset_left = 40.0
-offset_top = 0.0
-offset_right = -40.0
-offset_bottom = 9999
-grow_horizontal = 2
-grow_vertical = 2
-scroll_active = false
-text = "文字加载中"
 
 [connection signal="pressed" from="Panel/BackButton" to="." method="back_to_main"]

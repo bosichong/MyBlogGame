@@ -277,8 +277,8 @@ func deserialize_time_data(data: TimeData, dict: Dictionary):
     data.current_quarter = dict.get("current_quarter", 1)
     data.time_scale = dict.get("time_scale", 1.0)
     data.is_paused = dict.get("is_paused", false)
-    data.game_start_date = dict.get("game_start_date", str(TimeData.GAME_START_YEAR) + "-1-1-1")
-    data.current_date_str = dict.get("current_date_str", str(TimeData.GAME_START_YEAR) + "-1-1-1")
+    data.game_start_date = dict.get("game_start_date", TimeData.get_game_start_date_str())
+    data.current_date_str = dict.get("current_date_str", TimeData.get_game_start_date_str())
 
 func serialize_bank_data(data: BankData) -> Dictionary:
     return {

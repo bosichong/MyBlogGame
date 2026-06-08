@@ -14,7 +14,7 @@ var chapter1 = {
     "first_article_favorited": false,  # [已实现] 第一次文章收藏：获得第一篇文章收藏
     "first_income": false,            # [已实现]加入广告联盟并收到第一笔广告收益
     "icp_filing_done": false,        # [已实现]网站备案完成：响应国家备案制度
-    "award_2005": false,              # 博客优秀大奖（2005）：获得提名，称号"博客新星"
+    "award_2005": false,              # [已实现]博客优秀大奖（2005）：获得提名，称号"博客新星"
     "year_summary_2005": false,       # 2005年度总结：三年回顾
 }
 

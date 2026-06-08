@@ -1,21 +1,28 @@
 class_name TimeData
 
+## 游戏起始时间相关常量（修改此处即可调整游戏起始时间）
 const GAME_START_YEAR: int = 2001
+const GAME_START_MONTH: int = 12
+const GAME_START_WEEK: int = 4
+const GAME_START_DAY: int = 7
+
+## 云主机和域名免费时长（年）
+const FREE_DURATION_YEARS: int = 1
 
 var current_year: int = GAME_START_YEAR
-var current_month: int = 12
-var current_week: int = 4
-var current_day: int = 7
+var current_month: int = GAME_START_MONTH
+var current_week: int = GAME_START_WEEK
+var current_day: int = GAME_START_DAY
 var current_quarter: int = 1
 
 var time_scale: float = 1.0
 var is_paused: bool = false
 
 ## 游戏起始日期（格式：年-月-周-日）
-var game_start_date: String = "2001-12-4-7"
+var game_start_date: String = get_game_start_date_str()
 
 ## 当前日期字符串
-var current_date_str: String = "2001-12-4-7"
+var current_date_str: String = get_game_start_date_str()
 
 signal day_passed
 signal week_passed
@@ -41,6 +48,15 @@ func get_total_days() -> int:
 
 func get_formatted_date() -> String:
     return "%d-%d-%d-%d" % [current_year, current_month, current_week, current_day]
+
+## 获取游戏起始日期字符串（格式：年-月-周-日）
+static func get_game_start_date_str() -> String:
+    return "%d-%d-%d-%d" % [GAME_START_YEAR, GAME_START_MONTH, GAME_START_WEEK, GAME_START_DAY]
+
+## 获取起始时间 N 年后的日期字符串（用于域名/主机到期时间计算）
+## 简化处理：月份/周/日保持与起始时间一致
+static func get_date_after_years(years: int) -> String:
+    return "%d-%d-%d-%d" % [GAME_START_YEAR + years, GAME_START_MONTH, GAME_START_WEEK, GAME_START_DAY]
 
 func advance_day():
     current_day += 1

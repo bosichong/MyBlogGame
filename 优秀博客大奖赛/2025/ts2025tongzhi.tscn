@@ -1,10 +1,10 @@
-[gd_scene format=3 uid="uid://b3y1kn3xsv1uw"]
+[gd_scene format=3 uid="uid://by1hrey6unhsr"]
 
-[ext_resource type="Script" uid="uid://b8v421noemwcs" path="res://优秀博客大奖赛/2010/ts_2010_tongzhi.gd" id="1_hm8yn"]
-[ext_resource type="Texture2D" uid="uid://do0ukex12h06a" path="res://assets/scens/s003/email2.png" id="2_26jmf"]
-[ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="3_f265r"]
-[ext_resource type="Texture2D" uid="uid://bn02govqswnuy" path="res://assets/scens/s003/email3.png" id="4_afgaa"]
-[ext_resource type="Texture2D" uid="uid://cu65sg6tpyng7" path="res://assets/scens/s003/email.png" id="5_gd0an"]
+[ext_resource type="Script" uid="uid://g3i7wc2u4f7h" path="res://优秀博客大奖赛/2025/ts_2025_tongzhi.gd" id="1_2ftj6"]
+[ext_resource type="Texture2D" uid="uid://do0ukex12h06a" path="res://assets/scens/s003/email2.png" id="1_m54h2"]
+[ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="2_2ftj6"]
+[ext_resource type="Texture2D" uid="uid://bn02govqswnuy" path="res://assets/scens/s003/email3.png" id="3_alrwd"]
+[ext_resource type="Texture2D" uid="uid://cu65sg6tpyng7" path="res://assets/scens/s003/email.png" id="4_v11dm"]
 
 [sub_resource type="Animation" id="Animation_gu5nn"]
 length = 0.001
@@ -67,8 +67,8 @@ _data = {
 &"main": SubResource("Animation_x7pta")
 }
 
-[node name="Ts2010tongzhi" type="Node2D" unique_id=983999548]
-script = ExtResource("1_hm8yn")
+[node name="Ts2025tongzhi" type="Node2D" unique_id=983999548]
+script = ExtResource("1_2ftj6")
 metadata/_edit_horizontal_guides_ = [240.0]
 metadata/_edit_vertical_guides_ = [480.0]
 
@@ -89,7 +89,7 @@ position = Vector2(-16, 0)
 
 [node name="ui" type="Sprite2D" parent="emailui" unique_id=1028483272]
 position = Vector2(499, 240)
-texture = ExtResource("2_26jmf")
+texture = ExtResource("1_m54h2")
 
 [node name="列表" type="Label" parent="emailui" unique_id=921665209]
 visible = false
@@ -98,7 +98,7 @@ offset_top = 167.0
 offset_right = 302.0
 offset_bottom = 190.0
 theme_override_colors/font_color = Color(0, 0.34902, 0.6, 1)
-theme_override_fonts/font = ExtResource("3_f265r")
+theme_override_fonts/font = ExtResource("2_2ftj6")
 theme_override_font_sizes/font_size = 14
 text = "邮件列表"
 
@@ -109,13 +109,13 @@ offset_top = 176.0
 offset_right = 638.0
 offset_bottom = 199.0
 theme_override_colors/font_color = Color(7.70092e-07, 0.668736, 0.918941, 1)
-theme_override_fonts/font = ExtResource("3_f265r")
+theme_override_fonts/font = ExtResource("2_2ftj6")
 theme_override_font_sizes/font_size = 10
 text = "云起网络：免费域名+主机，送给你。----2001年12月28日"
 
 [node name="email3" type="Sprite2D" parent="emailui" unique_id=881723464]
 position = Vector2(504, 241)
-texture = ExtResource("4_afgaa")
+texture = ExtResource("3_alrwd")
 
 [node name="tit" type="Label" parent="emailui" unique_id=2064013669]
 offset_left = 377.0
@@ -123,9 +123,9 @@ offset_top = 176.0
 offset_right = 700.0
 offset_bottom = 199.0
 theme_override_colors/font_color = Color(0, 0.670588, 0.917647, 1)
-theme_override_fonts/font = ExtResource("3_f265r")
+theme_override_fonts/font = ExtResource("2_2ftj6")
 theme_override_font_sizes/font_size = 14
-text = "中文博客联盟【第 2 届中文优秀博客大奖】评选通知"
+text = "中文博客联盟【第 5 届中文优秀博客大奖】评选通知"
 
 [node name="con2" type="Label" parent="emailui" unique_id=978802944]
 offset_left = 376.0
@@ -133,17 +133,17 @@ offset_top = 216.0
 offset_right = 776.0
 offset_bottom = 383.0
 theme_override_colors/font_color = Color(1.44392e-06, 0.502224, 0.691956, 1)
-theme_override_fonts/font = ExtResource("3_f265r")
+theme_override_fonts/font = ExtResource("2_2ftj6")
 theme_override_font_sizes/font_size = 10
 text = "亲爱的博主朋友：
 
 您好！
-第 2 届「中文优秀博客大奖」评选活动现已启动。本届主题为「内容质量 + 访问量」，评选标准为「文章深度与影响力」。
-经联盟评审团初筛，您的博客已进入入围名单。
-您的博客从众多提名中脱颖而出，正式入围！
-颁奖时间：2010 年 12 月
-颁奖地点：线上公告 + 联盟年会
-中文博客联盟  2010 年 11 月"
+第 5 届「中文优秀博客大奖」评选活动现已启动。本届主题为「回归表达的本质」，评选标准为「内容真诚度」。
+经联盟评审团初筛，您的博客已受邀请参加。
+您是博客圈的传奇人物，本届组委会特别邀请您莅临。
+颁奖时间：2025 年 12 月
+颁奖地点：杭州 · 中文博客大会
+中文博客联盟  2025 年 11 月"
 autowrap_mode = 1
 
 [node name="Button" type="Button" parent="emailui" unique_id=1439150922]
@@ -156,7 +156,7 @@ text = "退出邮箱"
 [node name="email_ico" type="Sprite2D" parent="." unique_id=768855555]
 modulate = Color(1, 1, 1, 0)
 position = Vector2(480, 240)
-texture = ExtResource("5_gd0an")
+texture = ExtResource("4_v11dm")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=504074145]
 libraries/ = SubResource("AnimationLibrary_7f2gj")

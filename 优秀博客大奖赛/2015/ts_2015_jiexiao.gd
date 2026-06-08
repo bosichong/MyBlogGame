@@ -7,7 +7,7 @@ func _ready() -> void:
 
 func _grant_title() -> void:
     var sp = GDManager.get_story_progress()
-    sp.set_completed(1, "award_2005")
+    sp.set_completed(3, "award_2015")
 
 func _update_con_content() -> void:
     var con_label: Label = get_node_or_null("Panel/con")
@@ -17,10 +17,10 @@ func _update_con_content() -> void:
     var player_name: String = str(Blogger.blog_data.get("blog_name", "我的博客"))
 
     var content := ""
-    content += "恭喜您的博客「%s」获得第 1 届「中文优秀博客大奖」提名！\n\n" % player_name
-    content += "本届共有 50 位优秀博主获得提名，您的博客名列其中。\n\n"
-    content += "您获得称号「博客新星（2005）」！\n\n"
-    content += "评语：「三年坚持，初心未改。您的博客是中文独立博客圈新生的力量。」"
+    content += "第 3 届「中文优秀博客大奖」获奖名单正式公布——\n\n"
+    content += "本届共有 6 位博主荣获优秀博客大奖，「%s」是其中之一！\n\n" % player_name
+    content += "您获得称号「优秀博客（2015）」！\n\n"
+    content += "评语：「您的博客代表了中文独立博客的精神。在这个喧嚣的时代，您守住了自己的角落。」"
 
     con_label.text = content
 

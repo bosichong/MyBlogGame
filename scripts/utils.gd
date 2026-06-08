@@ -50,18 +50,27 @@ func get_quality(category: String) -> int:
         return 0
 
 
+## 时代标签常量（每个时代跨度 5 年）
+const ERA_KEYS: Array[String] = [
+    "era_2002_2005",  # 第1章：offset 0-4
+    "era_2006_2010",  # 第2章：offset 5-9
+    "era_2011_2015",  # 第3章：offset 10-14
+    "era_2016_2020",  # 第4章：offset 15-19
+    "era_2021_2025",  # 第5章：offset 20+
+]
+## 每个时代的年数跨度
+const ERA_YEARS_PER_ERA: int = 5
+
 ## 根据年份获取时代标签
+## 基于 GAME_START_YEAR 的相对偏移计算，5 年一个时代
 func get_era_key(year: int) -> String:
-    if year <= 2005:
-        return "era_2002_2005"
-    elif year <= 2010:
-        return "era_2006_2010"
-    elif year <= 2015:
-        return "era_2011_2015"
-    elif year <= 2020:
-        return "era_2016_2020"
-    else:
-        return "era_2021_2025"
+    var offset = year - TimeData.GAME_START_YEAR
+    if offset < 0:
+        return ERA_KEYS[0]  # 起始前也归入第一章
+    var era_index = offset / ERA_YEARS_PER_ERA
+    if era_index >= ERA_KEYS.size():
+        era_index = ERA_KEYS.size() - 1
+    return ERA_KEYS[era_index]
 
 ## 生成随机标题
 func generate_random_title(category: String) -> String:

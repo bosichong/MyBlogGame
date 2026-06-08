@@ -12,8 +12,8 @@ const DOMAIN_RENEWAL_COST = 80.0  # 可以根据实际需求修改这个数值
 # 域名信息
 var domain_info = {
     "name": "suiyan.cc",
-    "start_time": "2001-12-4-7",  # YYYY-M-W-D
-    "end_time": "2002-12-4-7",    # YYYY-M-W-D
+    "start_time": TimeData.get_game_start_date_str(),     # YYYY-M-W-D
+    "end_time": TimeData.get_date_after_years(TimeData.FREE_DURATION_YEARS),
     "is_active": true
 }
 
@@ -191,8 +191,8 @@ const PACKAGE_DEFINITIONS: Dictionary = {
 var server_package = {
     "type": PackageType.FREE,
     "name": PACKAGE_DEFINITIONS[PackageType.FREE]["name"],
-    "start_time": str(TimeData.GAME_START_YEAR) + "-1-1-1",
-    "end_time": str(TimeData.GAME_START_YEAR + 1) + "-1-1-1",
+    "start_time": TimeData.get_game_start_date_str(),
+    "end_time": TimeData.get_date_after_years(TimeData.FREE_DURATION_YEARS),
     "is_active": true,
     "monthly_traffic_limit": PACKAGE_DEFINITIONS[PackageType.FREE]["traffic_limit"]
 }
@@ -225,8 +225,8 @@ var recovery_current_day: int = 0
 func initialize_free_package():
     """初始化免费套餐 - 赠送一年使用期"""
     var current_date = Utils.format_date()
-    server_package.start_time = "2001-12-4-7"
-    server_package.end_time = "2002-12-4-7"
+    server_package.start_time = TimeData.get_game_start_date_str()
+    server_package.end_time = TimeData.get_date_after_years(TimeData.FREE_DURATION_YEARS)
     server_package.type = PackageType.FREE
     server_package.name = PACKAGE_DEFINITIONS[PackageType.FREE]["name"]
     server_package.monthly_traffic_limit = PACKAGE_DEFINITIONS[PackageType.FREE]["traffic_limit"]
