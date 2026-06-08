@@ -43,6 +43,8 @@ var task_states: Array[Dictionary] = []
 
 ## 弹窗确认后要跳转的场景路径（由 main.gd 读取）
 var pending_scene_after_popup: String = ""
+## 弹窗跳转场景的参数（如回顾年份范围）
+var pending_scene_params: Dictionary = {}
 
 ## 信号定义
 signal schedule_refresh_needed
@@ -869,6 +871,11 @@ func _action_show_popup_notification(action: Dictionary, context: Dictionary = {
         content = content.replace("{income_amount}", income_amount)
         var follow_up_scene = action.get("follow_up_scene", "")
         pending_scene_after_popup = follow_up_scene
+        pending_scene_params = {
+            "from_year": action.get("review_from_year", 0),
+            "to_year": action.get("review_to_year", 0),
+            "title": action.get("review_title", ""),
+        }
         emit_signal("sg_task_show_popup_msg", title, content)
 
 ## 渲染弹窗模板

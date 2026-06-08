@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://djqyi3mkciwh2"]
+
+[ext_resource type="Script" path="res://scenes/review/review.gd" id="1_7r4hb"]
+
+[node name="Review" type="Node2D"]
+script = ExtResource("1_7r4hb")
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "继  续"
+
+[connection signal="pressed" from="BackButton" to="." method="back_to_main"]
