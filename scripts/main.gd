@@ -435,6 +435,13 @@ func show_popup_message(title: String, content: String) -> void:
     $AcceptDialog.popup_centered()  
     
     TimerManager.stop_timer()
+    
+    if TaskManager and not TaskManager.pending_scene_after_popup.is_empty():
+        var scene = TaskManager.pending_scene_after_popup
+        TaskManager.pending_scene_after_popup = ""
+        $AcceptDialog.confirmed.connect(func():
+            Utils.goto_scene(scene)
+        , CONNECT_ONE_SHOT)
 
 func s_level(l):
     var tx = Utils.get_rank_title(l,Strs.game_strs.头衔)

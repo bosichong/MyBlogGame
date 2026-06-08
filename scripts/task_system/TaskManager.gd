@@ -41,6 +41,9 @@ var OpenSourceMgr = null
 ## 任务状态
 var task_states: Array[Dictionary] = []
 
+## 弹窗确认后要跳转的场景路径（由 main.gd 读取）
+var pending_scene_after_popup: String = ""
+
 ## 信号定义
 signal schedule_refresh_needed
 signal sg_task_info_display_msg(msg)
@@ -864,6 +867,8 @@ func _action_show_popup_notification(action: Dictionary, context: Dictionary = {
         content = content.replace("{link_blog_name}", link_blog_name)
         var income_amount = context.get("income_amount", "0.00")
         content = content.replace("{income_amount}", income_amount)
+        var follow_up_scene = action.get("follow_up_scene", "")
+        pending_scene_after_popup = follow_up_scene
         emit_signal("sg_task_show_popup_msg", title, content)
 
 ## 渲染弹窗模板
