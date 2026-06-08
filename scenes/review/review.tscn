@@ -12,6 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+stretch_mode = 2
 
 [node name="Clipper" type="Control" parent="."]
 layout_mode = 1
@@ -26,9 +27,9 @@ clip_contents = true
 [node name="ScrollLabel" type="RichTextLabel" parent="Clipper"]
 layout_mode = 1
 anchors_preset = 0
-offset_left = 80.0
+offset_left = 200.0
 offset_top = 0.0
-offset_right = -80.0
+offset_right = -200.0
 offset_bottom = 0.0
 mouse_filter = 2
 size_flags_horizontal = 4
@@ -45,9 +46,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -120.0
+offset_left = -110.0
 offset_top = 260.0
-offset_right = 120.0
+offset_right = 110.0
 offset_bottom = 310.0
 grow_horizontal = 2
 grow_vertical = 2

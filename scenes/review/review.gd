@@ -21,23 +21,36 @@ func _ready() -> void:
     if GDManager and from_year > 0 and to_year > 0:
         review_events = GDManager.get_blog_archive().get_events_by_year_range(from_year, to_year)
 
+    if review_events.is_empty():
+        review_events = _make_test_events()
+
     _build_scroll_text()
     _start_scroll()
+
+func _make_test_events() -> Array[Dictionary]:
+    return [
+        {"time": "2003-06", "title": "第一篇博文发布", "description": "写下《你好，世界》"},
+        {"time": "2003-08", "title": "博客被搜索引擎收录", "description": "博客第一次出现在搜索结果中"},
+        {"time": "2003-12", "title": "RSS订阅开通", "description": "获得第一批订阅者"},
+        {"time": "2004-03", "title": "加入博客联盟", "description": "认识第一个博友星光博客"},
+        {"time": "2004-05", "title": "第一次文章收藏", "description": "获得第一篇文章收藏"},
+        {"time": "2004-09", "title": "第一笔广告收入", "description": "收到第一笔广告收益12.5元"},
+        {"time": "2005-01", "title": "友链交换", "description": "与星光博客交换友链"},
+        {"time": "2005-08", "title": "网站备案完成", "description": "响应国家备案制度"},
+        {"time": "2005-11", "title": "博客优秀大奖提名", "description": "获得提名，称号"博客新星""},
+    ]
 
 func _build_scroll_text() -> void:
     var text = "[center][b]%s[/b]\n%d - %d[/center]\n\n" % [review_title, from_year, to_year]
 
-    if review_events.is_empty():
-        text += "[center]暂无记录[/center]"
-    else:
-        for e in review_events:
-            var time = e.get("time", "")
-            var title = e.get("title", "")
-            var desc = e.get("description", "")
-            text += "[b]%s[/b]  %s\n" % [time, title]
-            if not desc.is_empty():
-                text += "  %s\n" % desc
-            text += "\n"
+    for e in review_events:
+        var time = e.get("time", "")
+        var title = e.get("title", "")
+        var desc = e.get("description", "")
+        text += "[b]%s[/b]  %s\n" % [time, title]
+        if not desc.is_empty():
+            text += "  %s\n" % desc
+        text += "\n"
 
     scroll_label.text = text
 
@@ -48,7 +61,7 @@ func _start_scroll() -> void:
     var viewport_h = get_viewport_rect().size.y
     var text_h = scroll_label.get_content_height()
     if text_h <= 0:
-        text_h = 500
+        text_h = 800
     var start_y = viewport_h + 50
     var end_y = -text_h - 50
     var duration = (start_y - end_y) / 35.0
@@ -56,8 +69,6 @@ func _start_scroll() -> void:
     scroll_label.position.y = start_y
     var tween = create_tween()
     tween.tween_property(scroll_label, "position:y", end_y, duration)
-    tween.set_ease(Tween.EASE_LINEAR)
-    tween.set_trans(Tween.TRANS_LINEAR)
 
 func back_to_main() -> void:
     Utils.goto_scene(MAIN_SCENE_PATH)
