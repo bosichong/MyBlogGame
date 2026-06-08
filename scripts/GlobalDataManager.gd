@@ -254,6 +254,16 @@ func get_story_progress() -> StoryProgress:
 func get_yearly_summary() -> YearlySummaryData:
     return data_container.get_yearly_summary()
 
+func get_blog_archive() -> ArchiveData:
+    return data_container.get_archive()
+
+func add_archive_event(event_id: String, title: String, description: String) -> void:
+    var time_data = get_time()
+    if not time_data:
+        return
+    var time_str = "%d-%d" % [time_data.current_year, time_data.current_month]
+    data_container.get_archive().add_event(event_id, time_str, title, description)
+
 func get_friend_link_manager() -> FriendLinkManager:
     return friend_link_manager
 

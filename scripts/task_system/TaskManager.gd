@@ -599,6 +599,8 @@ func _execute_action(action: Dictionary, context: Dictionary = {}) -> void:
             _action_update_blog_union_button()
         TaskConfig_ActionType.SEO_NOTIFICATION:
             _action_seo_notification()
+        TaskConfig_ActionType.ADD_ARCHIVE_EVENT:
+            _action_add_archive_event(action)
         _:
             push_warning("[TaskManager] Unhandled action type: %s" % action_type)
 
@@ -933,10 +935,37 @@ func _action_set_story_milestone(action: Dictionary) -> void:
         push_error("[TaskManager] SET_STORY_MILESTONE: milestone is empty")
         return
     if GDManager:
-        GDManager.get_story_progress().set_completed(chapter, milestone)
+        var story = GDManager.get_story_progress()
+        story.set_completed(chapter, milestone)
 
         if milestone == "blog_union_joined":
             _update_blog_union_button_now()
+
+        _record_milestone_archive(chapter, milestone)
+
+## 里程碑完成时自动记录博客历史事件
+func _record_milestone_archive(chapter: int, milestone: String) -> void:
+    if not GDManager:
+        return
+    var story = GDManager.get_story_progress()
+    if not story:
+        return
+    var desc = story.get_milestone_description(chapter, milestone)
+    var parts = desc.split("：")
+    var title = parts[0]
+    var detail = parts[1] if parts.size() > 1 else ""
+    GDManager.add_archive_event(milestone, title, detail)
+
+## 动作:添加博客历史事件
+func _action_add_archive_event(action: Dictionary) -> void:
+    var event_id = action.get("event_id", "")
+    var title = action.get("title", "")
+    var description = action.get("description", "")
+    if event_id.is_empty() or title.is_empty():
+        push_error("[TaskManager] ADD_ARCHIVE_EVENT missing event_id or title")
+        return
+    if GDManager:
+        GDManager.add_archive_event(event_id, title, description)
 
 func _update_blog_union_button_now() -> void:
     if get_tree().get_root().has_node("Main/ui/bottom"):

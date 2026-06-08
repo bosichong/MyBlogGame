@@ -40,6 +40,11 @@ func get_yearly_summary() -> YearlySummaryData:
         runtime_data.yearly_summary = YearlySummaryData.new()
     return runtime_data.yearly_summary
 
+func get_archive() -> ArchiveData:
+    if not runtime_data.archive:
+        runtime_data.archive = ArchiveData.new()
+    return runtime_data.archive
+
 # ===== 静态配置访问 =====
 
 func get_static_config() -> StaticConfig:

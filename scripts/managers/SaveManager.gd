@@ -143,6 +143,7 @@ func serialize_runtime_data(runtime_data: RuntimeData) -> Dictionary:
         "comment": serialize_comment_data(runtime_data.comment),
         "story_progress": serialize_story_progress_data(runtime_data.story_progress),
         "yearly_summary": serialize_yearly_summary_data(runtime_data.yearly_summary),
+        "archive": serialize_archive_data(runtime_data.archive),
     }
 
 func deserialize_runtime_data(data: Dictionary) -> RuntimeData:
@@ -170,6 +171,8 @@ func deserialize_runtime_data(data: Dictionary) -> RuntimeData:
         deserialize_story_progress_data(runtime_data.story_progress, data["story_progress"])
     if data.has("yearly_summary"):
         deserialize_yearly_summary_data(runtime_data.yearly_summary, data["yearly_summary"])
+    if data.has("archive"):
+        deserialize_archive_data(runtime_data.archive, data["archive"])
     else:
         # 老存档兼容：初始化当前年份的快照
         if GDManager and runtime_data.time and runtime_data.blogger:
@@ -457,6 +460,15 @@ func serialize_yearly_summary_data(data: YearlySummaryData) -> Dictionary:
 func deserialize_yearly_summary_data(data: YearlySummaryData, dict: Dictionary):
     if dict.has("yearly_snapshots"):
         data.yearly_snapshots = dict["yearly_snapshots"].duplicate(true)
+
+func serialize_archive_data(data: ArchiveData) -> Dictionary:
+    return {
+        "events": data.events.duplicate(true)
+    }
+
+func deserialize_archive_data(data: ArchiveData, dict: Dictionary):
+    if dict.has("events"):
+        data.events = dict["events"].duplicate(true)
 
 # ===== 元数据 =====
 

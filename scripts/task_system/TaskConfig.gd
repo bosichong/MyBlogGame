@@ -58,6 +58,7 @@ enum ActionType {
     SHOW_POPUP_NOTIFICATION, # 显示弹窗通知（弹出窗口）
     SEO_NOTIFICATION,        # SEO提示弹窗+升级奖励
     UPDATE_BLOG_UNION_BUTTON, # 更新博客联盟按钮状态
+    ADD_ARCHIVE_EVENT,        # 添加博客历史事件（event_id, title, description）
 }
 
 ## ============================================================
