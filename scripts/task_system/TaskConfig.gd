@@ -685,7 +685,7 @@ const TASKS: Array = [
         "is_repeatable": false,
         "actions": [
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "year_summary_2005"},
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 三年回顾", "content": "从2001年冬夜那封邮件开始，你的博客已经走过了三年时光。\n\n你从一个对互联网充满好奇的年轻人，成长为一名被行业认可的博主。\n\n这不是结束，而是新的开始——故事，才刚刚开始。"},
+            {"type": ActionType.CHANGE_SCENE, "scene_path": "res://scenes/s001/2005_review.tscn"},
         ],
     },
     

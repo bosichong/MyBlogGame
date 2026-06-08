@@ -601,6 +601,8 @@ func _execute_action(action: Dictionary, context: Dictionary = {}) -> void:
             _action_seo_notification()
         TaskConfig_ActionType.ADD_ARCHIVE_EVENT:
             _action_add_archive_event(action)
+        TaskConfig_ActionType.CHANGE_SCENE:
+            _action_change_scene(action)
         _:
             push_warning("[TaskManager] Unhandled action type: %s" % action_type)
 
@@ -955,6 +957,15 @@ func _record_milestone_archive(chapter: int, milestone: String) -> void:
     var title = parts[0]
     var detail = parts[1] if parts.size() > 1 else ""
     GDManager.add_archive_event(milestone, title, detail)
+
+## 动作:切换场景
+func _action_change_scene(action: Dictionary) -> void:
+    var scene_path = action.get("scene_path", "")
+    if scene_path.is_empty():
+        push_error("[TaskManager] CHANGE_SCENE missing scene_path")
+        return
+    if Utils and Utils.has_method("goto_scene"):
+        Utils.goto_scene(scene_path)
 
 ## 动作:添加博客历史事件
 func _action_add_archive_event(action: Dictionary) -> void:
