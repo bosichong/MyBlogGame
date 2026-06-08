@@ -44,7 +44,7 @@ func _make_test_events() -> Array[Dictionary]:
 func _build_scroll_text() -> void:
     scroll_label.clear()
 
-    scroll_label.push_center()
+    scroll_label.push_paragraph(HORIZONTAL_ALIGNMENT_CENTER)
     scroll_label.push_bold()
     scroll_label.push_font_size(24)
     scroll_label.add_text(review_title)
@@ -52,7 +52,7 @@ func _build_scroll_text() -> void:
     scroll_label.pop()
     scroll_label.pop()
     scroll_label.add_text("\n")
-    scroll_label.push_center()
+    scroll_label.push_paragraph(HORIZONTAL_ALIGNMENT_CENTER)
     scroll_label.add_text("%d - %d" % [from_year, to_year])
     scroll_label.pop()
 
