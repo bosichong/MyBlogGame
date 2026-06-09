@@ -1,5 +1,5 @@
 extends Node2D
-const SCENE_PATH = "res://优秀博客大奖赛/ts_main.tscn"
+const SCENE_PATH = "res://scenes/main.tscn"
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -12,4 +12,5 @@ func _process(delta: float) -> void:
 
 
 func _on_button_pressed() -> void:
+    TimerManager.start_timer()
     Utils.goto_scene(SCENE_PATH)

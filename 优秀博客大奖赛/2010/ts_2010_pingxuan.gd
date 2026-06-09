@@ -1,5 +1,5 @@
 extends Node2D
-const SCENE_PATH = "res://优秀博客大奖赛/ts_main.tscn"
+const SCENE_PATH = "res://scenes/main.tscn"
 
 ## 江湖榜取前 N 名 + 玩家博客名（玩家已在前 N 时自动去重）
 const TOP_N := 19
@@ -56,4 +56,5 @@ func _update_shortlist_label() -> void:
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
     if anim_name == "main":
+        TimerManager.start_timer()
         Utils.goto_scene(SCENE_PATH)

@@ -1,5 +1,5 @@
 extends Node2D
-const SCENE_PATH = "res://优秀博客大奖赛/ts_main.tscn"
+const SCENE_PATH = "res://scenes/main.tscn"
 
 func _ready() -> void:
     _grant_title()
@@ -25,4 +25,5 @@ func _update_con_content() -> void:
     con_label.text = content
 
 func _on_button_pressed() -> void:
+    TimerManager.start_timer()
     Utils.goto_scene(SCENE_PATH)
