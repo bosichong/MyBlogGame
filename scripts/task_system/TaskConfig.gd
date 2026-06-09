@@ -160,6 +160,9 @@ const CONDITIONS: Dictionary = {
     # 第一届优秀博客大赛评选（2005年11月第2周第1天）
     "time_blog_competition_2005_pingxuan": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2005], "m": [11], "w": [2], "d": [1]}},
     
+    # 第一届优秀博客大赛揭晓（2005年12月第1周第5天）
+    "time_blog_competition_2005_jiexiao": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2005], "m": [12], "w": [1], "d": [5]}},
+    
     # ICP备案进行中条件
     "icp_filing_in_progress": {"type": ConditionType.CUSTOM, "check_func": "check_icp_filing_in_progress"},
     
@@ -973,6 +976,23 @@ const TASKS: Array = [
              "title": "第一届优秀博客大赛评选开始",
              "content": "您好！\n\n第 1 届「中文优秀博客大奖」评选阶段现已开始。\n\n评审团正在对提名博客进行评议，请静候佳音。",
              "follow_up_scene": "res://优秀博客大奖赛/2005/ts2005pingxuan.tscn"},
+        ],
+    },
+
+    # ====================
+    # 优秀博客大赛揭晓（2005年12月）
+    # ====================
+    {
+        "id": "blog_competition_2005_jiexiao",
+        "description": "第一届优秀博客大赛结果揭晓",
+        "conditions": ["time_blog_competition_2005_jiexiao"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第一届优秀博客大赛结果揭晓",
+             "content": "您好！\n\n第 1 届「中文优秀博客大奖」结果已公布。\n\n请查看获奖详情。",
+             "follow_up_scene": "res://优秀博客大奖赛/2005/ts2005jiexiao.tscn"},
         ],
     },
 ]

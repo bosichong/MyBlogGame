@@ -25,4 +25,5 @@ func _update_con_content() -> void:
     con_label.text = content
 
 func _on_button_pressed() -> void:
+    TimerManager.start_timer()
     Utils.goto_scene(SCENE_PATH)
