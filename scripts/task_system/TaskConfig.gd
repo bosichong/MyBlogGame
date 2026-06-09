@@ -157,6 +157,9 @@ const CONDITIONS: Dictionary = {
     # 第一届优秀博客大赛通知（2005年11月第1周第1天）
     "time_blog_competition_2005": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2005], "m": [11], "w": [1], "d": [1]}},
     
+    # 第一届优秀博客大赛评选（2005年11月第2周第1天）
+    "time_blog_competition_2005_pingxuan": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2005], "m": [11], "w": [2], "d": [1]}},
+    
     # ICP备案进行中条件
     "icp_filing_in_progress": {"type": ConditionType.CUSTOM, "check_func": "check_icp_filing_in_progress"},
     
@@ -953,6 +956,23 @@ const TASKS: Array = [
              "title": "第一届优秀博客大赛开始",
              "content": "您好！\n\n第 1 届「中文优秀博客大奖」评选活动现已启动。\n\n您的博客已获得提名，请查看邮件了解详情。",
              "follow_up_scene": "res://优秀博客大奖赛/2005/ts2005tongzhi.tscn"},
+        ],
+    },
+
+    # ====================
+    # 优秀博客大赛评选（2005年11月）
+    # ====================
+    {
+        "id": "blog_competition_2005_pingxuan",
+        "description": "第一届优秀博客大赛评选",
+        "conditions": ["time_blog_competition_2005_pingxuan"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第一届优秀博客大赛评选开始",
+             "content": "您好！\n\n第 1 届「中文优秀博客大奖」评选阶段现已开始。\n\n评审团正在对提名博客进行评议，请静候佳音。",
+             "follow_up_scene": "res://优秀博客大奖赛/2005/ts2005pingxuan.tscn"},
         ],
     },
 ]
