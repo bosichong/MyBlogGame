@@ -154,6 +154,9 @@ const CONDITIONS: Dictionary = {
     # ICP备案时间条件（2002年1月第三周第一天）
     "time_icp_filing": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2004], "m": [1], "w": [3], "d": [1]}},
     
+    # 第一届优秀博客大赛通知（2005年11月第1周第1天）
+    "time_blog_competition_2005": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2005], "m": [11], "w": [1], "d": [1]}},
+    
     # ICP备案进行中条件
     "icp_filing_in_progress": {"type": ConditionType.CUSTOM, "check_func": "check_icp_filing_in_progress"},
     
@@ -933,6 +936,23 @@ const TASKS: Array = [
         "actions": [
             {"type": ActionType.SEO_NOTIFICATION},
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "sousuo_indexed"},
+        ],
+    },
+
+    # ====================
+    # 优秀博客大赛（2005年11月）
+    # ====================
+    {
+        "id": "blog_competition_2005_notification",
+        "description": "第一届优秀博客大赛通知",
+        "conditions": ["time_blog_competition_2005"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第一届优秀博客大赛开始",
+             "content": "您好！\n\n第 1 届「中文优秀博客大奖」评选活动现已启动。\n\n您的博客已获得提名，请查看邮件了解详情。",
+             "follow_up_scene": "res://优秀博客大奖赛/2005/ts2005tongzhi.tscn"},
         ],
     },
 ]

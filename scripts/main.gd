@@ -426,6 +426,8 @@ func _on_friend_link_added(link_data: Dictionary) -> void:
     if TaskManager:
         TaskManager.check_tasks_by_trigger("friendlink_added", {"link_data": link_data})
 
+var _popup_has_pending_scene := false
+
 ## 显示通用弹窗
 func show_popup_message(title: String, content: String) -> void:
     
@@ -436,12 +438,14 @@ func show_popup_message(title: String, content: String) -> void:
     
     TimerManager.stop_timer()
     
-    if TaskManager and not TaskManager.pending_scene_after_popup.is_empty():
+    _popup_has_pending_scene = TaskManager and not TaskManager.pending_scene_after_popup.is_empty()
+    if _popup_has_pending_scene:
         var scene = TaskManager.pending_scene_after_popup
         TaskManager.pending_scene_after_popup = ""
-        $AcceptDialog.confirmed.connect(func():
+        var nav_func = func():
             Utils.goto_scene(scene)
-        , CONNECT_ONE_SHOT)
+        $AcceptDialog.confirmed.connect(nav_func, CONNECT_ONE_SHOT)
+        $AcceptDialog.canceled.connect(nav_func, CONNECT_ONE_SHOT)
 
 func s_level(l):
     var tx = Utils.get_rank_title(l,Strs.game_strs.头衔)
@@ -464,8 +468,10 @@ func _on_paid_income_settled(msg):
     info_display.add_message(msg)
 
 func _close_ac():
-    TimerManager.timer.start()
-    TimerManager.time_stop = false
+    if not _popup_has_pending_scene:
+        TimerManager.timer.start()
+        TimerManager.time_stop = false
+    _popup_has_pending_scene = false
 
 func sg_task_info_display_msg(msg):
     info_display.add_message(msg)
