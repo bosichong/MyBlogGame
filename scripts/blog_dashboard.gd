@@ -55,8 +55,6 @@ var pending_delete_member_id: int = -1
 
 # 自动设置UI引用
 var min_level_spinbox: SpinBox
-var auto_delete_invalid_check: CheckBox
-var auto_delete_spam_check: CheckBox
 var level_desc_label: Label
 var _selected_member_id: int = -1
 
@@ -524,17 +522,6 @@ func _init_auto_settings_ui() -> void:
     level_desc_label.add_theme_font_size_override("font_size", 10)
     hbox1.add_child(level_desc_label)
     
-    auto_delete_invalid_check = CheckBox.new()
-    auto_delete_invalid_check.text = "失效链接自动删除"
-    auto_delete_invalid_check.button_pressed = settings.get("auto_delete_invalid", true)
-    auto_delete_invalid_check.toggled.connect(_on_auto_delete_invalid_toggled)
-    vbox.add_child(auto_delete_invalid_check)
-    
-    auto_delete_spam_check = CheckBox.new()
-    auto_delete_spam_check.text = "垃圾友链自动删除"
-    auto_delete_spam_check.button_pressed = settings.get("auto_delete_spam", true)
-    auto_delete_spam_check.toggled.connect(_on_auto_delete_spam_toggled)
-    vbox.add_child(auto_delete_spam_check)
 
 func _on_min_level_changed(value: float) -> void:
     var fl_manager = GDManager.get_friend_link_manager()
@@ -543,20 +530,6 @@ func _on_min_level_changed(value: float) -> void:
         settings["min_level_diff"] = int(value)
         fl_manager.set_auto_settings(settings)
         level_desc_label.text = "(≥%d级的申请者自动通过)" % int(value)
-
-func _on_auto_delete_invalid_toggled(toggled: bool) -> void:
-    var fl_manager = GDManager.get_friend_link_manager()
-    if fl_manager:
-        var settings = fl_manager.get_auto_settings()
-        settings["auto_delete_invalid"] = toggled
-        fl_manager.set_auto_settings(settings)
-
-func _on_auto_delete_spam_toggled(toggled: bool) -> void:
-    var fl_manager = GDManager.get_friend_link_manager()
-    if fl_manager:
-        var settings = fl_manager.get_auto_settings()
-        settings["auto_delete_spam"] = toggled
-        fl_manager.set_auto_settings(settings)
 
 func _on_apply_friendlink_pressed() -> void:
     _show_apply_dialog()
