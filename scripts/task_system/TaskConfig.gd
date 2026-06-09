@@ -163,6 +163,34 @@ const CONDITIONS: Dictionary = {
     # 第一届优秀博客大赛揭晓（2005年12月第1周第5天）
     "time_blog_competition_2005_jiexiao": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2005], "m": [12], "w": [1], "d": [5]}},
     
+    # 第二届优秀博客大赛通知（2010年11月第1周第1天）
+    "time_blog_competition_2010": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2010], "m": [11], "w": [1], "d": [1]}},
+    # 第二届优秀博客大赛评选（2010年11月第2周第1天）
+    "time_blog_competition_2010_pingxuan": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2010], "m": [11], "w": [2], "d": [1]}},
+    # 第二届优秀博客大赛揭晓（2010年12月第1周第5天）
+    "time_blog_competition_2010_jiexiao": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2010], "m": [12], "w": [1], "d": [5]}},
+    
+    # 第三届优秀博客大赛通知（2015年11月第1周第1天）
+    "time_blog_competition_2015": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2015], "m": [11], "w": [1], "d": [1]}},
+    # 第三届优秀博客大赛评选（2015年11月第2周第1天）
+    "time_blog_competition_2015_pingxuan": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2015], "m": [11], "w": [2], "d": [1]}},
+    # 第三届优秀博客大赛揭晓（2015年12月第1周第5天）
+    "time_blog_competition_2015_jiexiao": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2015], "m": [12], "w": [1], "d": [5]}},
+    
+    # 第四届优秀博客大赛通知（2020年11月第1周第1天）
+    "time_blog_competition_2020": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2020], "m": [11], "w": [1], "d": [1]}},
+    # 第四届优秀博客大赛评选（2020年11月第2周第1天）
+    "time_blog_competition_2020_pingxuan": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2020], "m": [11], "w": [2], "d": [1]}},
+    # 第四届优秀博客大赛揭晓（2020年12月第1周第5天）
+    "time_blog_competition_2020_jiexiao": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2020], "m": [12], "w": [1], "d": [5]}},
+    
+    # 第五届优秀博客大赛通知（2025年11月第1周第1天）
+    "time_blog_competition_2025": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2025], "m": [11], "w": [1], "d": [1]}},
+    # 第五届优秀博客大赛评选（2025年11月第2周第1天）
+    "time_blog_competition_2025_pingxuan": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2025], "m": [11], "w": [2], "d": [1]}},
+    # 第五届优秀博客大赛揭晓（2025年12月第1周第5天）
+    "time_blog_competition_2025_jiexiao": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2025], "m": [12], "w": [1], "d": [5]}},
+    
     # ICP备案进行中条件
     "icp_filing_in_progress": {"type": ConditionType.CUSTOM, "check_func": "check_icp_filing_in_progress"},
     
@@ -993,6 +1021,178 @@ const TASKS: Array = [
              "title": "第一届优秀博客大赛结果揭晓",
              "content": "您好！\n\n第 1 届「中文优秀博客大奖」结果已公布。\n\n请查看获奖详情。",
              "follow_up_scene": "res://优秀博客大奖赛/2005/ts2005jiexiao.tscn"},
+        ],
+    },
+
+    # ====================
+    # 优秀博客大赛（2010年）
+    # ====================
+    {
+        "id": "blog_competition_2010_notification",
+        "description": "第二届优秀博客大赛通知",
+        "conditions": ["time_blog_competition_2010"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第二届优秀博客大赛开始",
+             "content": "您好！\n\n第 2 届「中文优秀博客大奖」评选活动现已启动。\n\n您的博客已获得提名，请查看邮件了解详情。",
+             "follow_up_scene": "res://优秀博客大奖赛/2010/ts2010tongzhi.tscn"},
+        ],
+    },
+    {
+        "id": "blog_competition_2010_pingxuan",
+        "description": "第二届优秀博客大赛评选",
+        "conditions": ["time_blog_competition_2010_pingxuan"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第二届优秀博客大赛评选开始",
+             "content": "您好！\n\n第 2 届「中文优秀博客大奖」评选阶段现已开始。\n\n评审团正在对提名博客进行评议，请静候佳音。",
+             "follow_up_scene": "res://优秀博客大奖赛/2010/ts2010pingxuan.tscn"},
+        ],
+    },
+    {
+        "id": "blog_competition_2010_jiexiao",
+        "description": "第二届优秀博客大赛结果揭晓",
+        "conditions": ["time_blog_competition_2010_jiexiao"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第二届优秀博客大赛结果揭晓",
+             "content": "您好！\n\n第 2 届「中文优秀博客大奖」结果已公布。\n\n请查看获奖详情。",
+             "follow_up_scene": "res://优秀博客大奖赛/2010/ts2010jiexiao.tscn"},
+        ],
+    },
+
+    # ====================
+    # 优秀博客大赛（2015年）
+    # ====================
+    {
+        "id": "blog_competition_2015_notification",
+        "description": "第三届优秀博客大赛通知",
+        "conditions": ["time_blog_competition_2015"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第三届优秀博客大赛开始",
+             "content": "您好！\n\n第 3 届「中文优秀博客大奖」评选活动现已启动。\n\n您的博客已获得提名，请查看邮件了解详情。",
+             "follow_up_scene": "res://优秀博客大奖赛/2015/ts2015tongzhi.tscn"},
+        ],
+    },
+    {
+        "id": "blog_competition_2015_pingxuan",
+        "description": "第三届优秀博客大赛评选",
+        "conditions": ["time_blog_competition_2015_pingxuan"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第三届优秀博客大赛评选开始",
+             "content": "您好！\n\n第 3 届「中文优秀博客大奖」评选阶段现已开始。\n\n评审团正在对提名博客进行评议，请静候佳音。",
+             "follow_up_scene": "res://优秀博客大奖赛/2015/ts2015pingxuan.tscn"},
+        ],
+    },
+    {
+        "id": "blog_competition_2015_jiexiao",
+        "description": "第三届优秀博客大赛结果揭晓",
+        "conditions": ["time_blog_competition_2015_jiexiao"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第三届优秀博客大赛结果揭晓",
+             "content": "您好！\n\n第 3 届「中文优秀博客大奖」结果已公布。\n\n请查看获奖详情。",
+             "follow_up_scene": "res://优秀博客大奖赛/2015/ts2015jiexiao.tscn"},
+        ],
+    },
+
+    # ====================
+    # 优秀博客大赛（2020年）
+    # ====================
+    {
+        "id": "blog_competition_2020_notification",
+        "description": "第四届优秀博客大赛通知",
+        "conditions": ["time_blog_competition_2020"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第四届优秀博客大赛开始",
+             "content": "您好！\n\n第 4 届「中文优秀博客大奖」评选活动现已启动。\n\n您的博客已获得提名，请查看邮件了解详情。",
+             "follow_up_scene": "res://优秀博客大奖赛/2020/ts2020tongzhi.tscn"},
+        ],
+    },
+    {
+        "id": "blog_competition_2020_pingxuan",
+        "description": "第四届优秀博客大赛评选",
+        "conditions": ["time_blog_competition_2020_pingxuan"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第四届优秀博客大赛评选开始",
+             "content": "您好！\n\n第 4 届「中文优秀博客大奖」评选阶段现已开始。\n\n评审团正在对提名博客进行评议，请静候佳音。",
+             "follow_up_scene": "res://优秀博客大奖赛/2020/ts2020pingxuan.tscn"},
+        ],
+    },
+    {
+        "id": "blog_competition_2020_jiexiao",
+        "description": "第四届优秀博客大赛结果揭晓",
+        "conditions": ["time_blog_competition_2020_jiexiao"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第四届优秀博客大赛结果揭晓",
+             "content": "您好！\n\n第 4 届「中文优秀博客大奖」结果已公布。\n\n请查看获奖详情。",
+             "follow_up_scene": "res://优秀博客大奖赛/2020/ts2020jiexiao.tscn"},
+        ],
+    },
+
+    # ====================
+    # 优秀博客大赛（2025年）
+    # ====================
+    {
+        "id": "blog_competition_2025_notification",
+        "description": "第五届优秀博客大赛通知",
+        "conditions": ["time_blog_competition_2025"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第五届优秀博客大赛开始",
+             "content": "您好！\n\n第 5 届「中文优秀博客大奖」评选活动现已启动。\n\n您的博客已获得提名，请查看邮件了解详情。",
+             "follow_up_scene": "res://优秀博客大奖赛/2025/ts2025tongzhi.tscn"},
+        ],
+    },
+    {
+        "id": "blog_competition_2025_pingxuan",
+        "description": "第五届优秀博客大赛评选",
+        "conditions": ["time_blog_competition_2025_pingxuan"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第五届优秀博客大赛评选开始",
+             "content": "您好！\n\n第 5 届「中文优秀博客大奖」评选阶段现已开始。\n\n评审团正在对提名博客进行评议，请静候佳音。",
+             "follow_up_scene": "res://优秀博客大奖赛/2025/ts2025pingxuan.tscn"},
+        ],
+    },
+    {
+        "id": "blog_competition_2025_jiexiao",
+        "description": "第五届优秀博客大赛结果揭晓",
+        "conditions": ["time_blog_competition_2025_jiexiao"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "第五届优秀博客大赛结果揭晓",
+             "content": "您好！\n\n第 5 届「中文优秀博客大奖」结果已公布。\n\n请查看获奖详情。",
+             "follow_up_scene": "res://优秀博客大奖赛/2025/ts2025jiexiao.tscn"},
         ],
     },
 ]
