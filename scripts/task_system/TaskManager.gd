@@ -875,6 +875,7 @@ func _action_show_popup_notification(action: Dictionary, context: Dictionary = {
             "from_year": action.get("review_from_year", 0),
             "to_year": action.get("review_to_year", 0),
             "title": action.get("review_title", ""),
+            "chapter": action.get("review_chapter", 1),
         }
         emit_signal("sg_task_show_popup_msg", title, content)
 
@@ -1043,7 +1044,40 @@ func check_year_summary_2005(context: Dictionary) -> bool:
     if not GDManager:
         return false
     var time = GDManager.get_time()
-    return time != null and time.current_year == 2005
+    if time == null or time.current_year != 2005:
+        return false
+    var story = GDManager.get_story_progress()
+    return story != null and not story.is_completed(1, "year_summary_2005")
+
+## 自定义条件检查:2010年度总结已发布
+func check_year_summary_2010(context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var time = GDManager.get_time()
+    if time == null or time.current_year != 2010:
+        return false
+    var story = GDManager.get_story_progress()
+    return story != null and not story.is_completed(2, "year_summary_2010")
+
+## 自定义条件检查:2015年度总结已发布
+func check_year_summary_2015(context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var time = GDManager.get_time()
+    if time == null or time.current_year != 2015:
+        return false
+    var story = GDManager.get_story_progress()
+    return story != null and not story.is_completed(3, "year_summary_2015")
+
+## 自定义条件检查:2020年度总结已发布
+func check_year_summary_2020(context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var time = GDManager.get_time()
+    if time == null or time.current_year != 2020:
+        return false
+    var story = GDManager.get_story_progress()
+    return story != null and not story.is_completed(4, "year_summary_2020")
 
 ## 自定义条件检查:ICP备案进行中
 func check_icp_filing_in_progress(context: Dictionary) -> bool:

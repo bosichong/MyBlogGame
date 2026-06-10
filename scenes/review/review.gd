@@ -6,6 +6,7 @@ var review_events: Array[Dictionary] = []
 var review_title: String = ""
 var from_year: int = 0
 var to_year: int = 0
+var review_chapter: int = 1
 
 @onready var scroll_label: RichTextLabel = $Panel/RichTextLabel
 @onready var back_button: Button = $Panel/BackButton
@@ -17,28 +18,75 @@ func _ready() -> void:
         from_year = params.get("from_year", 0)
         to_year = params.get("to_year", 0)
         review_title = params.get("title", "回忆录")
+        review_chapter = params.get("chapter", 1)
         TaskManager.pending_scene_params = {}
 
-    if GDManager and from_year > 0 and to_year > 0:
-        review_events = GDManager.get_blog_archive().get_events_by_year_range(from_year, to_year)
+    _build_review_events()
+    _build_scroll_text()
+    _start_scroll()
+
+func _build_review_events() -> void:
+    review_events.clear()
+
+    if not GDManager:
+        review_events = _make_test_events()
+        return
+
+    var story = GDManager.get_story_progress()
+    if not story:
+        review_events = _make_test_events()
+        return
+
+    var ch: Dictionary = {}
+    match review_chapter:
+        2: ch = story.chapter2
+        3: ch = story.chapter3
+        4: ch = story.chapter4
+        5: ch = story.chapter5
+        _: ch = story.chapter1
+
+    var archive_map: Dictionary = {}
+    if from_year > 0 and to_year > 0:
+        var archive_events = GDManager.get_blog_archive().get_events_by_year_range(from_year, to_year)
+        for ae in archive_events:
+            archive_map[ae.get("id", "")] = ae.get("time", "")
+
+    for milestone in ch:
+        if not ch[milestone]:
+            continue
+
+        var full_desc = story.get_milestone_description(review_chapter, milestone)
+        if full_desc.begins_with("未知里程碑"):
+            continue
+
+        var parts = full_desc.split("：")
+        var title = parts[0] if parts.size() > 0 else milestone
+        var detail = parts[1] if parts.size() > 1 else ""
+
+        review_events.append({
+            "time": archive_map.get(milestone, ""),
+            "title": title,
+            "description": detail,
+        })
+
+    var dated: Array[Dictionary] = []
+    var undated: Array[Dictionary] = []
+    for e in review_events:
+        if e.time.is_empty():
+            undated.append(e)
+        else:
+            dated.append(e)
+
+    dated.sort_custom(func(a, b): return a.time < b.time)
+    review_events = dated + undated
 
     if review_events.is_empty():
         review_events = _make_test_events()
 
-    _build_scroll_text()
-    _start_scroll()
-
 func _make_test_events() -> Array[Dictionary]:
     return [
-        {"time": "2003-06", "title": "第一篇博文发布", "description": "写下《你好，世界》"},
-        {"time": "2003-08", "title": "博客被搜索引擎收录", "description": "博客第一次出现在搜索结果中"},
-        {"time": "2003-12", "title": "RSS订阅开通", "description": "获得第一批订阅者"},
-        {"time": "2004-03", "title": "加入博客联盟", "description": "认识第一个博友星光博客"},
-        {"time": "2004-05", "title": "第一次文章收藏", "description": "获得第一篇文章收藏"},
-        {"time": "2004-09", "title": "第一笔广告收入", "description": "收到第一笔广告收益12.5元"},
-        {"time": "2005-01", "title": "友链交换", "description": "与星光博客交换友链"},
-        {"time": "2005-08", "title": "网站备案完成", "description": "响应国家备案制度"},
-        {"time": "2005-11", "title": "博客优秀大奖提名", "description": "获得提名，称号[博客新星]"},
+        {"time": "", "title": "博客开启", "description": "开始撰写博客"},
+        {"time": "", "title": "第一篇文章", "description": ""},
     ]
 
 func _build_scroll_text() -> void:
@@ -90,11 +138,11 @@ func _start_scroll() -> void:
     scroll_label.position.y = start_y
     var tween = create_tween()
     tween.tween_property(scroll_label, "position:y", end_y, duration)
+    tween.finished.connect(back_to_main)
 
 func back_to_main() -> void:
-    #Utils.goto_scene(MAIN_SCENE_PATH)
-    
-    pass 
+    TimerManager.start_timer()
+    Utils.goto_scene(MAIN_SCENE_PATH)
 
 func get_review_events() -> Array[Dictionary]:
     return review_events

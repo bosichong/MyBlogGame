@@ -127,6 +127,11 @@ const CONDITIONS: Dictionary = {
 
     # 2005年度总结条件（仅2005年发布的年度总结）
     "year_summary_2005_posted": {"type": ConditionType.CUSTOM, "check_func": "check_year_summary_2005"},
+
+    # 各章节年度总结条件（仅对应年份发布的年度总结）
+    "year_summary_2010_posted": {"type": ConditionType.CUSTOM, "check_func": "check_year_summary_2010"},
+    "year_summary_2015_posted": {"type": ConditionType.CUSTOM, "check_func": "check_year_summary_2015"},
+    "year_summary_2020_posted": {"type": ConditionType.CUSTOM, "check_func": "check_year_summary_2020"},
     
     # 开源项目状态条件
     "open_source_project_started": {"type": ConditionType.CUSTOM, "check_func": "check_open_source_project"},
@@ -138,6 +143,14 @@ const CONDITIONS: Dictionary = {
     "time_year_summary_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [12], "w": [2], "d": [1]}},
     "time_year_summary_lock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [12], "w": [4], "d": [7]}},
     "time_trend_change": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [1, 6], "w": [2], "d": [1]}},
+
+    # 2005年末（12月第4周第7天）：防遗漏四年回顾触发
+    "time_2005_end": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2005], "m": [12], "w": [4], "d": [7]}},
+
+    # 各章节年末防遗漏回顾触发时间
+    "time_2010_end": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2010], "m": [12], "w": [4], "d": [7]}},
+    "time_2015_end": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2015], "m": [12], "w": [4], "d": [7]}},
+    "time_2020_end": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2020], "m": [12], "w": [4], "d": [7]}},
     
     # 春节特辑时间条件（每年2月）
     "time_spring_festival_unlock": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [0], "m": [2], "w": [3], "d": [1]}},
@@ -202,6 +215,14 @@ const CONDITIONS: Dictionary = {
     
     # 第一次文章收藏条件
     "first_article_favorited_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_favorited", "completed": false},
+
+    # 2005四年回顾未完成（用于防遗漏任务）
+    "year_summary_2005_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "year_summary_2005", "completed": false},
+
+    # 各章节回顾未完成（用于防遗漏任务）
+    "year_summary_2010_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 2, "milestone": "year_summary_2010", "completed": false},
+    "year_summary_2015_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "year_summary_2015", "completed": false},
+    "year_summary_2020_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 4, "milestone": "year_summary_2020", "completed": false},
 }
 
 ## ============================================================
@@ -715,17 +736,125 @@ const TASKS: Array = [
     },
     {
         "id": "chapter1_end_2005_review",
-        "description": "2005年度总结发布，完成三年回顾，第一章结束",
+        "description": "2005年度总结发布，完成四年回顾，第一章结束",
         "conditions": ["year_summary_2005_posted"],
         "trigger_type": "post_event",
         "post_type_filter": "年度总结",
         "is_repeatable": false,
         "actions": [
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "year_summary_2005"},
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 三年回顾", "content": "从2001年冬夜那封邮件开始，你的博客已经走过了三年时光。\n\n是时候回头看看这段旅程了。", "follow_up_scene": "res://scenes/review/review.tscn", "review_from_year": 2003, "review_to_year": 2005, "review_title": "三年回顾"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 四年回顾", "content": "从博客上线到现在，眨眼间已经走过了四个年头。\n\n是时候回头看看这段旅程了。", "follow_up_scene": "res://scenes/review/review.tscn", "review_from_year": 2002, "review_to_year": 2005, "review_title": "四年回顾"},
         ],
     },
-    
+
+    # ====================
+    # 2005年末四年回顾防遗漏（时间触发）
+    # ====================
+    {
+        "id": "chapter1_end_2005_review_fallback",
+        "description": "2005年末自动触发四年回顾（防遗漏）",
+        "conditions": ["time_2005_end", "year_summary_2005_not_completed"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "year_summary_2005"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 四年回顾", "content": "忙碌了一年，是时候回头看看这四年的博客旅程了。\n\n虽然错过了发布年度总结博文，但回顾依然值得。", "follow_up_scene": "res://scenes/review/review.tscn", "review_from_year": 2002, "review_to_year": 2005, "review_title": "四年回顾"},
+        ],
+    },
+
+    # ====================
+    # 2010年五年回顾（年度总结发布触发）
+    # ====================
+    {
+        "id": "chapter2_end_2010_review",
+        "description": "2010年度总结发布，完成五年回顾，第二章结束",
+        "conditions": ["year_summary_2010_posted"],
+        "trigger_type": "post_event",
+        "post_type_filter": "年度总结",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 2, "milestone": "year_summary_2010"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 五年回顾", "content": "从2006年到2010年，这五年你的博客在成长。\n\n是时候回头看看这段旅程了。", "follow_up_scene": "res://scenes/review/review.tscn", "review_chapter": 2, "review_from_year": 2006, "review_to_year": 2010, "review_title": "五年回顾"},
+        ],
+    },
+
+    # ====================
+    # 2010年末五年回顾防遗漏（时间触发）
+    # ====================
+    {
+        "id": "chapter2_end_2010_review_fallback",
+        "description": "2010年末自动触发五年回顾（防遗漏）",
+        "conditions": ["time_2010_end", "year_summary_2010_not_completed"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 2, "milestone": "year_summary_2010"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 五年回顾", "content": "忙碌了一年，是时候回头看看这五年的博客旅程了。\n\n虽然错过了发布年度总结博文，但回顾依然值得。", "follow_up_scene": "res://scenes/review/review.tscn", "review_chapter": 2, "review_from_year": 2006, "review_to_year": 2010, "review_title": "五年回顾"},
+        ],
+    },
+
+    # ====================
+    # 2015年五年回顾（年度总结发布触发）
+    # ====================
+    {
+        "id": "chapter3_end_2015_review",
+        "description": "2015年度总结发布，完成五年回顾，第三章结束",
+        "conditions": ["year_summary_2015_posted"],
+        "trigger_type": "post_event",
+        "post_type_filter": "年度总结",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "year_summary_2015"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 五年回顾", "content": "从2011年到2015年，这五年你的博客经历了许多转变。\n\n是时候回头看看这段旅程了。", "follow_up_scene": "res://scenes/review/review.tscn", "review_chapter": 3, "review_from_year": 2011, "review_to_year": 2015, "review_title": "五年回顾"},
+        ],
+    },
+
+    # ====================
+    # 2015年末五年回顾防遗漏（时间触发）
+    # ====================
+    {
+        "id": "chapter3_end_2015_review_fallback",
+        "description": "2015年末自动触发五年回顾（防遗漏）",
+        "conditions": ["time_2015_end", "year_summary_2015_not_completed"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "year_summary_2015"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 五年回顾", "content": "忙碌了一年，是时候回头看看这五年的博客旅程了。\n\n虽然错过了发布年度总结博文，但回顾依然值得。", "follow_up_scene": "res://scenes/review/review.tscn", "review_chapter": 3, "review_from_year": 2011, "review_to_year": 2015, "review_title": "五年回顾"},
+        ],
+    },
+
+    # ====================
+    # 2020年五年回顾（年度总结发布触发）
+    # ====================
+    {
+        "id": "chapter4_end_2020_review",
+        "description": "2020年度总结发布，完成五年回顾，第四章结束",
+        "conditions": ["year_summary_2020_posted"],
+        "trigger_type": "post_event",
+        "post_type_filter": "年度总结",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 4, "milestone": "year_summary_2020"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 五年回顾", "content": "从2016年到2020年，这五年你的博客面临了许多挑战。\n\n是时候回头看看这段旅程了。", "follow_up_scene": "res://scenes/review/review.tscn", "review_chapter": 4, "review_from_year": 2016, "review_to_year": 2020, "review_title": "五年回顾"},
+        ],
+    },
+
+    # ====================
+    # 2020年末五年回顾防遗漏（时间触发）
+    # ====================
+    {
+        "id": "chapter4_end_2020_review_fallback",
+        "description": "2020年末自动触发五年回顾（防遗漏）",
+        "conditions": ["time_2020_end", "year_summary_2020_not_completed"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 4, "milestone": "year_summary_2020"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 五年回顾", "content": "忙碌了一年，是时候回头看看这五年的博客旅程了。\n\n虽然错过了发布年度总结博文，但回顾依然值得。", "follow_up_scene": "res://scenes/review/review.tscn", "review_chapter": 4, "review_from_year": 2016, "review_to_year": 2020, "review_title": "五年回顾"},
+        ],
+    },
+
     # ====================
     # 春节特辑任务（每年2月）
     # ====================

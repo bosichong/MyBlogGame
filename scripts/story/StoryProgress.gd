@@ -15,7 +15,7 @@ var chapter1 = {
     "first_income": true,             # [已实现]加入广告联盟并收到第一笔广告收益
     "icp_filing_done": true,          # [已实现]网站备案完成：响应国家备案制度
     "award_2005": false,              # [已实现]博客优秀大奖（2005）：获得提名，称号"博客新星"
-    "year_summary_2005": false,       # 2005年度总结：三年回顾
+    "year_summary_2005": false,       # 2005年度总结：2002-2005 四年回顾
 }
 
 ## 第二章：博客黄金期（2005-2010）
@@ -25,7 +25,7 @@ var chapter2 = {
     "rss_100": false,                 # RSS订阅突破100人：获得稳定读者群
     "income_1000": false,              # 累计收益达到1000元：商业化里程碑
     "award_2010": false,               # 博客优秀大奖（2010）：获得入围，称号"博客新锐"
-    "year_summary_2010": false,        # 2010年度总结：五年回顾
+    "year_summary_2010": false,        # 2010年度总结：2006-2010 五年回顾
 }
 
 ## 第三章：博客转型期（2010-2015）
@@ -37,7 +37,7 @@ var chapter3 = {
     "https_upgraded": false,           # HTTPS升级：安装SSL证书保障安全
     "novel_planning": false,           # [已实现] 小说连载规划：开始出书前的长篇创作准备
     "open_source_planning": false,    # [已实现] 开源项目规划：开始开源前的项目规划
-    "year_summary_2015": false,        # 2015年度总结：十年回顾
+    "year_summary_2015": false,        # 2015年度总结：2011-2015五年回顾
     "award_2015": false,               # 博客优秀大奖（2015）：获得第一名，称号"博客之星"
 }
 
@@ -53,7 +53,7 @@ var chapter4 = {
     "cdn_enabled": false,              # CDN加速部署：提升网站访问速度
     "ai_preview": false,               # AI辅助预告：ChatGPT即将发布
     "award_2020": false,               # 博客优秀大奖（2020）：蝉联第一名，称号"博客传奇"
-    "year_summary_2020": false,        # 2020年度总结：十五年回顾
+    "year_summary_2020": false,        # 2020年度总结：2016-2020五年回顾
 }
 
 ## 第五章：博客重塑期（2020-2025）
@@ -224,7 +224,7 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "first_friend_link": "第一个友链：与星光博客交换链接",
         "ad_union_joined": "加入广告联盟：开始博客商业化尝试",
         "first_income": "第一笔广告收益：收到12.5元",
-        "year_summary_2005": "2005年度总结：三年回顾",
+        "year_summary_2005": "2005年度总结：四年回顾",
         "award_2005": '博客优秀大奖（2005）：获得提名，称号"博客新星"',
         # 第二章
         "literature_weekly": "文学周刊发布：分享文学作品，解锁3级文章",
@@ -244,7 +244,7 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "cloud_server": "云服务器迁移：从免费套餐升级到VPS",
         "novel_planning": "小说连载规划：开始出书前的长篇创作准备",
         "open_source_planning": "开源项目规划：开始开源前的项目规划",
-        "year_summary_2015": "2015年度总结：十年回顾",
+        "year_summary_2015": "2015年度总结：五年回顾",
         "award_2015": '博客优秀大奖（2015）：获得第一名，称号"博客之星"',
         # 第四章
         "novel_serial_start": "小说连载开始：创作长篇故事",
@@ -257,7 +257,7 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "cdn_enabled": "CDN加速部署：提升网站访问速度",
         "short_video": "短视频账号开通：抖音/短视频布局",
         "ai_preview": "AI辅助预告：ChatGPT即将发布",
-        "year_summary_2020": "2020年度总结：十五年回顾",
+        "year_summary_2020": "2020年度总结：五年回顾",
         "award_2020": '博客优秀大奖（2020）：蝉联第一名，称号"博客传奇"',
         # 第五章
         "ai_unlocked": "AI辅助解锁：ChatGPT发布，解锁AI创作",
