@@ -161,7 +161,7 @@ offset_left = 20.0
 offset_top = 430.0
 offset_right = 752.0
 offset_bottom = 455.0
-text = "这是博客联盟第一次举办这样的评选。三年来，无数博主在网络上坚持记录，您也是其中之一。"
+text = "这是博客联盟第一次举办这样的评选。三年来，无数博主在网络上坚持记录。"
 visible_characters = 0
 visible_ratio = 0.0
 
@@ -170,7 +170,7 @@ offset_left = 20.0
 offset_top = 430.0
 offset_right = 500.0
 offset_bottom = 455.0
-text = "评审团在 200+ 提名中，遴选了 50 位获得提名的博主。"
+text = "评审团在 200+ 提名中，将遴选出最终的获奖者。"
 visible_characters = 0
 visible_ratio = 0.0
 

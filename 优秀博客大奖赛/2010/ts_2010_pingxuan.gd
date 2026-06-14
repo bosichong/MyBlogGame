@@ -27,24 +27,20 @@ func _update_shortlist_label() -> void:
             if name != "" and not entries.has(name):
                 entries.append(name)
 
-    # 玩家补充进名单（去重）
+    # 玩家补充进名单
     if not entries.has(player_name):
         entries.append(player_name)
 
-    # 构建 BBCode 文本（每行 4 个，玩家高亮）
+    # 构建 BBCode 文本（每行 4 个）
     var lines: PackedStringArray = []
-    lines.append("[b]「第 2 届中文优秀博客大奖」入围名单[/b]")
+    lines.append("[b]「第 2 届中文优秀博客大奖」参赛博客（部分）[/b]")
     lines.append("")
 
     var row_parts: PackedStringArray = []
     for i in range(entries.size()):
         var rank: int = i + 1
         var entry: String = entries[i]
-        var cell: String
-        if entry == player_name:
-            cell = "[color=#FFD700][b]%02d. %s[/b][/color] ★" % [rank, entry]
-        else:
-            cell = "%02d. %s" % [rank, entry]
+        var cell: String = "%02d. %s" % [rank, entry]
         row_parts.append(cell)
 
         if row_parts.size() == COLS_PER_ROW or i == entries.size() - 1:

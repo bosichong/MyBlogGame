@@ -144,6 +144,7 @@ func serialize_runtime_data(runtime_data: RuntimeData) -> Dictionary:
         "story_progress": serialize_story_progress_data(runtime_data.story_progress),
         "yearly_summary": serialize_yearly_summary_data(runtime_data.yearly_summary),
         "archive": serialize_archive_data(runtime_data.archive),
+        "award_history": runtime_data.award_history,
     }
 
 func deserialize_runtime_data(data: Dictionary) -> RuntimeData:
@@ -174,6 +175,14 @@ func deserialize_runtime_data(data: Dictionary) -> RuntimeData:
     if data.has("archive"):
         deserialize_archive_data(runtime_data.archive, data["archive"])
     else:
+        # 老存档兼容：初始化当前年份的快照
+        if GDManager and runtime_data.time and runtime_data.blogger:
+            var current_year = runtime_data.time.current_year
+            if not runtime_data.yearly_summary.has_snapshot(current_year):
+                runtime_data.yearly_summary.record_yearly_snapshot(current_year, runtime_data.blogger)
+
+    if data.has("award_history"):
+        runtime_data.award_history = data["award_history"].duplicate(true)
         # 老存档兼容：初始化当前年份的快照
         if GDManager and runtime_data.time and runtime_data.blogger:
             var current_year = runtime_data.time.current_year

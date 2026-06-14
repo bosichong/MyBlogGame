@@ -12,6 +12,7 @@ var comment: CommentData = CommentData.new()
 var story_progress: StoryProgress = StoryProgress.new()
 var yearly_summary: YearlySummaryData = YearlySummaryData.new()
 var archive: ArchiveData = ArchiveData.new()
+var award_history: Array[Dictionary] = []
 
 func reset():
     blogger = BloggerData.new()
@@ -26,3 +27,4 @@ func reset():
     story_progress = StoryProgress.new()
     yearly_summary = YearlySummaryData.new()
     archive = ArchiveData.new()
+    award_history = []

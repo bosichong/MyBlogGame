@@ -1,26 +1,24 @@
 extends Node2D
 const SCENE_PATH = "res://scenes/main.tscn"
+const ORDINAL = 5
+const YEAR = 2025
 
 func _ready() -> void:
-    _grant_title()
-    _update_con_content()
+    _update_content()
 
-func _grant_title() -> void:
-    var sp = GDManager.get_story_progress()
-    sp.set_completed(3, "award_2025")
-
-func _update_con_content() -> void:
-    var con_label: Label = get_node_or_null("Panel/con")
-    if not con_label:
-        return
-
+func _update_content() -> void:
     var player_name: String = str(Blogger.blog_data.get("blog_name", "我的博客"))
+    var player_level: int = Blogger.level
 
-    var content := ""
-    content += "第 5 届「中文优秀博客大奖」获奖名单正式公布——\n\n"
-    content += "本届共有 6 位博主荣获优秀博客大奖，「%s」是其中之一！\n\n" % player_name
+    var result = AwardManager.process_award(ORDINAL, YEAR, player_level, player_name)
 
-    con_label.text = content
+    var tit_label: Label = get_node_or_null("Panel/tit")
+    if tit_label:
+        tit_label.text = result.title
+
+    var con_label: Label = get_node_or_null("Panel/con")
+    if con_label:
+        con_label.text = result.content
 
 func _on_button_pressed() -> void:
     TimerManager.start_timer()

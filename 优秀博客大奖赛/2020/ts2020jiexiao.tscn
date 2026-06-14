@@ -22,7 +22,7 @@ offset_bottom = 60.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("2_uqi0v")
 theme_override_font_sizes/font_size = 24
-text = "第3届优秀博客大奖获奖名单公布"
+text = "评选结果加载中……"
 
 [node name="con" type="Label" parent="Panel" unique_id=1920765643]
 layout_mode = 1
