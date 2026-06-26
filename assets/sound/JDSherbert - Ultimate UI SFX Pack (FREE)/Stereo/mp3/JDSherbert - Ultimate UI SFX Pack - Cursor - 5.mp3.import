@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dq6poa2odbhcs"
+path="res://.godot/imported/JDSherbert - Ultimate UI SFX Pack - Cursor - 5.mp3-b43a90d7efcac9ecc0d1e6b39759e87e.mp3str"
+
+[deps]
+
+source_file="res://assets/sound/JDSherbert - Ultimate UI SFX Pack (FREE)/Stereo/mp3/JDSherbert - Ultimate UI SFX Pack - Cursor - 5.mp3"
+dest_files=["res://.godot/imported/JDSherbert - Ultimate UI SFX Pack - Cursor - 5.mp3-b43a90d7efcac9ecc0d1e6b39759e87e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

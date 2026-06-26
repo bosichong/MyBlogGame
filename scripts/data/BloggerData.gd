@@ -7,7 +7,7 @@ class_name BloggerData
 # ============================================
 
 ## 等级（1-100）
-var level: int = 31
+var level: int = 80
 
 ## 经验值
 var exp: int = 0
@@ -24,16 +24,16 @@ var attribute_points: int = 0
 # ============================================
 
 ## 写作能力：影响所有文章的质量分
-var writing_ability: float = 30
+var writing_ability: float = 10
 
 ## 技术能力：影响技术类文章质量和网站维护效果
-var technical_ability: float = 30
+var technical_ability: float = 90
 
 ## 编程能力：影响编程教程、黑客攻防等技术文章质量
-var code_ability: float = 30
+var code_ability: float = 90
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 30
+var literature_ability: float = 90
 
 # ============================================
 # 资源

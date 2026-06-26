@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dh8a6w7n4pc0e"]
+
+[ext_resource type="Script" path="res://优秀博客大奖赛/jiexiao_dispatch.gd" id="1_kv2ma"]
+
+[node name="JiexiaoDispatch" type="Node2D"]
+script = ExtResource("1_kv2ma")

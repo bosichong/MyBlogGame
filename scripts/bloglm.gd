@@ -21,6 +21,9 @@ func _get_league_data():
 func _ready() -> void:
     _init_league_members()
     up_jhph()
+    _sync_is_join()
+    if GDManager:
+        GDManager.connect("game_loaded", _on_game_loaded)
 
 func _init_league_members():
     var league = _get_league_data()
@@ -36,6 +39,15 @@ func _update_rankings():
         jhph_wx = sort_by_lv(2)
         jhph_js = sort_by_lv(3)
         jhph_ys = sort_by_lv(4)
+
+func _sync_is_join():
+    var league = _get_league_data()
+    if league:
+        is_join = league.is_joined
+
+func _on_game_loaded(_slot: int):
+    _sync_is_join()
+    _update_rankings()
 
 func up_jhph():
     _update_rankings()
@@ -68,10 +80,28 @@ func join_lm():
             existing[key] = lm_player[key]
 
     is_join = true
+    _update_rankings()
 
     var fl_manager = GDManager.get_friend_link_manager() if GDManager else null
     if fl_manager:
         fl_manager.on_league_joined()
+
+func sync_player_data():
+    var league = _get_league_data()
+    if not league:
+        return
+    if not is_join and not league.is_joined:
+        return
+    if not is_join and league.is_joined:
+        is_join = true
+    var existing = league.get_member(888)
+    if existing.is_empty():
+        return
+    existing["lv"] = Blogger.level
+    existing["blog_name"] = Blogger.blog_data.blog_name
+    existing["blog_author"] = Blogger.blog_data.blog_author
+    existing["quality"] = GDManager.get_blogger().last_post_quality if GDManager else 0
+    _update_rankings()
 
 func exit_lm():
     var league = _get_league_data()

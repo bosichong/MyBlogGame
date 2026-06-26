@@ -19,13 +19,6 @@ offset_right = 533.0
 offset_bottom = 79.0
 text = "2005第一届优秀博客大赛评选"
 
-[node name="Button3" type="Button" parent="." unique_id=339223736]
-offset_left = 560.0
-offset_top = 48.0
-offset_right = 781.0
-offset_bottom = 79.0
-text = "2005第一届优秀博客大赛揭晓"
-
 [node name="Button4" type="Button" parent="." unique_id=775697253]
 offset_left = 56.0
 offset_top = 144.0
@@ -40,13 +33,6 @@ offset_right = 533.0
 offset_bottom = 175.0
 text = "2010第二届优秀博客大赛评选"
 
-[node name="Button6" type="Button" parent="." unique_id=1917409707]
-offset_left = 560.0
-offset_top = 144.0
-offset_right = 781.0
-offset_bottom = 175.0
-text = "2010第二届优秀博客大赛揭晓"
-
 [node name="Button7" type="Button" parent="." unique_id=482943156]
 offset_left = 56.0
 offset_top = 240.0
@@ -60,13 +46,6 @@ offset_top = 240.0
 offset_right = 533.0
 offset_bottom = 271.0
 text = "2015第三届优秀博客大奖评选"
-
-[node name="Button9" type="Button" parent="." unique_id=504165378]
-offset_left = 560.0
-offset_top = 240.0
-offset_right = 781.0
-offset_bottom = 271.0
-text = "2015第三届优秀博客大奖揭晓"
 
 [node name="Button10" type="Button" parent="." unique_id=615276489]
 offset_left = 56.0
@@ -96,16 +75,53 @@ offset_right = 533.0
 offset_bottom = 463.0
 text = "2025第五届优秀博客大奖评选"
 
+[node name="Button14" type="Button" parent="." unique_id=111111111]
+offset_left = 560.0
+offset_top = 48.0
+offset_right = 781.0
+offset_bottom = 79.0
+text = "测试-未提名"
+
+[node name="Button15" type="Button" parent="." unique_id=222222222]
+offset_left = 560.0
+offset_top = 90.0
+offset_right = 781.0
+offset_bottom = 121.0
+text = "测试-提名"
+
+[node name="Button16" type="Button" parent="." unique_id=333333333]
+offset_left = 560.0
+offset_top = 132.0
+offset_right = 781.0
+offset_bottom = 163.0
+text = "测试-入围"
+
+[node name="Button17" type="Button" parent="." unique_id=444444444]
+offset_left = 560.0
+offset_top = 174.0
+offset_right = 781.0
+offset_bottom = 205.0
+text = "测试-优秀博客"
+
+[node name="Button18" type="Button" parent="." unique_id=555555555]
+offset_left = 560.0
+offset_top = 216.0
+offset_right = 781.0
+offset_bottom = 247.0
+text = "测试-蝉联优秀博客"
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_button_2_pressed"]
-[connection signal="pressed" from="Button3" to="." method="_on_button_3_pressed"]
 [connection signal="pressed" from="Button4" to="." method="_on_button_4_pressed"]
 [connection signal="pressed" from="Button5" to="." method="_on_button_5_pressed"]
-[connection signal="pressed" from="Button6" to="." method="_on_button_6_pressed"]
 [connection signal="pressed" from="Button7" to="." method="_on_button_7_pressed"]
 [connection signal="pressed" from="Button8" to="." method="_on_button_8_pressed"]
-[connection signal="pressed" from="Button9" to="." method="_on_button_9_pressed"]
 [connection signal="pressed" from="Button10" to="." method="_on_button_10_pressed"]
 [connection signal="pressed" from="Button11" to="." method="_on_button_11_pressed"]
 [connection signal="pressed" from="Button12" to="." method="_on_button_12_pressed"]
 [connection signal="pressed" from="Button13" to="." method="_on_button_13_pressed"]
+[connection signal="pressed" from="Button14" to="." method="_on_test_not_nominated"]
+[connection signal="pressed" from="Button15" to="." method="_on_test_nominated"]
+[connection signal="pressed" from="Button16" to="." method="_on_test_shortlisted"]
+[connection signal="pressed" from="Button17" to="." method="_on_test_won"]
+[connection signal="pressed" from="Button18" to="." method="_on_test_repeat_won"]

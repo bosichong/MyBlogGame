@@ -876,6 +876,7 @@ func _action_show_popup_notification(action: Dictionary, context: Dictionary = {
             "to_year": action.get("review_to_year", 0),
             "title": action.get("review_title", ""),
             "chapter": action.get("review_chapter", 1),
+            "notification_ordinal": action.get("notification_ordinal", 1),
         }
         emit_signal("sg_task_show_popup_msg", title, content)
 

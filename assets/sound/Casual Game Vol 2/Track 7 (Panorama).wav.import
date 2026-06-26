@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://d1evm62tfma78"
+path="res://.godot/imported/Track 7 (Panorama).wav-d97c36666834ea674a606db9a1857181.sample"
+
+[deps]
+
+source_file="res://assets/sound/Casual Game Vol 2/Track 7 (Panorama).wav"
+dest_files=["res://.godot/imported/Track 7 (Panorama).wav-d97c36666834ea674a606db9a1857181.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

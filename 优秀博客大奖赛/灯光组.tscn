@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://c5vofwg6gyggr"]
+
+[ext_resource type="Script" uid="uid://d4dg8ppj064dh" path="res://优秀博客大奖赛/灯光组.gd" id="1_pndwp"]
+[ext_resource type="Texture2D" uid="uid://eykkm1pm3jfj" path="res://优秀博客大奖赛/images/灯光.png" id="1_ya8bu"]
+
+[node name="灯光组" type="Node2D" unique_id=149331547]
+script = ExtResource("1_pndwp")
+
+[node name="灯光1" type="Sprite2D" parent="." unique_id=951822397]
+modulate = Color(1, 1, 1, 0.39215687)
+position = Vector2(185.99998, 42)
+rotation = -0.7780713
+scale = Vector2(1.9967502, 2.264176)
+texture = ExtResource("1_ya8bu")
+offset = Vector2(9.535706, 174.13072)
+
+[node name="灯光2" type="Sprite2D" parent="." unique_id=1122451076]
+modulate = Color(1, 1, 1, 0.4509804)
+position = Vector2(821, 42.999985)
+rotation = 0.8142124
+scale = Vector2(1.9967502, 2.264176)
+texture = ExtResource("1_ya8bu")
+offset = Vector2(9.535706, 174.13072)
+
+[node name="灯光3" type="Sprite2D" parent="." unique_id=645903273]
+modulate = Color(1, 1, 1, 0.39215687)
+position = Vector2(410, 38.999996)
+rotation = -0.7780713
+scale = Vector2(1.9967502, 2.264176)
+texture = ExtResource("1_ya8bu")
+offset = Vector2(9.535706, 174.13072)
+
+[node name="灯光4" type="Sprite2D" parent="." unique_id=1045006402]
+modulate = Color(1, 1, 1, 0.4509804)
+position = Vector2(663.00006, 39.999958)
+rotation = 0.8142124
+scale = Vector2(1.9967502, 2.264176)
+texture = ExtResource("1_ya8bu")
+offset = Vector2(9.535706, 174.13072)

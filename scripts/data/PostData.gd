@@ -2,7 +2,7 @@
 class_name PostData
 
 ## 唯一标识
-var id: int = 0
+var id: String = ""
 
 ## 文章标题
 var title: String = ""

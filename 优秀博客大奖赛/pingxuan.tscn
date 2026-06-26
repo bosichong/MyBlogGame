@@ -1,0 +1,270 @@
+[gd_scene format=3 uid="uid://db1w57r3tmrwp"]
+
+[ext_resource type="Script" uid="uid://dfwwvpvu6tw4c" path="res://优秀博客大奖赛/pingxuan.gd" id="1_ndpls"]
+[ext_resource type="Texture2D" uid="uid://c2hj388l21g31" path="res://优秀博客大奖赛/images/评选牌.png" id="2_02r05"]
+[ext_resource type="Texture2D" uid="uid://dau82ngjl11la" path="res://优秀博客大奖赛/images/桌面.png" id="2_m7mlv"]
+[ext_resource type="Texture2D" uid="uid://7sb8b4oiqae0" path="res://优秀博客大奖赛/images/公平专业贴纸.png" id="3_ltidl"]
+[ext_resource type="Texture2D" uid="uid://bptqiu3aym2qa" path="res://优秀博客大奖赛/images/tmpx/element_41.png" id="4_e4vu5"]
+[ext_resource type="Texture2D" uid="uid://5ky4ebiukg1y" path="res://优秀博客大奖赛/images/评审席.png" id="4_mf773"]
+[ext_resource type="Texture2D" uid="uid://dho1eoyscdixp" path="res://优秀博客大奖赛/images/提名.png" id="5_6f6f4"]
+[ext_resource type="Texture2D" uid="uid://7jxkqi27hsqb" path="res://优秀博客大奖赛/images/tmpx/element_32.png" id="6_j3l7x"]
+[ext_resource type="Texture2D" uid="uid://b3821qpvaflph" path="res://优秀博客大奖赛/images/tmpx/element_30.png" id="7_x0l5a"]
+[ext_resource type="Texture2D" uid="uid://dkmtrr7nfw6kp" path="res://优秀博客大奖赛/images/tmpx/element_40.png" id="8_x0l5a"]
+[ext_resource type="Texture2D" uid="uid://betc13nvrtgjx" path="res://优秀博客大奖赛/images/tmpx/element_43.png" id="10_esr7c"]
+[ext_resource type="AudioStream" uid="uid://onf67wjp3dsn" path="res://assets/sound/vnmusicternox/dream/vntrack13.mp3" id="12_lhryu"]
+
+[sub_resource type="Animation" id="Animation_8d3v2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("01:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("02:visible_ratio")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("03:visible_ratio")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("04:visible_ratio")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("05:visible_ratio")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_qspfu"]
+resource_name = "main"
+length = 23.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("01:visible_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 1.5000001, 3.5, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("02:visible_ratio")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 4, 4.5, 6.5, 7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("03:visible_ratio")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 7, 7.5, 11.266666, 11.666666),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("04:visible_ratio")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 11.666666, 12.166666, 17, 17.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("05:visible_ratio")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 17.5, 18, 21.266666, 21.766666),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0, 1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sh8cx"]
+_data = {
+&"RESET": SubResource("Animation_8d3v2"),
+&"main": SubResource("Animation_qspfu")
+}
+
+[node name="Ts2005Pingxuan" type="Node2D" unique_id=1521015679]
+script = ExtResource("1_ndpls")
+
+[node name="场景" type="Node2D" parent="." unique_id=1459565835]
+
+[node name="桌子" type="Sprite2D" parent="场景" unique_id=2094077360]
+position = Vector2(40, 104)
+
+[node name="桌面" type="Sprite2D" parent="场景/桌子" unique_id=1569273414]
+position = Vector2(512, 144)
+texture = ExtResource("2_m7mlv")
+
+[node name="桌面2" type="Sprite2D" parent="场景/桌子" unique_id=936216294]
+position = Vector2(511, 200)
+texture = ExtResource("2_m7mlv")
+
+[node name="贴纸" type="Sprite2D" parent="场景/桌子" unique_id=274197634]
+position = Vector2(96, -7.999996)
+scale = Vector2(0.65999997, 0.66)
+texture = ExtResource("3_ltidl")
+
+[node name="书籍" type="Sprite2D" parent="场景/桌子" unique_id=2119701053]
+position = Vector2(624.00006, 80)
+scale = Vector2(0.48322302, 0.48322302)
+texture = ExtResource("4_e4vu5")
+
+[node name="评审席" type="Sprite2D" parent="场景/桌子" unique_id=1832130763]
+position = Vector2(336.00003, 128)
+scale = Vector2(0.4215686, 0.42156863)
+texture = ExtResource("4_mf773")
+
+[node name="文件" type="Sprite2D" parent="场景/桌子" unique_id=497308260]
+position = Vector2(517.17633, 149.70444)
+rotation = 0.5235988
+scale = Vector2(0.23139533, 0.23139529)
+texture = ExtResource("6_j3l7x")
+
+[node name="文件1" type="Sprite2D" parent="场景/桌子" unique_id=1023800296]
+position = Vector2(453.17636, 151.70444)
+rotation = -0.5235988
+scale = Vector2(0.30696827, 0.30696827)
+texture = ExtResource("7_x0l5a")
+
+[node name="提名" type="Sprite2D" parent="场景/桌子" unique_id=1822377483]
+position = Vector2(567.99994, 168)
+scale = Vector2(0.3071429, 0.3071429)
+texture = ExtResource("5_6f6f4")
+
+[node name="花盆" type="Sprite2D" parent="场景/桌子" unique_id=1586694215]
+position = Vector2(712, 104)
+scale = Vector2(0.48027027, 0.48027027)
+texture = ExtResource("8_x0l5a")
+
+[node name="Sprite2D" type="Sprite2D" parent="场景/桌子" unique_id=1384551438]
+position = Vector2(432, -40)
+scale = Vector2(0.4583333, 0.4583333)
+texture = ExtResource("10_esr7c")
+
+[node name="场景牌" type="Sprite2D" parent="." unique_id=2022083776]
+position = Vector2(824, 88)
+scale = Vector2(0.6212121, 0.6212121)
+texture = ExtResource("2_02r05")
+
+[node name="01" type="RichTextLabel" parent="." unique_id=1037505400]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 500.0
+offset_bottom = 455.0
+text = "111"
+scroll_active = false
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="02" type="RichTextLabel" parent="." unique_id=1803567681]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 500.0
+offset_bottom = 455.0
+text = "222"
+scroll_active = false
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="03" type="RichTextLabel" parent="." unique_id=1753201945]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 752.0
+offset_bottom = 455.0
+text = "333"
+scroll_active = false
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="04" type="RichTextLabel" parent="." unique_id=262936621]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 500.0
+offset_bottom = 455.0
+text = "444"
+scroll_active = false
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="05" type="RichTextLabel" parent="." unique_id=1685236201]
+offset_left = 20.0
+offset_top = 430.0
+offset_right = 500.0
+offset_bottom = 455.0
+text = "555"
+scroll_active = false
+visible_characters = 0
+visible_ratio = 0.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1257695947]
+libraries/ = SubResource("AnimationLibrary_sh8cx")
+autoplay = &"main"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1491459483]
+stream = ExtResource("12_lhryu")
+autoplay = true
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

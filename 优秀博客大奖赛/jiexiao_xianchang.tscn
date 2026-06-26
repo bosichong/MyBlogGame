@@ -1,0 +1,693 @@
+[gd_scene format=3 uid="uid://b3l53f6nti678"]
+
+[ext_resource type="Script" uid="uid://5sd7nwhvy0x7" path="res://优秀博客大奖赛/jiexiao_xianchang.gd" id="1_re57w"]
+[ext_resource type="Texture2D" uid="uid://dq2dvjx1ppu3c" path="res://优秀博客大奖赛/images/tbdsbj/element_52.png" id="2_6k5as"]
+[ext_resource type="Texture2D" uid="uid://cg07pd3bmiknt" path="res://优秀博客大奖赛/images/tbdsbj/优秀大赛背景.png" id="2_b07k1"]
+[ext_resource type="Texture2D" uid="uid://c7dqrujg5r0bi" path="res://优秀博客大奖赛/images/tbdsbj/element_50.png" id="3_7oh1a"]
+[ext_resource type="Texture2D" uid="uid://dgavp6dbj1c02" path="res://优秀博客大奖赛/images/tbdsbj/element_39.png" id="3_ba7fo"]
+[ext_resource type="Texture2D" uid="uid://be1paiyfgl5aa" path="res://优秀博客大奖赛/images/tbdsbj/element_40.png" id="4_cr3c1"]
+[ext_resource type="Texture2D" uid="uid://cs0y861oi8g87" path="res://优秀博客大奖赛/images/tbdsbj/element_51.png" id="4_v7f8a"]
+[ext_resource type="Texture2D" uid="uid://biqcq5ovf08hi" path="res://优秀博客大奖赛/images/tbdsbj/element_46.png" id="5_ih4gq"]
+[ext_resource type="Texture2D" uid="uid://df5bx776oles8" path="res://优秀博客大奖赛/images/tbdsbj/element_45.png" id="6_a4u4e"]
+[ext_resource type="Texture2D" uid="uid://d3oc05n6shp6x" path="res://优秀博客大奖赛/images/tbdsbj/element_43.png" id="7_pydwl"]
+[ext_resource type="Texture2D" uid="uid://ca3v783m2e8yy" path="res://优秀博客大奖赛/images/tbdsbj/element_42.png" id="8_at80a"]
+[ext_resource type="Texture2D" uid="uid://bmj183qx6rstr" path="res://优秀博客大奖赛/images/tbdsbj/element_19.png" id="12_7oh1a"]
+[ext_resource type="Texture2D" uid="uid://b6j7cm8ii4hx8" path="res://优秀博客大奖赛/images/tbdsbj/element_34.png" id="12_afnsi"]
+[ext_resource type="Texture2D" uid="uid://c721vgpljhx4m" path="res://优秀博客大奖赛/images/tbdsbj/element_33.png" id="13_avk8a"]
+[ext_resource type="Texture2D" uid="uid://dqd8wvx8c55gg" path="res://优秀博客大奖赛/images/tbdsbj/element_20.png" id="14_afnsi"]
+[ext_resource type="Texture2D" uid="uid://cetb43chippvu" path="res://优秀博客大奖赛/images/tbdsbj/element_23.png" id="15_0m7n1"]
+[ext_resource type="Texture2D" uid="uid://3maewgpm665w" path="res://优秀博客大奖赛/images/tbdsbj/element_28.png" id="17_mm1cn"]
+[ext_resource type="Texture2D" uid="uid://fi01i2sc3cvy" path="res://优秀博客大奖赛/images/tbdsbj/element_26.png" id="18_rqwxb"]
+[ext_resource type="Texture2D" uid="uid://b3fr43jgxcmja" path="res://优秀博客大奖赛/images/tbdsbj/element_31.png" id="19_iervc"]
+[ext_resource type="Texture2D" uid="uid://b8r3qwja1p4cc" path="res://优秀博客大奖赛/images/tbdsbj/element_30.png" id="20_1eoal"]
+[ext_resource type="Texture2D" uid="uid://dwg0520f5q5mw" path="res://优秀博客大奖赛/images/tbdsbj/element_1.png" id="21_sgj02"]
+[ext_resource type="Texture2D" uid="uid://cooskbemmyhmp" path="res://优秀博客大奖赛/images/tbdsbj/element_5.png" id="22_egiwf"]
+[ext_resource type="Texture2D" uid="uid://df5yxhd0tqtsl" path="res://优秀博客大奖赛/images/tbdsbj/element_7.png" id="23_rv6ej"]
+[ext_resource type="Texture2D" uid="uid://x4t1rtx10hxj" path="res://优秀博客大奖赛/images/tbdsbj/element_15.png" id="24_14ewv"]
+[ext_resource type="Texture2D" uid="uid://brngo735qbxky" path="res://优秀博客大奖赛/images/tbdsbj/element_25.png" id="25_vvwmu"]
+[ext_resource type="Texture2D" uid="uid://bhu7gomuwfrcd" path="res://优秀博客大奖赛/images/tbdsbj/element_18.png" id="26_7xtg5"]
+[ext_resource type="Texture2D" uid="uid://qel87vd0jo1b" path="res://优秀博客大奖赛/images/tbdsbj/element_16.png" id="27_4t2if"]
+[ext_resource type="Texture2D" uid="uid://cn8phli2bs58k" path="res://优秀博客大奖赛/images/tbdsbj/element_17.png" id="28_hd2tl"]
+[ext_resource type="Texture2D" uid="uid://c0h40gj1ufhvx" path="res://优秀博客大奖赛/images/tbdsbj/element_0.png" id="29_5sbtc"]
+[ext_resource type="Texture2D" uid="uid://culg5xnkjciwg" path="res://优秀博客大奖赛/images/tbdsbj/element_9.png" id="30_0wyg6"]
+[ext_resource type="Texture2D" uid="uid://c7a5of7mau6wp" path="res://优秀博客大奖赛/images/tbdsbj/element_10.png" id="31_m0jme"]
+[ext_resource type="Texture2D" uid="uid://d2ammo6hdcvdr" path="res://优秀博客大奖赛/images/tbdsbj/element_47_f.png" id="34_1eoal"]
+[ext_resource type="PackedScene" uid="uid://o5pwx81lxv6n" path="res://优秀博客大奖赛/口号.tscn" id="34_sgj02"]
+[ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="35_egiwf"]
+[ext_resource type="PackedScene" uid="uid://c5vofwg6gyggr" path="res://优秀博客大奖赛/灯光组.tscn" id="35_sgj02"]
+[ext_resource type="AudioStream" uid="uid://cun7xjdu3q4bj" path="res://assets/sound/banjiang.mp3" id="36_egiwf"]
+[ext_resource type="AudioStream" uid="uid://ba3gxfxfyyq1" path="res://assets/sound/guzhang.mp3" id="37_rv6ej"]
+[ext_resource type="PackedScene" uid="uid://boh4ck8vvyl2g" path="res://scenes/confetti.tscn" id="38_14ewv"]
+
+[sub_resource type="Animation" id="Animation_sgj02"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("开场白/tit:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("开场白/con:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("开场白:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("结尾:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("结尾/tit:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("结尾/con:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("声音/颁奖:playing")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("声音/颁奖:stream_paused")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("声音/鼓掌:playing")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_egiwf"]
+resource_name = "main"
+length = 30.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("开场白/tit:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("开场白/con:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2, 3.0000002),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("开场白:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(10.000001, 11.000001),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("结尾:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(19.000002, 20.000002),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("结尾/tit:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(20.000002, 21.000002),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("结尾/con:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(21, 22.000002),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("声音/颁奖:playing")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(1, 1.5000001),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("声音/颁奖:stream_paused")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(30),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("声音/鼓掌:playing")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(8.8, 9.466667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/9/type = "method"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Confetti")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(3.2333333, 13.733334),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"emit"
+}, {
+"args": [],
+"method": &"emit"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rv6ej"]
+_data = {
+&"RESET": SubResource("Animation_sgj02"),
+&"main": SubResource("Animation_egiwf")
+}
+
+[node name="jiexiao_xianchang" type="Node2D" unique_id=2095294214]
+script = ExtResource("1_re57w")
+
+[node name="颁奖现场" type="Node2D" parent="." unique_id=676980078]
+
+[node name="背景" type="Node2D" parent="颁奖现场" unique_id=886852043]
+
+[node name="墙" type="ColorRect" parent="颁奖现场/背景" unique_id=1724016391]
+offset_right = 960.0
+offset_bottom = 270.0
+color = Color(0.3372549, 0.33333334, 0.40392157, 1)
+metadata/_edit_lock_ = true
+
+[node name="墙2" type="ColorRect" parent="颁奖现场/背景" unique_id=598641173]
+offset_left = 176.0
+offset_top = -128.00002
+offset_right = 552.0
+offset_bottom = 109.999985
+rotation = 1.0471976
+scale = Vector2(1.3461177, 1.9658833)
+color = Color(0.972549, 0.9529412, 0.8784314, 1)
+metadata/_edit_lock_ = true
+
+[node name="地面" type="ColorRect" parent="颁奖现场/背景" unique_id=186116189]
+offset_top = 272.0
+offset_right = 960.0
+offset_bottom = 462.0
+color = Color(0.42352942, 0.45490196, 0.5372549, 1)
+metadata/_edit_lock_ = true
+
+[node name="条幅4" type="Sprite2D" parent="颁奖现场/背景" unique_id=1987063772]
+position = Vector2(800.2437, 55.962315)
+scale = Vector2(0.49492177, 0.49013266)
+texture = ExtResource("2_6k5as")
+metadata/_edit_lock_ = true
+
+[node name="条幅3" type="Sprite2D" parent="颁奖现场/背景" unique_id=1175674071]
+position = Vector2(880, 56.000004)
+scale = Vector2(0.49953476, 0.49953467)
+texture = ExtResource("3_7oh1a")
+metadata/_edit_lock_ = true
+
+[node name="条幅" type="Sprite2D" parent="颁奖现场/背景" unique_id=905356370]
+position = Vector2(200.00002, 64)
+scale = Vector2(0.58247423, 0.5824742)
+texture = ExtResource("3_7oh1a")
+metadata/_edit_lock_ = true
+
+[node name="条幅2" type="Sprite2D" parent="颁奖现场/背景" unique_id=1686784975]
+position = Vector2(111.99999, 64)
+scale = Vector2(0.5778017, 0.5778016)
+texture = ExtResource("4_v7f8a")
+metadata/_edit_lock_ = true
+
+[node name="前景" type="Node2D" parent="颁奖现场" unique_id=891115337]
+
+[node name="海报" type="Sprite2D" parent="颁奖现场/前景" unique_id=484015057]
+position = Vector2(496, 168.00002)
+scale = Vector2(0.625, 0.625)
+texture = ExtResource("2_b07k1")
+metadata/_edit_lock_ = true
+
+[node name="舞台" type="Sprite2D" parent="颁奖现场/前景" unique_id=112037134]
+position = Vector2(496, 320)
+scale = Vector2(0.8503649, 0.850365)
+texture = ExtResource("3_ba7fo")
+metadata/_edit_lock_ = true
+
+[node name="主角颁奖" type="Sprite2D" parent="颁奖现场/前景" unique_id=1468946922]
+position = Vector2(496, 256)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_cr3c1")
+metadata/_edit_lock_ = true
+
+[node name="麦克" type="Sprite2D" parent="颁奖现场/前景" unique_id=701720873]
+position = Vector2(584, 280)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("5_ih4gq")
+metadata/_edit_lock_ = true
+
+[node name="奖杯" type="Sprite2D" parent="颁奖现场/前景" unique_id=1870183063]
+position = Vector2(664, 262)
+scale = Vector2(0.43388438, 0.43388435)
+texture = ExtResource("6_a4u4e")
+metadata/_edit_lock_ = true
+
+[node name="书柜" type="Sprite2D" parent="颁奖现场/前景" unique_id=1183959279]
+position = Vector2(64, 240)
+scale = Vector2(0.6230769, 0.6230769)
+texture = ExtResource("7_pydwl")
+metadata/_edit_lock_ = true
+
+[node name="电脑桌椅" type="Sprite2D" parent="颁奖现场/前景" unique_id=140244294]
+position = Vector2(175.99998, 255.99998)
+scale = Vector2(0.6052632, 0.6052632)
+texture = ExtResource("8_at80a")
+metadata/_edit_lock_ = true
+
+[node name="观众" type="Node2D" parent="颁奖现场" unique_id=1153764541]
+
+[node name="前排观众5" type="Sprite2D" parent="颁奖现场/观众" unique_id=122625291]
+position = Vector2(440, 383.99997)
+scale = Vector2(0.6842105, 0.68421054)
+texture = ExtResource("12_afnsi")
+
+[node name="前排观众1" type="Sprite2D" parent="颁奖现场/观众" unique_id=883700150]
+position = Vector2(496, 384)
+scale = Vector2(0.67582417, 0.67582417)
+texture = ExtResource("12_7oh1a")
+
+[node name="前排观众4" type="Sprite2D" parent="颁奖现场/观众" unique_id=1041034801]
+position = Vector2(576, 386.00003)
+scale = Vector2(0.6618107, 0.6618104)
+texture = ExtResource("13_avk8a")
+
+[node name="前排观众6" type="Sprite2D" parent="颁奖现场/观众" unique_id=1640504700]
+position = Vector2(690, 380)
+scale = Vector2(0.5912317, 0.59123164)
+texture = ExtResource("14_afnsi")
+
+[node name="前排观众2" type="Sprite2D" parent="颁奖现场/观众" unique_id=1695831239]
+position = Vector2(472.00003, 400)
+scale = Vector2(0.6472884, 0.6472883)
+texture = ExtResource("14_afnsi")
+
+[node name="前排观众7" type="Sprite2D" parent="颁奖现场/观众" unique_id=2075988896]
+position = Vector2(746, 378)
+scale = Vector2(0.64259183, 0.64259154)
+texture = ExtResource("15_0m7n1")
+
+[node name="前排观众3" type="Sprite2D" parent="颁奖现场/观众" unique_id=186391498]
+position = Vector2(530.4149, 396.43954)
+scale = Vector2(0.6816684, 0.6816683)
+texture = ExtResource("15_0m7n1")
+
+[node name="前排观众" type="Sprite2D" parent="颁奖现场/观众" unique_id=984139766]
+position = Vector2(339, 383.99997)
+scale = Vector2(0.6710528, 0.67105293)
+texture = ExtResource("17_mm1cn")
+
+[node name="观众15" type="Sprite2D" parent="颁奖现场/观众" unique_id=1760083397]
+position = Vector2(215.99998, 379)
+scale = Vector2(0.70253164, 0.70253164)
+texture = ExtResource("18_rqwxb")
+
+[node name="观众" type="Sprite2D" parent="颁奖现场/观众" unique_id=766544171]
+position = Vector2(400, 400.00003)
+scale = Vector2(0.7191781, 0.7191781)
+texture = ExtResource("19_iervc")
+
+[node name="观众19" type="Sprite2D" parent="颁奖现场/观众" unique_id=827745024]
+position = Vector2(146, 380)
+scale = Vector2(0.7191781, 0.7191781)
+texture = ExtResource("19_iervc")
+
+[node name="观众2" type="Sprite2D" parent="颁奖现场/观众" unique_id=498312050]
+position = Vector2(432.00003, 420)
+scale = Vector2(0.7051282, 0.7051282)
+texture = ExtResource("20_1eoal")
+
+[node name="观众22" type="Sprite2D" parent="颁奖现场/观众" unique_id=317447755]
+position = Vector2(74, 389)
+scale = Vector2(0.6402438, 0.6402438)
+texture = ExtResource("23_rv6ej")
+
+[node name="观众20" type="Sprite2D" parent="颁奖现场/观众" unique_id=789658713]
+position = Vector2(118, 404)
+scale = Vector2(0.7051282, 0.7051282)
+texture = ExtResource("20_1eoal")
+
+[node name="观众3" type="Sprite2D" parent="颁奖现场/观众" unique_id=606318030]
+position = Vector2(264, 392)
+scale = Vector2(0.6590908, 0.6590909)
+texture = ExtResource("21_sgj02")
+
+[node name="观众4" type="Sprite2D" parent="颁奖现场/观众" unique_id=515885869]
+position = Vector2(304.00003, 420)
+scale = Vector2(0.7077922, 0.70779216)
+texture = ExtResource("22_egiwf")
+
+[node name="观众21" type="Sprite2D" parent="颁奖现场/观众" unique_id=1944391293]
+position = Vector2(34.000004, 405.00003)
+scale = Vector2(0.7077922, 0.70779216)
+texture = ExtResource("22_egiwf")
+
+[node name="观众5" type="Sprite2D" parent="颁奖现场/观众" unique_id=685706519]
+position = Vector2(360, 416)
+scale = Vector2(0.6402438, 0.6402438)
+texture = ExtResource("23_rv6ej")
+
+[node name="观众6" type="Sprite2D" parent="颁奖现场/观众" unique_id=1018024624]
+position = Vector2(242, 416)
+scale = Vector2(0.65584415, 0.65584415)
+texture = ExtResource("24_14ewv")
+
+[node name="观众7" type="Sprite2D" parent="颁奖现场/观众" unique_id=1827475989]
+position = Vector2(184, 408)
+scale = Vector2(0.70253164, 0.70253164)
+texture = ExtResource("25_vvwmu")
+
+[node name="观众8" type="Sprite2D" parent="颁奖现场/观众" unique_id=1105265404]
+position = Vector2(632, 385.99997)
+scale = Vector2(0.72889584, 0.72889584)
+texture = ExtResource("26_7xtg5")
+
+[node name="观众18" type="Sprite2D" parent="颁奖现场/观众" unique_id=1235375805]
+position = Vector2(830, 381)
+scale = Vector2(0.72889584, 0.72889584)
+texture = ExtResource("26_7xtg5")
+
+[node name="观众14" type="Sprite2D" parent="颁奖现场/观众" unique_id=1776208410]
+position = Vector2(783.99994, 408)
+scale = Vector2(0.6069177, 0.60691756)
+texture = ExtResource("27_4t2if")
+
+[node name="观众9" type="Sprite2D" parent="颁奖现场/观众" unique_id=1578935624]
+position = Vector2(611, 408.00003)
+scale = Vector2(0.57848835, 0.5784883)
+texture = ExtResource("27_4t2if")
+
+[node name="观众23" type="Sprite2D" parent="颁奖现场/观众" unique_id=1422711406]
+position = Vector2(880, 392)
+scale = Vector2(0.65189874, 0.65189874)
+texture = ExtResource("30_0wyg6")
+
+[node name="观众10" type="Sprite2D" parent="颁奖现场/观众" unique_id=2065753851]
+position = Vector2(560, 424)
+scale = Vector2(0.68243235, 0.68243235)
+texture = ExtResource("28_hd2tl")
+
+[node name="观众16" type="Sprite2D" parent="颁奖现场/观众" unique_id=1357875187]
+position = Vector2(560, 424)
+scale = Vector2(0.68243235, 0.68243235)
+texture = ExtResource("28_hd2tl")
+
+[node name="观众17" type="Sprite2D" parent="颁奖现场/观众" unique_id=603259251]
+position = Vector2(826, 423)
+scale = Vector2(0.68243235, 0.68243235)
+texture = ExtResource("28_hd2tl")
+
+[node name="观众13" type="Sprite2D" parent="颁奖现场/观众" unique_id=582571969]
+position = Vector2(504, 424)
+scale = Vector2(0.69512194, 0.69512194)
+texture = ExtResource("29_5sbtc")
+
+[node name="观众24" type="Sprite2D" parent="颁奖现场/观众" unique_id=1054890204]
+position = Vector2(879.99994, 435)
+scale = Vector2(0.69512194, 0.69512194)
+texture = ExtResource("29_5sbtc")
+
+[node name="观众12" type="Sprite2D" parent="颁奖现场/观众" unique_id=1561796674]
+position = Vector2(664, 416.00003)
+scale = Vector2(0.65189874, 0.65189874)
+texture = ExtResource("30_0wyg6")
+
+[node name="观众11" type="Sprite2D" parent="颁奖现场/观众" unique_id=1771827326]
+position = Vector2(720, 413.00003)
+scale = Vector2(0.69753087, 0.6975309)
+texture = ExtResource("31_m0jme")
+
+[node name="观众25" type="Sprite2D" parent="颁奖现场/观众" unique_id=1394246069]
+position = Vector2(932, 412)
+scale = Vector2(0.69753087, 0.6975309)
+texture = ExtResource("31_m0jme")
+
+[node name="灯" type="Node2D" parent="颁奖现场" unique_id=592606984]
+
+[node name="灯" type="Sprite2D" parent="颁奖现场/灯" unique_id=1238093361]
+position = Vector2(831, 21.000004)
+scale = Vector2(0.63846153, 0.6384616)
+texture = ExtResource("34_1eoal")
+
+[node name="灯2" type="Sprite2D" parent="颁奖现场/灯" unique_id=1022242625]
+position = Vector2(670, 21.000004)
+scale = Vector2(0.63846153, 0.6384616)
+texture = ExtResource("34_1eoal")
+
+[node name="灯3" type="Sprite2D" parent="颁奖现场/灯" unique_id=367734118]
+position = Vector2(404, 21.000004)
+scale = Vector2(0.63846153, 0.6384616)
+texture = ExtResource("34_1eoal")
+flip_h = true
+
+[node name="灯4" type="Sprite2D" parent="颁奖现场/灯" unique_id=1469176065]
+position = Vector2(175.00003, 21.000004)
+scale = Vector2(0.63846153, 0.6384616)
+texture = ExtResource("34_1eoal")
+flip_h = true
+
+[node name="灯光组" parent="颁奖现场" unique_id=149331547 instance=ExtResource("35_sgj02")]
+
+[node name="口号" parent="颁奖现场" unique_id=145779810 instance=ExtResource("34_sgj02")]
+
+[node name="开场白" type="Node2D" parent="." unique_id=1997266289]
+
+[node name="ColorRect" type="ColorRect" parent="开场白" unique_id=1747944409]
+offset_right = 960.0
+offset_bottom = 480.0
+color = Color(0.101960786, 0.101960786, 0.101960786, 1)
+
+[node name="tit" type="Label" parent="开场白" unique_id=1843413912]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 334.0
+offset_top = 40.0
+offset_right = 634.0
+offset_bottom = 76.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("35_egiwf")
+theme_override_font_sizes/font_size = 24
+text = "博客优秀大奖赛 — 颁奖典礼"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="con" type="RichTextLabel" parent="开场白" unique_id=355082986]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 136.0
+offset_top = 116.0
+offset_right = 836.0
+offset_bottom = 416.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="结尾" type="Node2D" parent="." unique_id=1997266290]
+
+[node name="ColorRect" type="ColorRect" parent="结尾" unique_id=1747944410]
+offset_right = 960.0
+offset_bottom = 480.0
+color = Color(0.101960786, 0.101960786, 0.101960786, 1)
+
+[node name="tit" type="Label" parent="结尾" unique_id=1843413913]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 234.0
+offset_top = 40.0
+offset_right = 734.0
+offset_bottom = 76.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("35_egiwf")
+theme_override_font_sizes/font_size = 24
+text = "title"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="return_btn" type="Button" parent="结尾" unique_id=1287140796]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 448.0
+offset_top = 408.0
+offset_right = 536.0
+offset_bottom = 439.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "返回主场景"
+
+[node name="con" type="Label" parent="结尾" unique_id=355082987]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 136.0
+offset_top = 116.0
+offset_right = 836.0
+offset_bottom = 416.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("35_egiwf")
+theme_override_font_sizes/font_size = 18
+text = "con"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1512516815]
+libraries/ = SubResource("AnimationLibrary_rv6ej")
+autoplay = &"main"
+
+[node name="声音" type="Node2D" parent="." unique_id=684949637]
+
+[node name="颁奖" type="AudioStreamPlayer" parent="声音" unique_id=1878524439]
+stream = ExtResource("36_egiwf")
+volume_db = -6.5
+
+[node name="鼓掌" type="AudioStreamPlayer" parent="声音" unique_id=1256837135]
+stream = ExtResource("37_rv6ej")
+
+[node name="Confetti" parent="." unique_id=1969269409 instance=ExtResource("38_14ewv")]
+auto_emit = false
+
+[connection signal="pressed" from="结尾/return_btn" to="." method="_on_return_button_pressed"]

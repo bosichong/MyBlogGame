@@ -30,3 +30,4 @@ func trigger() -> void:
     var new_requests = fl_manager.add_passive_requests()
     
     if new_requests.size() > 0:
+        print("收到", new_requests.size(), "个被动友链申请")

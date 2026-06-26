@@ -5,6 +5,7 @@ signal close_bm
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
     on_show_panel()
+    _setup_nav_buttons()
     
 
 
@@ -51,6 +52,20 @@ func _show_gupiao_notice():
     lab.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
     lab.add_theme_font_size_override("font_size", 32)
     $bg/选项组/sc3/VBoxContainer.add_child(lab)
+
+func _setup_nav_buttons():
+    var group = ButtonGroup.new()
+    group.allow_unpress = false
+    for mc in $bg/按钮组/vb.get_children():
+        var btn = mc.get_child(0) if mc.get_child_count() > 0 else null
+        if btn is Button:
+            btn.button_group = group
+    var b1 = $bg/按钮组/vb/mc1/b1
+    b1.button_pressed = true
+    b1.pressed.connect(_on_bank_pressed)
+
+func _on_bank_pressed() -> void:
+    _show_bank_panel()
   
 func upd_dqck_tab():
     var tab = $"bg/选项组/sc1/VBoxContainer/ScrollContainer/dqck"

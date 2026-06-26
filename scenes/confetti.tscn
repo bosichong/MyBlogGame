@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://boh4ck8vvyl2g"]
+
+[ext_resource type="Script" uid="uid://bfqicbjof6la0" path="res://scripts/confetti.gd" id="1_4ebxx"]
+
+[node name="Confetti" type="Node2D" unique_id=1969269409]
+script = ExtResource("1_4ebxx")

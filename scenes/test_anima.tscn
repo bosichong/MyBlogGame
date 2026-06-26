@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cemka52jreqkg"]
+[gd_scene format=3 uid="uid://cemka52jreqkg"]
 
 [ext_resource type="Texture2D" uid="uid://ue1lksap2od7" path="res://assets/风景.png" id="1_ujotk"]
 [ext_resource type="Texture2D" uid="uid://u0q1107gl1v" path="res://assets/窗户.png" id="2_uocx0"]
@@ -58,133 +58,131 @@ _data = {
 &"RESET": SubResource("Animation_uocx0")
 }
 
-[node name="test" type="Node"]
+[node name="test" type="Node" unique_id=241205386]
 
-[node name="背景" type="Sprite2D" parent="."]
+[node name="背景" type="Sprite2D" parent="." unique_id=529775756]
 
-[node name="ColorRect" type="ColorRect" parent="背景"]
+[node name="ColorRect" type="ColorRect" parent="背景" unique_id=2000601648]
 self_modulate = Color(1, 0.968627, 0.917647, 1)
 offset_right = 964.0
 offset_bottom = 470.0
 
-[node name="ColorRect3" type="ColorRect" parent="背景"]
+[node name="ColorRect3" type="ColorRect" parent="背景" unique_id=1269119237]
 self_modulate = Color(0.784314, 0.772549, 0.752941, 1)
 offset_left = -40.0
 offset_right = 1008.0
 offset_bottom = 54.0
 
-[node name="ColorRect2" type="ColorRect" parent="背景"]
+[node name="ColorRect2" type="ColorRect" parent="背景" unique_id=799854365]
 self_modulate = Color(0.784314, 0.772549, 0.752941, 1)
 offset_left = -40.0
 offset_top = 296.0
 offset_right = 1008.0
 offset_bottom = 470.0
 
-[node name="前景" type="Sprite2D" parent="."]
+[node name="前景" type="Sprite2D" parent="." unique_id=1281852021]
 
-[node name="风景" type="Sprite2D" parent="前景"]
+[node name="风景" type="Sprite2D" parent="前景" unique_id=1894110018]
 modulate = Color(1, 1, 1, 0)
 position = Vector2(518, 160)
 texture = ExtResource("1_ujotk")
 
-[node name="窗户" type="Sprite2D" parent="前景"]
+[node name="窗户" type="Sprite2D" parent="前景" unique_id=522631182]
 position = Vector2(518, 160)
 texture = ExtResource("2_uocx0")
 
-[node name="窗帘" type="Sprite2D" parent="前景"]
+[node name="窗帘" type="Sprite2D" parent="前景" unique_id=2135521635]
 position = Vector2(516, 159)
 texture = ExtResource("3_4fa24")
 
-[node name="电脑桌" type="Sprite2D" parent="前景"]
-position = Vector2(510, 278)
+[node name="电脑桌" type="Sprite2D" parent="前景" unique_id=1419071576]
+position = Vector2(510.5, 278)
 texture = ExtResource("4_eta06")
 
-[node name="显示器" type="Sprite2D" parent="前景"]
-position = Vector2(505, 226)
+[node name="显示器" type="Sprite2D" parent="前景" unique_id=1219953222]
+position = Vector2(505.5, 226)
 texture = ExtResource("5_h6bu0")
 
-[node name="键盘" type="Sprite2D" parent="前景"]
-position = Vector2(505, 256)
+[node name="键盘" type="Sprite2D" parent="前景" unique_id=903447388]
+position = Vector2(505.5, 256)
 texture = ExtResource("6_yux7b")
 
-[node name="主角背面" type="Sprite2D" parent="前景"]
-position = Vector2(504, 264)
+[node name="主角背面" type="Sprite2D" parent="前景" unique_id=224237625]
+position = Vector2(504.5, 264)
 texture = ExtResource("7_u8cxf")
 
-[node name="椅子诶面" type="Sprite2D" parent="前景"]
-position = Vector2(505, 283)
+[node name="椅子诶面" type="Sprite2D" parent="前景" unique_id=1665982002]
+position = Vector2(505.5, 283)
 texture = ExtResource("8_b2g18")
 
-[node name="门" type="Sprite2D" parent="前景"]
+[node name="门" type="Sprite2D" parent="前景" unique_id=292403951]
 position = Vector2(127, 237)
 texture = ExtResource("9_rv76f")
 
-[node name="表" type="Sprite2D" parent="前景"]
+[node name="表" type="Sprite2D" parent="前景" unique_id=1244130836]
 position = Vector2(127, 145)
 texture = ExtResource("10_momq4")
 
-[node name="吊灯" type="Sprite2D" parent="前景"]
+[node name="吊灯" type="Sprite2D" parent="前景" unique_id=1429190905]
 position = Vector2(216, 102)
 texture = ExtResource("11_1fqpr")
 
-[node name="床" type="Sprite2D" parent="前景"]
+[node name="床" type="Sprite2D" parent="前景" unique_id=55414813]
 position = Vector2(741, 348)
 texture = ExtResource("12_phlig")
 
-[node name="相框大" type="Sprite2D" parent="前景"]
+[node name="相框大" type="Sprite2D" parent="前景" unique_id=180551231]
 position = Vector2(675, 147)
 texture = ExtResource("13_k4q8h")
 
-[node name="台灯" type="Sprite2D" parent="前景"]
+[node name="台灯" type="Sprite2D" parent="前景" unique_id=134853297]
 position = Vector2(652, 269)
 texture = ExtResource("14_k1lmq")
 
-[node name="书架" type="Sprite2D" parent="前景"]
+[node name="书架" type="Sprite2D" parent="前景" unique_id=632323048]
 position = Vector2(341, 238)
 texture = ExtResource("15_r58b2")
 
-[node name="植物" type="Sprite2D" parent="前景"]
+[node name="植物" type="Sprite2D" parent="前景" unique_id=257108462]
 position = Vector2(233, 266)
 texture = ExtResource("16_cbj3i")
 
-[node name="书1" type="Sprite2D" parent="前景"]
+[node name="书1" type="Sprite2D" parent="前景" unique_id=1300964469]
 position = Vector2(343, 195)
 texture = ExtResource("17_wfa3g")
 
-[node name="书2" type="Sprite2D" parent="前景"]
+[node name="书2" type="Sprite2D" parent="前景" unique_id=1292012432]
 position = Vector2(339, 242)
 texture = ExtResource("18_q65lw")
 
-[node name="球" type="Sprite2D" parent="前景"]
+[node name="球" type="Sprite2D" parent="前景" unique_id=1565308866]
 position = Vector2(310, 285)
 texture = ExtResource("19_nywu8")
 
-[node name="盒子" type="Sprite2D" parent="前景"]
+[node name="盒子" type="Sprite2D" parent="前景" unique_id=1227397389]
 position = Vector2(365, 284)
 texture = ExtResource("20_2ufmy")
 
-[node name="相框小" type="Sprite2D" parent="前景"]
+[node name="相框小" type="Sprite2D" parent="前景" unique_id=1581668082]
 position = Vector2(275, 121)
 texture = ExtResource("21_p627i")
 
-[node name="音箱右" type="Sprite2D" parent="前景"]
+[node name="音箱右" type="Sprite2D" parent="前景" unique_id=2030114512]
 position = Vector2(560, 244)
 texture = ExtResource("22_ymkk4")
 
-[node name="音箱左" type="Sprite2D" parent="前景"]
+[node name="音箱左" type="Sprite2D" parent="前景" unique_id=289729736]
 position = Vector2(455, 243)
 texture = ExtResource("22_ymkk4")
 
-[node name="狗垫子" type="Sprite2D" parent="前景"]
+[node name="狗垫子" type="Sprite2D" parent="前景" unique_id=637128523]
 position = Vector2(391, 333)
 texture = ExtResource("23_f5nsg")
 
-[node name="露西" type="Sprite2D" parent="前景"]
+[node name="露西" type="Sprite2D" parent="前景" unique_id=851556739]
 position = Vector2(387, 325.35)
 texture = ExtResource("24_6lc77")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_uocx0")
-}
-autoplay = "RESET"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=696542685]
+libraries/ = SubResource("AnimationLibrary_uocx0")
+autoplay = &"RESET"
