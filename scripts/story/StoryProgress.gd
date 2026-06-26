@@ -4,16 +4,16 @@ class_name StoryProgress
 
 ## 第一章：博客启蒙期（2001-2005）
 var chapter1 = {
-    "prologue_completed": false,       # [已实现] 开场动画完成：2001年12月冬夜，收到云起网络邮件
-    "blog_online": false,              # [已实现] 博客正式上线：获得域名suiyan.cc和免费主机
-    "first_article_posted": false,     # [已实现] 第一篇博文发布：写下《你好，世界》
-    "sousuo_indexed": false,           # [已实现] 搜索引擎首次收录：博客被搜索引擎发现
+    "prologue_completed": true,       # [已实现] 开场动画完成：2001年12月冬夜，收到云起网络邮件
+    "blog_online": true,              # [已实现] 博客正式上线：获得域名suiyan.cc和免费主机
+    "first_article_posted": true,     # [已实现] 第一篇博文发布：写下《你好，世界》
+    "sousuo_indexed": true,           # [已实现] 搜索引擎首次收录：博客被搜索引擎发现
     "blog_union_joined": true,        # [已实现] 加入博客联盟
-    "first_friend_link": false,        # [已实现]第一个友链
-    "rss_enabled": false,              # [已实现] 开通RSS订阅：获得第一批订阅者
-    "first_article_favorited": false,  # [已实现] 第一次文章收藏：获得第一篇文章收藏
-    "first_income": false,             # [已实现]加入广告联盟并收到第一笔广告收益
-    "icp_filing_done": false,          # [已实现]网站备案完成：响应国家备案制度
+    "first_friend_link": true,        # [已实现]第一个友链
+    "rss_enabled": true,              # [已实现] 开通RSS订阅：获得第一批订阅者
+    "first_article_favorited": true,  # [已实现] 第一次文章收藏：获得第一篇文章收藏
+    "first_income": true,             # [已实现]加入广告联盟并收到第一笔广告收益
+    "icp_filing_done": true,          # [已实现]网站备案完成：响应国家备案制度
     "award_2005": false,              # [已实现]博客优秀大奖（2005）：获得提名，称号"博客新星"
     "year_summary_2005": false,       # 2005年度总结：2002-2005 四年回顾
 }

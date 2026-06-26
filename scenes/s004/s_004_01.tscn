@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://crnhhkwncis5q"]
+[gd_scene format=3 uid="uid://crnhhkwncis5q"]
 
 [ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="1_5vfy3"]
 
@@ -397,9 +397,9 @@ _data = {
 &"play": SubResource("Animation_5vfy3")
 }
 
-[node name="s_004_01" type="Node2D"]
+[node name="s_004_01" type="Node2D" unique_id=1467807611]
 
-[node name="01" type="Label" parent="."]
+[node name="01" type="Label" parent="." unique_id=765369711]
 visible = false
 modulate = Color(1, 1, 1, 0)
 offset_left = -36.0
@@ -410,7 +410,7 @@ theme_override_fonts/font = ExtResource("1_5vfy3")
 theme_override_font_sizes/font_size = 14
 text = "挑选域名......"
 
-[node name="02" type="Label" parent="."]
+[node name="02" type="Label" parent="." unique_id=148077473]
 visible = false
 modulate = Color(1, 1, 1, 0)
 offset_left = -36.0
@@ -421,7 +421,7 @@ theme_override_fonts/font = ExtResource("1_5vfy3")
 theme_override_font_sizes/font_size = 14
 text = "注册域名......"
 
-[node name="03" type="Label" parent="."]
+[node name="03" type="Label" parent="." unique_id=1811794835]
 visible = false
 modulate = Color(1, 1, 1, 0)
 offset_left = -36.0
@@ -432,7 +432,7 @@ theme_override_fonts/font = ExtResource("1_5vfy3")
 theme_override_font_sizes/font_size = 14
 text = "选择博客程序......"
 
-[node name="04" type="Label" parent="."]
+[node name="04" type="Label" parent="." unique_id=1603424583]
 visible = false
 modulate = Color(1, 1, 1, 0)
 offset_left = -35.6585
@@ -443,7 +443,7 @@ theme_override_fonts/font = ExtResource("1_5vfy3")
 theme_override_font_sizes/font_size = 14
 text = "配置程序......"
 
-[node name="05" type="Label" parent="."]
+[node name="05" type="Label" parent="." unique_id=1308753575]
 visible = false
 modulate = Color(1, 1, 1, 0)
 offset_left = -39.4302
@@ -454,7 +454,7 @@ theme_override_fonts/font = ExtResource("1_5vfy3")
 theme_override_font_sizes/font_size = 14
 text = "简单美化界面......"
 
-[node name="06" type="Label" parent="."]
+[node name="06" type="Label" parent="." unique_id=1365109794]
 visible = false
 modulate = Color(1, 1, 1, 0)
 offset_left = -10.9528
@@ -465,7 +465,7 @@ theme_override_fonts/font = ExtResource("1_5vfy3")
 theme_override_font_sizes/font_size = 14
 text = "构思博客文章分类......"
 
-[node name="07" type="Label" parent="."]
+[node name="07" type="Label" parent="." unique_id=319968013]
 visible = false
 modulate = Color(1, 1, 1, 0)
 offset_left = 108.531
@@ -474,9 +474,9 @@ offset_right = 198.531
 offset_bottom = 143.487
 theme_override_fonts/font = ExtResource("1_5vfy3")
 theme_override_font_sizes/font_size = 14
-text = "调试博客能....."
+text = "调试博客功能....."
 
-[node name="08" type="Label" parent="."]
+[node name="08" type="Label" parent="." unique_id=1026691508]
 visible = false
 modulate = Color(1, 1, 1, 0)
 offset_left = -137.195
@@ -487,7 +487,7 @@ theme_override_fonts/font = ExtResource("1_5vfy3")
 theme_override_font_sizes/font_size = 14
 text = "远程主机测试博客....."
 
-[node name="09" type="Label" parent="."]
+[node name="09" type="Label" parent="." unique_id=927691130]
 visible = false
 modulate = Color(1, 1, 1, 0)
 offset_left = 433.512
@@ -498,7 +498,7 @@ theme_override_fonts/font = ExtResource("1_5vfy3")
 theme_override_font_sizes/font_size = 14
 text = "准备发布博客......"
 
-[node name="10" type="Label" parent="."]
+[node name="10" type="Label" parent="." unique_id=656040896]
 visible = false
 modulate = Color(1, 1, 1, 0)
 offset_left = -404.0
@@ -509,8 +509,6 @@ theme_override_fonts/font = ExtResource("1_5vfy3")
 theme_override_font_sizes/font_size = 14
 text = "发布博客....."
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_3eyub")
-}
-autoplay = "play"
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1700297306]
+libraries/ = SubResource("AnimationLibrary_3eyub")
+autoplay = &"play"

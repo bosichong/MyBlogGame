@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cywfir3cb3y3t"]
+
+[ext_resource type="Texture2D" uid="uid://b1dabni1ximit" path="res://assets/scens/s003/luxi/luxibeiying_0004.png" id="1_d5e75"]
+[ext_resource type="Texture2D" uid="uid://bj3k4u6dvajcs" path="res://assets/scens/s003/luxi/luxibeiying_0003.png" id="2_3u7ho"]
+[ext_resource type="Texture2D" uid="uid://btjdlidnmhhn2" path="res://assets/scens/s003/luxi/luxibeiying_0002.png" id="3_h4j3j"]
+[ext_resource type="Texture2D" uid="uid://cv3idjhs8pruk" path="res://assets/scens/s003/luxi/luxibeiying_0001.png" id="4_gcxb8"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bnj6j"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_d5e75")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_3u7ho")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_h4j3j")
+}, {
+"duration": 2.0,
+"texture": ExtResource("4_gcxb8")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="luxibeiying" type="Node2D" unique_id=1293707234]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1450978289]
+sprite_frames = SubResource("SpriteFrames_bnj6j")
+animation = &"idle"
+autoplay = "idle"
+frame = 3
+frame_progress = 0.72720844

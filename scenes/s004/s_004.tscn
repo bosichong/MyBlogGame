@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cbt4xqfw2ijq3"]
+[gd_scene format=3 uid="uid://cbt4xqfw2ijq3"]
 
 [ext_resource type="Texture2D" uid="uid://byoxg8e4gphrk" path="res://assets/电脑桌.png" id="1_2vbmp"]
 [ext_resource type="Script" uid="uid://fh8sy8tu726e" path="res://scenes/s004/s_004.gd" id="1_l24yl"]
@@ -7,51 +7,55 @@
 [ext_resource type="Texture2D" uid="uid://d3wdmiob7w5ee" path="res://assets/主角背面.png" id="4_8gcve"]
 [ext_resource type="Texture2D" uid="uid://ih47js0t8c48" path="res://assets/椅子背面.png" id="5_p81i6"]
 [ext_resource type="Texture2D" uid="uid://b0177vyh8abvq" path="res://assets/狗垫子.png" id="6_h54i7"]
-[ext_resource type="Texture2D" uid="uid://dt2yeu0rhls5u" path="res://assets/露西.png" id="7_d1ggw"]
 [ext_resource type="PackedScene" uid="uid://crnhhkwncis5q" path="res://scenes/s004/s_004_01.tscn" id="8_5puuk"]
+[ext_resource type="PackedScene" uid="uid://d4mfgyba6fm1x" path="res://scenes/s003/露西动画.tscn" id="8_l24yl"]
+[ext_resource type="AudioStream" uid="uid://ghp6cxnknsh3" path="res://assets/sound/vnmusicternox/dream/vntrack20.mp3" id="10_8gcve"]
 
-[node name="s_004" type="Node2D"]
+[node name="s_004" type="Node2D" unique_id=1459484344]
 script = ExtResource("1_l24yl")
 
-[node name="bg" type="Node2D" parent="."]
+[node name="bg" type="Node2D" parent="." unique_id=480433772]
 
-[node name="电脑桌" type="Sprite2D" parent="bg"]
+[node name="电脑桌" type="Sprite2D" parent="bg" unique_id=655541584]
 position = Vector2(510, 278)
 texture = ExtResource("1_2vbmp")
 
-[node name="显示器" type="Sprite2D" parent="bg"]
+[node name="显示器" type="Sprite2D" parent="bg" unique_id=271104725]
 position = Vector2(505, 226)
 texture = ExtResource("2_5puuk")
 
-[node name="键盘" type="Sprite2D" parent="bg"]
+[node name="键盘" type="Sprite2D" parent="bg" unique_id=857712803]
 position = Vector2(505, 256)
 texture = ExtResource("3_l24yl")
 
-[node name="主角背面" type="Sprite2D" parent="bg"]
+[node name="主角背面" type="Sprite2D" parent="bg" unique_id=361608035]
 position = Vector2(504, 264)
 texture = ExtResource("4_8gcve")
 
-[node name="椅子诶面" type="Sprite2D" parent="bg"]
+[node name="椅子诶面" type="Sprite2D" parent="bg" unique_id=360874490]
 position = Vector2(505, 283)
 texture = ExtResource("5_p81i6")
 
-[node name="狗垫子" type="Sprite2D" parent="bg"]
-position = Vector2(391, 333)
+[node name="狗垫子" type="Sprite2D" parent="bg" unique_id=1911421966]
+position = Vector2(333, 352)
 texture = ExtResource("6_h54i7")
 
-[node name="露西" type="Sprite2D" parent="bg"]
-position = Vector2(387, 328)
-texture = ExtResource("7_d1ggw")
+[node name="露西动画" parent="bg" unique_id=1228147306 instance=ExtResource("8_l24yl")]
+position = Vector2(333, 352)
 
-[node name="s_004_01" parent="bg" instance=ExtResource("8_5puuk")]
+[node name="s_004_01" parent="bg" unique_id=1905949083 instance=ExtResource("8_5puuk")]
 position = Vector2(502, 166)
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=746098880]
 wait_time = 16.0
 one_shot = true
 autostart = true
 
-[node name="AcceptDialog" type="AcceptDialog" parent="."]
+[node name="AcceptDialog" type="AcceptDialog" parent="." unique_id=145378109]
 auto_translate_mode = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1248388224]
+stream = ExtResource("10_8gcve")
+autoplay = true
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

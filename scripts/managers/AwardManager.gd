@@ -10,15 +10,29 @@ const AWARD_YEARS = [
     { "ordinal": 5, "year": 2025, "chapter": 5, "milestone": "award_2025" },
 ]
 
-func determine_result(player_level: int) -> AwardResult:
-    if player_level < 20:
+func determine_result(_player_level: int = 0) -> AwardResult:
+    var rank = _get_player_rank()
+    if rank <= 0:
         return AwardResult.NONE
-    elif player_level < 50:
-        return AwardResult.NOMINATE
-    elif player_level < 80:
-        return AwardResult.SHORTLIST
-    else:
+    elif rank <= 10:
         return AwardResult.WIN
+    elif rank <= 25:
+        return AwardResult.SHORTLIST
+    elif rank <= 50:
+        return AwardResult.NOMINATE
+    else:
+        return AwardResult.NONE
+
+func _get_player_rank() -> int:
+    if not Lm:
+        return -1
+    Lm.sync_player_data()
+    if Lm.jhph.is_empty():
+        return -1
+    for i in Lm.jhph.size():
+        if Lm.jhph[i].get("id", 0) == 888:
+            return i + 1
+    return -1
 
 func get_result_label(result: AwardResult) -> String:
     match result:
@@ -64,25 +78,23 @@ func get_award_content(ordinal: int, year: int, player_name: String, result: Awa
 
         AwardResult.NOMINATE:
             parts.push_back("恭喜您的博客「%s」获得第 %d 届「中文优秀博客大奖」提名！" % [player_name, ordinal])
-            parts.push_back("本届共有 50 位优秀博主获得提名，您的博客名列其中。")
             if not title_name.is_empty():
                 parts.push_back("您获得称号「%s」！" % title_name)
             if not repeat_tip.is_empty():
                 parts.push_back("[蝉联] %s" % repeat_tip)
-            parts.push_back("评语：「每一篇认真的文字都值得被看见。」")
+            parts.push_back("继续加油，每一篇认真的文字都值得被看见。")
 
         AwardResult.SHORTLIST:
             parts.push_back("恭喜您的博客「%s」入围第 %d 届「中文优秀博客大奖」！" % [player_name, ordinal])
-            parts.push_back("您从本届数百位提名者中脱颖而出，成为 20 位入围者之一。")
             if not title_name.is_empty():
                 parts.push_back("您获得称号「%s」！" % title_name)
             if not repeat_tip.is_empty():
                 parts.push_back("[蝉联] %s" % repeat_tip)
-            parts.push_back("评语：「您的博客代表了中文独立博客的中坚力量。」")
+            parts.push_back("再接再厉，您的博客正在被更多人看见。")
 
         AwardResult.WIN:
             parts.push_back("第 %d 届「中文优秀博客大奖」获奖名单正式公布——" % ordinal)
-            parts.push_back("本届共有 6 位博主荣获优秀博客大奖，「%s」是其中之一！" % player_name)
+            parts.push_back("本届联盟排名前十的博主荣获优秀博客大奖，「%s」是其中之一！" % player_name)
             if not title_name.is_empty():
                 parts.push_back("您获得称号「%s」！" % title_name)
             if not repeat_tip.is_empty():

@@ -1112,10 +1112,11 @@ const TASKS: Array = [
         "is_repeatable": false,
         "trigger_type": "time_check",
         "actions": [
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第一届优秀博客大赛开始",
              "content": "您好！\n\n第 1 届「中文优秀博客大奖」评选活动现已启动。\n\n本届评选面向全体中文独立博客，请查看邮件了解详情。",
-             "follow_up_scene": "res://优秀博客大奖赛/2005/ts2005tongzhi.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/tongzhi.tscn",
+             "notification_ordinal": 1},
         ],
     },
 
@@ -1129,10 +1130,11 @@ const TASKS: Array = [
         "is_repeatable": false,
         "trigger_type": "time_check",
         "actions": [
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第一届优秀博客大赛评选开始",
              "content": "您好！\n\n第 1 届「中文优秀博客大奖」评选阶段现已开始。\n\n评审团正在对参赛博客进行综合评议，结果将于 12 月揭晓。",
-             "follow_up_scene": "res://优秀博客大奖赛/2005/ts2005pingxuan.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/pingxuan.tscn",
+             "notification_ordinal": 1},
         ],
     },
 
@@ -1149,7 +1151,8 @@ const TASKS: Array = [
             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第一届优秀博客大赛结果揭晓",
              "content": "您好！\n\n第 1 届「中文优秀博客大奖」结果已公布。\n\n请查看获奖详情。",
-             "follow_up_scene": "res://优秀博客大奖赛/2005/ts2005jiexiao.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/jiexiao_dispatch.tscn",
+             "notification_ordinal": 1},
         ],
     },
 
@@ -1163,10 +1166,11 @@ const TASKS: Array = [
         "is_repeatable": false,
         "trigger_type": "time_check",
         "actions": [
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第二届优秀博客大赛开始",
              "content": "您好！\n\n第 2 届「中文优秀博客大奖」评选活动现已启动。\n\n本届评选面向全体中文独立博客，请查看邮件了解详情。",
-             "follow_up_scene": "res://优秀博客大奖赛/2010/ts2010tongzhi.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/tongzhi.tscn",
+             "notification_ordinal": 2},
         ],
     },
     {
@@ -1176,10 +1180,11 @@ const TASKS: Array = [
         "is_repeatable": false,
         "trigger_type": "time_check",
         "actions": [
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第二届优秀博客大赛评选开始",
              "content": "您好！\n\n第 2 届「中文优秀博客大奖」评选阶段现已开始。\n\n评审团正在对参赛博客进行综合评议，结果将于 12 月揭晓。",
-             "follow_up_scene": "res://优秀博客大奖赛/2010/ts2010pingxuan.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/pingxuan.tscn",
+             "notification_ordinal": 2},
         ],
     },
     {
@@ -1192,7 +1197,8 @@ const TASKS: Array = [
             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第二届优秀博客大赛结果揭晓",
              "content": "您好！\n\n第 2 届「中文优秀博客大奖」结果已公布。\n\n请查看获奖详情。",
-             "follow_up_scene": "res://优秀博客大奖赛/2010/ts2010jiexiao.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/jiexiao_dispatch.tscn",
+             "notification_ordinal": 2},
         ],
     },
 
@@ -1206,10 +1212,11 @@ const TASKS: Array = [
         "is_repeatable": false,
         "trigger_type": "time_check",
         "actions": [
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第三届优秀博客大赛开始",
              "content": "您好！\n\n第 3 届「中文优秀博客大奖」评选活动现已启动。\n\n本届评选面向全体中文独立博客，请查看邮件了解详情。",
-             "follow_up_scene": "res://优秀博客大奖赛/2015/ts2015tongzhi.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/tongzhi.tscn",
+             "notification_ordinal": 3},
         ],
     },
     {
@@ -1219,10 +1226,11 @@ const TASKS: Array = [
         "is_repeatable": false,
         "trigger_type": "time_check",
         "actions": [
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第三届优秀博客大赛评选开始",
              "content": "您好！\n\n第 3 届「中文优秀博客大奖」评选阶段现已开始。\n\n评审团正在对参赛博客进行综合评议，结果将于 12 月揭晓。",
-             "follow_up_scene": "res://优秀博客大奖赛/2015/ts2015pingxuan.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/pingxuan.tscn",
+             "notification_ordinal": 3},
         ],
     },
     {
@@ -1235,7 +1243,8 @@ const TASKS: Array = [
             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第三届优秀博客大赛结果揭晓",
              "content": "您好！\n\n第 3 届「中文优秀博客大奖」结果已公布。\n\n请查看获奖详情。",
-             "follow_up_scene": "res://优秀博客大奖赛/2015/ts2015jiexiao.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/jiexiao_dispatch.tscn",
+             "notification_ordinal": 3},
         ],
     },
 
@@ -1249,10 +1258,11 @@ const TASKS: Array = [
         "is_repeatable": false,
         "trigger_type": "time_check",
         "actions": [
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第四届优秀博客大赛开始",
              "content": "您好！\n\n第 4 届「中文优秀博客大奖」评选活动现已启动。\n\n本届评选面向全体中文独立博客，请查看邮件了解详情。",
-             "follow_up_scene": "res://优秀博客大奖赛/2020/ts2020tongzhi.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/tongzhi.tscn",
+             "notification_ordinal": 4},
         ],
     },
     {
@@ -1262,10 +1272,11 @@ const TASKS: Array = [
         "is_repeatable": false,
         "trigger_type": "time_check",
         "actions": [
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第四届优秀博客大赛评选开始",
              "content": "您好！\n\n第 4 届「中文优秀博客大奖」评选阶段现已开始。\n\n评审团正在对参赛博客进行综合评议，结果将于 12 月揭晓。",
-             "follow_up_scene": "res://优秀博客大奖赛/2020/ts2020pingxuan.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/pingxuan.tscn",
+             "notification_ordinal": 4},
         ],
     },
     {
@@ -1278,7 +1289,8 @@ const TASKS: Array = [
             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第四届优秀博客大赛结果揭晓",
              "content": "您好！\n\n第 4 届「中文优秀博客大奖」结果已公布。\n\n请查看获奖详情。",
-             "follow_up_scene": "res://优秀博客大奖赛/2020/ts2020jiexiao.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/jiexiao_dispatch.tscn",
+             "notification_ordinal": 4},
         ],
     },
 
@@ -1292,10 +1304,11 @@ const TASKS: Array = [
         "is_repeatable": false,
         "trigger_type": "time_check",
         "actions": [
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第五届优秀博客大赛开始",
              "content": "您好！\n\n第 5 届「中文优秀博客大奖」评选活动现已启动。\n\n本届评选面向全体中文独立博客，请查看邮件了解详情。",
-             "follow_up_scene": "res://优秀博客大奖赛/2025/ts2025tongzhi.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/tongzhi.tscn",
+             "notification_ordinal": 5},
         ],
     },
     {
@@ -1305,10 +1318,11 @@ const TASKS: Array = [
         "is_repeatable": false,
         "trigger_type": "time_check",
         "actions": [
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第五届优秀博客大赛评选开始",
              "content": "您好！\n\n第 5 届「中文优秀博客大奖」评选阶段现已开始。\n\n评审团正在对参赛博客进行综合评议，结果将于 12 月揭晓。",
-             "follow_up_scene": "res://优秀博客大奖赛/2025/ts2025pingxuan.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/pingxuan.tscn",
+             "notification_ordinal": 5},
         ],
     },
     {
@@ -1321,7 +1335,8 @@ const TASKS: Array = [
             {"type": ActionType.SHOW_POPUP_NOTIFICATION,
              "title": "第五届优秀博客大赛结果揭晓",
              "content": "您好！\n\n第 5 届「中文优秀博客大奖」结果已公布。\n\n请查看获奖详情。",
-             "follow_up_scene": "res://优秀博客大奖赛/2025/ts2025jiexiao.tscn"},
+             "follow_up_scene": "res://优秀博客大奖赛/jiexiao_dispatch.tscn",
+             "notification_ordinal": 5},
         ],
     },
 ]

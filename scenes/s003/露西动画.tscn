@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://d4mfgyba6fm1x"]
+
+[ext_resource type="Texture2D" uid="uid://dt2yeu0rhls5u" path="res://assets/露西.png" id="1_e1qbh"]
+
+[sub_resource type="Animation" id="Animation_7xhlx"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_0hkjp"]
+resource_name = "paly"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -2.9999995), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8m73c"]
+_data = {
+&"RESET": SubResource("Animation_7xhlx"),
+&"paly": SubResource("Animation_0hkjp")
+}
+
+[node name="露西动画" type="Node2D" unique_id=1228147306]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1746611985]
+texture = ExtResource("1_e1qbh")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2005244314]
+libraries/ = SubResource("AnimationLibrary_8m73c")
+autoplay = &"paly"

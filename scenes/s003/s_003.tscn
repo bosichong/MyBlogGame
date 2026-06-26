@@ -2,12 +2,26 @@
 
 [ext_resource type="Texture2D" uid="uid://cu65sg6tpyng7" path="res://assets/scens/s003/email.png" id="1_10thn"]
 [ext_resource type="Script" uid="uid://c47q50hjg1vtk" path="res://scenes/s003/s_003.gd" id="1_heusd"]
+[ext_resource type="Texture2D" uid="uid://dakiadhvdk17h" path="res://assets/scens/s003/雪夜背景.png" id="2_a72d6"]
 [ext_resource type="Texture2D" uid="uid://do0ukex12h06a" path="res://assets/scens/s003/email2.png" id="2_t7cxx"]
+[ext_resource type="Texture2D" uid="uid://bpi2y08ia3pq0" path="res://assets/scens/s003/云朵.png" id="3_mmkp0"]
+[ext_resource type="Texture2D" uid="uid://u0q1107gl1v" path="res://assets/窗户.png" id="3_qab5l"]
 [ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="3_tu51s"]
 [ext_resource type="Texture2D" uid="uid://b5t3q3lvwp0us" path="res://assets/scens/s003/zhizhen.png" id="4_jqnny"]
+[ext_resource type="Texture2D" uid="uid://xxnj8dgv3c1o" path="res://assets/窗帘.png" id="4_mmkp0"]
 [ext_resource type="Texture2D" uid="uid://bn02govqswnuy" path="res://assets/scens/s003/email3.png" id="4_sfyrg"]
+[ext_resource type="Texture2D" uid="uid://byoxg8e4gphrk" path="res://assets/电脑桌.png" id="5_in50r"]
 [ext_resource type="Texture2D" uid="uid://dq6paj68vudt6" path="res://assets/scens/s003/shou.png" id="5_sfyrg"]
+[ext_resource type="Texture2D" uid="uid://ch7vn8m3i2wub" path="res://assets/显示器.png" id="6_oilfm"]
+[ext_resource type="Texture2D" uid="uid://dly1dho6tmlon" path="res://assets/键盘.png" id="7_6sj5u"]
 [ext_resource type="Theme" uid="uid://cp1t7xqq6k8jr" path="res://scenes/程菜单.tres" id="8_thhpl"]
+[ext_resource type="Texture2D" uid="uid://d3wdmiob7w5ee" path="res://assets/主角背面.png" id="8_yef37"]
+[ext_resource type="Texture2D" uid="uid://ih47js0t8c48" path="res://assets/椅子背面.png" id="9_4x8vs"]
+[ext_resource type="Texture2D" uid="uid://b0177vyh8abvq" path="res://assets/狗垫子.png" id="11_in50r"]
+[ext_resource type="PackedScene" uid="uid://d4mfgyba6fm1x" path="res://scenes/s003/露西动画.tscn" id="12_in50r"]
+[ext_resource type="Texture2D" uid="uid://bncvq361062po" path="res://assets/scens/s003/论坛背景.png" id="13_oilfm"]
+[ext_resource type="PackedScene" uid="uid://cywfir3cb3y3t" path="res://scenes/s003/luxibeiying.tscn" id="21_6sj5u"]
+[ext_resource type="AudioStream" uid="uid://de1pxe518mxb0" path="res://assets/sound/vnmusicternox/dream/vntrack12.mp3" id="22_yef37"]
 
 [sub_resource type="Animation" id="Animation_heusd"]
 length = 0.001
@@ -82,6 +96,78 @@ tracks/5/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("场景/云朵:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(557.99994, 176)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("场景:modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("背景:modulate")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("luxibeiying:modulate")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("显示器邮件提示:modulate")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("显示器邮件提示/邮件图标:modulate")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_yu87a"]
@@ -339,6 +425,78 @@ tracks/20/keys = {
 "update": 0,
 "values": [0.0, 1.0]
 }
+tracks/21/type = "value"
+tracks/21/imported = false
+tracks/21/enabled = true
+tracks/21/path = NodePath("场景/云朵:position")
+tracks/21/interp = 1
+tracks/21/loop_wrap = true
+tracks/21/keys = {
+"times": PackedFloat32Array(0, 5.1000004),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(557.99994, 176), Vector2(473, 176)]
+}
+tracks/22/type = "value"
+tracks/22/imported = false
+tracks/22/enabled = true
+tracks/22/path = NodePath("场景:modulate")
+tracks/22/interp = 1
+tracks/22/loop_wrap = true
+tracks/22/keys = {
+"times": PackedFloat32Array(6.0000005, 6.5000005),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/23/type = "value"
+tracks/23/imported = false
+tracks/23/enabled = true
+tracks/23/path = NodePath("背景:modulate")
+tracks/23/interp = 1
+tracks/23/loop_wrap = true
+tracks/23/keys = {
+"times": PackedFloat32Array(6.5000005, 7.0000005, 16.166668, 17),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/24/type = "value"
+tracks/24/imported = false
+tracks/24/enabled = true
+tracks/24/path = NodePath("luxibeiying:modulate")
+tracks/24/interp = 1
+tracks/24/loop_wrap = true
+tracks/24/keys = {
+"times": PackedFloat32Array(17, 17.433334, 35.100002, 35.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/25/type = "value"
+tracks/25/imported = false
+tracks/25/enabled = true
+tracks/25/path = NodePath("显示器邮件提示:modulate")
+tracks/25/interp = 1
+tracks/25/loop_wrap = true
+tracks/25/keys = {
+"times": PackedFloat32Array(18.633333, 19.066668, 35.100002, 35.666668),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/26/type = "value"
+tracks/26/imported = false
+tracks/26/enabled = true
+tracks/26/path = NodePath("显示器邮件提示/邮件图标:modulate")
+tracks/26/interp = 1
+tracks/26/loop_wrap = true
+tracks/26/keys = {
+"times": PackedFloat32Array(33, 33.166668, 33.3, 33.433334, 33.56667, 33.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ql46m"]
 _data = {
@@ -348,6 +506,90 @@ _data = {
 
 [node name="s_003" type="Node2D" unique_id=1830846853]
 script = ExtResource("1_heusd")
+
+[node name="场景" type="Node2D" parent="." unique_id=1903399463]
+
+[node name="风景" type="Sprite2D" parent="场景" unique_id=385285420]
+position = Vector2(494, 225.99998)
+scale = Vector2(1.9476302, 1.9476302)
+texture = ExtResource("2_a72d6")
+
+[node name="云朵" type="Sprite2D" parent="场景" unique_id=704951921]
+position = Vector2(557.99994, 176)
+scale = Vector2(1.3062919, 1.3062919)
+texture = ExtResource("3_mmkp0")
+
+[node name="窗户" type="Sprite2D" parent="场景" unique_id=2072761444]
+position = Vector2(492.5797, 210.6795)
+scale = Vector2(1.9476302, 1.9476302)
+texture = ExtResource("3_qab5l")
+
+[node name="窗帘" type="Sprite2D" parent="场景" unique_id=23882470]
+position = Vector2(490.5797, 209.6795)
+scale = Vector2(1.9476302, 1.9476302)
+texture = ExtResource("4_mmkp0")
+
+[node name="电脑桌" type="Sprite2D" parent="场景" unique_id=1463522427]
+position = Vector2(523.5, 366)
+scale = Vector2(1.5765855, 1.5765855)
+texture = ExtResource("5_in50r")
+
+[node name="显示器" type="Sprite2D" parent="场景" unique_id=1358967568]
+position = Vector2(481, 288)
+scale = Vector2(1.5765855, 1.5765855)
+texture = ExtResource("6_oilfm")
+
+[node name="键盘" type="Sprite2D" parent="场景" unique_id=374672557]
+position = Vector2(533, 332)
+scale = Vector2(1.5765855, 1.5765855)
+texture = ExtResource("7_6sj5u")
+
+[node name="主角背面" type="Sprite2D" parent="场景" unique_id=190497800]
+position = Vector2(547.6849, 347.52295)
+scale = Vector2(1.5765855, 1.5765855)
+texture = ExtResource("8_yef37")
+
+[node name="椅子诶面" type="Sprite2D" parent="场景" unique_id=1866828916]
+position = Vector2(549.1849, 384.52295)
+scale = Vector2(1.5765855, 1.5765855)
+texture = ExtResource("9_4x8vs")
+
+[node name="狗垫子" type="Sprite2D" parent="场景" unique_id=788436790]
+position = Vector2(707, 419.15)
+texture = ExtResource("11_in50r")
+
+[node name="露西动画" parent="场景" unique_id=1228147306 instance=ExtResource("12_in50r")]
+position = Vector2(704, 417)
+
+[node name="背景" type="Sprite2D" parent="." unique_id=867125525]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(480, 240)
+texture = ExtResource("13_oilfm")
+
+[node name="title" type="Label" parent="背景" unique_id=1560036967]
+offset_left = -177.0
+offset_top = -211.0
+offset_right = -137.0
+offset_bottom = -188.0
+theme_override_font_sizes/font_size = 24
+text = "天涯社区"
+
+[node name="帖子列表" type="Label" parent="背景" unique_id=1377737687]
+offset_left = -191.0
+offset_top = -110.0
+offset_right = 296.0
+offset_bottom = 225.0
+text = "资深论坛混子的自白 阿琛 阅读226
+传奇私服到底怎么架 网事随风 阅读12340
+谁在听《半岛铁盒》 八度空间 阅读8940
+中巴之战你看了吗 足球小将 阅读32100
+刚买奔腾4，求单机游戏 穷学生 阅读5670
+老妈说我上网费电 睡不醒的猫 阅读1400
+学校开始查身份证上网 逃课少年 阅读21000
+求张国荣热情演唱会录音 路过蜻蜓 阅读734
+小霸王卡带换游戏 红白机魂 阅读298
+还有人在玩江湖聊天室吗 忘忧草 阅读4500
+"
 
 [node name="Node" type="Node2D" parent="." unique_id=755296338]
 position = Vector2(33, 446)
@@ -398,17 +640,13 @@ visible_characters = 0
 visible_ratio = 0.0
 
 [node name="06" type="RichTextLabel" parent="Node" unique_id=870006474]
-self_modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0.09999937)
 offset_right = 500.0
 offset_bottom = 23.0
 text = "我在等什么？"
 vertical_alignment = 1
 visible_characters = 0
 visible_ratio = 0.0
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=985888547]
-libraries/ = SubResource("AnimationLibrary_ql46m")
-autoplay = &"play"
 
 [node name="emailico" type="Node2D" parent="." unique_id=1833072952]
 modulate = Color(1, 1, 1, 0)
@@ -418,6 +656,7 @@ position = Vector2(480, 203)
 texture = ExtResource("1_10thn")
 
 [node name="emailui" type="Node2D" parent="." unique_id=1881266222]
+modulate = Color(1, 1, 1, 0)
 
 [node name="ui" type="Sprite2D" parent="emailui" unique_id=970590273]
 position = Vector2(499, 240)
@@ -441,9 +680,10 @@ offset_bottom = 199.0
 theme_override_colors/font_color = Color(7.70092e-07, 0.668736, 0.918941, 1)
 theme_override_fonts/font = ExtResource("3_tu51s")
 theme_override_font_sizes/font_size = 10
-text = "云起网络：免费域名+主机，送给你。----2001年12月28日"
+text = "云起网络：免费域名+主机，送给你。----2001年12月4周7日"
 
 [node name="email_ts" type="Node2D" parent="." unique_id=1886630196]
+modulate = Color(1, 1, 1, 0)
 
 [node name="email3" type="Sprite2D" parent="email_ts" unique_id=752753462]
 position = Vector2(504, 241)
@@ -489,12 +729,12 @@ autowrap_mode = 1
 
 [node name="zhizhen" type="Sprite2D" parent="." unique_id=1483522992]
 modulate = Color(1, 1, 1, 0)
-position = Vector2(512, 199)
+position = Vector2(704, 347)
 texture = ExtResource("4_jqnny")
 
 [node name="shou" type="Sprite2D" parent="." unique_id=1707369288]
 modulate = Color(1, 1, 1, 0)
-position = Vector2(498, 184)
+position = Vector2(512, 199)
 texture = ExtResource("5_sfyrg")
 
 [node name="AcceptDialog" type="AcceptDialog" parent="." unique_id=95419943]
@@ -508,5 +748,36 @@ offset_bottom = 38.0
 theme = ExtResource("8_thhpl")
 text = "跳过动画"
 
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[node name="显示器邮件提示" type="Node2D" parent="." unique_id=1247026359]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(-110, -44)
+
+[node name="电脑桌" type="Sprite2D" parent="显示器邮件提示" unique_id=167107594]
+position = Vector2(833, 272)
+scale = Vector2(2.7854006, 2.7854006)
+texture = ExtResource("5_in50r")
+
+[node name="显示器" type="Sprite2D" parent="显示器邮件提示" unique_id=2090109164]
+position = Vector2(820.00006, 138.00002)
+scale = Vector2(2.5092905, 2.5092905)
+texture = ExtResource("6_oilfm")
+
+[node name="邮件图标" type="Sprite2D" parent="显示器邮件提示" unique_id=1894980358]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(816, 125)
+texture = ExtResource("1_10thn")
+
+[node name="luxibeiying" parent="." unique_id=1293707234 instance=ExtResource("21_6sj5u")]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(453, 311)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=985888547]
+libraries/ = SubResource("AnimationLibrary_ql46m")
+autoplay = &"play"
+
+[node name="背景音乐" type="AudioStreamPlayer" parent="." unique_id=2082765801]
+stream = ExtResource("22_yef37")
+autoplay = true
+
 [connection signal="pressed" from="跳过游戏" to="." method="_on_跳过游戏_pressed"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

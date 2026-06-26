@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://o5pwx81lxv6n"]
+
+[ext_resource type="Script" uid="uid://ds8jkmc5rr2tm" path="res://优秀博客大奖赛/口号.gd" id="1_ds8jkm"]
+[ext_resource type="Texture2D" uid="uid://druiyrk465tkx" path="res://优秀博客大奖赛/images/tbdsbj/element_35.png" id="2_2v273"]
+[ext_resource type="Texture2D" uid="uid://bdnhds3rhlgc" path="res://优秀博客大奖赛/images/tbdsbj/element_36.png" id="2_3wg7e"]
+
+[node name="口号" type="Node2D" unique_id=145779810]
+script = ExtResource("1_ds8jkm")
+
+[node name="口号2" type="Sprite2D" parent="." unique_id=1688584497]
+position = Vector2(551.99994, 366.99997)
+scale = Vector2(0.5144927, 0.51449275)
+texture = ExtResource("2_3wg7e")
+
+[node name="Label" type="Label" parent="口号2" unique_id=784988498]
+offset_left = -54.422394
+offset_top = -25.267578
+offset_right = 17.577606
+offset_bottom = 8.732422
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "blog万岁！"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2005754685]
+position = Vector2(348, 329)
+scale = Vector2(0.45652172, 0.45652175)
+texture = ExtResource("2_2v273")
+
+[node name="Label" type="Label" parent="Sprite2D" unique_id=1324963265]
+offset_left = -30.666677
+offset_top = -24.095264
+offset_right = 41.33332
+offset_bottom = 9.904736
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "加油！"
