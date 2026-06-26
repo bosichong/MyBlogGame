@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" uid="uid://cuqhio8vg78j3" path="res://优秀博客大奖赛/jiexiao_web.gd" id="1_5jegk"]
 [ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="2_a8j28"]
+[ext_resource type="Texture2D" uid="uid://dq2dvjx1ppu3c" path="res://优秀博客大奖赛/images/tbdsbj/element_52.png" id="2_ks82g"]
+[ext_resource type="Texture2D" uid="uid://c7dqrujg5r0bi" path="res://优秀博客大奖赛/images/tbdsbj/element_50.png" id="3_ptuct"]
+[ext_resource type="Texture2D" uid="uid://cs0y861oi8g87" path="res://优秀博客大奖赛/images/tbdsbj/element_51.png" id="4_qig0e"]
 
 [node name="JiexiaoWeb" type="Node2D" unique_id=1369215570]
 script = ExtResource("1_5jegk")
@@ -9,6 +12,32 @@ script = ExtResource("1_5jegk")
 [node name="Panel" type="Panel" parent="." unique_id=1163549503]
 offset_right = 960.0
 offset_bottom = 480.0
+
+[node name="背景" type="Node2D" parent="Panel" unique_id=543496196]
+
+[node name="条幅4" type="Sprite2D" parent="Panel/背景" unique_id=1663805721]
+position = Vector2(800.2437, 55.962315)
+scale = Vector2(0.49492177, 0.49013266)
+texture = ExtResource("2_ks82g")
+metadata/_edit_lock_ = true
+
+[node name="条幅3" type="Sprite2D" parent="Panel/背景" unique_id=1545641915]
+position = Vector2(880, 56.000004)
+scale = Vector2(0.49953476, 0.49953467)
+texture = ExtResource("3_ptuct")
+metadata/_edit_lock_ = true
+
+[node name="条幅" type="Sprite2D" parent="Panel/背景" unique_id=1481941864]
+position = Vector2(200.00002, 64)
+scale = Vector2(0.58247423, 0.5824742)
+texture = ExtResource("3_ptuct")
+metadata/_edit_lock_ = true
+
+[node name="条幅2" type="Sprite2D" parent="Panel/背景" unique_id=1801565937]
+position = Vector2(111.99999, 64)
+scale = Vector2(0.5778017, 0.5778016)
+texture = ExtResource("4_qig0e")
+metadata/_edit_lock_ = true
 
 [node name="tit" type="Label" parent="Panel" unique_id=1631734312]
 layout_mode = 1
@@ -23,6 +52,8 @@ grow_horizontal = 2
 theme_override_fonts/font = ExtResource("2_a8j28")
 theme_override_font_sizes/font_size = 24
 text = "评选结果加载中……"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="con" type="Label" parent="Panel" unique_id=1920765643]
 layout_mode = 1
