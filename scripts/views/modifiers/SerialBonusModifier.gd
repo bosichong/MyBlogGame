@@ -42,22 +42,22 @@ func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
     
     return views + bonus
 
-## 获取指定类型连载文章的发布篇数（用于UI显示，非每日调用所以不缓存）
+## 获取指定类型连载文章的发布篇数（优先读取缓存，未缓存时回退扫描）
 func _get_serial_count(category: String, blogger: Dictionary) -> int:
-    var count = 0
-    for post in blogger.get("posts", []) + blogger.get("archived_posts", []):
-        if post.get("category", "") == category:
-            count += 1
-    return count
+    if _cached_counts.is_empty():
+        refresh_cache(blogger)
+    return _cached_counts.get(category, 0)
 
 ## 获取连载加成信息（用于UI显示）
 func get_serial_bonus_info(category: String, blogger: Dictionary) -> Dictionary:
     var count = _get_serial_count(category, blogger)
-    var bonus_ratio = 1.0 + float(count) * 0.01
+    var bonus_percent = int(count / 10) * 2
+    bonus_percent = min(bonus_percent, 20)
+    var bonus_ratio = 1.0 + float(bonus_percent) / 100.0
     
     return {
         "category": category,
         "published_count": count,
         "bonus_ratio": bonus_ratio,
-        "bonus_percent": int((bonus_ratio - 1.0) * 100)
+        "bonus_percent": bonus_percent
     }

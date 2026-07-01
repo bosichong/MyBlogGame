@@ -762,16 +762,10 @@ func update_blog_views() -> int:
             stats_data.record_daily_stat(Utils.format_date(), blogger.today_views, 0.0)
 
     # 更新收藏数(基于今日访问量)
-    var old_favorites = blogger.favorites  # 保存更新前的收藏数
+    # _today_views 由 calculate_daily() 写入 post 字段，无需再查 post_stats
+    var old_favorites = blogger.favorites
     for post in blogger.posts:
-        var post_views_today = 0
-        var post_id = post.get("id", 0)
-        if post_id != 0 and views_calculator:
-            var stats = views_calculator.get_post_stats(post_id)
-            var daily = stats.get("daily_views", [])
-            if daily.size() > 0:
-                post_views_today = daily[-1].get("views", 0)
-
+        var post_views_today = post.get("_today_views", 0)
         if post_views_today > 0:
             var new_favorites = Utils.update_favorites(post_views_today, post.get("quality", 100))
             post.favorites = post.get("favorites", 0) + new_favorites

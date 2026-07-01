@@ -87,7 +87,7 @@ func get_milestones():
 func get_lm_members():
     var lm_data = loaded_data.get("lm_members")
     if lm_data:
-        return lm_data.lm_list.duplicate()
+        return lm_data.lm_list
     return []
 
 # 兼容旧代码的属性访问

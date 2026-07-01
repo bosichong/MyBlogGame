@@ -143,19 +143,19 @@ func update_ui():
     $ui/top/h2/Panel/ProgressBar/blog_exp.text = str(Blogger.exp)+"/"+str(Blogger.get_exp_for_next_level())
     
     
-    $ui/bottom/v1/h3/blog_name.text = Blogger.blog_data.blog_name
-    $ui/bottom/v1/h3/blog_posts.text = "文章数:" + str(len(Blogger.blog_data.posts) + len(Blogger.blog_data.archived_posts))
-    $ui/bottom/v1/h3/blog_safety.text = "安全指数:" + str(Blogger.blog_data.safety_value)
-    $ui/bottom/v1/h3/blog_seo.text = "SEO:" + str(Blogger.blog_data.seo_value)
+    var bd = Blogger.blog_data
+    $ui/bottom/v1/h3/blog_name.text = bd.blog_name
+    $ui/bottom/v1/h3/blog_posts.text = "文章数:" + str(len(bd.posts) + len(bd.archived_posts))
+    $ui/bottom/v1/h3/blog_safety.text = "安全指数:" + str(bd.safety_value)
+    $ui/bottom/v1/h3/blog_seo.text = "SEO:" + str(bd.seo_value)
     
+    $ui/bottom/v1/h4/today_views.text="昨日:"+ str(bd.today_views)
+    $ui/bottom/v1/h4/month_vies.text="本月:"+ Utils.format_number(bd.month_views)
+    $ui/bottom/v1/h4/year_vies.text="今年:"+ Utils.format_number(bd.year_views)
+    $ui/bottom/v1/h4/blog_views.text="总:"+ Utils.format_number(bd.views)
     
-    $ui/bottom/v1/h4/today_views.text="昨日:"+ str(Blogger.blog_data.today_views)
-    $ui/bottom/v1/h4/month_vies.text="本月:"+ Utils.format_number(Blogger.blog_data.month_views)
-    $ui/bottom/v1/h4/year_vies.text="今年:"+ Utils.format_number(Blogger.blog_data.year_views)
-    $ui/bottom/v1/h4/blog_views.text="总:"+ Utils.format_number(Blogger.blog_data.views)
-    
-    $ui/bottom/v1/h5/rss.text = "RSS订阅数:"+ Utils.format_number(Blogger.blog_data.rss)
-    $ui/bottom/v1/h5/favorites.text = "博文收藏数:"+ Utils.format_number(Blogger.blog_data.favorites)
+    $ui/bottom/v1/h5/rss.text = "RSS订阅数:"+ Utils.format_number(bd.rss)
+    $ui/bottom/v1/h5/favorites.text = "博文收藏数:"+ Utils.format_number(bd.favorites)
     
     $ui/r_panel/top/writingProgressBar.show_percentage = false
     $ui/r_panel/top/writingProgressBar.set_value_no_signal(Blogger.writing_ability)

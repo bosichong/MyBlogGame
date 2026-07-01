@@ -2,77 +2,77 @@ class_name StoryProgress
 ## 剧情进度追踪系统
 ## 用于管理游戏五个章节的剧情里程碑完成状态
 
+signal chapter_reward_popup(chapter: int, chapter_name: String)
+
+var _emitted_chapters: Array[int] = []
+
 ## 第一章：博客启蒙期（2001-2005）
 var chapter1 = {
-    "prologue_completed": true,       # [已实现] 开场动画完成：2001年12月冬夜，收到云起网络邮件
-    "blog_online": true,              # [已实现] 博客正式上线：获得域名suiyan.cc和免费主机
-    "first_article_posted": true,     # [已实现] 第一篇博文发布：写下《你好，世界》
-    "sousuo_indexed": true,           # [已实现] 搜索引擎首次收录：博客被搜索引擎发现
-    "blog_union_joined": true,        # [已实现] 加入博客联盟
-    "first_friend_link": true,        # [已实现]第一个友链
-    "rss_enabled": true,              # [已实现] 开通RSS订阅：获得第一批订阅者
-    "first_article_favorited": true,  # [已实现] 第一次文章收藏：获得第一篇文章收藏
-    "first_income": true,             # [已实现]加入广告联盟并收到第一笔广告收益
-    "icp_filing_done": true,          # [已实现]网站备案完成：响应国家备案制度
-    "award_2005": false,              # [已实现]博客优秀大奖（2005）：获得提名，称号"博客新星"
-    "year_summary_2005": false,       # 2005年度总结：2002-2005 四年回顾
+    "blog_online": true,              # 博客正式上线
+    "first_article_posted": true,     # 第一篇博文发布
+    "sousuo_indexed": true,           # 搜索引擎首次收录
+    "blog_union_joined": true,        # 加入博客联盟
+    "first_friend_link": true,        # 第一个友链
+    "rss_enabled": true,              # 开通RSS订阅
+    "first_article_favorited": true,  # 第一次文章收藏
+    "first_income": true,             # 第一笔广告收益
+    "icp_filing_done": true,          # 网站备案完成
+    "award_2005": true,              # 优秀博客奖项（结果动态判定）
+    "year_summary_2005": true,       # 2005年度总结
 }
 
 ## 第二章：博客黄金期（2005-2010）
 var chapter2 = {
-    "literature_weekly": false,       # [已实现] 文学周刊发布：分享文学作品，解锁3级文章
-    "code_weekly": false,              # [已实现] 程序员周刊发布：分享技术内容，解锁3级文章
-    "rss_100": false,                 # RSS订阅突破100人：获得稳定读者群
-    "income_1000": false,              # 累计收益达到1000元：商业化里程碑
-    "award_2010": false,               # 博客优秀大奖（2010）：获得入围，称号"博客新锐"
-    "year_summary_2010": false,        # 2010年度总结：2006-2010 五年回顾
+    "literature_weekly": false,       # 文学周刊发布
+    "code_weekly": false,             # 程序员周刊发布
+    "rss_100": false,                 # RSS订阅突破百人
+    "income_1000": false,             # 累计收益突破千元
+    "award_2010": false,              # 优秀博客奖项（2010）
+    "year_summary_2010": false,       # 2010年度总结
 }
 
 ## 第三章：博客转型期（2010-2015）
 var chapter3 = {
-    "viral_article": false,            # 爆款网文发布：热门文章达到4级写作
-    "advanced_tutorial": false,        # 高级编程教程发布：深度技术内容达到4级
-    "wechat_public": false,            # 微信公众号开通：自媒体布局
-    "mobile_adapted": false,           # 网站移动端适配：响应式改造
-    "https_upgraded": false,           # HTTPS升级：安装SSL证书保障安全
-    "novel_planning": false,           # [已实现] 小说连载规划：开始出书前的长篇创作准备
-    "open_source_planning": false,    # [已实现] 开源项目规划：开始开源前的项目规划
-    "year_summary_2015": false,        # 2015年度总结：2011-2015五年回顾
-    "award_2015": false,               # 博客优秀大奖（2015）：获得第一名，称号"博客之星"
+    "viral_article": false,           # 爆款文章诞生
+    "advanced_tutorial": false,       # 高级教程发布
+    "wechat_public": false,           # 微信公众号开通
+    "mobile_adapted": false,          # 网站移动端适配
+    "https_upgraded": false,          # HTTPS升级
+    "novel_planning": false,          # 小说连载规划
+    "open_source_planning": false,    # 开源项目规划
+    "year_summary_2015": false,       # 2015年度总结
+    "award_2015": false,              # 优秀博客奖项（2015）
 }
 
 ## 第四章：博客挑战期（2015-2020）
 var chapter4 = {
-    "novel_serial_start": false,      # [已实现] 小说连载开始：创作长篇故事
-    "paid_hacking": false,             # [已实现] 付费黑客攻防发布：高级安全技术分享
-    "book_invitation": false,          # [已实现] 出版邀请：收到出版商邀请，进入出书流程
-    "book_writing": false,             # 书籍撰写中：记录写作进度
-    "book_published": false,           # 书籍出版完成：里程碑①，称号"作家"
-    "open_source_start": false,         # [已实现] 开源项目发布：贡献开源代码
-    "open_source_recognized": false,   # [已实现] 开源获得认可：社区赞助商关注，称号"开发者"
-    "cdn_enabled": false,              # CDN加速部署：提升网站访问速度
-    "ai_preview": false,               # AI辅助预告：ChatGPT即将发布
-    "award_2020": false,               # 博客优秀大奖（2020）：蝉联第一名，称号"博客传奇"
-    "year_summary_2020": false,        # 2020年度总结：2016-2020五年回顾
+    "novel_serial_start": false,      # 小说连载开启
+    "paid_hacking": false,            # 付费安全课程发布
+    "book_invitation": false,         # 出版邀请
+    "book_writing": false,            # 书籍撰写中
+    "book_published": false,          # 书籍正式出版
+    "open_source_start": false,       # 开源项目发布
+    "open_source_recognized": false,  # 开源获得认可
+    "cdn_enabled": false,             # CDN加速部署
+    "ai_preview": false,              # AI时代预告
+    "award_2020": false,              # 优秀博客奖项（2020）
+    "year_summary_2020": false,       # 2020年度总结
 }
 
 ## 第五章：博客重塑期（2020-2025）
 var chapter5 = {
-    "ai_unlocked": false,              # AI辅助解锁：ChatGPT发布，解锁AI创作
-    "game_dev_start": false,           # 游戏开发开始：文学+编程双满级后解锁
-    "game_dev_complete": false,        # 游戏制作完成：游戏主体开发完成
-    "game_test": false,                # 游戏测试优化：测试与优化阶段
-    "video_account": false,            # 视频号开通：宣传游戏
-    "game_trailer": false,             # 游戏预告发布：发布预告视频
-    "personal_brand": false,           # 个人IP品牌：建立"游戏开发者"品牌
-    "game_released": false,            # 游戏正式发布：上架发布，玩家涌入
-    "game_award": false,              # 游戏大奖获得：站在领奖台上，称号"游戏大奖传奇"
-    "fame_let_go": false,              # 看淡名利：站在巅峰回望，发现最重要的是成长
-    "award_2025": false,                # 博客优秀大奖（2025）：根据等级动态判定
-    "decline_award_2025": false,        # 拒绝博客大奖：选择不参加2025年博客大奖评比
-    "return_to_roots": false,          # 回归博客本质：卸载数据分析工具，不再查看访问量
-    "free_writing": false,             # 自由写作：想写什么就写什么，不考虑SEO流量收益
-    "ending_achieved": false,          # 结局达成：从这里开始，不再有任务，只有表达
+    "ai_unlocked": false,              # AI创作解锁
+    "game_dev_start": false,           # 游戏开发启动
+    "game_dev_complete": false,        # 游戏主体完成
+    "game_test": false,                # 游戏测试优化
+    "video_account": false,            # 视频号开通
+    "game_trailer": false,             # 游戏预告发布
+    "personal_brand": false,           # 个人品牌建立
+    "game_released": false,            # 游戏正式发布
+    "game_award": false,               # 游戏获奖
+    "fame_let_go": false,              # 看淡名利（合并奖项与放弃参评）
+    "return_to_roots": false,          # 回归初心（合并自由写作）
+    "ending_achieved": false,          # 结局达成
 }
 
 ## 设置里程碑完成状态
@@ -88,6 +88,12 @@ func set_completed(chapter: int, milestone: String) -> void:
         push_error("[StoryProgress] Unknown milestone '%s' in chapter %d" % [milestone, chapter])
         return
     ch[milestone] = true
+
+    if chapter_completed(chapter):
+        # 确保只触发一次（确认不是之前已经完成的章节）
+        if not _emitted_chapters.has(chapter):
+            _emitted_chapters.append(chapter)
+            chapter_reward_popup.emit(chapter, get_chapter_name(chapter))
 
 ## 检查里程碑是否已完成
 ## @param chapter: 章节号（1-5）
@@ -134,6 +140,7 @@ func reset_chapter(chapter: int) -> void:
         return
     for key in ch:
         ch[key] = false
+    _emitted_chapters.erase(chapter)
 
 ## 获取所有章节的进度
 ## 方便在UI上显示整体游戏进度
@@ -196,12 +203,18 @@ func _get_chapter_dict(chapter: int) -> Dictionary:
         _:
             return {}
 
+## 获取章节的所有里程碑（key -> 是否完成）
+## @param chapter: 章节号（1-5）
+## @return: 里程碑字典副本
+func get_chapter_milestones(chapter: int) -> Dictionary:
+    return _get_chapter_dict(chapter).duplicate()
+
 ## 获取章节名称
 ## @param chapter: 章节号（1-5）
 ## @return: 章节名称
 func get_chapter_name(chapter: int) -> String:
     match chapter:
-        1: return "第一章：博客启蒙期（2001-2005）"
+        1: return "第一章：博客启蒙期（2002-2005）"
         2: return "第二章：博客黄金期（2005-2010）"
         3: return "第三章：博客转型期（2010-2015）"
         4: return "第四章：博客挑战期（2015-2020）"
@@ -211,71 +224,88 @@ func get_chapter_name(chapter: int) -> String:
 ## 获取里程碑描述
 ## @param chapter: 章节号（1-5）
 ## @param milestone: 里程碑名称
-## @return: 里程碑描述（如"第一篇博文发布：写下《你好，世界》"）
+## @return: 里程碑描述
 func get_milestone_description(chapter: int, milestone: String) -> String:
+    # 奖项里程碑动态生成——读取 AwardManager 的实际结果
+    var award_desc = _get_award_description(milestone)
+    if award_desc:
+        return award_desc
+
     var descriptions = {
         # 第一章
-        "prologue_completed": "开场动画完成：2001年12月冬夜，收到云起网络邮件",
-        "blog_online": "博客正式上线：获得域名suiyan.cc和免费主机",
-        "first_article_posted": "第一篇博文发布：写下《你好，世界》",
-        "baidu_indexed": "百度首次收录：博客被搜索引擎发现",
-        "icp_filing_done": "网站备案完成：响应国家备案制度",
-        "rss_enabled": "开通RSS订阅：获得第一批订阅者",
-        "blog_union_joined": "加入博客联盟：认识第一个博友星光博客",
-        "first_friend_link": "第一个友链：与星光博客交换链接",
-        "ad_union_joined": "加入广告联盟：开始博客商业化尝试",
-        "first_income": "第一笔广告收益：收到12.5元",
-        "year_summary_2005": "2005年度总结：四年回顾",
-        "award_2005": '博客优秀大奖（2005）：获得提名，称号"博客新星"',
+        "blog_online": "博客正式上线了，成功开启了博客生涯",
+        "first_article_posted": "第一篇博文发布：记录下属于自己的第一段文字",
+        "sousuo_indexed": "搜索引擎首次收录：博客开始被更多人看见",
+        "blog_union_joined": "加入博客联盟：结识了第一批志同道合的博友",
+        "first_friend_link": "第一个友链：与志同道合的博客交换了友情链接",
+        "rss_enabled": "开通RSS订阅：迎来了第一批忠实订阅者",
+        "first_article_favorited": "获得第一次文章收藏：文字得到了读者的认可",
+        "first_income": "第一笔广告收益：收到了博客的第一笔收入",
+        "icp_filing_done": "网站备案完成：迈出了合规运营的一步",
+        "year_summary_2005": "2005年度总结：回望这四年，写下成长的足迹",
         # 第二章
-        "literature_weekly": "文学周刊发布：分享文学作品，解锁3级文章",
-        "code_weekly": "程序员周刊发布：分享技术内容，解锁3级文章",
-        "rss_100": "RSS订阅突破100人：获得稳定读者群",
-        "weibo_joined": "微博账号开通：多平台同步内容",
-        "weibo_content_50": '微博同步发布50篇：称号"多平台博主"',
-        "income_1000": "累计收益达到1000元：商业化里程碑",
-        "year_summary_2010": "2010年度总结：五年回顾",
-        "award_2010": '博客优秀大奖（2010）：获得入围，称号"博客新锐"',
+        "literature_weekly": "文学周刊发布：用文字书写内心世界",
+        "code_weekly": "程序员周刊发布：分享技术路上的思考",
+        "rss_100": "RSS订阅突破百人：拥有了稳定的读者群",
+        "income_1000": "累计收益突破千元：商业化迈上新台阶",
+        "year_summary_2010": "2010年度总结：黄金五年，收获满满",
         # 第三章
-        "viral_article": "爆款网文发布：热门文章达到4级写作",
-        "advanced_tutorial": "高级编程教程发布：深度技术内容达到4级",
-        "wechat_public": "微信公众号开通：自媒体布局",
-        "mobile_adapted": "网站移动端适配：响应式改造",
-        "https_upgraded": "HTTPS升级：安装SSL证书保障安全",
-        "cloud_server": "云服务器迁移：从免费套餐升级到VPS",
-        "novel_planning": "小说连载规划：开始出书前的长篇创作准备",
-        "open_source_planning": "开源项目规划：开始开源前的项目规划",
-        "year_summary_2015": "2015年度总结：五年回顾",
-        "award_2015": '博客优秀大奖（2015）：获得第一名，称号"博客之星"',
+        "viral_article": "爆款文章诞生：一篇好文让博客声名远扬",
+        "advanced_tutorial": "高级教程发布：技术深度获得了读者认可",
+        "wechat_public": "微信公众号开通：开拓新的内容阵地",
+        "mobile_adapted": "网站移动端适配：让阅读不再受设备限制",
+        "https_upgraded": "HTTPS升级：为读者提供更安全的访问",
+        "novel_planning": "小说连载规划：开始筹备长篇创作",
+        "open_source_planning": "开源项目规划：为社区贡献代码做准备",
+        "year_summary_2015": "2015年度总结：转型路上，初心不改",
         # 第四章
-        "novel_serial_start": "小说连载开始：创作长篇故事",
-        "paid_hacking": "付费黑客攻防发布：高级安全技术分享",
-        "book_invitation": "出版邀请：收到出版商邀请，进入出书流程",
-        "book_writing": "书籍撰写中：记录写作进度",
-        "book_published": '书籍出版完成：里程碑①，称号"作家"',
-        "open_source_start": "开源项目发布：贡献开源代码",
-        "open_source_recognized": '开源获得认可：社区赞助商关注，称号"开发者"',
-        "cdn_enabled": "CDN加速部署：提升网站访问速度",
-        "short_video": "短视频账号开通：抖音/短视频布局",
-        "ai_preview": "AI辅助预告：ChatGPT即将发布",
-        "year_summary_2020": "2020年度总结：五年回顾",
-        "award_2020": '博客优秀大奖（2020）：蝉联第一名，称号"博客传奇"',
+        "novel_serial_start": "小说连载开启：用故事构建另一个世界",
+        "paid_hacking": "付费安全课程发布：高级技术分享获得认可",
+        "book_invitation": "出版邀请：收到出版社的合作邀约",
+        "book_writing": "书籍撰写中：将积累化为文字",
+        "book_published": "书籍正式出版：多年的博客精华凝聚成书",
+        "open_source_start": "开源项目发布：代码贡献获得社区关注",
+        "open_source_recognized": "开源获得认可：社区开始关注你的项目",
+        "cdn_enabled": "CDN加速部署：网站访问速度大幅提升",
+        "ai_preview": "AI时代预告：新一轮技术变革即将到来",
+        "year_summary_2020": "2020年度总结：挑战与突破的五年",
         # 第五章
-        "ai_unlocked": "AI辅助解锁：ChatGPT发布，解锁AI创作",
-        "ai_article_50": 'AI辅助创作50篇：称号"AI创作先锋"',
-        "game_dev_start": "游戏开发开始：文学+编程双满级后解锁",
-        "game_dev_complete": "游戏制作完成：游戏主体开发完成",
-        "game_test": "游戏测试优化：测试与优化阶段",
-        "video_account": "视频号开通：宣传游戏",
-        "game_trailer": "游戏预告发布：发布预告视频",
-        "personal_brand": '个人IP品牌：建立"游戏开发者"品牌',
-        "game_released": "游戏正式发布：上架发布，玩家涌入",
-        "game_award": '游戏大奖获得：站在领奖台上，称号"游戏大奖传奇"',
-        "fame_let_go": "看淡名利：站在巅峰回望，发现最重要的是成长",
-        "award_2025": "博客优秀大奖（2025）：根据等级动态判定",
-        "decline_award_2025": "拒绝博客大奖：选择不参加2025年博客大奖评比",
-        "return_to_roots": "回归博客本质：卸载数据分析工具，不再查看访问量",
-        "free_writing": "自由写作：想写什么就写什么，不考虑SEO流量收益",
-        "ending_achieved": "结局达成：从这里开始，不再有任务，只有表达",
+        "ai_unlocked": "AI创作解锁：借助AI开启全新的创作模式",
+        "game_dev_start": "游戏开发启动：用代码构建心中的世界",
+        "game_dev_complete": "游戏主体完成：从零到一，梦想成形",
+        "game_test": "游戏测试优化：打磨每一处细节",
+        "video_account": "视频号开通：用影像讲述创作故事",
+        "game_trailer": "游戏预告发布：向世界展示你的作品",
+        "personal_brand": "个人品牌建立：从博主到创作者的蜕变",
+        "game_released": "游戏正式发布：作品终于与玩家见面",
+        "game_award": "游戏获奖：站上领奖台，梦想照进现实",
+        "fame_let_go": "看淡名利：奖项也好，排名也罢，唯有成长最珍贵",
+        "return_to_roots": "回归初心：卸下数据焦虑，不为流量，只为表达",
+        "ending_achieved": "结局达成：从今往后，不再有任务，只有热爱",
     }
     return descriptions.get(milestone, "未知里程碑: " + milestone)
+
+## 奖项描述动态生成——通过 AwardManager 查询实际结果
+func _get_award_description(milestone: String) -> String:
+    var award_map = {
+        "award_2005": {"ordinal": 1, "year": 2005},
+        "award_2010": {"ordinal": 2, "year": 2010},
+        "award_2015": {"ordinal": 3, "year": 2015},
+        "award_2020": {"ordinal": 4, "year": 2020},
+        "award_2025": {"ordinal": 5, "year": 2025, "milestone": "fame_let_go"},
+    }
+    if not award_map.has(milestone):
+        return ""
+
+    var info = award_map[milestone]
+    var history = AwardManager._get_history()
+    var result = AwardManager.AwardResult.NONE
+    for entry in history:
+        if entry.year == info.year:
+            result = entry.result
+            break
+
+    var label = AwardManager.get_result_label(result)
+    if label.is_empty():
+        return "优秀博客奖项（%d）：奖项结果已揭晓" % info.year
+    return "优秀博客奖项（%d）：%s" % [info.year, label]

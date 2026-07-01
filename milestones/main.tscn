@@ -52,7 +52,17 @@ theme_override_constants/margin_bottom = 5
 [node name="b1" type="Button" parent="bg/btn_group/vb/mc1"]
 layout_mode = 2
 toggle_mode = true
-text = "里程碑"
+text = "游戏成就"
+
+[node name="mc2" type="MarginContainer" parent="bg/btn_group/vb"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b2" type="Button" parent="bg/btn_group/vb/mc2"]
+layout_mode = 2
+toggle_mode = true
+text = "章节进度"
 
 [node name="选项组" type="Panel" parent="bg"]
 layout_mode = 1
@@ -83,6 +93,54 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="sc2" type="PanelContainer" parent="bg/选项组"]
+visible = false
+layout_mode = 2
+offset_top = 10.0
+offset_right = 760.0
+offset_bottom = 410.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="bg/选项组/sc2"]
+layout_mode = 2
+
+[node name="hbox_main" type="HBoxContainer" parent="bg/选项组/sc2/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="chapter_list" type="VBoxContainer" parent="bg/选项组/sc2/VBoxContainer/hbox_main"]
+layout_mode = 2
+custom_minimum_size = Vector2(100, 0)
+
+[node name="content" type="VBoxContainer" parent="bg/选项组/sc2/VBoxContainer/hbox_main"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="title" type="Label" parent="bg/选项组/sc2/VBoxContainer/hbox_main/content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+
+[node name="progress_hbox" type="HBoxContainer" parent="bg/选项组/sc2/VBoxContainer/hbox_main/content"]
+layout_mode = 2
+
+[node name="bar" type="ProgressBar" parent="bg/选项组/sc2/VBoxContainer/hbox_main/content/progress_hbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="count_label" type="Label" parent="bg/选项组/sc2/VBoxContainer/hbox_main/content/progress_hbox"]
+layout_mode = 2
+custom_minimum_size = Vector2(50, 0)
+horizontal_alignment = 1
+
+[node name="scroll" type="ScrollContainer" parent="bg/选项组/sc2/VBoxContainer/hbox_main/content"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="milestone_vbox" type="VBoxContainer" parent="bg/选项组/sc2/VBoxContainer/hbox_main/content/scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="close_btn" type="Button" parent="bg"]
 layout_mode = 1
 anchors_preset = 1
@@ -97,3 +155,5 @@ text = "X"
 theme_type_variation = "Button"
 
 [connection signal="pressed" from="bg/close_btn" to="." method="_on_close_pressed"]
+[connection signal="toggled" from="bg/btn_group/vb/mc1/b1" to="." method="_on_b1_toggled"]
+[connection signal="toggled" from="bg/btn_group/vb/mc2/b2" to="." method="_on_b2_toggled"]
