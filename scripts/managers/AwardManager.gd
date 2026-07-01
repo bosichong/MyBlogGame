@@ -7,7 +7,7 @@ const AWARD_YEARS = [
     { "ordinal": 2, "year": 2010, "chapter": 2, "milestone": "award_2010" },
     { "ordinal": 3, "year": 2015, "chapter": 3, "milestone": "award_2015" },
     { "ordinal": 4, "year": 2020, "chapter": 4, "milestone": "award_2020" },
-    { "ordinal": 5, "year": 2025, "chapter": 5, "milestone": "award_2025" },
+    { "ordinal": 5, "year": 2025, "chapter": 5, "milestone": "fame_let_go" },
 ]
 
 func determine_result(_player_level: int = 0) -> AwardResult:

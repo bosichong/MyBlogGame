@@ -24,9 +24,7 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
         $AcceptDialog.popup_centered()
 
 func _on_dialog_confirmed():
-    GDManager.get_story_progress().set_completed(1, "prologue_completed")
     Utils.goto_scene(S04_SCENE_PATH)
 
 func _on_跳过游戏_pressed() -> void:
-    GDManager.get_story_progress().set_completed(1, "prologue_completed")
     Utils.goto_scene(S04_SCENE_PATH)

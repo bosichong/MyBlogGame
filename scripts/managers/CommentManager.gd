@@ -67,19 +67,6 @@ func get_comments(post_id = -1) -> Array:
         return _data.comments
     return _data.comments.filter(func(c): return c.get("post_id") == post_id)
 
-func get_comment_count(post_id) -> int:
-    return get_comments(post_id).size()
-
-func get_comment_count_int(post_id: int) -> int:
-    return get_comments(post_id).size()
-
-func should_generate_comment(post_id: int, article_views: int) -> bool:
-    if not _data:
-        return false
-    var threshold = floor(article_views / 500.0)
-    var current = get_comment_count(post_id)
-    return current < threshold
-
 func get_max_comments(article_views: int) -> int:
     var calculated = floor(article_views * 0.2)
     return mini(calculated, 50)
@@ -305,8 +292,6 @@ func check_all_articles() -> Dictionary:
     if not blogger:
         return result
     
-    refresh_post_cache()
-    
     for post in blogger.posts:
         var post_id = post.get("id", 0)
         var views = post.get("views", 0)
@@ -364,19 +349,3 @@ func sync_to_post(post_id: int, comment_count: int) -> bool:
     
     return false
 
-func sync_all_posts() -> int:
-    var synced_count = 0
-    var all_comments = get_comments()
-    
-    var post_comment_counts: Dictionary = {}
-    for comment in all_comments:
-        var post_id = comment.get("post_id")
-        if not post_comment_counts.has(post_id):
-            post_comment_counts[post_id] = 0
-        post_comment_counts[post_id] += 1
-    
-    for post_id in post_comment_counts:
-        if sync_to_post(post_id, post_comment_counts[post_id]):
-            synced_count += 1
-    
-    return synced_count

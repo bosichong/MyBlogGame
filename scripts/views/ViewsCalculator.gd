@@ -96,6 +96,7 @@ func calculate_daily(blogger_data: Dictionary) -> Dictionary:
         var result = _calculate_post_views(post, blogger_data)
         
         post.views = post.get("views", 0) + result.views
+        post["_today_views"] = result.views
         
         var is_paid = post.get("is_money", false)
         var is_private = is_paid

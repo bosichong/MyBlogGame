@@ -132,8 +132,11 @@ func clear() -> void:
 
 ## 获取所有统计数据（用于保存）
 func get_all_stats() -> Dictionary:
+    var daily = data.daily_stats
+    if daily.size() > 365:
+        daily = daily.slice(-365)
     return {
-        "daily_stats": data.daily_stats.duplicate(),
+        "daily_stats": daily.duplicate(),
         "weekly_stats": data.weekly_stats.duplicate(),
         "monthly_stats": data.monthly_stats.duplicate(),
         "yearly_stats": data.yearly_stats.duplicate(),

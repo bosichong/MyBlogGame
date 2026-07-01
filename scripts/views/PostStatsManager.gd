@@ -121,7 +121,12 @@ func get_top_posts(limit: int = 10) -> Array:
 
 ## 获取统计数据（用于保存）
 func get_all_stats() -> Dictionary:
-    return post_stats.duplicate()
+    var result = post_stats.duplicate(true)
+    for pid in result:
+        var daily = result[pid].get("daily_views", [])
+        if daily.size() > 365:
+            result[pid].daily_views = daily.slice(-365)
+    return result
 
 ## 加载统计数据
 func load_all_stats(data: Dictionary) -> void:

@@ -223,6 +223,23 @@ const CONDITIONS: Dictionary = {
     "year_summary_2010_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 2, "milestone": "year_summary_2010", "completed": false},
     "year_summary_2015_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "year_summary_2015", "completed": false},
     "year_summary_2020_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 4, "milestone": "year_summary_2020", "completed": false},
+
+    # 文学周刊里程碑未完成
+    "literature_weekly_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 2, "milestone": "literature_weekly", "completed": false},
+
+    "code_weekly_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 2, "milestone": "code_weekly", "completed": false},
+
+    # RSS订阅里程碑未完成
+    "rss_100_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 2, "milestone": "rss_100", "completed": false},
+
+    # RSS订阅达到100
+    "rss_ge_100": {"type": ConditionType.CUSTOM, "check_func": "check_rss_ge_100"},
+
+    # 累计收益里程碑未完成
+    "income_1000_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 2, "milestone": "income_1000", "completed": false},
+
+    # 累计收益达到1000
+    "income_ge_1000": {"type": ConditionType.CUSTOM, "check_func": "check_income_ge_1000"},
 }
 
 ## ============================================================
@@ -338,6 +355,19 @@ const TASKS: Array = [
         "is_repeatable": false,
         "actions": [
             {"type": ActionType.UNLOCK_POST_TASK, "post_type": "文学周刊"},
+        ],
+    },
+    {
+        "id": "literature_weekly_milestone",
+        "description": "发布文学周刊，获得奖励并标记第二章里程碑",
+        "conditions": ["literature_weekly_not_completed"],
+        "trigger_type": "post_event",
+        "post_type_filter": "文学周刊",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 2, "milestone": "literature_weekly"},
+            {"type": ActionType.MODIFY_ATTRIBUTE, "attr_name": "writing", "value": 5},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📰 文学周刊发布！", "content": "你伏案写下最新一期的文学周刊，字里行间藏着这几年的沉淀与思索。\n\n发布后读者的留言如潮水般涌来——有人说读你的文字像和老朋友聊天，有人说每周都在等着这一期。\n\n你意识到，写作的意义不只是记录，更是与这个世界温柔地连接。\n\n写作能力 +5 🎉"},
         ],
     },
     {
@@ -506,6 +536,41 @@ const TASKS: Array = [
         "is_repeatable": false,
         "actions": [
             {"type": ActionType.UNLOCK_POST_TASK, "post_type": "程序员周刊"},
+        ],
+    },
+    {
+        "id": "code_weekly_milestone",
+        "description": "发布程序员周刊，获得奖励并标记第二章里程碑",
+        "conditions": ["code_weekly_not_completed"],
+        "trigger_type": "post_event",
+        "post_type_filter": "程序员周刊",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 2, "milestone": "code_weekly"},
+            {"type": ActionType.MODIFY_ATTRIBUTE, "attr_name": "technical", "value": 5},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "💻 程序员周刊发布！", "content": "你泡了杯咖啡，敲完最后一段代码示例，新一期程序员周刊终于定稿了。\n\n发布后技术社区反响热烈——有读者说你把复杂的概念讲得通透易懂，还有人专门转给了团队里的新人看。\n\n这一刻你感到，技术分享的意义不止于输出知识，更是点燃他人的好奇。\n\n技术能力 +5 🎉"},
+        ],
+    },
+    {
+        "id": "rss_100_milestone",
+        "description": "RSS订阅突破百人，标记第二章里程碑",
+        "conditions": ["rss_ge_100", "rss_100_not_completed"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 2, "milestone": "rss_100"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📨 RSS 订阅突破 100 人！", "content": "打开后台，你发现 RSS 订阅数悄然突破了 100。\n\n从第一个订阅者小心翼翼按下按钮，到今天满百——每一个数字背后都是一个真实的读者，他们在阅读器里等待你的每一次更新。\n\n这份信任，比任何数据都更温暖。\n\n继续写下去吧，有人在读。\n\n🎉"},
+        ],
+    },
+    {
+        "id": "income_1000_milestone",
+        "description": "累计收益突破千元，标记第二章里程碑",
+        "conditions": ["income_ge_1000", "income_1000_not_completed"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 2, "milestone": "income_1000"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "💰 累计收益突破千元！", "content": "你查看了后台的收益统计，累计广告收入已经突破 1000 元。\n\n从最初一个月几块钱的零碎收入，到如今稳定进账——每一分钱都是读者用注意力投下的信任票。\n\n虽然离财务自由还差得远，但对一个独立博客来说，这是值得纪念的一小步。\n\n继续坚持下去，路还长。\n\n🎉"},
         ],
     },
     {
