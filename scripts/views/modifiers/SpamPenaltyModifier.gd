@@ -21,18 +21,12 @@ func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
     if not comment_manager:
         return views
     
-    var comments = comment_manager.get_comments(post_id)
-    var spam_count = 0
-    
-    for comment in comments:
-        if comment.get("is_spam", false) and comment.get("status") == "spam":
-            spam_count += 1
+    var spam_count = comment_manager.get_spam_count(post_id)
     
     if spam_count > 0:
         var effective_count = mini(spam_count, MAX_PENALTY_SPAM_COUNT)
         var penalty = 1.0 - (effective_count * 0.05)
         var final_views = int(float(views) * penalty)
-        #print("[垃圾惩罚] 文章ID=%s | 垃圾数=%d | 原访问=%d | 惩罚=%d | 结果=%d" % [str(post_id), spam_count, views, views - final_views, final_views])
         return final_views
     
     return views

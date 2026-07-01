@@ -7,7 +7,7 @@ extends ViewsModifier
 var new_article_days: int = 7          # 新文章期（天）
 var mid_period_1_days: int = 14         # 第二阶段（天）
 var mid_period_2_days: int = 28         # 第三阶段（天）
-var active_article_years: float = 0.5   # 有效文章年限（半年）
+var active_article_years: float = 0.25  # 有效文章年限（3个月，28天×3=84天）
 var mid_period_1_chance: float = 0.5   # 7-14天访问概率
 var mid_period_2_chance: float = 0.25  # 14-28天访问概率
 var old_period_chance: float = 0.05     # 28-半年访问概率
@@ -17,7 +17,7 @@ var max_random_views: int = 5            # 随机访问最大值
 func _init():
     modifier_name = "time_decay"
     display_name = "时间衰减"
-    description = "新文章7天正常，之后随时间递减，半年后无访问"
+    description = "新文章7天正常，之后随时间递减，3个月后无访问"
     priority = 100
     type = Type.DECAY
 

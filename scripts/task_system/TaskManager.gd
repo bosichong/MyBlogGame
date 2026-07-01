@@ -41,6 +41,9 @@ var OpenSourceMgr = null
 ## 任务状态
 var task_states: Array[Dictionary] = []
 
+## 按 trigger_type 索引的任务 ID 列表（避免每日遍历全部任务）
+var _tasks_by_trigger: Dictionary = {}
+
 ## 弹窗确认后要跳转的场景路径（由 main.gd 读取）
 var pending_scene_after_popup: String = ""
 ## 弹窗跳转场景的参数（如回顾年份范围）
@@ -105,26 +108,34 @@ func _force_check_skill_tasks() -> void:
 func check_initial_tasks() -> void:
     _force_check_skill_tasks()
 
+## 重建 trigger_type 索引
+func _rebuild_trigger_index() -> void:
+    _tasks_by_trigger.clear()
+    for i in range(task_states.size()):
+        var task = task_states[i]
+        var trigger = task.get("trigger_type", "")
+        if not _tasks_by_trigger.has(trigger):
+            _tasks_by_trigger[trigger] = []
+        _tasks_by_trigger[trigger].append(i)
+
 ## 重置任务状态(从配置复制)
 func reset_task_states() -> void:
-    # 如果任务状态已经有数据,需要检查是否有新任务需要添加
     if task_states.size() > 0:
         _add_missing_tasks()
         return
 
-    # 清空本地任务状态
     task_states.clear()
 
     for task in get_task_config().TASKS:
         var state = task.duplicate(true)
-        # 初始化状态字段
         if not state.has("is_active"):
             state.is_active = true
         if not state.has("is_completed"):
             state.is_completed = false
         task_states.append(state)
 
-    # 同步到 GDManager(如果可用)
+    _rebuild_trigger_index()
+
     if GDManager:
         var task_data = GDManager.get_task()
         task_data.task_states = task_states.duplicate(true)
@@ -152,7 +163,8 @@ func _add_missing_tasks() -> void:
                 state.is_completed = false
             task_states.append(state)
     
-    # 同步到 GDManager
+    _rebuild_trigger_index()
+
     if GDManager:
         var task_data = GDManager.get_task()
         task_data.task_states = task_states.duplicate(true)
@@ -216,30 +228,22 @@ func day_task_func() -> void:
 
 ## 按触发类型检查任务
 func check_tasks_by_trigger(trigger_type: String, context: Dictionary) -> void:
-    for i in range(task_states.size()):
+    var indices = _tasks_by_trigger.get(trigger_type, [])
+    for i in indices:
         var task = task_states[i]
 
-        # 检查触发类型
-        var task_trigger = task.get("trigger_type", "")
-        if task_trigger != trigger_type:
-            continue
-        
-        # 检查 post_type_filter（如果有）
         var post_type_filter = task.get("post_type_filter", "")
         if post_type_filter != "":
             var post_type = context.get("post_type", "")
             if post_type != post_type_filter:
                 continue
 
-        # 检查任务是否可执行
         if not _can_execute_task(task):
             continue
 
-        # 检查所有条件
         if not _check_all_conditions(task, context):
             continue
 
-        # 执行任务
         _execute_task_at(i, context)
 
 ## 检查任务是否可执行
@@ -377,7 +381,7 @@ func _get_total_article_count() -> int:
     var blogger_data = GDManager.get_blogger()
     if blogger_data == null:
         return 0
-    return blogger_data.posts.size()
+    return blogger_data.posts.size() + blogger_data.archived_posts.size()
 
 ## 获取指定类型博文发布次数
 func _get_post_count_by_type(post_type: String) -> int:
@@ -389,7 +393,7 @@ func _get_post_count_by_type(post_type: String) -> int:
         return 0
 
     var count = 0
-    for post in blogger_data.posts:
+    for post in blogger_data.posts + blogger_data.archived_posts:
         # 检查多个可能的字段:category、post_category、article_category、content_type、task_type
         if post.get("post_category", "") == post_type:
             count += 1
@@ -569,6 +573,8 @@ func _execute_action(action: Dictionary, context: Dictionary = {}) -> void:
             _action_unlock_website_maintenance(action)
         TaskConfig_ActionType.REPLACE_POST_TREND:
             _action_replace_trend(action)
+        TaskConfig_ActionType.MODIFY_ATTRIBUTE:
+            _action_modify_attribute(action)
         TaskConfig_ActionType.UNLOCK_MILESTONES_TASK:
             _action_unlock_milestone(action)
         # ===== 书籍出版、IP授权、开源项目(委托给子模块)=====
@@ -992,6 +998,31 @@ func _action_add_archive_event(action: Dictionary) -> void:
     if GDManager:
         GDManager.add_archive_event(event_id, title, description)
 
+## 动作:修改属性（能力值/经验/体力等）
+func _action_modify_attribute(action: Dictionary) -> void:
+    var attr_name = action.get("attr_name", "")
+    var value = action.get("value", 0)
+    if attr_name.is_empty():
+        push_error("[TaskManager] MODIFY_ATTRIBUTE missing attr_name")
+        return
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        push_error("[TaskManager] BloggerData 不可用")
+        return
+    match attr_name:
+        "writing":
+            blogger.set_ability("writing", blogger.writing_ability + value)
+        "technical":
+            blogger.set_ability("technical", blogger.technical_ability + value)
+        "code":
+            blogger.set_ability("code", blogger.code_ability + value)
+        "literature":
+            blogger.set_ability("literature", blogger.literature_ability + value)
+        "exp":
+            blogger.add_exp(value)
+        _:
+            push_error("[TaskManager] MODIFY_ATTRIBUTE unknown attr_name: %s" % attr_name)
+
 func _update_blog_union_button_now() -> void:
     if get_tree().get_root().has_node("Main/ui/bottom"):
         get_tree().get_root().get_node("Main/ui/bottom").update_story_progress()
@@ -1086,3 +1117,17 @@ func check_icp_filing_in_progress(context: Dictionary) -> bool:
         return false
     var blogger = GDManager.get_blogger()
     return blogger.icp_filing_in_progress
+
+## 自定义条件检查:RSS订阅数达到100
+func check_rss_ge_100(context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var blogger = GDManager.get_blogger()
+    return blogger.rss >= 100
+
+## 自定义条件检查:累计收益达到1000
+func check_income_ge_1000(context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var ad = GDManager.get_ad()
+    return ad.total_commission >= 1000.0

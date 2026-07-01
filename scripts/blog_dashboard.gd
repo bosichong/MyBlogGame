@@ -122,10 +122,10 @@ func refresh_dashboard() -> void:
     
     total_views_value.text = Utils.format_number(blog_data.get("views", 0))
     today_views_value.text = str(blog_data.get("today_views", 0))
-    articles_value.text = str(len(blog_data.get("posts", [])))
+    articles_value.text = str(len(blog_data.get("posts", [])) + len(blog_data.get("archived_posts", [])))
     
     var total_comments = 0
-    for post in blog_data.get("posts", []):
+    for post in blog_data.get("posts", []) + blog_data.get("archived_posts", []):
         total_comments += post.get("comments", 0)
     comments_value.text = str(total_comments)
     
@@ -183,7 +183,7 @@ func refresh_articles() -> void:
         return
     
     var blog_data = Blogger.blog_data
-    var posts = blog_data.get("posts", [])
+    var posts = blog_data.get("posts", []) + blog_data.get("archived_posts", [])
     
     # 去重（按 id 去重）
     var unique_posts = []
@@ -702,7 +702,7 @@ func _display_comments_list(container: VBoxContainer, comments: Array, list_type
     var blogger = GDManager.get_blogger()
     var posts_map = {}
     if blogger:
-        for post in blogger.posts:
+        for post in blogger.posts + blogger.archived_posts:
             var post_id = post.get("id", 0)
             posts_map[post_id] = post.get("title", "无标题")
     

@@ -219,6 +219,7 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "month_views": data.month_views,
         "year_views": data.year_views,
         "posts": data.posts,
+        "archived_posts": data.archived_posts,
         "calendar": data.calendar,
         "tmp_week": data.tmp_week,
         "tmp_month": data.tmp_month,
@@ -256,6 +257,7 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.month_views = dict.get("month_views", 0)
     data.year_views = dict.get("year_views", 0)
     data.posts = dict.get("posts", [])
+    data.archived_posts = dict.get("archived_posts", [])
     data.calendar = dict.get("calendar", [])
     data.tmp_week = dict.get("tmp_week", 1)
     data.tmp_month = dict.get("tmp_month", 1)

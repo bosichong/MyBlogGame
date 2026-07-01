@@ -213,6 +213,7 @@ var blog_data: Dictionary:
                 "month_views": blogger.month_views,
                 "year_views": blogger.year_views,
                 "posts": blogger.posts,
+                "archived_posts": blogger.archived_posts,
                 "weekly_views_data": weekly_views_data,
             }
         return {}
@@ -234,6 +235,7 @@ var blog_data: Dictionary:
             blogger.month_views = value.get("month_views", 0)
             blogger.year_views = value.get("year_views", 0)
             blogger.posts = value.get("posts", [])
+            blogger.archived_posts = value.get("archived_posts", [])
 
 # 临时量,用来记录周、月份、年份统计使用
 var tmp_w: int:
@@ -361,6 +363,10 @@ func daily_activities():
     #earn_money_from_ads() # 从广告联盟赚取佣金
     gain_exp(exp_gained) # 累加EXP并处理升级
 
+    # 月末归档
+    if TimerManager.current_week == 4 and TimerManager.current_day == 7:
+        _archive_old_posts()
+
 func week_activites():
     if not GDManager:
         return
@@ -379,15 +385,15 @@ func week_activites():
 
 ## 博客文章收藏量在三个月后始递减
 func del_fa():
-    if GDManager:
-        var blogger = GDManager.get_blogger()
-        for p in blogger.posts:
-            # 博文发布时间与当前时间的间隔日期。
-            var tmp_b = Utils.calculate_new_game_time_difference(Utils.format_date(),p.date)
-            if tmp_b > 28*6 and p.favorites > 100:
-                var tmp_k = randi_range(0,10)
-                p.favorites -= tmp_k
-                blogger.favorites -= tmp_k
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    for p in blogger.posts + blogger.archived_posts:
+        var tmp_b = Utils.calculate_new_game_time_difference(Utils.format_date(), p.date)
+        if tmp_b > 28*6 and p.favorites > 100:
+            var tmp_k = randi_range(0, 10)
+            p.favorites -= tmp_k
+            blogger.favorites -= tmp_k
 
 ## 添加新的博客文章
 func add_new_blog_post(title: String, d) -> Dictionary:
@@ -655,10 +661,15 @@ func update_blog_views() -> int:
         "last_post_quality": blogger.last_post_quality,
         "month_views": blogger.month_views,
         "tmp_year": blogger.tmp_year,
-        "posts": blogger.posts
+        "posts": blogger.posts,
+        "archived_posts": blogger.archived_posts
     }
 
-    # 使用新计算器计算访问量
+    # 刷新评论缓存供 SpamPenaltyModifier 使用
+    var comment_manager = GDManager.get_comment_manager() if GDManager else null
+    if comment_manager:
+        comment_manager.refresh_post_cache()
+
     var result = views_calculator.calculate_daily(blogger_data)
     blogger.today_views = result.views
     
@@ -671,56 +682,53 @@ func update_blog_views() -> int:
     var today_money = 0
     var today_novel_money = 0
     var today_hacker_money = 0
-    var paid_posts = []
-    var novel_posts = []
-    var hacker_posts = []
     var current_total_views = 0
     var novel_views = 0
     var hacker_views = 0
-    for post in blogger.posts:
-        if post.get("content_type", "") == "付费":
-            paid_posts.append(post)
+    var novel_quality_sum = 0
+    var novel_count = 0
+    var hacker_quality_sum = 0
+    var hacker_count = 0
+    var is_settle_day = TimerManager.current_week == 4 and TimerManager.current_day == 7
+    var total_paid_views = 0
+    for post in blogger.posts + blogger.archived_posts:
+        var content_type = post.get("content_type", "")
+        if content_type == "付费":
             var post_views = post.get("views", 0)
             current_total_views += post_views
-            # 分别统计不同类型
-            if post.get("category", "") == "小说连载(付费)":
-                novel_posts.append(post)
+            var cat = post.get("category", "")
+            if cat == "小说连载(付费)":
                 novel_views += post_views
-            elif post.get("category", "") == "付费黑客攻防":
-                hacker_posts.append(post)
+                novel_quality_sum += post.get("quality", 50)
+                novel_count += 1
+            elif cat == "付费黑客攻防":
                 hacker_views += post_views
+                hacker_quality_sum += post.get("quality", 50)
+                hacker_count += 1
+            if is_settle_day:
+                total_paid_views += post_views
     
-    # 分别计算不同类型的收入
-    if novel_posts.size() > 0:
+    if novel_count > 0:
         var novel_new_views = novel_views - last_settle_novel_views
         if novel_new_views > 0:
-            var avg_quality = 0
-            for post in novel_posts:
-                avg_quality += post.get("quality", 50)
-            avg_quality = avg_quality / novel_posts.size()
+            var avg_quality = float(novel_quality_sum) / novel_count
             today_novel_money = calculate_paid_income(novel_new_views, avg_quality)
             monthly_novel_income += today_novel_money
     
-    if hacker_posts.size() > 0:
+    if hacker_count > 0:
         var hacker_new_views = hacker_views - last_settle_hacker_views
         if hacker_new_views > 0:
-            var avg_quality = 0
-            for post in hacker_posts:
-                avg_quality += post.get("quality", 50)
-            avg_quality = avg_quality / hacker_posts.size()
+            var avg_quality = float(hacker_quality_sum) / hacker_count
             today_hacker_money = calculate_paid_income(hacker_new_views, avg_quality)
             monthly_hacker_income += today_hacker_money
     
     today_money = today_novel_money + today_hacker_money
-    
-    # 累积每月收入
     monthly_paid_income += today_money
     
     # 每月结算（第4周第7天）
-    if TimerManager.current_week == 4 and TimerManager.current_day == 7 and monthly_paid_income > 0:
+    if is_settle_day and monthly_paid_income > 0:
         blogger.money += monthly_paid_income
         
-        # 通过信号发送收入到账信息
         var msg = ""
         if monthly_novel_income > 0:
             msg += "小说连载收入: %.0f 元\n" % monthly_novel_income
@@ -731,13 +739,8 @@ func update_blog_views() -> int:
         msg = msg.trim_suffix("\n")
         emit_signal("sg_paid_income_settled", msg)
 
-        # 更新上次结算访问量
         last_settle_novel_views = novel_views
         last_settle_hacker_views = hacker_views
-        var total_paid_views = 0
-        for post in blogger.posts:
-            if post.get("content_type", "") == "付费":
-                total_paid_views += post.get("views", 0)
         last_settle_paid_views = total_paid_views
         monthly_paid_income = 0
         monthly_novel_income = 0
@@ -750,7 +753,7 @@ func update_blog_views() -> int:
     # 更新统计
     var tongji = get_node_or_null("/root/Tongji")
     if tongji:
-        tongji.record_daily(Utils.format_date(), blogger.today_views, blogger.posts.size(), {})
+        tongji.record_daily(Utils.format_date(), blogger.today_views, blogger.posts.size() + blogger.archived_posts.size(), {})
     
     # 同步到 StatisticsData（用于保存）
     if GDManager:
@@ -782,11 +785,9 @@ func update_blog_views() -> int:
     check_icp_filing_progress()
     
     # 生成评论(基于每篇文章的访问量)
-    if GDManager:
-        var comment_manager = GDManager.get_comment_manager()
-        if comment_manager:
-            comment_manager.check_all_articles()
-            comment_manager.sync_all_posts()
+    # check_all_articles 内部已同步评论数到文章，无需再调 sync_all_posts
+    if comment_manager:
+        comment_manager.check_all_articles()
 
     # 周/月/年统计
     if tmp_w == TimerManager.current_week:
@@ -1258,3 +1259,25 @@ func add_technical_ability_points() -> void:
         blogger.technical_ability += increment
         blogger.technical_ability = min(float(blogger.technical_ability), 100.0)
         blogger.technical_ability = round(blogger.technical_ability * 10) / 10.0
+
+## 月末归档：将超过 84 天的文章从 posts 移入 archived_posts
+## TimeDecayModifier.active_article_years * 336 = 84
+func _archive_old_posts():
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+
+    var now = Utils.format_date()
+    var max_active_days = int(0.25 * 336)
+
+    var keep: Array[Dictionary] = []
+    for post in blogger.posts:
+        var post_date = post.get("date", "")
+        if post_date != "":
+            var days = Utils.calculate_new_game_time_difference(post_date, now)
+            if days > max_active_days:
+                blogger.archived_posts.append(post)
+                continue
+        keep.append(post)
+
+    blogger.posts = keep

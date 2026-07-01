@@ -4,6 +4,9 @@
 class_name BookSalesBoostModifier
 extends ViewsModifier
 
+## 缓存书籍数据实例，避免每天每篇文章都 reload
+var _book_data = null
+
 func _init():
     modifier_name = "book_sales_boost"
     display_name = "畅销书加成"
@@ -11,20 +14,23 @@ func _init():
     priority = 270
     type = Type.BOOST
 
+func _get_book_data():
+    if _book_data == null:
+        _book_data = load("res://data/book_publish.gd").new()
+    return _book_data
+
 func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
-    # 获取当前有效的书籍加成
     var total_bonus_ratio = _get_total_book_bonus_ratio()
     
     if total_bonus_ratio <= 0:
         return views
     
-    # 应用加成
     var bonus = int(views * total_bonus_ratio)
     return views + bonus
 
 ## 获取所有出版书籍的总加成比例
 func _get_total_book_bonus_ratio() -> float:
-    var BookPublishData = load("res://data/book_publish.gd").new()
+    var BookPublishData = _get_book_data()
     if not BookPublishData:
         return 0.0
     
@@ -39,14 +45,12 @@ func _get_total_book_bonus_ratio() -> float:
             continue
         
         var sales_months = book.get("sales_months", 0)
-        if sales_months >= 36:  # 超过3年
+        if sales_months >= 36:
             continue
         
-        # 计算单本书的加成比例
         var book_ratio = _calculate_book_boost_ratio(sales_months)
         total_ratio += book_ratio
     
-    # 多本书可以叠加，但上限200%
     return min(total_ratio, 2.0)
 
 ## 计算单本书的加成比例
@@ -64,7 +68,7 @@ func _calculate_book_boost_ratio(sales_months: int) -> float:
 
 ## 获取书籍加成信息（用于UI显示）
 func get_book_boost_info() -> Dictionary:
-    var BookPublishData = load("res://data/book_publish.gd").new()
+    var BookPublishData = _get_book_data()
     if not BookPublishData:
         return {"active": false, "total_ratio": 0.0, "books": []}
     

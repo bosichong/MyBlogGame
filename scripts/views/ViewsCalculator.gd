@@ -61,6 +61,11 @@ func _register_default_events() -> void:
 ## 每日计算（在blogger.gd中调用）
 ## 注意：会直接修改 posts 中每篇文章的 views 字段
 func calculate_daily(blogger_data: Dictionary) -> Dictionary:
+    # 0. 预热修饰器缓存
+    var serial_mod = modifier_manager.get_modifier("serial_bonus")
+    if serial_mod and serial_mod is SerialBonusModifier:
+        serial_mod.refresh_cache(blogger_data)
+    
     # 1. 检查事件触发
     var triggered_events = event_manager.check_daily(blogger_data)
     
@@ -77,26 +82,31 @@ func calculate_daily(blogger_data: Dictionary) -> Dictionary:
     }
     
     var posts = blogger_data.get("posts", [])
+    # 与 TimeDecayModifier.active_article_years * 336 保持同步
+    var now_date = Utils.format_date()
+    var max_active_days = int(0.25 * 336)
     for post in posts:
+        var post_date = post.get("date", "")
+        if post_date != "":
+            var days = Utils.calculate_new_game_time_difference(post_date, now_date)
+            if days > max_active_days:
+                # 老文章日访问量为 0，跳过全部修饰器/事件/统计记录
+                continue
+        
         var result = _calculate_post_views(post, blogger_data)
         
-        # 更新文章的 views 字段
         post.views = post.get("views", 0) + result.views
         
-        # 付费文章的访问量不计入总访问量（如小说连载）
-        # 只统计公开访问的文章
         var is_paid = post.get("is_money", false)
-        var is_private = is_paid  # 仅付费文章不计入总访问量
+        var is_private = is_paid
         
         if not is_private:
             total_views += result.views
             
-            # 统计来源
             for key in result.sources:
                 if sources.has(key):
                     sources[key] += result.sources[key]
         
-        # 记录单篇文章统计
         var post_id = post.get("id", 0)
         if post_id != 0:
             post_stats_manager.record_post_views(post_id, result.views, result.sources)
