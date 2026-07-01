@@ -83,6 +83,10 @@ func _ready() -> void:
     if fl_manager:
         fl_manager.connect("link_added", _on_friend_link_added)
     
+    var sp = GDManager.get_story_progress() if GDManager else null
+    if sp:
+        sp.chapter_reward_popup.connect(_on_chapter_reward)
+    
     # 延迟检查初始任务，确保所有节点的 _ready() 都执行完毕
     call_deferred("_check_initial_tasks")
     
@@ -140,7 +144,7 @@ func update_ui():
     
     
     $ui/bottom/v1/h3/blog_name.text = Blogger.blog_data.blog_name
-    $ui/bottom/v1/h3/blog_posts.text = "文章数:" + str(len(Blogger.blog_data.posts))
+    $ui/bottom/v1/h3/blog_posts.text = "文章数:" + str(len(Blogger.blog_data.posts) + len(Blogger.blog_data.archived_posts))
     $ui/bottom/v1/h3/blog_safety.text = "安全指数:" + str(Blogger.blog_data.safety_value)
     $ui/bottom/v1/h3/blog_seo.text = "SEO:" + str(Blogger.blog_data.seo_value)
     
@@ -427,6 +431,22 @@ func _on_friend_link_added(link_data: Dictionary) -> void:
         TaskManager.check_tasks_by_trigger("friendlink_added", {"link_data": link_data})
 
 var _popup_has_pending_scene := false
+
+## 章节完成奖励弹窗
+func _on_chapter_reward(chapter: int, chapter_name: String) -> void:
+    var rewards = [
+        "写作 +5",
+        "技术 +5",
+        "等级 +5",
+        "金钱 +1000",
+    ]
+    var reward = preload("res://milestones/chapter_reward.tscn").instantiate()
+    reward.setup(chapter_name + " 完成！", rewards)
+    reward.closed.connect(func():
+        TimerManager.start_timer()
+    )
+    add_child(reward)
+    TimerManager.stop_timer()
 
 ## 显示通用弹窗
 func show_popup_message(title: String, content: String) -> void:

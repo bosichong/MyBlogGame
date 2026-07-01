@@ -24,7 +24,7 @@ var attribute_points: int = 0
 # ============================================
 
 ## 写作能力：影响所有文章的质量分
-var writing_ability: float = 10
+var writing_ability: float = 90
 
 ## 技术能力：影响技术类文章质量和网站维护效果
 var technical_ability: float = 90
@@ -127,9 +127,13 @@ var year_views: int = 0
 # 文章列表
 # ============================================
 
-## 已发布的文章列表
+## 已发布的活跃文章列表
 ## 每篇文章包含：id, title, category, task_type, type, type1, quality, views, favorites, date等
 var posts: Array[Dictionary] = []
+
+## 已归档的老文章列表（超过84天）
+## 数据结构与 posts 一致，月末由 _archive_old_posts() 移入
+var archived_posts: Array[Dictionary] = []
 
 # ============================================
 # 日程安排（7天循环）

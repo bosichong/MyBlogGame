@@ -6,7 +6,10 @@ extends ViewsModifier
 
 ## 连载文章类型列表（文学周刊、程序员周刊，【艺术周刊已禁用】）
 ## 小说连载、动漫连载是付费文章不计入总访问量
-var serial_types: Array = ["文学周刊", "程序员周刊"]  # 艺术周刊、动漫连载(收费)、小说连载(付费) 已禁用
+var serial_types: Array = ["文学周刊", "程序员周刊"]
+
+## 缓存各类型连载篇数，每日更新一次
+var _cached_counts: Dictionary = {}
 
 func _init():
     modifier_name = "serial_bonus"
@@ -15,35 +18,36 @@ func _init():
     priority = 260
     type = Type.BOOST
 
+## 每天开始前刷新缓存
+func refresh_cache(blogger: Dictionary) -> void:
+    _cached_counts.clear()
+    for post in blogger.get("posts", []) + blogger.get("archived_posts", []):
+        var cat = post.get("category", "")
+        if cat in serial_types:
+            _cached_counts[cat] = _cached_counts.get(cat, 0) + 1
+
 func apply(views: int, post: Dictionary, blogger: Dictionary) -> int:
     var category = post.get("category", "")
     
-    # 检查是否是连载类型文章
     if not category in serial_types:
         return views
     
-    # 计算该类型文章的发布篇数
-    var serial_count = _get_serial_count(category, blogger)
+    var serial_count = _cached_counts.get(category, 0)
     
-    # 加成公式：每10篇 +2%，100篇到顶（20%）
     var bonus_percent = int(serial_count / 10) * 2
-    bonus_percent = min(bonus_percent, 20)  # 最高20%
+    bonus_percent = min(bonus_percent, 20)
     var bonus_ratio = 1.0 + float(bonus_percent) / 100.0
     
-    # 应用加成
     var bonus = int(views * (bonus_ratio - 1.0))
     
     return views + bonus
 
-## 获取指定类型连载文章的发布篇数
+## 获取指定类型连载文章的发布篇数（用于UI显示，非每日调用所以不缓存）
 func _get_serial_count(category: String, blogger: Dictionary) -> int:
-    var posts = blogger.get("posts", [])
     var count = 0
-    
-    for post in posts:
+    for post in blogger.get("posts", []) + blogger.get("archived_posts", []):
         if post.get("category", "") == category:
             count += 1
-    
     return count
 
 ## 获取连载加成信息（用于UI显示）

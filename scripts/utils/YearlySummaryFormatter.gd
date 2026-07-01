@@ -14,7 +14,7 @@ static func build_template_data(year: int) -> Dictionary:
         return {}
     
     var change = yearly.get_yearly_change(year, blogger)
-    var posts_stats = yearly.count_posts_by_year(year, blogger.posts)
+    var posts_stats = yearly.count_posts_by_year(year, blogger.posts + blogger.archived_posts)
     
     # 生成分类文本
     var category_text = _format_categories(posts_stats.get("categories", {}))

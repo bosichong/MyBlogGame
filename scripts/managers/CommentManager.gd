@@ -9,6 +9,12 @@ var _data: CommentData:
 var _templates: Dictionary = {}
 var _league_templates_by_type: Dictionary = {}
 
+## 每篇文章的垃圾评论数缓存（每日刷新）
+var _post_spam_counts: Dictionary = {}
+## 每篇文章的评论总数缓存（每日刷新，避免全量 filter）
+var _post_comment_counts: Dictionary = {}
+var _comment_cache_valid: bool = false
+
 signal comment_generated(comment_data: Dictionary)
 signal comment_removed(comment_id: int)
 signal maintenance_completed(result: Dictionary)
@@ -33,6 +39,26 @@ func _get_comment_data() -> CommentData:
     if GDManager and GDManager.data_container:
         return GDManager.data_container.get_comment()
     return null
+
+## 刷新每篇文章的评论缓存（每日调用一次，避免每篇文章都 filter 全部评论）
+func refresh_post_cache() -> void:
+    _post_spam_counts.clear()
+    _post_comment_counts.clear()
+    if not _data:
+        _comment_cache_valid = true
+        return
+    for comment in _data.comments:
+        var pid = comment.get("post_id", 0)
+        _post_comment_counts[pid] = _post_comment_counts.get(pid, 0) + 1
+        if comment.get("is_spam", false) and comment.get("status") == "spam":
+            _post_spam_counts[pid] = _post_spam_counts.get(pid, 0) + 1
+    _comment_cache_valid = true
+
+func get_spam_count(post_id: int) -> int:
+    return _post_spam_counts.get(post_id, 0)
+
+func get_comment_count_cached(post_id: int) -> int:
+    return _post_comment_counts.get(post_id, 0)
 
 func get_comments(post_id = -1) -> Array:
     if not _data:
@@ -194,14 +220,7 @@ func _fill_template(template: String, article_quality: int) -> String:
     return result
 
 func _generate_comment_id() -> int:
-    if not _data:
-        return randi()
-    var max_id = 0
-    for comment in _data.comments:
-        var cid = comment.get("id", 0)
-        if cid > max_id:
-            max_id = cid
-    return max_id + 1
+    return Time.get_ticks_msec() + (randi() % 10000)
 
 func do_maintenance() -> Dictionary:
     var result = {
@@ -241,7 +260,7 @@ func check_article_comments(post_id, article_views: int, article_quality: int, a
     
     var generated_count = 0
     var threshold = floor(article_views / 500.0)
-    var current = get_comment_count(post_id)
+    var current = get_comment_count_cached(post_id)
     var max_allowed = get_max_comments(article_views)
     
     var members = GDManager.get_lm_members() if GDManager else []
@@ -286,6 +305,8 @@ func check_all_articles() -> Dictionary:
     if not blogger:
         return result
     
+    refresh_post_cache()
+    
     for post in blogger.posts:
         var post_id = post.get("id", 0)
         var views = post.get("views", 0)
@@ -296,7 +317,8 @@ func check_all_articles() -> Dictionary:
         var generated = check_article_comments(post_id, views, quality, article_type)
         result["comments_generated"] += generated
         
-        if generated > 0:
+        if generated > 0 and post_id != 0:
+            post["comments"] = post.get("comments", 0) + generated
             result["messages"].append("文章 %s 生成了 %d 条评论" % [post_id, generated])
     
     return result
@@ -335,7 +357,7 @@ func sync_to_post(post_id: int, comment_count: int) -> bool:
     if not blogger:
         return false
     
-    for post in blogger.posts:
+    for post in blogger.posts + blogger.archived_posts:
         if post.get("id") == post_id:
             post["comments"] = comment_count
             return true
