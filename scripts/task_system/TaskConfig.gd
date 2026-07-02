@@ -240,6 +240,18 @@ const CONDITIONS: Dictionary = {
 
     # 累计收益达到1000
     "income_ge_1000": {"type": ConditionType.CUSTOM, "check_func": "check_income_ge_1000"},
+
+    # 第3章 爆款文章里程碑未完成
+    "viral_article_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "viral_article", "completed": false},
+
+    # 第3章 高级教程里程碑未完成
+    "advanced_tutorial_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "advanced_tutorial", "completed": false},
+
+    # 第3章 哲学批判里程碑未完成
+    "philosophy_critique_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "philosophy_critique", "completed": false},
+
+    # 第3章 极客前沿里程碑未完成
+    "geek_frontier_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "geek_frontier", "completed": false},
 }
 
 ## ============================================================
@@ -372,12 +384,13 @@ const TASKS: Array = [
     },
     {
         "id": "literature_post_unlock_60",
-        "description": "文学能力值达到60，解锁爆款网文文章类型",
+        "description": "文学能力值达到60，解锁爆款网文、哲学批判文章类型",
         "conditions": ["literature_value_ge_60"],
         "trigger_type": "skill_up",
         "is_repeatable": false,
         "actions": [
             {"type": ActionType.UNLOCK_POST_TASK, "post_type": "爆款网文"},
+            {"type": ActionType.UNLOCK_POST_TASK, "post_type": "哲学批判"},
         ],
     },
     {
@@ -573,14 +586,75 @@ const TASKS: Array = [
             {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "💰 累计收益突破千元！", "content": "你查看了后台的收益统计，累计广告收入已经突破 1000 元。\n\n从最初一个月几块钱的零碎收入，到如今稳定进账——每一分钱都是读者用注意力投下的信任票。\n\n虽然离财务自由还差得远，但对一个独立博客来说，这是值得纪念的一小步。\n\n继续坚持下去，路还长。\n\n🎉"},
         ],
     },
+    # ====================
+    # 第3章里程碑：爆款文章
+    # ====================
+    {
+        "id": "viral_article_milestone",
+        "description": "发布爆款网文，标记第3章里程碑",
+        "conditions": ["viral_article_not_completed"],
+        "trigger_type": "post_event",
+        "post_type_filter": "爆款网文",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "viral_article"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🔥 爆款文章诞生！", "content": "你刷新后台数据，发现访问量在飙升——评论区炸了，各路读者争相转发讨论。\n\n这篇文章击中了时代的情绪，引发了广泛的共鸣。你意识到，好的内容真的可以跨越圈层，触达那些素未谋面的人。\n\n这一刻，你真正体会到了文字的力量。\n\n🎉"},
+        ],
+    },
+    # ====================
+    # 第3章里程碑：高级教程
+    # ====================
+    {
+        "id": "advanced_tutorial_milestone",
+        "description": "发布深度技术文章，标记第3章里程碑",
+        "conditions": ["advanced_tutorial_not_completed"],
+        "trigger_type": "post_event",
+        "post_type_filter": "深度技术",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "advanced_tutorial"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📘 高级教程发布！", "content": "你花了大量时间打磨这篇深度技术文章，从原理到实践，层层递进。\n\n发布后收到了不少资深开发者的好评——有人说终于有人把这个讲透了，还有人私信向你请教细节。\n\n技术分享的快乐，莫过于此。\n\n🎉"},
+        ],
+    },
+    # ====================
+    # 第3章里程碑：哲学批判
+    # ====================
+    {
+        "id": "philosophy_critique_milestone",
+        "description": "发布哲学批判文章，标记第3章里程碑",
+        "conditions": ["philosophy_critique_not_completed"],
+        "trigger_type": "post_event",
+        "post_type_filter": "哲学批判",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "philosophy_critique"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🤔 哲学批判发布！", "content": "你写下了一篇哲学批判，用思辨的笔触审视技术与时代的关系。\n\n文章发出后引发了深度讨论——有人在评论区展开了激烈的辩论，有人表示读了你的分析后重新审视了自己的技术观。\n\n不只是写代码，不只是写文字，你在用思考连接这个世界。\n\n🎉"},
+        ],
+    },
+    # ====================
+    # 第3章里程碑：极客前沿
+    # ====================
+    {
+        "id": "geek_frontier_milestone",
+        "description": "发布极客前沿文章，标记第3章里程碑",
+        "conditions": ["geek_frontier_not_completed"],
+        "trigger_type": "post_event",
+        "post_type_filter": "极客前沿",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "geek_frontier"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🚀 极客前沿发布！", "content": "你搜罗了国内外最新的技术动态，整理成一篇干货满满的极客前沿。\n\n发布后被疯狂转发——有人说这是本周读过最有价值的文章，有人收藏了慢慢消化。\n\n保持对前沿技术的敏锐，是一个技术人最宝贵的习惯。\n\n🎉"},
+        ],
+    },
     {
         "id": "code_post_unlock_60",
-        "description": "编程能力值达到60，解锁极客前沿文章类型",
+        "description": "编程能力值达到60，解锁极客前沿、深度技术文章类型",
         "conditions": ["code_value_ge_60"],
         "trigger_type": "skill_up",
         "is_repeatable": false,
         "actions": [
             {"type": ActionType.UNLOCK_POST_TASK, "post_type": "极客前沿"},
+            {"type": ActionType.UNLOCK_POST_TASK, "post_type": "深度技术"},
         ],
     },
     {

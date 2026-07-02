@@ -441,7 +441,7 @@ func _on_chapter_reward(chapter: int, chapter_name: String) -> void:
         "金钱 +1000",
     ]
     var reward = preload("res://milestones/chapter_reward.tscn").instantiate()
-    reward.setup(chapter_name + " 完成！", rewards)
+    reward.setup("🎉 你完成了" + chapter_name + " 的所有章节任务！", rewards)
     reward.closed.connect(func():
         TimerManager.start_timer()
     )
