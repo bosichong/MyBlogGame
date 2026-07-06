@@ -516,6 +516,12 @@ func check_open_source_project(_context: Dictionary) -> bool:
     return OpenSourceMgr.check_open_source_project(_context) if OpenSourceMgr else false
 
 ## 检查博客联盟是否未加入
+func check_wechat_articles_200(_context: Dictionary) -> bool:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return false
+    return blogger.wechat_data.get("total_articles", 0) >= 200
+
 func check_blog_union_not_joined(_context: Dictionary) -> bool:
     if GDManager:
         var sp = GDManager.get_story_progress()

@@ -167,6 +167,9 @@ const CONDITIONS: Dictionary = {
     # ICP备案时间条件（2002年1月第三周第一天）
     "time_icp_filing": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2004], "m": [1], "w": [3], "d": [1]}},
     
+    # 公众号开通时间（2012年1月第1周第1天）
+    "time_wechat_open": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2012], "m": [1], "w": [3], "d": [1]}},
+
     # 第一届优秀博客大赛通知（2005年11月第1周第1天）
     "time_blog_competition_2005": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2005], "m": [11], "w": [1], "d": [1]}},
     
@@ -252,6 +255,11 @@ const CONDITIONS: Dictionary = {
 
     # 第3章 极客前沿里程碑未完成
     "geek_frontier_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "geek_frontier", "completed": false},
+
+    # 公众号
+    "wechat_not_opened": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "wechat_public", "completed": false},
+    "wechat_articles_200_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "wechat_articles_200", "completed": false},
+    "wechat_articles_200_condition": {"type": ConditionType.CUSTOM, "check_func": "check_wechat_articles_200"},
 }
 
 ## ============================================================
@@ -1476,6 +1484,36 @@ const TASKS: Array = [
              "content": "您好！\n\n第 5 届「中文优秀博客大奖」结果已公布。\n\n请查看获奖详情。",
              "follow_up_scene": "res://优秀博客大奖赛/jiexiao_dispatch.tscn",
              "notification_ordinal": 5},
+        ],
+    },
+    # ====================
+    # 公众号
+    # ====================
+    {
+        "id": "wechat_open",
+        "description": "公众号开通：2012年公众号平台上线，开通属于你的公众号",
+        "conditions": ["time_wechat_open", "wechat_not_opened"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "📱 公众号平台上线了！",
+             "content": "2012年，公众号平台正式上线。\n\n这是一个全新的内容阵地——和独立博客不同，公众号是一个封闭的生态系统，读者通过订阅获取内容。\n\n要不要开通一个公众号试试？\"运营公众号\"已经添加到日程中的网站维护里了。\n\n（提示：公众号涨粉慢、收入低，需要投入大量体力，请谨慎分配精力。）"},
+            {"type": ActionType.UNLOCK_WEBSITE_MAINTENANCE, "task_name": "运营公众号"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "wechat_public"},
+        ],
+    },
+    {
+        "id": "wechat_articles_200_milestone",
+        "description": "公众号累计发布200篇文章",
+        "conditions": ["wechat_articles_200_not_completed", "wechat_articles_200_condition"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "wechat_articles_200"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "📱 公众号渐入佳境",
+             "content": "不知不觉，你已经发布了200篇公众号文章。\n\n从最初无人问津的冷启动，到现在有一批稳定的读者——公众号终于有了起色。\n\n虽然收入仍然远不及博客广告，但这片阵地也算是站稳了脚跟。"},
         ],
     },
 ]

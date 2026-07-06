@@ -228,6 +228,7 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "icp_filing_number": data.icp_filing_number,
         "icp_filing_in_progress": data.icp_filing_in_progress,
         "icp_filing_start_date": data.icp_filing_start_date,
+        "wechat_data": data.wechat_data,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -266,6 +267,15 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.icp_filing_number = dict.get("icp_filing_number", "")
     data.icp_filing_in_progress = dict.get("icp_filing_in_progress", false)
     data.icp_filing_start_date = dict.get("icp_filing_start_date", "")
+    data.wechat_data = dict.get("wechat_data", {
+        "is_active": false,
+        "total_articles": 0,
+        "followers": 0,
+        "total_views": 0,
+        "weekly_views": 0,
+        "monthly_income": 0.0,
+        "total_income": 0.0,
+    })
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {

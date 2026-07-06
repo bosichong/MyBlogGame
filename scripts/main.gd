@@ -431,6 +431,8 @@ func _on_friend_link_added(link_data: Dictionary) -> void:
         TaskManager.check_tasks_by_trigger("friendlink_added", {"link_data": link_data})
 
 var _popup_has_pending_scene := false
+var _popup_queue: Array[Dictionary] = []
+var _popup_is_showing := false
 
 ## 章节完成奖励弹窗
 func _on_chapter_reward(chapter: int, chapter_name: String) -> void:
@@ -448,11 +450,22 @@ func _on_chapter_reward(chapter: int, chapter_name: String) -> void:
     add_child(reward)
     TimerManager.stop_timer()
 
-## 显示通用弹窗
+## 显示通用弹窗（加入队列，依次弹出）
 func show_popup_message(title: String, content: String) -> void:
+    _popup_queue.append({"title": title, "content": content})
+    if not _popup_is_showing:
+        _show_next_popup()
+
+func _show_next_popup() -> void:
+    if _popup_queue.is_empty():
+        _popup_is_showing = false
+        return
     
-    $AcceptDialog.title = title
-    $AcceptDialog.dialog_text = content
+    _popup_is_showing = true
+    var data = _popup_queue.pop_front()
+    
+    $AcceptDialog.title = data.title
+    $AcceptDialog.dialog_text = data.content
     $AcceptDialog.set_size(Vector2i(400,200))
     $AcceptDialog.popup_centered()  
     
@@ -488,10 +501,12 @@ func _on_paid_income_settled(msg):
     info_display.add_message(msg)
 
 func _close_ac():
-    if not _popup_has_pending_scene:
+    _popup_has_pending_scene = false
+    if _popup_queue.is_empty():
         TimerManager.timer.start()
         TimerManager.time_stop = false
-    _popup_has_pending_scene = false
+    else:
+        _show_next_popup()
 
 func sg_task_info_display_msg(msg):
     info_display.add_message(msg)
