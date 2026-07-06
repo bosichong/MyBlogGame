@@ -339,6 +339,8 @@ func daily_activities():
                 exp_gained += maintain_comment(task) # 进行评论管理
             if task == "网站备案":
                 exp_gained += execute_icp_filing(task) # 执行ICP备案
+            if task == "运营公众号":
+                exp_gained += operate_wechat(task)
         elif Utils.check_name_exists(Utils.recreation, task):
             if task == "休息":
                 exp_gained += recreation_rest(task) # 休息一天
@@ -363,9 +365,10 @@ func daily_activities():
     #earn_money_from_ads() # 从广告联盟赚取佣金
     gain_exp(exp_gained) # 累加EXP并处理升级
 
-    # 月末归档
+    # 月末归档 + 公众号月收入结算
     if TimerManager.current_week == 4 and TimerManager.current_day == 7:
         _archive_old_posts()
+        _settle_wechat_monthly_income()
 
 func week_activites():
     if not GDManager:
@@ -1043,6 +1046,81 @@ func maintain_comment(category: String) -> int:
             return 10
 
     return 0
+
+## ==================== 公众号运营 ====================
+
+signal signal_wechat_no_stamina(msg: String)
+signal signal_wechat_operated(msg: String)
+
+## 运营公众号
+func operate_wechat(category: String) -> int:
+    if not GDManager:
+        return 0
+
+    var blogger = GDManager.get_blogger()
+    var wd = blogger.wechat_data
+    if not wd.get("is_active", false):
+        # 如果里程碑已设置但未激活，自动激活
+        var sp = GDManager.get_story_progress() if GDManager else null
+        if sp and sp.is_completed(3, "wechat_public"):
+            wd.is_active = true
+        else:
+            return 0
+    var d = Utils.find_category_by_name(Utils.website_maintenance, category)
+    var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
+
+    if blogger.stamina < actual_cost:
+        emit_signal("signal_wechat_no_stamina", "体力不足,无法运营公众号!需要" + str(actual_cost) + "体力")
+        return 0
+
+    blogger.stamina -= actual_cost
+
+    wd.total_articles += 1
+
+    # 阅读量 = 粉丝数 × 3%~12% 打开率
+    var open_rate = randf_range(0.03, 0.12)
+    var base_views = max(1, int(wd.followers * open_rate))
+
+    # 8% 概率爆款
+    var is_viral = randf() < 0.08
+    var views = base_views
+    var new_followers = 0
+    if is_viral:
+        var multiplier = randi_range(3, 8)
+        views = base_views * multiplier
+        new_followers = int(views * randf_range(0.01, 0.05))
+    else:
+        new_followers = randi_range(0, 2)
+
+    wd.followers += new_followers
+    wd.total_views += views
+    wd.weekly_views += views
+
+    # EXP = 少量经验（远少于写博客）
+    var exp = max(1, int(views * 0.05))
+
+    if is_viral:
+        emit_signal("signal_wechat_operated", "公众号文章阅读量爆了！获得 %d 阅读，涨粉 %d" % [views, new_followers])
+    return exp
+
+## 公众号月末收入结算
+func _settle_wechat_monthly_income() -> void:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger or not blogger.wechat_data.get("is_active", false):
+        return
+    var wd = blogger.wechat_data
+    if wd.total_articles < 50:
+        wd.monthly_income = 0.0
+        return
+
+    var monthly_views = wd.weekly_views
+    var cpm = 0.002 if wd.total_articles < 200 else 0.004
+    var income = monthly_views * cpm
+    income = clamp(income, 0.0, 999.0)
+    wd.monthly_income = income
+    wd.total_income += income
+    blogger.money += income
+    wd.weekly_views = 0
 
 ## 休闲娱乐 -> 休息
 signal s_recrecreation_rest(msg)

@@ -210,6 +210,21 @@ var os_article_count: int = 0
 var is_developing_os: bool = false
 
 # ============================================
+# 公众号
+# ============================================
+
+## 公众号运营数据
+var wechat_data: Dictionary = {
+    "is_active": false,
+    "total_articles": 0,
+    "followers": 0,
+    "total_views": 0,
+    "weekly_views": 0,
+    "monthly_income": 0.0,
+    "total_income": 0.0,
+}
+
+# ============================================
 # 技能学习
 # ============================================
 

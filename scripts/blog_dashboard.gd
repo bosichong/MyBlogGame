@@ -9,6 +9,7 @@ signal close_blog_dashboard
     $bg/面板组/articles_panel,
     $bg/面板组/friendlinks_panel,
     $bg/面板组/comments_panel,
+    $bg/面板组/wechat_panel,
 ]
 
 @onready var buttons: Array[Button] = [
@@ -16,6 +17,7 @@ signal close_blog_dashboard
     $bg/按钮组/vb/mc2/b2,
     $bg/按钮组/vb/mc3/b3,
     $bg/按钮组/vb/mc4/b4,
+    $bg/按钮组/vb/mc5/b5,
 ]
 
 ## 数据看板节点引用
@@ -46,6 +48,14 @@ signal close_blog_dashboard
 @onready var pending_list = $bg/面板组/comments_panel/VBoxContainer/pending_scroll/pending_list
 @onready var approved_list = $bg/面板组/comments_panel/VBoxContainer/approved_scroll/approved_list
 
+## 公众号数据节点引用
+@onready var wechat_followers_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/followers_value
+@onready var wechat_articles_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/articles_value
+@onready var wechat_views_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/views_value
+@onready var wechat_monthly_income_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/monthly_income_value
+@onready var wechat_total_income_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/total_income_value
+@onready var wechat_tip_label = $bg/面板组/wechat_panel/VBoxContainer/tip_label
+
 var _current_comment_tab: int = 0
 
 var current_panel_index: int = 0
@@ -74,9 +84,15 @@ func _ready() -> void:
     
     # 初始化自动设置UI
     _init_auto_settings_ui()
+    
+    # 根据公众号开通状态显示/隐藏按钮
+    _update_wechat_visibility()
 
 func _on_close_button_pressed() -> void:
     emit_signal("close_blog_dashboard")
+
+func _on_b_5_pressed() -> void:
+    show_panel(4)
 
 ## 显示指定面板
 func show_panel(index: int) -> void:
@@ -94,6 +110,55 @@ func show_panel(index: int) -> void:
     
     # 刷新面板数据
     _refresh_panel(index)
+    
+    # 更新公众号按钮可见性
+    _update_wechat_visibility()
+
+## 刷新公众号面板
+func refresh_wechat_panel() -> void:
+    if not Blogger:
+        return
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    var wd = blogger.wechat_data
+    if not wd.get("is_active", false):
+        return
+
+    wechat_followers_value.text = str(wd.get("followers", 0))
+    wechat_articles_value.text = str(wd.get("total_articles", 0))
+    wechat_views_value.text = str(wd.get("weekly_views", 0))
+
+    var monthly_income = wd.get("monthly_income", 0.0)
+    wechat_monthly_income_value.text = "%.1f 元" % monthly_income
+
+    var total_income = wd.get("total_income", 0.0)
+    wechat_total_income_value.text = "%.1f 元" % total_income
+
+    # 提示文案随进度更新
+    var articles = wd.get("total_articles", 0)
+    if articles < 50:
+        wechat_tip_label.text = "公众号刚起步，涨粉很慢，坚持更新才有希望。"
+    elif articles < 200:
+        wechat_tip_label.text = "公众号运营不易，涨粉缓慢，坚持了这么久实属不易。"
+    else:
+        wechat_tip_label.text = "公众号运营渐入佳境，多年的坚持终于有了回报。"
+
+## 根据公众号状态显示/隐藏侧边按钮
+func _update_wechat_visibility() -> void:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    var visible = blogger.wechat_data.get("is_active", false)
+    # 里程碑已标记但 is_active 尚未激活时，也显示面板
+    if not visible:
+        var sp = GDManager.get_story_progress() if GDManager else null
+        if sp and sp.is_completed(3, "wechat_public"):
+            visible = true
+    if buttons.size() > 4 and buttons[4]:
+        buttons[4].visible = visible
+    if panels.size() > 4 and panels[4]:
+        panels[4].visible = visible and current_panel_index == 4
 
 ## 设置按钮按下状态
 func set_button_pressed(index: int) -> void:
@@ -111,6 +176,8 @@ func _refresh_panel(index: int) -> void:
             refresh_friendlinks()
         3:
             refresh_comments()
+        4:
+            refresh_wechat_panel()
 
 ## ==================== 数据看板 ====================
 
