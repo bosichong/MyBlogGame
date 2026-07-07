@@ -275,6 +275,7 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
         "weekly_views": 0,
         "monthly_income": 0.0,
         "total_income": 0.0,
+        "synced_category_counts": {},
     })
 
 func serialize_time_data(data: TimeData) -> Dictionary:

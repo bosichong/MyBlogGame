@@ -372,7 +372,7 @@ func _check_friendlink_applies() -> void:
     for result in results:
         var member_id = result.get("member_id")
         var member_info = fl_manager.get_member_by_id(member_id)
-        var member_name = member_info.get("name", "未知博客") if member_info else "未知博客"
+        var member_name = member_info.get("blog_name", "未知博客") if member_info else "未知博客"
         
         var success = result.get("success", false)
         

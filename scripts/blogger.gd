@@ -1052,7 +1052,7 @@ func maintain_comment(category: String) -> int:
 signal signal_wechat_no_stamina(msg: String)
 signal signal_wechat_operated(msg: String)
 
-## 运营公众号
+## 运营公众号（文章同步模式）
 func operate_wechat(category: String) -> int:
     if not GDManager:
         return 0
@@ -1060,12 +1060,12 @@ func operate_wechat(category: String) -> int:
     var blogger = GDManager.get_blogger()
     var wd = blogger.wechat_data
     if not wd.get("is_active", false):
-        # 如果里程碑已设置但未激活，自动激活
         var sp = GDManager.get_story_progress() if GDManager else null
         if sp and sp.is_completed(3, "wechat_public"):
             wd.is_active = true
         else:
             return 0
+
     var d = Utils.find_category_by_name(Utils.website_maintenance, category)
     var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
 
@@ -1073,35 +1073,61 @@ func operate_wechat(category: String) -> int:
         emit_signal("signal_wechat_no_stamina", "体力不足,无法运营公众号!需要" + str(actual_cost) + "体力")
         return 0
 
+    var today = Utils.format_date()
+    var exclude_cats = ["出版畅销书", "开源项目"]
+    var matched_posts = []
+    for post in blogger.posts:
+        if post.get("date", "") == today and not post.get("post_category", "") in exclude_cats:
+            matched_posts.append(post)
+
+    if matched_posts.is_empty():
+        emit_signal("signal_wechat_operated", "今天没有新发表的文章可以同步到公众号。")
+        return 0
+
     blogger.stamina -= actual_cost
 
-    wd.total_articles += 1
+    var total_views = 0
+    var total_followers = 0
+    var total_exp = 0
 
-    # 阅读量 = 粉丝数 × 3%~12% 打开率
-    var open_rate = randf_range(0.03, 0.12)
-    var base_views = max(1, int(wd.followers * open_rate))
+    for post in matched_posts:
+        var post_views = post.get("views", 0)
+        var base = max(1, post_views) * 0.15 + wd.followers * 0.03
+        var views_14d = int(base * 3.5)
 
-    # 8% 概率爆款
-    var is_viral = randf() < 0.08
-    var views = base_views
-    var new_followers = 0
-    if is_viral:
-        var multiplier = randi_range(3, 8)
-        views = base_views * multiplier
-        new_followers = int(views * randf_range(0.01, 0.05))
-    else:
-        new_followers = randi_range(0, 2)
+        var new_followers = 0
+        var is_viral = randf() < 0.05
+        if is_viral:
+            var multiplier = randi_range(3, 8)
+            views_14d *= multiplier
+            new_followers = int(views_14d * randf_range(0.01, 0.03))
+        else:
+            new_followers = randi_range(0, 2)
 
-    wd.followers += new_followers
-    wd.total_views += views
-    wd.weekly_views += views
+        total_views += views_14d
+        total_followers += new_followers
+        total_exp += int(views_14d * 0.02)
 
-    # EXP = 少量经验（远少于写博客）
-    var exp = max(1, int(views * 0.05))
+        if post.get("is_money", false) and wd.followers >= 1000:
+            var extra_income = int(wd.followers * 0.005) * max(1, post_views) * 0.01
+            if extra_income > 0:
+                blogger.money += extra_income
 
-    if is_viral:
-        emit_signal("signal_wechat_operated", "公众号文章阅读量爆了！获得 %d 阅读，涨粉 %d" % [views, new_followers])
-    return exp
+    wd.total_articles += matched_posts.size()
+    wd.followers += total_followers
+    wd.total_views += total_views
+    wd.weekly_views += total_views
+
+    var cat_counts = wd.get("synced_category_counts", {})
+    for post in matched_posts:
+        var cat = post.get("article_category", "")
+        if cat != "":
+            cat_counts[cat] = cat_counts.get(cat, 0) + 1
+    wd["synced_category_counts"] = cat_counts
+
+    emit_signal("signal_wechat_operated", "同步了 %d 篇文章，获得 %d 阅读，涨粉 %d" % [matched_posts.size(), total_views, total_followers])
+
+    return total_exp
 
 ## 公众号月末收入结算
 func _settle_wechat_monthly_income() -> void:
@@ -1109,7 +1135,7 @@ func _settle_wechat_monthly_income() -> void:
     if not blogger or not blogger.wechat_data.get("is_active", false):
         return
     var wd = blogger.wechat_data
-    if wd.total_articles < 50:
+    if wd.total_articles < 50 or wd.followers < 1000:
         wd.monthly_income = 0.0
         return
 

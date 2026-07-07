@@ -260,8 +260,9 @@ custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="friendlinks_list" type="VBoxContainer" parent="bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer/friendlinks_scroll" unique_id=212080848]
+[node name="friendlinks_list" type="GridContainer" parent="bg/面板组/friendlinks_panel/ScrollContainer/VBoxContainer/friendlinks_scroll" unique_id=212080848]
 layout_mode = 2
+columns = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
@@ -307,6 +308,12 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.827451, 0.352941, 0, 1)
 text = "💬 评论管理"
+
+[node name="tip_label" type="Label" parent="bg/面板组/comments_panel/VBoxContainer" unique_id=9703404]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 12
+text = "管理博客评论，良好的互动会增加博客的知名度和访问量。"
 
 [node name="tabs_container" type="HBoxContainer" parent="bg/面板组/comments_panel/VBoxContainer" unique_id=1000001]
 layout_mode = 2
@@ -403,6 +410,21 @@ layout_mode = 2
 text = "0.0 元"
 
 [node name="separator" type="HSeparator" parent="bg/面板组/wechat_panel/VBoxContainer" unique_id=134893417]
+layout_mode = 2
+
+[node name="cat_stats" type="HBoxContainer" parent="bg/面板组/wechat_panel/VBoxContainer" unique_id=2008996416]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="literature_label" type="Label" parent="bg/面板组/wechat_panel/VBoxContainer/cat_stats" unique_id=9703406]
+layout_mode = 2
+text = "文学：0 篇"
+
+[node name="tech_label" type="Label" parent="bg/面板组/wechat_panel/VBoxContainer/cat_stats" unique_id=9703407]
+layout_mode = 2
+text = "技术：0 篇"
+
+[node name="cat_separator" type="HSeparator" parent="bg/面板组/wechat_panel/VBoxContainer" unique_id=134893419]
 layout_mode = 2
 
 [node name="tip_label" type="Label" parent="bg/面板组/wechat_panel/VBoxContainer" unique_id=1360617495]
