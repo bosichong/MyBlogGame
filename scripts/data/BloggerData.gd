@@ -222,6 +222,7 @@ var wechat_data: Dictionary = {
     "weekly_views": 0,
     "monthly_income": 0.0,
     "total_income": 0.0,
+    "synced_category_counts": {},
 }
 
 # ============================================

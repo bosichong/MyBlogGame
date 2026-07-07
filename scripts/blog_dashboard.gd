@@ -47,6 +47,7 @@ signal close_blog_dashboard
 @onready var approved_tab = $bg/面板组/comments_panel/VBoxContainer/tabs_container/approved_tab
 @onready var pending_list = $bg/面板组/comments_panel/VBoxContainer/pending_scroll/pending_list
 @onready var approved_list = $bg/面板组/comments_panel/VBoxContainer/approved_scroll/approved_list
+@onready var comment_tip_label = $bg/面板组/comments_panel/VBoxContainer/tip_label
 
 ## 公众号数据节点引用
 @onready var wechat_followers_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/followers_value
@@ -55,6 +56,8 @@ signal close_blog_dashboard
 @onready var wechat_monthly_income_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/monthly_income_value
 @onready var wechat_total_income_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/total_income_value
 @onready var wechat_tip_label = $bg/面板组/wechat_panel/VBoxContainer/tip_label
+@onready var wechat_literature_label = $bg/面板组/wechat_panel/VBoxContainer/cat_stats/literature_label
+@onready var wechat_tech_label = $bg/面板组/wechat_panel/VBoxContainer/cat_stats/tech_label
 
 var _current_comment_tab: int = 0
 
@@ -135,12 +138,19 @@ func refresh_wechat_panel() -> void:
     var total_income = wd.get("total_income", 0.0)
     wechat_total_income_value.text = "%.1f 元" % total_income
 
+    var cat_counts = wd.get("synced_category_counts", {})
+    wechat_literature_label.text = "文学：%d 篇" % cat_counts.get("文学", 0)
+    wechat_tech_label.text = "技术：%d 篇" % cat_counts.get("技术", 0)
+
     # 提示文案随进度更新
     var articles = wd.get("total_articles", 0)
-    if articles < 50:
-        wechat_tip_label.text = "公众号刚起步，涨粉很慢，坚持更新才有希望。"
+    var followers = wd.get("followers", 0)
+    if followers < 1000:
+        wechat_tip_label.text = "粉丝数未达1000，公众号暂时没有收入。坚持更新涨粉吧。"
+    elif articles < 50:
+        wechat_tip_label.text = "粉丝数已超1000，但文章不足50篇，流量主还未开放。继续更新。"
     elif articles < 200:
-        wechat_tip_label.text = "公众号运营不易，涨粉缓慢，坚持了这么久实属不易。"
+        wechat_tip_label.text = "公众号已开启流量主收入，但涨粉缓慢，坚持更新才有起色。"
     else:
         wechat_tip_label.text = "公众号运营渐入佳境，多年的坚持终于有了回报。"
 
@@ -443,31 +453,28 @@ func _compare_links_by_level_desc(a: Dictionary, b: Dictionary) -> bool:
 
 func _create_friendlink_item(link: Dictionary) -> Control:
     var panel = PanelContainer.new()
+    panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     panel.custom_minimum_size.y = 30
     
     var hbox = HBoxContainer.new()
-    hbox.add_theme_constant_override("separation", 10)
+    hbox.add_theme_constant_override("separation", 6)
     hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
     panel.add_child(hbox)
-    
-    var info_vbox = VBoxContainer.new()
-    info_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    info_vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-    hbox.add_child(info_vbox)
     
     var name_label = Label.new()
     var level = link.get("lv", 1)
     var name = link.get("blog_name", "未知博客")
-    var status = "active"
-    var add_date = link.get("add_date", "")
     var status_text = "互链" if link.get("is_friend_link", false) else "待审"
-    name_label.text = "%s (lv%d) [%s]" % [name, level, status_text]
+    name_label.text = "%s (lv%d)" % [name, level]
+    name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    name_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
     name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-    info_vbox.add_child(name_label)
+    name_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+    hbox.add_child(name_label)
     
     var delete_btn = Button.new()
-    delete_btn.text = "删除"
-    delete_btn.custom_minimum_size.y = 24
+    delete_btn.text = "×"
+    delete_btn.custom_minimum_size = Vector2(24, 24)
     delete_btn.set_meta("member_id", link.get("id"))
     delete_btn.pressed.connect(_on_delete_friendlink_pressed.bind(link.get("id")))
     hbox.add_child(delete_btn)
@@ -738,6 +745,13 @@ func refresh_comments() -> void:
     
     pending_tab.text = "全部评论 (%d)" % all_comments.size()
     approved_tab.text = "垃圾评论 (%d)" % spam_comments.size()
+    
+    if all_comments.is_empty():
+        comment_tip_label.text = "暂无评论，坚持更新文章会吸引读者留言互动。"
+    elif spam_comments.size() > 0:
+        comment_tip_label.text = "有 %d 条垃圾评论待处理，建议通过「评论管理」日程清理。" % spam_comments.size()
+    else:
+        comment_tip_label.text = "共有 %d 条评论，良好的互动氛围有助于提升博客权重。" % all_comments.size()
     
     if _current_comment_tab == 0:
         _display_comments_list(pending_list, all_comments, "全部")
