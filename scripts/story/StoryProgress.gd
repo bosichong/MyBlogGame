@@ -38,7 +38,7 @@ var chapter3 = {
     "philosophy_critique": false,     # 哲学批判
     "geek_frontier": false,           # 极客前沿
     "wechat_public": false,           # 公众号开通
-    "wechat_articles_200": false,     # 公众号累计发布200篇文章
+    "followers_1000": false,          # 公众号粉丝达到1000
     "mobile_adapted": false,          # 网站移动端适配
     "https_upgraded": false,          # HTTPS升级
     "novel_planning": false,          # 小说连载规划
@@ -258,7 +258,7 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "philosophy_critique": "哲学批判发布：用思辨的视角审视技术与世界",
         "geek_frontier": "极客前沿发布：带你站在技术浪潮的最前端",
         "wechat_public": "公众号开通：开拓新的内容阵地",
-        "wechat_articles_200": "公众号累计发布200篇文章：坚持不懈终有回响",
+        "followers_1000": "公众号粉丝突破1000：开启流量主收入模式",
         "mobile_adapted": "网站移动端适配：让阅读不再受设备限制",
         "https_upgraded": "HTTPS升级：为读者提供更安全的访问",
         "novel_planning": "小说连载规划：开始筹备长篇创作",

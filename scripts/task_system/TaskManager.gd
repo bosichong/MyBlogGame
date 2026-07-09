@@ -231,7 +231,6 @@ func check_tasks_by_trigger(trigger_type: String, context: Dictionary) -> void:
     var indices = _tasks_by_trigger.get(trigger_type, [])
     for i in indices:
         var task = task_states[i]
-
         var post_type_filter = task.get("post_type_filter", "")
         if post_type_filter != "":
             var post_type = context.get("post_type", "")
@@ -429,6 +428,8 @@ func _check_milestone_condition(cond: Dictionary, _context: Dictionary) -> bool:
         var sp = GDManager.get_story_progress()
         if sp:
             var is_completed = sp.is_completed(chapter, milestone)
+            if milestone == "followers_1000":
+                print("[DEBUG] milestone_check: chapter=", chapter, " milestone=", milestone, " is_completed=", is_completed, " should_be=", should_be_completed, " result=", is_completed == should_be_completed)
             return is_completed == should_be_completed
     
     return false
@@ -516,12 +517,6 @@ func check_open_source_project(_context: Dictionary) -> bool:
     return OpenSourceMgr.check_open_source_project(_context) if OpenSourceMgr else false
 
 ## 检查博客联盟是否未加入
-func check_wechat_articles_200(_context: Dictionary) -> bool:
-    var blogger = GDManager.get_blogger() if GDManager else null
-    if not blogger:
-        return false
-    return blogger.wechat_data.get("total_articles", 0) >= 200
-
 func check_blog_union_not_joined(_context: Dictionary) -> bool:
     if GDManager:
         var sp = GDManager.get_story_progress()
@@ -548,6 +543,9 @@ func _execute_task_at(index: int, context: Dictionary) -> void:
         return
 
     var task = task_states[index]
+    var task_id = task.get("id", "")
+    if task_id == "followers_1000_milestone":
+        print("[DEBUG] EXECUTING task: ", task_id)
 
     # 标记完成(非长期任务)
     if not task.get("duration_days", false):
@@ -890,6 +888,7 @@ func _action_show_popup_notification(action: Dictionary, context: Dictionary = {
             "chapter": action.get("review_chapter", 1),
             "notification_ordinal": action.get("notification_ordinal", 1),
         }
+        print("[DEBUG] _action_show_popup: emitting signal, title='", title, "'")
         emit_signal("sg_task_show_popup_msg", title, content)
 
 ## 渲染弹窗模板
@@ -1130,6 +1129,13 @@ func check_rss_ge_100(context: Dictionary) -> bool:
         return false
     var blogger = GDManager.get_blogger()
     return blogger.rss >= 100
+
+## 自定义条件检查:公众号粉丝达到1000
+func check_followers_ge_1000(_context: Dictionary) -> bool:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    var f = blogger.wechat_data.get("followers", 0) if blogger else -1
+    print("[DEBUG] check_followers_ge_1000: followers=", f, " blogger=", blogger)
+    return f >= 1000
 
 ## 自定义条件检查:累计收益达到1000
 func check_income_ge_1000(context: Dictionary) -> bool:

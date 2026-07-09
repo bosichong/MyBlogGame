@@ -452,6 +452,7 @@ func _on_chapter_reward(chapter: int, chapter_name: String) -> void:
 
 ## 显示通用弹窗（加入队列，依次弹出）
 func show_popup_message(title: String, content: String) -> void:
+    print("[DEBUG] show_popup_message: title='", title, "' queue_size=", _popup_queue.size(), " is_showing=", _popup_is_showing)
     _popup_queue.append({"title": title, "content": content})
     if not _popup_is_showing:
         _show_next_popup()
@@ -463,6 +464,7 @@ func _show_next_popup() -> void:
     
     _popup_is_showing = true
     var data = _popup_queue.pop_front()
+    print("[DEBUG] _show_next_popup: dialog=", $AcceptDialog, " title='", data.title, "'")
     
     $AcceptDialog.title = data.title
     $AcceptDialog.dialog_text = data.content
@@ -502,11 +504,10 @@ func _on_paid_income_settled(msg):
 
 func _close_ac():
     _popup_has_pending_scene = false
+    _show_next_popup()
     if _popup_queue.is_empty():
         TimerManager.timer.start()
         TimerManager.time_stop = false
-    else:
-        _show_next_popup()
 
 func sg_task_info_display_msg(msg):
     info_display.add_message(msg)
@@ -519,6 +520,7 @@ func _on_skill_learned(skill_name: String, tip: String):
         $日程.up_data()
 
 func sg_task_show_popup_msg(title: String, content: String):
+    print("[DEBUG] main.gd received popup signal: title='", title, "'")
     show_popup_message(title, content)
 
 # ===== 主机域名系统信号处理 =====

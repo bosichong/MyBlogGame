@@ -259,6 +259,15 @@ var tmp_y: int:
         if GDManager:
             GDManager.get_blogger().tmp_year = value
 
+@export var wechat_followers: int:
+    get:
+        var b = GDManager.get_blogger() if GDManager else null
+        return b.wechat_data.get("followers", 0) if b else 0
+    set(value):
+        var b = GDManager.get_blogger() if GDManager else null
+        if b:
+            b.wechat_data["followers"] = value
+
 # 初始化
 func _ready():
     # 初始化访问量计算器
