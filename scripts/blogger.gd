@@ -350,6 +350,10 @@ func daily_activities():
                 exp_gained += execute_icp_filing(task) # 执行ICP备案
             if task == "运营公众号":
                 exp_gained += operate_wechat(task)
+            if task == "移动端适配":
+                exp_gained += execute_mobile_adapt(task)
+            if task == "HTTPS升级":
+                exp_gained += execute_https_upgrade(task)
         elif Utils.check_name_exists(Utils.recreation, task):
             if task == "休息":
                 exp_gained += recreation_rest(task) # 休息一天
@@ -805,6 +809,12 @@ func update_blog_views() -> int:
     # 检查ICP备案进度
     check_icp_filing_progress()
     
+    # 检查移动端适配进度
+    check_mobile_adapt_progress()
+    
+    # 检查HTTPS升级进度
+    check_https_upgrade_progress()
+    
     # 生成评论(基于每篇文章的访问量)
     # check_all_articles 内部已同步评论数到文章，无需再调 sync_all_posts
     if comment_manager:
@@ -1044,6 +1054,116 @@ func check_icp_filing_progress() -> void:
     if days_passed >= 14:
         if TaskManager:
             TaskManager._on_icp_filing_complete()
+
+## 执行移动端适配
+func execute_mobile_adapt(category: String) -> int:
+    if not GDManager:
+        return 0
+    
+    var blogger = GDManager.get_blogger()
+    var d = Utils.find_category_by_name(Utils.website_maintenance, category)
+    
+    # 检查配置是否存在
+    if d.is_empty():
+        return 0
+
+    var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
+
+    if blogger.stamina < actual_cost:
+        return 0
+
+    # 检查是否已经在进行
+    if blogger.mobile_adapt_in_progress:
+        return 0
+
+    # 开始适配流程
+    blogger.stamina -= actual_cost
+    blogger.money -= d.money
+    blogger.mobile_adapt_in_progress = true
+    blogger.mobile_adapt_start_date = Utils.format_date()
+
+    # 隐藏选项（只执行一次）
+    d.isVisible = false
+    d.disabled = true
+
+    return 0
+
+## 检查移动端适配进度
+func check_mobile_adapt_progress() -> void:
+    if not GDManager:
+        return
+    
+    var blogger = GDManager.get_blogger()
+    
+    # 检查是否正在进行
+    if not blogger.mobile_adapt_in_progress:
+        return
+    
+    # 计算已过去的天数
+    var start_date = blogger.mobile_adapt_start_date
+    if start_date.is_empty():
+        return
+    
+    var days_passed = Utils.calculate_new_game_time_difference(start_date, Utils.format_date())
+    
+    # 检查是否已满7天
+    if days_passed >= 7:
+        if TaskManager:
+            TaskManager._on_mobile_adapt_complete()
+        blogger.mobile_adapt_in_progress = false
+
+## 执行HTTPS升级
+func execute_https_upgrade(category: String) -> int:
+    if not GDManager:
+        return 0
+    
+    var blogger = GDManager.get_blogger()
+    var d = Utils.find_category_by_name(Utils.website_maintenance, category)
+    
+    if d.is_empty():
+        return 0
+
+    var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
+
+    if blogger.stamina < actual_cost:
+        return 0
+
+    if blogger.https_upgrade_in_progress:
+        return 0
+
+    if blogger.money < d.money:
+        return 0
+
+    blogger.stamina -= actual_cost
+    blogger.money -= d.money
+    blogger.https_upgrade_in_progress = true
+    blogger.https_upgrade_start_date = Utils.format_date()
+
+    d.isVisible = false
+    d.disabled = true
+
+    return 0
+
+## 检查HTTPS升级进度
+func check_https_upgrade_progress() -> void:
+    if not GDManager:
+        return
+    
+    var blogger = GDManager.get_blogger()
+    
+    if not blogger.https_upgrade_in_progress:
+        return
+    
+    var start_date = blogger.https_upgrade_start_date
+    if start_date.is_empty():
+        return
+    
+    var days_passed = Utils.calculate_new_game_time_difference(start_date, Utils.format_date())
+    
+    if days_passed >= 5:
+        if TaskManager:
+            TaskManager._on_https_upgrade_complete()
+        blogger.https_upgrade_in_progress = false
 
 signal signal_comment_maintenance(msg: String)
 func maintain_comment(category: String) -> int:
