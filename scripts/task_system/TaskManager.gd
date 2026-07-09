@@ -211,6 +211,14 @@ func _on_article_first_favorited(favorites_count: int) -> void:
 func _on_icp_filing_complete() -> void:
     check_tasks_by_trigger("icp_filing_complete", {})
 
+## 移动端适配完成触发信号
+func _on_mobile_adapt_complete() -> void:
+    check_tasks_by_trigger("mobile_adapt_complete", {})
+
+## HTTPS升级完成触发信号
+func _on_https_upgrade_complete() -> void:
+    check_tasks_by_trigger("https_upgrade_complete", {})
+
 ## 每日任务检查
 func day_task_func() -> void:
     check_tasks_by_trigger("time_check", {})
@@ -428,8 +436,6 @@ func _check_milestone_condition(cond: Dictionary, _context: Dictionary) -> bool:
         var sp = GDManager.get_story_progress()
         if sp:
             var is_completed = sp.is_completed(chapter, milestone)
-            if milestone == "followers_1000":
-                print("[DEBUG] milestone_check: chapter=", chapter, " milestone=", milestone, " is_completed=", is_completed, " should_be=", should_be_completed, " result=", is_completed == should_be_completed)
             return is_completed == should_be_completed
     
     return false
@@ -544,8 +550,6 @@ func _execute_task_at(index: int, context: Dictionary) -> void:
 
     var task = task_states[index]
     var task_id = task.get("id", "")
-    if task_id == "followers_1000_milestone":
-        print("[DEBUG] EXECUTING task: ", task_id)
 
     # 标记完成(非长期任务)
     if not task.get("duration_days", false):
@@ -888,7 +892,7 @@ func _action_show_popup_notification(action: Dictionary, context: Dictionary = {
             "chapter": action.get("review_chapter", 1),
             "notification_ordinal": action.get("notification_ordinal", 1),
         }
-        print("[DEBUG] _action_show_popup: emitting signal, title='", title, "'")
+
         emit_signal("sg_task_show_popup_msg", title, content)
 
 ## 渲染弹窗模板
@@ -1123,6 +1127,20 @@ func check_icp_filing_in_progress(context: Dictionary) -> bool:
     var blogger = GDManager.get_blogger()
     return blogger.icp_filing_in_progress
 
+## 自定义条件检查:移动端适配进行中
+func check_mobile_adapt_in_progress(context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var blogger = GDManager.get_blogger()
+    return blogger.mobile_adapt_in_progress
+
+## 自定义条件检查:HTTPS升级进行中
+func check_https_upgrade_in_progress(context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var blogger = GDManager.get_blogger()
+    return blogger.https_upgrade_in_progress
+
 ## 自定义条件检查:RSS订阅数达到100
 func check_rss_ge_100(context: Dictionary) -> bool:
     if not GDManager:
@@ -1134,7 +1152,7 @@ func check_rss_ge_100(context: Dictionary) -> bool:
 func check_followers_ge_1000(_context: Dictionary) -> bool:
     var blogger = GDManager.get_blogger() if GDManager else null
     var f = blogger.wechat_data.get("followers", 0) if blogger else -1
-    print("[DEBUG] check_followers_ge_1000: followers=", f, " blogger=", blogger)
+
     return f >= 1000
 
 ## 自定义条件检查:累计收益达到1000

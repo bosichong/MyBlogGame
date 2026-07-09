@@ -74,6 +74,18 @@ var icp_filing_in_progress: bool = false
 ## ICP备案开始日期
 var icp_filing_start_date: String = ""
 
+## 移动端适配是否进行中
+var mobile_adapt_in_progress: bool = false
+
+## 移动端适配开始日期
+var mobile_adapt_start_date: String = ""
+
+## HTTPS升级是否进行中
+var https_upgrade_in_progress: bool = false
+
+## HTTPS升级开始日期
+var https_upgrade_start_date: String = ""
+
 # ============================================
 # 博客属性值（范围0-200）
 # ============================================

@@ -228,6 +228,10 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "icp_filing_number": data.icp_filing_number,
         "icp_filing_in_progress": data.icp_filing_in_progress,
         "icp_filing_start_date": data.icp_filing_start_date,
+        "mobile_adapt_in_progress": data.mobile_adapt_in_progress,
+        "mobile_adapt_start_date": data.mobile_adapt_start_date,
+        "https_upgrade_in_progress": data.https_upgrade_in_progress,
+        "https_upgrade_start_date": data.https_upgrade_start_date,
         "wechat_data": data.wechat_data,
     }
 
@@ -267,6 +271,10 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.icp_filing_number = dict.get("icp_filing_number", "")
     data.icp_filing_in_progress = dict.get("icp_filing_in_progress", false)
     data.icp_filing_start_date = dict.get("icp_filing_start_date", "")
+    data.mobile_adapt_in_progress = dict.get("mobile_adapt_in_progress", false)
+    data.mobile_adapt_start_date = dict.get("mobile_adapt_start_date", "")
+    data.https_upgrade_in_progress = dict.get("https_upgrade_in_progress", false)
+    data.https_upgrade_start_date = dict.get("https_upgrade_start_date", "")
     data.wechat_data = dict.get("wechat_data", {
         "is_active": false,
         "total_articles": 0,

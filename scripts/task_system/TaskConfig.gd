@@ -210,6 +210,27 @@ const CONDITIONS: Dictionary = {
     # ICP备案进行中条件
     "icp_filing_in_progress": {"type": ConditionType.CUSTOM, "check_func": "check_icp_filing_in_progress"},
     
+    # 移动端适配时间条件（2011年7月第1周第1天）
+    "time_mobile_adapt": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2011], "m": [7], "w": [1], "d": [1]}},
+    
+    # 移动端适配未完成
+    "mobile_adapt_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "mobile_adapted", "completed": false},
+    
+    # 移动端适配进行中
+    "mobile_adapt_in_progress": {"type": ConditionType.CUSTOM, "check_func": "check_mobile_adapt_in_progress"},
+    
+    # HTTPS升级时间条件（2014年8月第1周第1天）
+    "time_https_upgrade": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2014], "m": [8], "w": [1], "d": [1]}},
+    
+    # HTTPS升级未完成
+    "https_upgrade_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "https_upgraded", "completed": false},
+    
+    # HTTPS升级进行中
+    "https_upgrade_in_progress": {"type": ConditionType.CUSTOM, "check_func": "check_https_upgrade_in_progress"},
+    
+    # ICP备案已完成（前置条件）
+    "icp_filing_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "icp_filing_done", "completed": true},
+    
     # 广告联盟第一笔收益条件
     "first_ad_income_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_income", "completed": false},
     
@@ -1516,8 +1537,65 @@ const TASKS: Array = [
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "wechat_public"},
         ],
     },
+    # ====================
+    # 移动端适配
+    # ====================
+    {
+        "id": "mobile_adapt_notification",
+        "description": "移动端适配通知：2011年智能手机浪潮来袭，博客需要适配移动端",
+        "conditions": ["time_mobile_adapt", "mobile_adapt_not_completed"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "📱 移动互联网时代来了！",
+             "content": "2011年，智能手机开始普及，越来越多的人用手机浏览网页。\n\n你发现博客在手机上的显示效果惨不忍睹——文字太小、排版错乱、图片溢出。\n\n再不进行移动端适配，读者体验会越来越差。\n\n💡 \"移动端适配\"已经添加到日程的网站维护中，完成适配大约需要7天。"},
+            {"type": ActionType.UNLOCK_WEBSITE_MAINTENANCE, "task_name": "移动端适配"},
+        ],
+    },
+    {
+        "id": "mobile_adapt_complete",
+        "description": "移动端适配完成：博客完美适配移动端",
+        "conditions": ["mobile_adapt_in_progress"],
+        "is_repeatable": false,
+        "trigger_type": "mobile_adapt_complete",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "✅ 移动端适配完成！",
+             "content": "🎉 经过几天的开发调试，你的博客终于完美适配了移动端！\n\n📱 现在无论读者使用手机、平板还是电脑访问，都能获得良好的阅读体验。\n\n移动流量的占比开始逐年提升，这次适配为博客的未来发展打下了坚实基础。"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "mobile_adapted"},
+        ],
+    },
+    # ====================
+    # HTTPS升级
+    # ====================
+    {
+        "id": "https_upgrade_notification",
+        "description": "HTTPS升级通知：2014年Google宣布HTTPS为排名信号",
+        "conditions": ["time_https_upgrade", "https_upgrade_not_completed"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "🔒 HTTPS时代来了！",
+             "content": "2014年，Google正式宣布将HTTPS作为搜索排名信号。\n\n这意味着——没有HTTPS的网站在搜索结果中会逐渐处于劣势。你的读者也开始更在意地址栏上那个\"安全锁\"图标。\n\n💡 是时候升级HTTPS了！这需要购买SSL证书（80元），配置完成后大约需要5天生效。"},
+            {"type": ActionType.UNLOCK_WEBSITE_MAINTENANCE, "task_name": "HTTPS升级"},
+        ],
+    },
+    {
+        "id": "https_upgrade_complete",
+        "description": "HTTPS升级完成：博客全站支持HTTPS安全访问",
+        "conditions": ["https_upgrade_in_progress"],
+        "is_repeatable": false,
+        "trigger_type": "https_upgrade_complete",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "✅ HTTPS升级完成！",
+             "content": "🎉 你的博客已成功升级到HTTPS！\n\n🔒 现在所有访问都经过SSL加密，读者可以看到地址栏上的安全锁图标。\n\n📈 HTTPS不仅能提升读者信任感，还能让博客在搜索引擎中获得更好的排名。在互联网安全日益重要的今天，这一步走得非常及时。"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "https_upgraded"},
+        ],
+    },
 ]
-
 ## ============================================================
 ## 辅助方法
 ## ============================================================
