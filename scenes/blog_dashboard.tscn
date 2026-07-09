@@ -409,6 +409,22 @@ text = "累计收入"
 layout_mode = 2
 text = "0.0 元"
 
+[node name="monthly_tax_label" type="Label" parent="bg/面板组/wechat_panel/VBoxContainer/stats_grid" unique_id=2137693475]
+layout_mode = 2
+text = "本月税金"
+
+[node name="monthly_tax_value" type="Label" parent="bg/面板组/wechat_panel/VBoxContainer/stats_grid" unique_id=2012357041]
+layout_mode = 2
+text = "0.0 元"
+
+[node name="total_tax_label" type="Label" parent="bg/面板组/wechat_panel/VBoxContainer/stats_grid" unique_id=1264988774]
+layout_mode = 2
+text = "累计税金"
+
+[node name="total_tax_value" type="Label" parent="bg/面板组/wechat_panel/VBoxContainer/stats_grid" unique_id=741311756]
+layout_mode = 2
+text = "0.0 元"
+
 [node name="separator" type="HSeparator" parent="bg/面板组/wechat_panel/VBoxContainer" unique_id=134893417]
 layout_mode = 2
 

@@ -55,6 +55,8 @@ signal close_blog_dashboard
 @onready var wechat_views_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/views_value
 @onready var wechat_monthly_income_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/monthly_income_value
 @onready var wechat_total_income_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/total_income_value
+@onready var wechat_monthly_tax_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/monthly_tax_value
+@onready var wechat_total_tax_value = $bg/面板组/wechat_panel/VBoxContainer/stats_grid/total_tax_value
 @onready var wechat_tip_label = $bg/面板组/wechat_panel/VBoxContainer/tip_label
 @onready var wechat_literature_label = $bg/面板组/wechat_panel/VBoxContainer/cat_stats/literature_label
 @onready var wechat_tech_label = $bg/面板组/wechat_panel/VBoxContainer/cat_stats/tech_label
@@ -137,6 +139,12 @@ func refresh_wechat_panel() -> void:
 
     var total_income = wd.get("total_income", 0.0)
     wechat_total_income_value.text = "%.1f 元" % total_income
+
+    var monthly_tax = wd.get("monthly_tax", 0.0)
+    wechat_monthly_tax_value.text = "%.1f 元" % monthly_tax
+
+    var total_tax = wd.get("total_tax", 0.0)
+    wechat_total_tax_value.text = "%.1f 元" % total_tax
 
     var cat_counts = wd.get("synced_category_counts", {})
     wechat_literature_label.text = "文学：%d 篇" % cat_counts.get("文学", 0)

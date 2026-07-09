@@ -366,7 +366,7 @@ func daily_activities():
     var blogger_data = GDManager.get_blogger()
     var max_stamina = Utils.get_max_stamina(blogger_data.level)
     blogger_data.stamina = max_stamina
-    
+
     #exp_gained += calculate_promotion_exp() # 推广EXP
     #exp_gained += calculate_interaction_exp() # 读者互动EXP
     #exp_gained += calculate_skill_learning_exp() # 技能学习EXP
@@ -393,6 +393,21 @@ func week_activites():
 
     blogger.design_value = Utils.decrease_value_safely(blogger.design_value, 1, 3)
     blogger.rss = Utils.decrease_rss(blogger.rss)
+
+    # 每周掉粉：公众号用户流失（与运营日程无关）
+    var wd_w = blogger.wechat_data
+    if wd_w.get("is_active", false) and wd_w.get("followers", 0) > 0:
+        var has_post_this_week = false
+        var week_prefix = "%d-%d-%d" % [TimerManager.current_year, TimerManager.current_month, TimerManager.current_week]
+        for p in blogger.posts:
+            if p.get("date", "").begins_with(week_prefix):
+                has_post_this_week = true
+                break
+        if has_post_this_week:
+            wd_w.followers = max(0, wd_w.followers - max(1, int(wd_w.followers * 0.0035)))  # 有更新：0.35%/周
+        else:
+            wd_w.followers = max(0, wd_w.followers - max(1, int(wd_w.followers * 0.021)))   # 无更新：2.1%/周
+
     del_fa()
 
 ## 博客文章收藏量在三个月后始递减
@@ -1151,10 +1166,15 @@ func _settle_wechat_monthly_income() -> void:
     var monthly_views = wd.weekly_views
     var cpm = 0.002 if wd.total_articles < 200 else 0.004
     var income = monthly_views * cpm
-    income = clamp(income, 0.0, 999.0)
-    wd.monthly_income = income
-    wd.total_income += income
-    blogger.money += income
+    var tax = 0.0
+    if income > 800.0:
+        tax = (income - 800.0) * 0.2
+    var after_tax = income - tax
+    wd.monthly_income = after_tax
+    wd.monthly_tax = tax
+    wd.total_income += after_tax
+    wd.total_tax += tax
+    blogger.money += after_tax
     wd.weekly_views = 0
 
 ## 休闲娱乐 -> 休息
