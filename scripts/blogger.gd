@@ -10,11 +10,11 @@ signal sg_paid_income_settled(msg: String)  # 付费文章收入结算信号
 ## 付费文章月收入累积（按类型分别统计）
 var monthly_paid_income: float = 0
 var monthly_novel_income: float = 0       # 小说连载收入
-var monthly_hacker_income: float = 0      # 付费黑客攻防收入
+var monthly_hacker_income: float = 0      # 黑客攻防(付费)收入
 ## 上次结算时付费文章总访问量（用于计算新增访问量）
 var last_settle_paid_views: int = 0
 var last_settle_novel_views: int = 0      # 小说连载上次结算访问量
-var last_settle_hacker_views: int = 0    # 付费黑客攻防上次结算访问量
+var last_settle_hacker_views: int = 0    # 黑客攻防(付费)上次结算访问量
 
 ## 付费文章订阅配置
 const PAID_SUBSCRIPTION_PRICE: float = 9.9  # 固定订阅价格
@@ -732,7 +732,7 @@ func update_blog_views() -> int:
                 novel_views += post_views
                 novel_quality_sum += post.get("quality", 50)
                 novel_count += 1
-            elif cat == "付费黑客攻防":
+            elif cat == "黑客攻防(付费)":
                 hacker_views += post_views
                 hacker_quality_sum += post.get("quality", 50)
                 hacker_count += 1
@@ -764,7 +764,7 @@ func update_blog_views() -> int:
         if monthly_novel_income > 0:
             msg += "小说连载收入: %.0f 元\n" % monthly_novel_income
         if monthly_hacker_income > 0:
-            msg += "付费黑客攻防收入: %.0f 元\n" % monthly_hacker_income
+            msg += "黑客攻防(付费)收入: %.0f 元\n" % monthly_hacker_income
         if monthly_novel_income > 0 or monthly_hacker_income > 0:
             msg += "付费文章总收入: %.0f 元，已入账" % monthly_paid_income
         msg = msg.trim_suffix("\n")

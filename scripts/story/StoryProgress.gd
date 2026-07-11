@@ -41,15 +41,16 @@ var chapter3 = {
     "followers_1000": false,          # 公众号粉丝达到1000
     "mobile_adapted": false,          # 网站移动端适配
     "https_upgraded": false,          # HTTPS升级
-    "novel_planning": false,          # 小说连载规划
-    "open_source_planning": false,    # 开源项目规划
+    "novel_first_post": false,         # 发布第一篇小说连载
+    "novel_batch_complete": false,     # 完成一部小说连载（100章）
+    "novel_ip_authorized": false,      # 小说获得IP授权
     "year_summary_2015": false,       # 2015年度总结
     "award_2015": false,              # 优秀博客奖项（2015）
 }
 
 ## 第四章：博客挑战期（2015-2020）
 var chapter4 = {
-    "novel_serial_start": false,      # 小说连载开启
+    "open_source_planning": false,    # 开源项目规划
     "paid_hacking": false,            # 付费安全课程发布
     "book_invitation": false,         # 出版邀请
     "book_writing": false,            # 书籍撰写中
@@ -261,11 +262,12 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "followers_1000": "公众号粉丝突破1000：开启流量主收入模式",
         "mobile_adapted": "网站移动端适配：让阅读不再受设备限制",
         "https_upgraded": "HTTPS升级：为读者提供更安全的访问",
-        "novel_planning": "小说连载规划：开始筹备长篇创作",
-        "open_source_planning": "开源项目规划：为社区贡献代码做准备",
+        "novel_first_post": "发布第一篇小说连载：开启你的长篇创作之路",
+        "novel_batch_complete": "完成一部小说连载：一百章的坚持，成就一个完整的故事",
+        "novel_ip_authorized": "小说获得IP授权：你的作品被商业机构看中了",
         "year_summary_2015": "2015年度总结：转型路上，初心不改",
         # 第四章
-        "novel_serial_start": "小说连载开启：用故事构建另一个世界",
+        "open_source_planning": "开源项目规划：为社区贡献代码做准备",
         "paid_hacking": "付费安全课程发布：高级技术分享获得认可",
         "book_invitation": "出版邀请：收到出版社的合作邀约",
         "book_writing": "书籍撰写中：将积累化为文字",

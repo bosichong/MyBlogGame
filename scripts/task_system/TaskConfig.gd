@@ -277,6 +277,9 @@ const CONDITIONS: Dictionary = {
     # 第3章 极客前沿里程碑未完成
     "geek_frontier_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "geek_frontier", "completed": false},
 
+    # 第3章 小说连载里程碑未完成
+    "novel_first_post_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "novel_first_post", "completed": false},
+
     # 公众号
     "wechat_not_opened": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "wechat_public", "completed": false},
     "followers_1000_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "followers_1000", "completed": false},
@@ -675,6 +678,22 @@ const TASKS: Array = [
             {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🚀 极客前沿发布！", "content": "你搜罗了国内外最新的技术动态，整理成一篇干货满满的极客前沿。\n\n发布后被疯狂转发——有人说这是本周读过最有价值的文章，有人收藏了慢慢消化。\n\n保持对前沿技术的敏锐，是一个技术人最宝贵的习惯。\n\n🎉"},
         ],
     },
+    # ====================
+    # 第3章里程碑：第一篇小说连载
+    # ====================
+    {
+        "id": "novel_first_post_milestone",
+        "description": "发布第一篇小说连载，标记第三章里程碑",
+        "conditions": ["novel_first_post_not_completed"],
+        "trigger_type": "post_event",
+        "post_type_filter": "小说连载(付费)",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "novel_first_post"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "✍️ 第一篇小说连载发布！",
+             "content": "你深吸一口气，敲下了小说的第一个段落。\n\n从博客短文到长篇创作，这一步迈得不容易。但当你看到第一章发布后读者们迫不及待地点下「订阅」按钮时，你知道——\n\n故事一旦开始，就有人愿意陪你走到最后。\n\n这是你创作生涯的一个新起点。\n\n🎉 恭喜开启小说连载之路！"},
+        ],
+    },
     {
         "id": "code_post_unlock_60",
         "description": "编程能力值达到60，解锁极客前沿、深度技术文章类型",
@@ -688,12 +707,12 @@ const TASKS: Array = [
     },
     {
         "id": "code_post_unlock_80",
-        "description": "编程能力值达到80，解锁付费黑客攻防文章类型",
+        "description": "编程能力值达到80，解锁黑客攻防(付费)文章类型",
         "conditions": ["code_value_ge_80"],
         "trigger_type": "skill_up",
         "is_repeatable": false,
         "actions": [
-            {"type": ActionType.UNLOCK_POST_TASK, "post_type": "付费黑客攻防"},
+            {"type": ActionType.UNLOCK_POST_TASK, "post_type": "黑客攻防(付费)"},
         ],
     },
     {
