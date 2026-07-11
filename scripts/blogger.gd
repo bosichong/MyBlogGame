@@ -17,7 +17,7 @@ var last_settle_novel_views: int = 0      # 小说连载上次结算访问量
 var last_settle_hacker_views: int = 0    # 黑客攻防(付费)上次结算访问量
 
 ## 付费文章订阅配置
-const PAID_SUBSCRIPTION_PRICE: float = 9.9  # 固定订阅价格
+const PAID_SUBSCRIPTION_PRICE: float = 4.9  # 固定订阅价格
 const PAID_SUBSCRIPTION_RATE: float = 0.05  # 5%访问量会订阅
 
 ## 计算付费文章收入（按周结算）
@@ -26,8 +26,9 @@ func calculate_paid_income(new_views: int, avg_quality: float) -> int:
     if new_views <= 0:
         return 0
     
-    # 访问量决定订阅人数（5%转化率，无上限）
-    var subscribers = int(float(new_views) * PAID_SUBSCRIPTION_RATE)
+    # 访问量决定订阅人数（0.1%-0.5%随机转化率）
+    var rate = randf_range(0.001, 0.005)
+    var subscribers = int(float(new_views) * rate)
     
     # 收入 = 订阅人数 × 固定价格
     return int(subscribers * PAID_SUBSCRIPTION_PRICE)
