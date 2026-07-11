@@ -523,6 +523,8 @@ func _handle_novel_batch(blogger):
         blogger.novel_batch_count = 0
         blogger.novel_batch_ip_triggered = false
         _assign_novel_title(blogger)  # 分配新主题
+        if TaskManager:
+            TaskManager._on_novel_batch_complete()
     
     # 检查是否触发IP授权（>=50篇且未触发过）
     elif blogger.novel_batch_count >= 5 and not blogger.novel_batch_ip_triggered:  # 测试用5篇
@@ -625,6 +627,8 @@ func _try_trigger_ip_auth(blogger):
         _show_ip_auth_popup(total_reward, literature_value)
         
         blogger.novel_batch_ip_triggered = true
+        if TaskManager:
+            TaskManager._on_novel_ip_authorized()
 
 ## 显示IP授权到账弹窗
 func _show_ip_auth_popup(reward: float, literature_bonus: float):

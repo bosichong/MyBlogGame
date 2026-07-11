@@ -219,6 +219,14 @@ func _on_mobile_adapt_complete() -> void:
 func _on_https_upgrade_complete() -> void:
     check_tasks_by_trigger("https_upgrade_complete", {})
 
+## 小说连载批次完成（100章）
+func _on_novel_batch_complete() -> void:
+    check_tasks_by_trigger("novel_batch_complete", {})
+
+## 小说获得IP授权
+func _on_novel_ip_authorized() -> void:
+    check_tasks_by_trigger("novel_ip_authorized", {})
+
 ## 每日任务检查
 func day_task_func() -> void:
     check_tasks_by_trigger("time_check", {})
