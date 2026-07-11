@@ -504,10 +504,10 @@ func _on_paid_income_settled(msg):
 
 func _close_ac():
     _popup_has_pending_scene = false
-    _show_next_popup()
     if _popup_queue.is_empty():
         TimerManager.timer.start()
         TimerManager.time_stop = false
+    _show_next_popup()
 
 func sg_task_info_display_msg(msg):
     info_display.add_message(msg)
