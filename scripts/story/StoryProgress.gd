@@ -44,6 +44,9 @@ var chapter3 = {
     "novel_first_post": false,         # 发布第一篇小说连载
     "novel_batch_complete": false,     # 完成一部小说连载（100章）
     "novel_ip_authorized": false,      # 小说获得IP授权
+    "hacker_first_post": false,        # 发布第一篇黑客攻防
+    "hacker_course_complete": false,   # 完成黑客攻防课程（100篇）
+    "hacker_course_authorized": false, # 黑客攻防获得课程授权
     "year_summary_2015": false,       # 2015年度总结
     "award_2015": false,              # 优秀博客奖项（2015）
 }
@@ -265,6 +268,9 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "novel_first_post": "发布第一篇小说连载：开启你的长篇创作之路",
         "novel_batch_complete": "完成一部小说连载：一百章的坚持，成就一个完整的故事",
         "novel_ip_authorized": "小说获得IP授权：你的作品被商业机构看中了",
+        "hacker_first_post": "发布第一篇黑客攻防：开启安全技术分享之路",
+        "hacker_course_complete": "完成黑客攻防课程：一百篇教程，铸就一份完整的课程体系",
+        "hacker_course_authorized": "黑客攻防获得课程授权：你的教程被教育机构看中了",
         "year_summary_2015": "2015年度总结：转型路上，初心不改",
         # 第四章
         "open_source_planning": "开源项目规划：为社区贡献代码做准备",

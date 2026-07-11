@@ -498,6 +498,15 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             title = _generate_book_note_title(blogger)
             new_post.title = title
         
+        # ===== 黑客攻防课程授权检查 =====
+        if d.name == "黑客攻防(付费)":
+            blogger.hacker_article_count += 1
+            if blogger.hacker_article_count >= 100:
+                if TaskManager:
+                    TaskManager._on_hacker_course_complete()
+            if blogger.hacker_article_count >= 5 and not blogger.hacker_course_triggered:  # 测试用5篇
+                _try_trigger_course_auth(blogger)
+        
         blogger.posts.append(new_post)
         # blogger.add_post(new_post)  # 已通过 posts.append 添加，无需重复
 
@@ -636,6 +645,35 @@ func _show_ip_auth_popup(reward: float, literature_bonus: float):
     var main = get_tree().root.get_node("Main")
     if main and main.has_method("show_popup_message"):
         main.show_popup_message("IP授权收益到账！", "您的作品被影视公司看中！\n\n基础收益: 100000元\n文学加成: %.0f%%\n总收益: %.0f元\n\n声望 +500" % [literature_bonus, reward])
+
+## 尝试触发课程授权
+func _try_trigger_course_auth(blogger):
+    var code_level = int(blogger.code_ability)
+    
+    if code_level < 85:
+        return
+
+    var random_val = randi() % 100
+
+    if random_val < 99:  # 99%概率（测试用）
+        var code_value = blogger.code_ability
+        var base_reward = 100000.0
+        var bonus = base_reward * (code_value / 100.0)
+        var total_reward = base_reward + bonus
+        
+        blogger.money += total_reward
+        blogger.reputation += 500
+        
+        _show_course_auth_popup(total_reward, code_value)
+        
+        blogger.hacker_course_triggered = true
+        if TaskManager:
+            TaskManager._on_hacker_course_authorized()
+
+func _show_course_auth_popup(reward: float, code_bonus: float):
+    var main = get_tree().root.get_node("Main")
+    if main and main.has_method("show_popup_message"):
+        main.show_popup_message("课程授权到账！", "您的黑客攻防教程被教育机构看中！\n\n基础收益: 100000元\n编程加成: %.0f%%\n总收益: %.0f元\n\n声望 +500" % [code_bonus, reward])
 
 signal sg_new_blog_post(category: String)
 ## 模拟当天发布新博客文章

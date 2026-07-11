@@ -227,6 +227,14 @@ func _on_novel_batch_complete() -> void:
 func _on_novel_ip_authorized() -> void:
     check_tasks_by_trigger("novel_ip_authorized", {})
 
+## 黑客攻防课程完成（100篇）
+func _on_hacker_course_complete() -> void:
+    check_tasks_by_trigger("hacker_course_complete", {})
+
+## 黑客攻防获得课程授权
+func _on_hacker_course_authorized() -> void:
+    check_tasks_by_trigger("hacker_course_authorized", {})
+
 ## 每日任务检查
 func day_task_func() -> void:
     check_tasks_by_trigger("time_check", {})

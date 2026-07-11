@@ -281,6 +281,9 @@ const CONDITIONS: Dictionary = {
     "novel_first_post_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "novel_first_post", "completed": false},
     "novel_batch_complete_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "novel_batch_complete", "completed": false},
     "novel_ip_authorized_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "novel_ip_authorized", "completed": false},
+    "hacker_first_post_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "hacker_first_post", "completed": false},
+    "hacker_course_complete_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "hacker_course_complete", "completed": false},
+    "hacker_course_authorized_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "hacker_course_authorized", "completed": false},
 
     # 公众号
     "wechat_not_opened": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "wechat_public", "completed": false},
@@ -724,6 +727,52 @@ const TASKS: Array = [
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "novel_ip_authorized"},
             {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🎬 小说获得IP授权！",
              "content": "你的小说被商业机构看中了。\n\n从键盘上敲下的第一个字，到今天被评估、被认可、被赋予商业价值——这条路比你想象的要长，但也比你想象的更值得。\n\n有人想把它改编成影视剧，有人想签下版权。你的故事不再只是屏幕上的文字，它正在走向更大的世界。\n\n🎉 恭喜获得IP授权！"},
+        ],
+    },
+    # ====================
+    # 第3章里程碑：第一篇黑客攻防
+    # ====================
+    {
+        "id": "hacker_first_post_milestone",
+        "description": "发布第一篇黑客攻防，标记第三章里程碑",
+        "conditions": ["hacker_first_post_not_completed"],
+        "trigger_type": "post_event",
+        "post_type_filter": "黑客攻防(付费)",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "hacker_first_post"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🔒 第一篇黑客攻防发布！",
+             "content": "你敲下了第一篇黑客攻防教程的最后一个字符。\n\n从技术研究到知识输出，这一步意味着你不再只是为了自己而学——你在为他人铺路。\n\n读者们在评论区热烈讨论，有人感谢你打开了安全领域的大门，有人开始跟着你的教程实战。\n\n技术分享的种子，已经种下了。\n\n🎉 恭喜开启黑客攻防教程之路！"},
+        ],
+    },
+    # ====================
+    # 第3章里程碑：完成黑客攻防课程
+    # ====================
+    {
+        "id": "hacker_course_complete_milestone",
+        "description": "完成黑客攻防课程（100篇），标记第三章里程碑",
+        "conditions": ["hacker_course_complete_not_completed"],
+        "trigger_type": "hacker_course_complete",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "hacker_course_complete"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📚 黑客攻防课程完成！",
+             "content": "一百篇教程，从入门到精通。\n\n你翻看着自己写下的这一百篇文章——从最基础的漏洞原理，到高级的渗透技术，这不仅仅是教程，更是你技术成长的见证。\n\n有读者留言说，跟着你的教程从一个安全小白成长为能独立挖掘漏洞的白帽。\n\n你意识到，真正的技术影响力，不是炫技，而是让更多人站上你的肩膀。\n\n🎉 恭喜完成黑客攻防课程！"},
+        ],
+    },
+    # ====================
+    # 第3章里程碑：黑客攻防获得课程授权
+    # ====================
+    {
+        "id": "hacker_course_authorized_milestone",
+        "description": "黑客攻防获得课程授权，标记第三章里程碑",
+        "conditions": ["hacker_course_authorized_not_completed"],
+        "trigger_type": "hacker_course_authorized",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "hacker_course_authorized"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🎓 黑客攻防获得课程授权！",
+             "content": "你的黑客攻防教程被教育机构看中了。\n\n从第一行代码的摸索，到成为别人眼中的「老师」——这条路充满了深夜的调试和无数次的重来。\n\n现在，你的教程将被正式纳入培训课程体系，成为教材的一部分。\n\n你的知识，正在改变更多人的职业轨迹。\n\n🎉 恭喜获得课程授权！"},
         ],
     },
     {
