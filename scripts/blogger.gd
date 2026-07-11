@@ -731,7 +731,7 @@ func update_blog_views() -> int:
         if content_type == "付费":
             var post_views = post.get("views", 0)
             current_total_views += post_views
-            var cat = post.get("category", "")
+            var cat = post.get("post_category", "")
             if cat == "小说连载(付费)":
                 novel_views += post_views
                 novel_quality_sum += post.get("quality", 50)
@@ -749,6 +749,7 @@ func update_blog_views() -> int:
             var avg_quality = float(novel_quality_sum) / novel_count
             today_novel_money = calculate_paid_income(novel_new_views, avg_quality)
             monthly_novel_income += today_novel_money
+            last_settle_novel_views = novel_views
     
     if hacker_count > 0:
         var hacker_new_views = hacker_views - last_settle_hacker_views
@@ -756,6 +757,7 @@ func update_blog_views() -> int:
             var avg_quality = float(hacker_quality_sum) / hacker_count
             today_hacker_money = calculate_paid_income(hacker_new_views, avg_quality)
             monthly_hacker_income += today_hacker_money
+            last_settle_hacker_views = hacker_views
     
     today_money = today_novel_money + today_hacker_money
     monthly_paid_income += today_money
