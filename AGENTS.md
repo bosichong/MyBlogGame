@@ -71,7 +71,7 @@ data/*.gd ──→ GDManager._load_all_data() ──→ loaded_data 字典
 | trigger | 状态 |
 |---------|------|
 | `time_check` / `skill_up` / `level_up` / `post_event` / `ad_income_paid` / `friendlink_added` | ✅ 已实现 |
-| `rss_subscribe` / `article_favorited` / `icp_filing_complete` | ❌ 信号未连接（死代码） |
+| `rss_subscribe` / `article_favorited` / `icp_filing_complete` | ✅ `blogger.gd` 每日结算直接调用 |
 | `book_event` / `open_source_event` | ❌ 无调用点 |
 
 ### 信号→TaskManager 连接路径（分散在三处）
