@@ -279,6 +279,8 @@ const CONDITIONS: Dictionary = {
 
     # 第3章 小说连载里程碑未完成
     "novel_first_post_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "novel_first_post", "completed": false},
+    "novel_batch_complete_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "novel_batch_complete", "completed": false},
+    "novel_ip_authorized_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "novel_ip_authorized", "completed": false},
 
     # 公众号
     "wechat_not_opened": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "wechat_public", "completed": false},
@@ -692,6 +694,36 @@ const TASKS: Array = [
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "novel_first_post"},
             {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "✍️ 第一篇小说连载发布！",
              "content": "你深吸一口气，敲下了小说的第一个段落。\n\n从博客短文到长篇创作，这一步迈得不容易。但当你看到第一章发布后读者们迫不及待地点下「订阅」按钮时，你知道——\n\n故事一旦开始，就有人愿意陪你走到最后。\n\n这是你创作生涯的一个新起点。\n\n🎉 恭喜开启小说连载之路！"},
+        ],
+    },
+    # ====================
+    # 第3章里程碑：完成一部小说连载
+    # ====================
+    {
+        "id": "novel_batch_complete_milestone",
+        "description": "完成一部小说连载（100章），标记第三章里程碑",
+        "conditions": ["novel_batch_complete_not_completed"],
+        "trigger_type": "novel_batch_complete",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "novel_batch_complete"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 一部小说连载完成！",
+             "content": "一百章，几十万字。\n\n从第一章的不确定到最后一章的不舍，你陪着故事里的角色走完了一段完整的旅程。\n\n读者们在评论区留下了长长的感言，有人说这是追过最棒的故事，有人催你赶紧开新篇。\n\n但此刻，你只想安静地坐一会儿——\n\n写作这件事，你已经走得很远了。\n\n🎉 恭喜完成一部完整的小说连载！"},
+        ],
+    },
+    # ====================
+    # 第3章里程碑：小说获得IP授权
+    # ====================
+    {
+        "id": "novel_ip_authorized_milestone",
+        "description": "小说获得IP授权，标记第三章里程碑",
+        "conditions": ["novel_ip_authorized_not_completed"],
+        "trigger_type": "novel_ip_authorized",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "novel_ip_authorized"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🎬 小说获得IP授权！",
+             "content": "你的小说被商业机构看中了。\n\n从键盘上敲下的第一个字，到今天被评估、被认可、被赋予商业价值——这条路比你想象的要长，但也比你想象的更值得。\n\n有人想把它改编成影视剧，有人想签下版权。你的故事不再只是屏幕上的文字，它正在走向更大的世界。\n\n🎉 恭喜获得IP授权！"},
         ],
     },
     {
