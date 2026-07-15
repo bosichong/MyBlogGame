@@ -6,13 +6,15 @@ var _open_source_instance = null
 ## 信号回调
 var emit_info_msg: Callable = func(_msg): pass
 var emit_popup_msg: Callable = func(_title, _content): pass
+var emit_os_event: Callable = func(): pass
 
 func _init():
     _open_source_instance = preload("res://data/open_source_project.gd").new()
 
-func set_signal_callbacks(info_callback: Callable, popup_callback: Callable):
+func set_signal_callbacks(info_callback: Callable, popup_callback: Callable, os_event_callback: Callable = func(): pass):
     emit_info_msg = info_callback
     emit_popup_msg = popup_callback
+    emit_os_event = os_event_callback
 
 ## 检查开源项目条件
 func check_open_source_project(_context: Dictionary) -> bool:
@@ -31,13 +33,12 @@ func action_start_open_source_project() -> void:
         os_project.disabled = false
         os_project.isVisible = true
     
-    # 注意："开源维护笔记"的解锁移到 action_os_progress 中
-    # 只有真正开始创建开源项目（发布第一篇"开源项目"）时才解锁
+    # 开源维护笔记的解锁在 action_os_progress 第一篇时通过 os_event 触发
     
     os_state.is_developing = true
     
     # 项目名在用户发布第一篇"开源项目"文章时才生成，这里只显示解锁提示
-    emit_info_msg.call("🎉 编程能力达到90级，可以开始创建开源项目了！\n\n💡 提示：发布5篇后，将进入社区运营阶段，有机会获得大厂赞助！")
+    emit_info_msg.call("🎉 编程能力达到90级，可以开始创建开源项目了！\n\n💡 提示：发布100篇后，将进入社区运营阶段，有机会获得大厂赞助！")
 
 ## 动作：开源项目进度更新
 func action_os_progress(progress: int) -> void:
@@ -51,12 +52,7 @@ func action_os_progress(progress: int) -> void:
         if blogger and blogger.is_developing_os:
             if not os_state.get("is_developing", false):
                 os_state.is_developing = true
-            
-            var os_notes = Utils.find_category_by_name(Utils.possible_categories, "开源维护笔记", true) if Utils else null
-            if os_notes != null and os_notes.disabled:
-                os_notes.disabled = false
-                os_notes.isVisible = true
-                emit_info_msg.call("📝 已解锁「开源维护笔记」类型，记录项目开发过程")
+        emit_os_event.call()
     
     if os_state.get("is_developing", false):
         os_state.write_days += 1
@@ -79,9 +75,9 @@ func action_os_progress(progress: int) -> void:
         var write_days = os_state.write_days
         var stars = os_state.stars
         
-        emit_info_msg.call("📡 项目《%s》开发中... 第%d篇 / 5篇\n⭐ GitHub Star: %d" % [project_name, write_days, stars])
+        emit_info_msg.call("📡 项目《%s》开发中... 第%d篇 / 100篇\n⭐ GitHub Star: %d" % [project_name, write_days, stars])
         
-        if write_days >= 5:
+        if write_days >= 100:
             _check_os_phase_complete(os_state)
 
 ## 动作：开源项目阶段变化
@@ -114,7 +110,7 @@ func _check_os_phase_complete(os_state: Dictionary) -> void:
                 os_state.sponsor = sponsor
                 os_state.current_phase = 1
                 os_state.phase_day = 0
-                var msg = "🎉 项目《%s》引起【%s】关注！\n\n📋 厂商评估：项目star数达到 %d，技术栈符合厂商需求\n⏱️ 商务谈判预计需要 %d 天\n\n💡 提示：谈判期间请保持项目活跃，积极回复社区issue" % [project_name, sponsor.name, os_state.stars, sponsor.edit_days]
+                var msg = "🎉 项目《%s》引起【%s】关注！\n\n📋 厂商评估：项目star数达到 %d，技术栈符合厂商需求\n⏱️ 商务谈判预计需要 %d 天\n\n💡 提示：谈判期间请保持项目活跃，积极回复社区issue" % [project_name, sponsor.get("name", "未知厂商"), os_state.stars, sponsor.get("edit_days", 5)]
                 emit_popup_msg.call("大厂关注", msg)
         1:
             # 社区运营阶段完成，进入厂商审核
@@ -135,14 +131,32 @@ func _check_os_phase_complete(os_state: Dictionary) -> void:
 
 ## 禁用开源项目分类（审核期间不再创建新项目）
 func _disable_os_project_category() -> void:
-    pass
+    if Blogger:
+        for day_task in Blogger.blog_calendar:
+            if "开源项目" in day_task.tasks:
+                day_task.tasks.erase("开源项目")
 
-## 隐藏开源维护笔记分类（赞助完成后调用）
-func _hide_os_notes_category() -> void:
+## 动态更新开源维护笔记可见性
+func _update_os_notes_visibility() -> void:
+    var should_show = false
+    
+    if _open_source_instance.current_project_state.get("is_developing", false):
+        should_show = true
+    
+    if not should_show:
+        for project in _open_source_instance.published_projects:
+            if project.get("published", false) and project.get("sponsor_months", 0) < 12:
+                should_show = true
+                break
+    
     var os_notes = Utils.find_category_by_name(Utils.possible_categories, "开源维护笔记", true) if Utils else null
-    if os_notes != null:
-        os_notes.disabled = true
-        os_notes.isVisible = false
+    if os_notes:
+        os_notes.isVisible = true
+        os_notes.disabled = not should_show
+        if os_notes.disabled and Blogger:
+            for day_task in Blogger.blog_calendar:
+                if "开源维护笔记" in day_task.tasks:
+                    day_task.tasks.erase("开源维护笔记")
 
 ## 每日更新项目阶段进度（审核期每天调用）
 func update_os_phase() -> void:
@@ -186,27 +200,15 @@ func update_os_phase() -> void:
         
         _check_os_phase_complete(os_state)
 
-## 获取随机赞助厂商（知名大厂）
+## 获取随机赞助厂商（从数据文件读取，按 Star 数筛选）
 func _get_random_sponsor() -> Dictionary:
-    var sponsors = [
-        # 谷歌 - 最高赞助
-        {"name": "谷歌(Google)", "reward_multiplier": 2.0, "edit_days": 5, "publish_days": 7, "monthly_base": 200000, "description": "全球科技巨头"},
-        # 苹果 - 高赞助
-        {"name": "苹果(Apple)", "reward_multiplier": 1.8, "edit_days": 6, "publish_days": 8, "monthly_base": 180000, "description": "产品生态领导者"},
-        # 微软 - 高赞助
-        {"name": "微软(Microsoft)", "reward_multiplier": 1.7, "edit_days": 5, "publish_days": 6, "monthly_base": 170000, "description": "开源生态重要贡献者"},
-        # 腾讯 - 中高赞助
-        {"name": "腾讯", "reward_multiplier": 1.5, "edit_days": 4, "publish_days": 5, "monthly_base": 150000, "description": "国内互联网巨头"},
-        # 阿里 - 中高赞助
-        {"name": "阿里云", "reward_multiplier": 1.4, "edit_days": 4, "publish_days": 5, "monthly_base": 140000, "description": "国内云服务领导者"},
-        # 字节跳动 - 中等赞助
-        {"name": "字节跳动", "reward_multiplier": 1.3, "edit_days": 3, "publish_days": 5, "monthly_base": 130000, "description": "短视频和AI领域领导者"},
-        # 华为 - 中等赞助
-        {"name": "华为", "reward_multiplier": 1.2, "edit_days": 4, "publish_days": 5, "monthly_base": 120000, "description": "技术研发实力雄厚"},
-        # 百度 - 中等赞助
-        {"name": "百度", "reward_multiplier": 1.1, "edit_days": 3, "publish_days": 4, "monthly_base": 110000, "description": "AI和搜索引擎领导者"},
-    ]
-    return sponsors[randi() % sponsors.size()]
+    if not _open_source_instance:
+        return {"name": "未知厂商", "reward_multiplier": 1.0, "edit_days": 5, "publish_days": 7, "monthly_base": 100000, "description": ""}
+    var stars = _open_source_instance.current_project_state.get("stars", 0)
+    var eligible = _open_source_instance.get_eligible_sponsors(stars)
+    if eligible.is_empty():
+        eligible = _open_source_instance.sponsors
+    return eligible[randi() % eligible.size()]
 
 ## 完成项目赞助上线
 func _complete_os_project(os_state: Dictionary) -> void:
@@ -222,7 +224,6 @@ func _complete_os_project(os_state: Dictionary) -> void:
         
     var sponsor = os_state.get("sponsor", {})
     var sponsor_name = sponsor.get("name", "未知厂商")
-    var sponsor_desc = sponsor.get("description", "")
     
     os_state.completed = true
     os_state.is_developing = false
@@ -231,8 +232,8 @@ func _complete_os_project(os_state: Dictionary) -> void:
     # 计算一次性奖励
     var base_reward = 80000
     var multiplier = sponsor.get("reward_multiplier", 1.0)
-    var write_days = os_state.get("write_days", 5)
-    var final_reward = int(base_reward * multiplier * (write_days / 5.0))
+    var write_days = os_state.get("write_days", 100)
+    var final_reward = int(base_reward * multiplier * (write_days / 100.0))
     
     os_state.publish_date = Utils.format_date() if Utils else ""
     os_state.project_id = "os_" + str(Time.get_ticks_msec())
@@ -244,7 +245,7 @@ func _complete_os_project(os_state: Dictionary) -> void:
         project_name = os_state.project_name
     
     var code_value = Blogger.get_ability_by_type("code") if Blogger else 50.0
-    os_state.write_quality = _calculate_os_quality(os_state.write_days, code_value)
+    os_state.write_quality = _open_source_instance.calculate_project_quality(os_state.write_days, code_value) if _open_source_instance else 0.5
     os_state.code_value = code_value
     os_state.sponsor_months = 0
     os_state.total_sponsor_income = 0
@@ -264,13 +265,15 @@ func _complete_os_project(os_state: Dictionary) -> void:
         blogger.set("os_project_name", "")
         blogger.set("os_article_count", 0)
 
-        # 赞助完成后，锁定并隐藏开源维护笔记
-        _hide_os_notes_category()
+        # 赞助完成后不立即隐藏，由月度结算动态管理
     
     # 重置 current_project_state，为新项目做准备
     _reset_os_state()
     
     _open_source_instance.published_projects.append(os_state.duplicate())
+    
+    if TaskManager:
+        TaskManager._on_open_source_complete()
     
     # 完整的赞助成功提示
     var msg = "🎉 恭喜！项目《%s》正式获得 %s 赞助！\n\n" % [project_name, sponsor_name]
@@ -288,15 +291,32 @@ func _complete_os_project(os_state: Dictionary) -> void:
     
     emit_popup_msg.call("🚀 赞助签约成功！", msg)
 
-## 计算项目开发质量
-func _calculate_os_quality(write_days: int, code_value: float) -> float:
-    var day_factor = clamp(float(write_days) / 10.0, 0.5, 1.0)
-    var code_factor = code_value / 100.0
-    return day_factor * code_factor
+func _set_story_milestone(chapter: int, milestone: String) -> void:
+    if GDManager and GDManager.has_method("get_story_progress"):
+        var sp = GDManager.get_story_progress()
+        if sp:
+            sp.set_completed(chapter, milestone)
 
 ## 获取或创建项目状态
 func _get_or_create_os_state() -> Dictionary:
     return _open_source_instance.current_project_state if _open_source_instance else {}
+
+func get_published_projects_ref() -> Array:
+    return _open_source_instance.published_projects if _open_source_instance else []
+
+func get_current_project_state() -> Dictionary:
+    return _open_source_instance.current_project_state.duplicate(true) if _open_source_instance else {}
+
+func get_published_projects() -> Array:
+    return _open_source_instance.published_projects.duplicate(true) if _open_source_instance else []
+
+func restore_state(project_state: Dictionary, published: Array) -> void:
+    if not _open_source_instance:
+        return
+    if not project_state.is_empty():
+        _open_source_instance.current_project_state = project_state
+    if not published.is_empty():
+        _open_source_instance.published_projects = published
 
 ## 重置项目状态（用于赞助完成后开始新项目）
 func _reset_os_state() -> void:
@@ -318,6 +338,10 @@ func _reset_os_state() -> void:
         "sponsor_months": 0,
         "total_sponsor_income": 0,
         "stars": 0,
+        "fork_count": 0,
+        "issue_count": 0,
+        "sponsor_name": "",
+        "code_value": 0,
     }
 
 ## 每月结算项目赞助收入
@@ -334,7 +358,7 @@ func settle_monthly_open_source() -> Dictionary:
         
         var sponsor = project.get("sponsor", {})
         var monthly_base = sponsor.get("monthly_base", 100000)
-        var monthly_income = _calculate_os_monthly_sponsor(project, project.sponsor_months, monthly_base)
+        var monthly_income = _open_source_instance.calculate_monthly_sponsor(project, project.sponsor_months, monthly_base) if _open_source_instance else 0
         project.sponsor_months = project.get("sponsor_months", 0) + 1
         project.total_sponsor_income = project.get("total_sponsor_income", 0) + monthly_income
         
@@ -357,22 +381,9 @@ func settle_monthly_open_source() -> Dictionary:
                 blogger.set("money", current_money + monthly_income)
         total_income += monthly_income
     
+    _update_os_notes_visibility()
+    
     return {"total_income": total_income, "projects": projects_info}
-
-## 计算项目月赞助收入
-func _calculate_os_monthly_sponsor(project: Dictionary, sponsor_months: int, monthly_base: int) -> int:
-    var write_quality = project.get("write_quality", 0.5)
-    var peak_income = monthly_base * (0.8 + 0.4 * write_quality)
-    
-    var income = 0.0
-    if sponsor_months < 6:
-        # 前6个月逐步增长
-        income = peak_income * pow(float(sponsor_months + 1) / 6.0, 1.5)
-    elif sponsor_months < 12:
-        # 6-12个月稳定收入
-        income = peak_income * (0.9 + randf_range(-0.1, 0.1))
-    
-    return int(max(income, 0))
 
 ## 动作：开源项目赞助完成（兼容旧版本）
 ## 实际赞助流程在 update_os_phase 中自动完成，这里提供兼容接口

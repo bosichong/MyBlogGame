@@ -72,13 +72,15 @@ data/*.gd ──→ GDManager._load_all_data() ──→ loaded_data 字典
 |---------|------|
 | `time_check` / `skill_up` / `level_up` / `post_event` / `ad_income_paid` / `friendlink_added` | ✅ 已实现 |
 | `rss_subscribe` / `article_favorited` / `icp_filing_complete` | ✅ `blogger.gd` 每日结算直接调用 |
+| `book_publish_complete` / `open_source_complete` | ✅ `BookPublishManager` / `OpenSourceManager` 完成时调用 |
 | `book_event` / `open_source_event` | ❌ 无调用点 |
 
-### 信号→TaskManager 连接路径（分散在三处）
+### 信号→TaskManager 连接路径（分散在四处）
 
 1. **TaskManager._connect_signals()**：自动连 Blogger 的 `sg_new_blog_post` / `s_level` / `skill_level_up`
 2. **main.gd**：连 `AdManager.sig_ad_commission_paid` → `TaskManager._on_ad_income_paid`
 3. **main.gd**：`FriendLinkManager.link_added` → `main.gd` 转发
+4. **BookPublishManager** / **OpenSourceManager**：完成时直接调用 `TaskManager._on_book_publish_complete()` / `TaskManager._on_open_source_complete()`
 
 ### 条件类型
 

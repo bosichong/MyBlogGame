@@ -66,7 +66,8 @@ func _ready():
     # 设置模块信号回调
     BookPublishMgr.set_signal_callbacks(
         func(msg): emit_signal("sg_task_info_display_msg", msg),
-        func(title, content): emit_signal("sg_task_show_popup_msg", title, content)
+        func(title, content): emit_signal("sg_task_show_popup_msg", title, content),
+        func(): check_tasks_by_trigger("book_event", {})
     )
     IPAuthMgr.set_signal_callbacks(
         func(msg): emit_signal("sg_task_info_display_msg", msg),
@@ -74,7 +75,8 @@ func _ready():
     )
     OpenSourceMgr.set_signal_callbacks(
         func(msg): emit_signal("sg_task_info_display_msg", msg),
-        func(title, content): emit_signal("sg_task_show_popup_msg", title, content)
+        func(title, content): emit_signal("sg_task_show_popup_msg", title, content),
+        func(): check_tasks_by_trigger("open_source_event", {})
     )
 
     # 初始化任务状态
@@ -219,9 +221,24 @@ func _on_mobile_adapt_complete() -> void:
 func _on_https_upgrade_complete() -> void:
     check_tasks_by_trigger("https_upgrade_complete", {})
 
+## CDN加速完成触发信号
+func _on_cdn_accelerate_complete() -> void:
+    check_tasks_by_trigger("cdn_accelerate_complete", {})
+
+## 书籍出版完成触发信号
+func _on_book_publish_complete() -> void:
+    check_tasks_by_trigger("book_publish_complete", {})
+
+## 开源项目赞助完成触发信号
+func _on_open_source_complete() -> void:
+    check_tasks_by_trigger("open_source_complete", {})
+
 ## 小说连载批次完成（100章）
 func _on_novel_batch_complete() -> void:
     check_tasks_by_trigger("novel_batch_complete", {})
+    _remove_task_from_calendar("小说连载(付费)")
+    schedule_refresh_needed.emit()
+    sg_task_show_popup_msg.emit("📖 小说连载完成", "你已完成一部小说连载（100章）！\n新小说主题已自动分配，别忘了去日程中重新安排写作！")
 
 ## 小说获得IP授权
 func _on_novel_ip_authorized() -> void:
@@ -230,6 +247,9 @@ func _on_novel_ip_authorized() -> void:
 ## 黑客攻防课程完成（100篇）
 func _on_hacker_course_complete() -> void:
     check_tasks_by_trigger("hacker_course_complete", {})
+    _remove_task_from_calendar("黑客攻防(付费)")
+    schedule_refresh_needed.emit()
+    sg_task_show_popup_msg.emit("💻 黑客攻防课程完成", "你已完成黑客攻防教程（100篇）！\n课程已归档，如需继续连载别忘了去日程中重新勾选。")
 
 ## 黑客攻防获得课程授权
 func _on_hacker_course_authorized() -> void:
@@ -1156,6 +1176,13 @@ func check_https_upgrade_in_progress(context: Dictionary) -> bool:
         return false
     var blogger = GDManager.get_blogger()
     return blogger.https_upgrade_in_progress
+
+## 自定义条件检查:CDN加速进行中
+func check_cdn_accelerate_in_progress(context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var blogger = GDManager.get_blogger()
+    return blogger.cdn_accelerate_in_progress
 
 ## 自定义条件检查:RSS订阅数达到100
 func check_rss_ge_100(context: Dictionary) -> bool:

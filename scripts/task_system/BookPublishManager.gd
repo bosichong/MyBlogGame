@@ -4,13 +4,15 @@ var _book_publish_instance = null
 
 var emit_info_msg: Callable = func(_msg): pass
 var emit_popup_msg: Callable = func(_title, _content): pass
+var emit_book_event: Callable = func(): pass
 
 func _init():
     _book_publish_instance = preload("res://data/book_publish.gd").new()
 
-func set_signal_callbacks(info_callback: Callable, popup_callback: Callable):
+func set_signal_callbacks(info_callback: Callable, popup_callback: Callable, book_event_callback: Callable = func(): pass):
     emit_info_msg = info_callback
     emit_popup_msg = popup_callback
+    emit_book_event = book_event_callback
 
 func is_book_writing() -> bool:
     if not _book_publish_instance:
@@ -31,7 +33,7 @@ func action_start_book_write() -> void:
     
     book_state.is_writing = true
     
-    emit_info_msg.call("📖 文学能力达到90级，可以开始创作畅销书了！\n\n💡 提示：发布5篇后，将进入出版社审核阶段！")
+    emit_info_msg.call("📖 文学能力达到90级，可以开始创作畅销书了！\n\n💡 提示：发布100篇后，将进入出版社审核阶段！")
 
 func action_book_progress(progress: int) -> void:
     var book_state = _get_or_create_book_state()
@@ -44,11 +46,7 @@ func action_book_progress(progress: int) -> void:
         if blogger and blogger.is_writing_book:
             if not book_state.get("is_writing", false):
                 book_state.is_writing = true
-            
-            var book_notes = Utils.find_category_by_name(Utils.possible_categories, "出书笔记", true) if Utils else null
-            if book_notes != null and book_notes.disabled:
-                book_notes.disabled = false
-                book_notes.isVisible = true
+        emit_book_event.call()
     
     if book_state.get("is_writing", false):
         book_state.write_days += 1
@@ -69,9 +67,9 @@ func action_book_progress(progress: int) -> void:
         
         var write_days = book_state.write_days
         
-        emit_info_msg.call("📖 创作《%s》中... 第%d篇 / 5篇" % [book_name, write_days])
+        emit_info_msg.call("📖 创作《%s》中... 第%d篇 / 100篇" % [book_name, write_days])
         
-        if write_days >= 5:
+        if write_days >= 100:
             _check_book_phase_complete(book_state)
 
 func action_book_phase_change(new_phase: int) -> void:
@@ -115,13 +113,31 @@ func _check_book_phase_complete(book_state: Dictionary) -> void:
                 _complete_book_publish(book_state)
 
 func _disable_book_publish_category() -> void:
-    pass
+    if Blogger:
+        for day_task in Blogger.blog_calendar:
+            if "出版畅销书" in day_task.tasks:
+                day_task.tasks.erase("出版畅销书")
 
-func _hide_book_notes_category() -> void:
+func _update_book_notes_visibility() -> void:
+    var should_show = false
+    
+    if _book_publish_instance.current_book_state.get("is_writing", false):
+        should_show = true
+    
+    if not should_show:
+        for book in _book_publish_instance.published_books:
+            if book.get("published", false) and book.get("sales_months", 0) < 12:
+                should_show = true
+                break
+    
     var book_notes = Utils.find_category_by_name(Utils.possible_categories, "出书笔记", true) if Utils else null
-    if book_notes != null:
-        book_notes.disabled = true
-        book_notes.isVisible = false
+    if book_notes:
+        book_notes.isVisible = true
+        book_notes.disabled = not should_show
+        if book_notes.disabled and Blogger:
+            for day_task in Blogger.blog_calendar:
+                if "出书笔记" in day_task.tasks:
+                    day_task.tasks.erase("出书笔记")
 
 func update_book_phase() -> void:
     var book_state = _get_or_create_book_state()
@@ -157,13 +173,15 @@ func update_book_phase() -> void:
 
         _check_book_phase_complete(book_state)
 
+var _publishers_data = null
+func _get_publishers_data():
+    if _publishers_data == null:
+        _publishers_data = preload("res://data/publishers.gd").new()
+    return _publishers_data
+
 func _get_random_publisher() -> Dictionary:
-    var publishers = [
-        {"name": "新星出版社", "reward_multiplier": 1.0, "edit_days": 3, "publish_days": 5},
-        {"name": "人民文学出版社", "reward_multiplier": 1.5, "edit_days": 5, "publish_days": 7},
-        {"name": "中信出版社", "reward_multiplier": 1.4, "edit_days": 4, "publish_days": 5},
-    ]
-    return publishers[randi() % publishers.size()]
+    var write_days = _book_publish_instance.current_book_state.get("write_days", 5)
+    return _get_publishers_data().get_random_publisher(write_days)
 
 func _complete_book_publish(book_state: Dictionary) -> void:
     book_state.completed = true
@@ -173,7 +191,7 @@ func _complete_book_publish(book_state: Dictionary) -> void:
     var publisher = book_state.get("publisher", {})
     var base_reward = 50000
     var multiplier = publisher.get("reward_multiplier", 1.0)
-    var final_reward = int(base_reward * multiplier * (book_state.write_days / 5.0))
+    var final_reward = int(base_reward * multiplier * (book_state.write_days / 100.0))
     
     book_state.publish_date = Utils.format_date() if Utils else ""
     book_state.book_id = "book_" + str(Time.get_ticks_msec())
@@ -182,7 +200,7 @@ func _complete_book_publish(book_state: Dictionary) -> void:
         book_state.book_name = default_names[randi() % default_names.size()]
     
     var literature_value = Blogger.get_ability_by_type("literature") if Blogger else 50.0
-    book_state.write_quality = _calculate_book_quality(book_state.write_days, literature_value)
+    book_state.write_quality = _book_publish_instance.calculate_write_quality(book_state.write_days, literature_value) if _book_publish_instance else 0.5
     book_state.literature_value = literature_value
     book_state.sales_months = 0
     book_state.total_sales_income = 0
@@ -199,8 +217,6 @@ func _complete_book_publish(book_state: Dictionary) -> void:
         
         blogger.book_title = ""
         blogger.book_article_count = 0
-
-        _hide_book_notes_category()
     
     _reset_book_state()
     
@@ -217,6 +233,9 @@ func _complete_book_publish(book_state: Dictionary) -> void:
         
     var publisher_name = publisher.get("name", "未知出版社")
     
+    if TaskManager:
+        TaskManager._on_book_publish_complete()
+    
     var msg = "🎉 恭喜！《%s》正式出版上市！\n\n" % book_name
     msg += "━━━━━━━━━━━━━━━━━━━━\n"
     msg += "🏢 出版社：%s\n" % publisher_name
@@ -224,20 +243,39 @@ func _complete_book_publish(book_state: Dictionary) -> void:
     msg += "📈 声望：+1000\n"
     msg += "━━━━━━━━━━━━━━━━━━━━\n\n"
     msg += "💡 后续安排：\n"
-    msg += "• 书籍将在各大书店上架销售（36个月）\n"
+    msg += "• 书籍将在各大书店上架销售（12个月）\n"
     msg += "• 每月将收到销售版税收入\n"
     msg += "• 声望和文坛影响力大幅提升\n\n"
     msg += "提示：可以开始创作新书了！"
     
     emit_popup_msg.call("📚 出版成功！", msg)
 
-func _calculate_book_quality(write_days: int, literature_value: float) -> float:
-    var day_factor = clamp(float(write_days) / 10.0, 0.5, 1.0)
-    var lit_factor = literature_value / 100.0
-    return day_factor * lit_factor
+
+func _set_story_milestone(chapter: int, milestone: String) -> void:
+    if GDManager and GDManager.has_method("get_story_progress"):
+        var sp = GDManager.get_story_progress()
+        if sp:
+            sp.set_completed(chapter, milestone)
 
 func _get_or_create_book_state() -> Dictionary:
     return _book_publish_instance.current_book_state if _book_publish_instance else {}
+
+func get_published_books_ref() -> Array:
+    return _book_publish_instance.published_books if _book_publish_instance else []
+
+func get_current_book_state() -> Dictionary:
+    return _book_publish_instance.current_book_state.duplicate(true) if _book_publish_instance else {}
+
+func get_published_books() -> Array:
+    return _book_publish_instance.published_books.duplicate(true) if _book_publish_instance else []
+
+func restore_state(book_state: Dictionary, published: Array) -> void:
+    if not _book_publish_instance:
+        return
+    if not book_state.is_empty():
+        _book_publish_instance.current_book_state = book_state
+    if not published.is_empty():
+        _book_publish_instance.published_books = published
 
 func _reset_book_state() -> void:
     if not _book_publish_instance:
@@ -267,9 +305,9 @@ func settle_monthly_book_sales() -> Dictionary:
     var books_info = []
     
     for book in _book_publish_instance.published_books:
-        if not book.get("published", false) or book.get("sales_months", 0) >= 36:
+        if not book.get("published", false) or book.get("sales_months", 0) >= 12:
             continue
-        var monthly_income = _calculate_book_monthly_income(book, book.sales_months)
+        var monthly_income = _book_publish_instance.calculate_monthly_sales(book, book.sales_months) if _book_publish_instance else 0
         book.sales_months = book.get("sales_months", 0) + 1
         book.total_sales_income = book.get("total_sales_income", 0) + monthly_income
         
@@ -291,19 +329,8 @@ func settle_monthly_book_sales() -> Dictionary:
                 blogger.set("money", current_money + monthly_income)
         total_income += monthly_income
     
+    _update_book_notes_visibility()
+    
     return {"total_income": total_income, "books": books_info}
 
-func _calculate_book_monthly_income(book: Dictionary, sales_months: int) -> int:
-    var write_quality = book.get("write_quality", 0.5)
-    var peak_income = 100000 + 100000 * write_quality
-    
-    var income = 0.0
-    if sales_months < 12:
-        income = peak_income * pow(float(sales_months + 1) / 12.0, 2)
-    elif sales_months < 18:
-        income = peak_income * (1.0 + randf_range(-0.1, 0.1))
-    else:
-        var decline = max(1.0 - float(sales_months - 18) / 18.0, 0.0)
-        income = peak_income * pow(decline, 1.5) * (0.8 + randf() * 0.4)
-    
-    return int(max(income, 0))
+

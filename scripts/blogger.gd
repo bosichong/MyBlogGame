@@ -355,6 +355,8 @@ func daily_activities():
                 exp_gained += execute_mobile_adapt(task)
             if task == "HTTPS升级":
                 exp_gained += execute_https_upgrade(task)
+            if task == "CDN加速":
+                exp_gained += execute_cdn_accelerate(task)
         elif Utils.check_name_exists(Utils.recreation, task):
             if task == "休息":
                 exp_gained += recreation_rest(task) # 休息一天
@@ -860,6 +862,9 @@ func update_blog_views() -> int:
     # 检查HTTPS升级进度
     check_https_upgrade_progress()
     
+    # 检查CDN加速进度
+    check_cdn_accelerate_progress()
+    
     # 生成评论(基于每篇文章的访问量)
     # check_all_articles 内部已同步评论数到文章，无需再调 sync_all_posts
     if comment_manager:
@@ -1209,6 +1214,59 @@ func check_https_upgrade_progress() -> void:
         if TaskManager:
             TaskManager._on_https_upgrade_complete()
         blogger.https_upgrade_in_progress = false
+
+## 执行CDN加速
+func execute_cdn_accelerate(category: String) -> int:
+    if not GDManager:
+        return 0
+    
+    var blogger = GDManager.get_blogger()
+    var d = Utils.find_category_by_name(Utils.website_maintenance, category)
+    
+    if d.is_empty():
+        return 0
+
+    var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
+
+    if blogger.stamina < actual_cost:
+        return 0
+
+    if blogger.cdn_accelerate_in_progress:
+        return 0
+
+    if blogger.money < d.money:
+        return 0
+
+    blogger.stamina -= actual_cost
+    blogger.money -= d.money
+    blogger.cdn_accelerate_in_progress = true
+    blogger.cdn_accelerate_start_date = Utils.format_date()
+
+    d.isVisible = false
+    d.disabled = true
+
+    return 0
+
+## 检查CDN加速进度
+func check_cdn_accelerate_progress() -> void:
+    if not GDManager:
+        return
+    
+    var blogger = GDManager.get_blogger()
+    
+    if not blogger.cdn_accelerate_in_progress:
+        return
+    
+    var start_date = blogger.cdn_accelerate_start_date
+    if start_date.is_empty():
+        return
+    
+    var days_passed = Utils.calculate_new_game_time_difference(start_date, Utils.format_date())
+    
+    if days_passed >= 5:
+        if TaskManager:
+            TaskManager._on_cdn_accelerate_complete()
+        blogger.cdn_accelerate_in_progress = false
 
 signal signal_comment_maintenance(msg: String)
 func maintain_comment(category: String) -> int:
