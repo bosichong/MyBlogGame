@@ -23,43 +23,40 @@ var chapter1 = {
 
 ## 第二章：博客黄金期（2005-2010）
 var chapter2 = {
-    "literature_weekly": false,       # 文学周刊发布
-    "code_weekly": false,             # 程序员周刊发布
-    "rss_100": false,                 # RSS订阅突破百人
-    "income_1000": false,             # 累计收益突破千元
-    "award_2010": false,              # 优秀博客奖项（2010）
-    "year_summary_2010": false,       # 2010年度总结
+    "literature_weekly": true,       # 文学周刊发布
+    "code_weekly": true,             # 程序员周刊发布
+    "rss_100": true,                 # RSS订阅突破百人
+    "income_1000": true,             # 累计收益突破千元
+    "award_2010": true,              # 优秀博客奖项（2010）
+    "year_summary_2010": true,       # 2010年度总结
 }
 
 ## 第三章：博客转型期（2010-2015）
 var chapter3 = {
-    "viral_article": false,           # 爆款文章诞生
-    "advanced_tutorial": false,       # 高级教程发布
-    "philosophy_critique": false,     # 哲学批判
-    "geek_frontier": false,           # 极客前沿
-    "wechat_public": false,           # 公众号开通
-    "followers_1000": false,          # 公众号粉丝达到1000
-    "mobile_adapted": false,          # 网站移动端适配
-    "https_upgraded": false,          # HTTPS升级
-    "novel_first_post": false,         # 发布第一篇小说连载
-    "novel_batch_complete": false,     # 完成一部小说连载（100章）
-    "novel_ip_authorized": false,      # 小说获得IP授权
-    "hacker_first_post": false,        # 发布第一篇黑客攻防
-    "hacker_course_complete": false,   # 完成黑客攻防课程（100篇）
-    "hacker_course_authorized": false, # 黑客攻防获得课程授权
-    "year_summary_2015": false,       # 2015年度总结
-    "award_2015": false,              # 优秀博客奖项（2015）
+    "viral_article": true,           # 爆款文章诞生
+    "advanced_tutorial": true,       # 高级教程发布
+    "philosophy_critique": true,     # 哲学批判
+    "geek_frontier": true,           # 极客前沿
+    "wechat_public": true,           # 公众号开通
+    "followers_1000": true,          # 公众号粉丝达到1000
+    "mobile_adapted": true,          # 网站移动端适配
+    "https_upgraded": true,          # HTTPS升级
+    "novel_first_post": true,         # 发布第一篇小说连载
+    "novel_batch_complete": true,     # 完成一部小说连载（100章）
+    "novel_ip_authorized": true,      # 小说获得IP授权
+    "hacker_first_post": true,        # 发布第一篇黑客攻防
+    "hacker_course_complete": true,   # 完成黑客攻防课程（100篇）
+    "hacker_course_authorized": true, # 黑客攻防获得课程授权
+    "year_summary_2015": true,       # 2015年度总结
+    "award_2015": true,              # 优秀博客奖项（2015）
 }
 
 ## 第四章：博客挑战期（2015-2020）
 var chapter4 = {
-    "open_source_planning": false,    # 开源项目规划
-    "paid_hacking": false,            # 付费安全课程发布
-    "book_invitation": false,         # 出版邀请
-    "book_writing": false,            # 书籍撰写中
     "book_published": false,          # 书籍正式出版
     "open_source_start": false,       # 开源项目发布
-    "open_source_recognized": false,  # 开源获得认可
+    "book_notes": false,              # 出书笔记
+    "os_notes": false,                # 开源维护笔记
     "cdn_enabled": false,             # CDN加速部署
     "ai_preview": false,              # AI时代预告
     "award_2020": false,              # 优秀博客奖项（2020）
@@ -273,13 +270,10 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "hacker_course_authorized": "黑客攻防获得课程授权：你的教程被教育机构看中了",
         "year_summary_2015": "2015年度总结：转型路上，初心不改",
         # 第四章
-        "open_source_planning": "开源项目规划：为社区贡献代码做准备",
-        "paid_hacking": "付费安全课程发布：高级技术分享获得认可",
-        "book_invitation": "出版邀请：收到出版社的合作邀约",
-        "book_writing": "书籍撰写中：将积累化为文字",
         "book_published": "书籍正式出版：多年的博客精华凝聚成书",
         "open_source_start": "开源项目发布：代码贡献获得社区关注",
-        "open_source_recognized": "开源获得认可：社区开始关注你的项目",
+        "book_notes": "出书笔记发布：记录创作心路历程",
+        "os_notes": "开源维护笔记发布：分享项目维护经验",
         "cdn_enabled": "CDN加速部署：网站访问速度大幅提升",
         "ai_preview": "AI时代预告：新一轮技术变革即将到来",
         "year_summary_2020": "2020年度总结：挑战与突破的五年",

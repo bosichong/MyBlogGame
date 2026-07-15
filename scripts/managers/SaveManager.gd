@@ -145,6 +145,8 @@ func serialize_runtime_data(runtime_data: RuntimeData) -> Dictionary:
         "yearly_summary": serialize_yearly_summary_data(runtime_data.yearly_summary),
         "archive": serialize_archive_data(runtime_data.archive),
         "award_history": runtime_data.award_history,
+        "book_publish": serialize_book_publish_data(),
+        "os_publish": serialize_os_publish_data(),
     }
 
 func deserialize_runtime_data(data: Dictionary) -> RuntimeData:
@@ -189,6 +191,11 @@ func deserialize_runtime_data(data: Dictionary) -> RuntimeData:
             if not runtime_data.yearly_summary.has_snapshot(current_year):
                 runtime_data.yearly_summary.record_yearly_snapshot(current_year, runtime_data.blogger)
 
+    if data.has("book_publish"):
+        deserialize_book_publish_data(data["book_publish"])
+    if data.has("os_publish"):
+        deserialize_os_publish_data(data["os_publish"])
+
     return runtime_data
 
 func serialize_blogger_data(data: BloggerData) -> Dictionary:
@@ -232,7 +239,15 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "mobile_adapt_start_date": data.mobile_adapt_start_date,
         "https_upgrade_in_progress": data.https_upgrade_in_progress,
         "https_upgrade_start_date": data.https_upgrade_start_date,
+        "cdn_accelerate_in_progress": data.cdn_accelerate_in_progress,
+        "cdn_accelerate_start_date": data.cdn_accelerate_start_date,
         "wechat_data": data.wechat_data,
+        "book_title": data.book_title,
+        "book_article_count": data.book_article_count,
+        "is_writing_book": data.is_writing_book,
+        "os_project_name": data.os_project_name,
+        "os_article_count": data.os_article_count,
+        "is_developing_os": data.is_developing_os,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -275,6 +290,8 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.mobile_adapt_start_date = dict.get("mobile_adapt_start_date", "")
     data.https_upgrade_in_progress = dict.get("https_upgrade_in_progress", false)
     data.https_upgrade_start_date = dict.get("https_upgrade_start_date", "")
+    data.cdn_accelerate_in_progress = dict.get("cdn_accelerate_in_progress", false)
+    data.cdn_accelerate_start_date = dict.get("cdn_accelerate_start_date", "")
     data.wechat_data = dict.get("wechat_data", {
         "is_active": false,
         "total_articles": 0,
@@ -287,6 +304,12 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
         "total_tax": 0.0,
         "synced_category_counts": {},
     })
+    data.book_title = dict.get("book_title", "")
+    data.book_article_count = dict.get("book_article_count", 0)
+    data.is_writing_book = dict.get("is_writing_book", false)
+    data.os_project_name = dict.get("os_project_name", "")
+    data.os_article_count = dict.get("os_article_count", 0)
+    data.is_developing_os = dict.get("is_developing_os", false)
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {
@@ -501,6 +524,40 @@ func serialize_archive_data(data: ArchiveData) -> Dictionary:
 func deserialize_archive_data(data: ArchiveData, dict: Dictionary):
     if dict.has("events"):
         data.events = dict["events"].duplicate(true)
+
+func serialize_book_publish_data() -> Dictionary:
+    if not TaskManager or not TaskManager.BookPublishMgr:
+        return {"current_book_state": {}, "published_books": []}
+    var mgr = TaskManager.BookPublishMgr
+    return {
+        "current_book_state": mgr.get_current_book_state(),
+        "published_books": mgr.get_published_books(),
+    }
+
+func deserialize_book_publish_data(data: Dictionary) -> void:
+    if not TaskManager or not TaskManager.BookPublishMgr:
+        return
+    TaskManager.BookPublishMgr.restore_state(
+        data.get("current_book_state", {}),
+        data.get("published_books", [])
+    )
+
+func serialize_os_publish_data() -> Dictionary:
+    if not TaskManager or not TaskManager.OpenSourceMgr:
+        return {"current_project_state": {}, "published_projects": []}
+    var mgr = TaskManager.OpenSourceMgr
+    return {
+        "current_project_state": mgr.get_current_project_state(),
+        "published_projects": mgr.get_published_projects(),
+    }
+
+func deserialize_os_publish_data(data: Dictionary) -> void:
+    if not TaskManager or not TaskManager.OpenSourceMgr:
+        return
+    TaskManager.OpenSourceMgr.restore_state(
+        data.get("current_project_state", {}),
+        data.get("published_projects", [])
+    )
 
 # ===== 元数据 =====
 

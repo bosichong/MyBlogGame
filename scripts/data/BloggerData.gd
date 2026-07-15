@@ -86,6 +86,12 @@ var https_upgrade_in_progress: bool = false
 ## HTTPS升级开始日期
 var https_upgrade_start_date: String = ""
 
+## CDN加速是否进行中
+var cdn_accelerate_in_progress: bool = false
+
+## CDN加速开始日期
+var cdn_accelerate_start_date: String = ""
+
 # ============================================
 # 博客属性值（范围0-200）
 # ============================================

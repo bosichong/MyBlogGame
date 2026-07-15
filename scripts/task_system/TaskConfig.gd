@@ -289,6 +289,33 @@ const CONDITIONS: Dictionary = {
     "wechat_not_opened": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "wechat_public", "completed": false},
     "followers_1000_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 3, "milestone": "followers_1000", "completed": false},
     "followers_ge_1000": {"type": ConditionType.CUSTOM, "check_func": "check_followers_ge_1000"},
+
+    # 第4章 出书笔记里程碑未完成
+    "book_notes_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 4, "milestone": "book_notes", "completed": false},
+
+    # 第4章 开源维护笔记里程碑未完成
+    "os_notes_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 4, "milestone": "os_notes", "completed": false},
+
+    # 第4章 书籍出版里程碑未完成
+    "book_published_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 4, "milestone": "book_published", "completed": false},
+
+    # 第4章 开源项目里程碑未完成
+    "open_source_start_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 4, "milestone": "open_source_start", "completed": false},
+
+    # 第4章 CDN加速里程碑未完成
+    "cdn_enabled_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 4, "milestone": "cdn_enabled", "completed": false},
+
+    # 第4章 AI预告里程碑未完成
+    "ai_preview_not_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 4, "milestone": "ai_preview", "completed": false},
+
+    # CDN加速进行中
+    "cdn_accelerate_in_progress": {"type": ConditionType.CUSTOM, "check_func": "check_cdn_accelerate_in_progress"},
+
+    # AI预告时间条件（2019年12月）
+    "time_ai_preview": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2019], "m": [12], "w": [1], "d": [1]}},
+
+    # CDN加速时间条件（2017年6月）
+    "time_cdn_accelerate": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2017], "m": [6], "w": [1], "d": [1]}},
 }
 
 ## ============================================================
@@ -500,8 +527,8 @@ const TASKS: Array = [
     # ====================
     {
         "id": "unlock_book_notes",
-        "description": "开始写书后，解锁出书笔记文章类型",
-        "conditions": ["book_writing_started"],
+        "description": "第一次发布出版畅销书后，解锁出书笔记文章类型",
+        "conditions": [],
         "trigger_type": "book_event",
         "is_repeatable": false,
         "actions": [
@@ -812,8 +839,8 @@ const TASKS: Array = [
     # ====================
     {
         "id": "unlock_open_source_notes",
-        "description": "开始创建开源项目后，解锁开源维护笔记文章类型",
-        "conditions": ["open_source_project_started"],
+        "description": "第一次发布开源项目后，解锁开源维护笔记文章类型",
+        "conditions": [],
         "trigger_type": "open_source_event",
         "is_repeatable": false,
         "actions": [
@@ -1693,6 +1720,113 @@ const TASKS: Array = [
              "title": "✅ HTTPS升级完成！",
              "content": "🎉 你的博客已成功升级到HTTPS！\n\n🔒 现在所有访问都经过SSL加密，读者可以看到地址栏上的安全锁图标。\n\n📈 HTTPS不仅能提升读者信任感，还能让博客在搜索引擎中获得更好的排名。在互联网安全日益重要的今天，这一步走得非常及时。"},
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 3, "milestone": "https_upgraded"},
+        ],
+    },
+
+    # ====================
+    # CDN加速通知（2017年6月）
+    # ====================
+    {
+        "id": "cdn_accelerate_notification",
+        "description": "CDN加速通知：2017年云服务兴起，博客需要CDN加速提升全球访问速度",
+        "conditions": ["time_cdn_accelerate", "cdn_enabled_not_completed"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "🚀 CDN时代来了！",
+             "content": "2017年，云计算和CDN服务开始普及。你发现博客在一些地区的加载速度越来越慢——尤其是海外读者抱怨连连。\n\n再不部署CDN加速，用户体验会持续下滑，SEO排名也会受影响。\n\n💡 \"CDN加速\"已经添加到日程的网站维护中，配置完成后大约需要5天生效。需要花费200元购买服务。"},
+            {"type": ActionType.UNLOCK_WEBSITE_MAINTENANCE, "task_name": "CDN加速"},
+        ],
+    },
+    {
+        "id": "cdn_accelerate_complete",
+        "description": "CDN加速完成：博客全球访问速度大幅提升",
+        "conditions": ["cdn_accelerate_in_progress"],
+        "is_repeatable": false,
+        "trigger_type": "cdn_accelerate_complete",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "✅ CDN加速完成！",
+             "content": "🎉 你的博客已成功接入CDN加速服务！\n\n🚀 现在全球读者都能快速访问你的博客，页面加载时间大幅缩短。\n\n📈 更快的加载速度不仅提升用户体验，还能在搜索引擎中获得更好的排名。在互联网全球化的今天，这一步至关重要。"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 4, "milestone": "cdn_enabled"},
+        ],
+    },
+
+    # ====================
+    # AI时代预告（2019年12月）
+    # ====================
+    {
+        "id": "ai_preview_notification",
+        "description": "AI时代预告：2019年新一轮技术变革即将到来",
+        "conditions": ["time_ai_preview", "ai_preview_not_completed"],
+        "is_repeatable": false,
+        "trigger_type": "time_check",
+        "actions": [
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION,
+             "title": "🤖 AI时代即将到来！",
+             "content": "2019年，人工智能技术正在悄然改变世界。从GPT系列模型到AI作画，你感受到了一股前所未有的技术浪潮正在酝酿。\n\n作为见证了互联网变迁的老博主，你隐约意识到——新一轮的技术变革即将来临，而这一次，它将颠覆内容创作的方式。\n\n你坐在电脑前，望着屏幕，心中涌起一股复杂的情绪：期待、不安，还有一丝跃跃欲试的兴奋。\n\n💡 提示：AI工具将在下一个五年深刻改变博客创作生态。"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 4, "milestone": "ai_preview"},
+        ],
+    },
+
+    # ====================
+    # 第4章里程碑：书籍正式出版
+    # ====================
+    {
+        "id": "book_publish_complete",
+        "description": "出版畅销书完成全部流程，标记第4章里程碑",
+        "conditions": ["book_published_not_completed"],
+        "trigger_type": "book_publish_complete",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 4, "milestone": "book_published"},
+        ],
+    },
+
+    # ====================
+    # 第4章里程碑：开源项目获得赞助
+    # ====================
+    {
+        "id": "open_source_complete",
+        "description": "开源项目获得厂商赞助，标记第4章里程碑",
+        "conditions": ["open_source_start_not_completed"],
+        "trigger_type": "open_source_complete",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 4, "milestone": "open_source_start"},
+        ],
+    },
+
+    # ====================
+    # 第4章里程碑：出书笔记
+    # ====================
+    {
+        "id": "book_notes_milestone",
+        "description": "发布出书笔记，标记第4章里程碑",
+        "conditions": ["book_notes_not_completed"],
+        "trigger_type": "post_event",
+        "post_type_filter": "出书笔记",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 4, "milestone": "book_notes"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📝 出书笔记发布！", "content": "你写下了一篇出书笔记，记录这段从博主到作者的创作历程。\n\n从博客上的零碎片段，到系统性的书籍创作——这一路走来，文字见证了你所有的成长与蜕变。\n\n🎉"},
+        ],
+    },
+
+    # ====================
+    # 第4章里程碑：开源维护笔记
+    # ====================
+    {
+        "id": "os_notes_milestone",
+        "description": "发布开源维护笔记，标记第4章里程碑",
+        "conditions": ["os_notes_not_completed"],
+        "trigger_type": "post_event",
+        "post_type_filter": "开源维护笔记",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 4, "milestone": "os_notes"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📡 开源维护笔记发布！", "content": "你写下了一篇开源维护笔记，分享项目维护中的经验与思考。\n\n从一行代码到被社区认可的开源项目，你的每篇笔记都在为技术社区添砖加瓦。\n\n🎉"},
         ],
     },
 ]
