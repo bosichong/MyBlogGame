@@ -36,6 +36,7 @@ func action_start_open_source_project() -> void:
     # 开源维护笔记的解锁在 action_os_progress 第一篇时通过 os_event 触发
     
     os_state.is_developing = true
+    _update_os_notes_visibility()
     
     # 项目名在用户发布第一篇"开源项目"文章时才生成，这里只显示解锁提示
     emit_info_msg.call("🎉 编程能力达到90级，可以开始创建开源项目了！\n\n💡 提示：发布100篇后，将进入社区运营阶段，有机会获得大厂赞助！")
@@ -151,12 +152,13 @@ func _update_os_notes_visibility() -> void:
     
     var os_notes = Utils.find_category_by_name(Utils.possible_categories, "开源维护笔记", true) if Utils else null
     if os_notes:
-        os_notes.isVisible = true
-        os_notes.disabled = not should_show
-        if os_notes.disabled and Blogger:
-            for day_task in Blogger.blog_calendar:
-                if "开源维护笔记" in day_task.tasks:
-                    day_task.tasks.erase("开源维护笔记")
+        os_notes.isVisible = should_show
+        if not should_show:
+            os_notes.disabled = true
+            if Blogger:
+                for day_task in Blogger.blog_calendar:
+                    if "开源维护笔记" in day_task.tasks:
+                        day_task.tasks.erase("开源维护笔记")
 
 ## 每日更新项目阶段进度（审核期每天调用）
 func update_os_phase() -> void:
@@ -264,11 +266,19 @@ func _complete_os_project(os_state: Dictionary) -> void:
         # 重置项目名和文章计数，为下一个项目做准备
         blogger.set("os_project_name", "")
         blogger.set("os_article_count", 0)
+        blogger.set("is_developing_os", false)
 
         # 赞助完成后不立即隐藏，由月度结算动态管理
     
     # 重置 current_project_state，为新项目做准备
     _reset_os_state()
+    
+    # 项目完成后冷确180天
+    if blogger:
+        var d = Utils.find_category_by_name(Utils.possible_categories, "开源项目", true)
+        if not d.is_empty():
+            blogger.cooldowns["开源项目"] = Utils.format_date()
+            d.disabled = true
     
     _open_source_instance.published_projects.append(os_state.duplicate())
     

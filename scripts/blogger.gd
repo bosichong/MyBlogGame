@@ -6,6 +6,7 @@ var tmp_v = 23
 var views_calculator: ViewsCalculator = null
 
 signal sg_paid_income_settled(msg: String)  # 付费文章收入结算信号
+signal sg_info_msg(msg: String)            # 信息提示面板消息
 
 ## 付费文章月收入累积（按类型分别统计）
 var monthly_paid_income: float = 0
@@ -216,6 +217,23 @@ var blog_data: Dictionary:
                 "posts": blogger.posts,
                 "archived_posts": blogger.archived_posts,
                 "weekly_views_data": weekly_views_data,
+                "novel_batch": blogger.novel_batch,
+                "novel_batch_count": blogger.novel_batch_count,
+                "novel_batch_ip_triggered": blogger.novel_batch_ip_triggered,
+                "novel_batch_ip_target": blogger.novel_batch_ip_target,
+                "novel_batch_title": blogger.novel_batch_title,
+                "book_title": blogger.book_title,
+                "book_article_count": blogger.book_article_count,
+                "is_writing_book": blogger.is_writing_book,
+                "os_project_name": blogger.os_project_name,
+                "os_article_count": blogger.os_article_count,
+                "is_developing_os": blogger.is_developing_os,
+                "hacker_batch": blogger.hacker_batch,
+                "hacker_batch_count": blogger.hacker_batch_count,
+                "hacker_batch_auth_target": blogger.hacker_batch_auth_target,
+                "hacker_batch_topic": blogger.hacker_batch_topic,
+                "hacker_course_triggered": blogger.hacker_course_triggered,
+                "cooldowns": blogger.cooldowns,
             }
         return {}
     set(value):
@@ -332,6 +350,8 @@ func daily_activities():
     # 模拟每天的活动
     var exp_gained := 0 # 记录本周获得的EXP
     var day = TimerManager.current_day-1 #获取当日所属周中几日值。
+    # 每天先检查冷确过期（让到期的类别当天可用）
+    check_cooldowns()
     # 遍历当天的所有任务(多选)
     for task in Blogger.blog_calendar[day].tasks:
         if Utils.check_name_exists(Utils.possible_categories, task):
@@ -475,6 +495,7 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             var chapter = blogger.novel_batch_count
             title = "%s 第%d章" % [blogger.novel_batch_title, chapter]
             new_post.title = title  # 更新文章标题
+            emit_signal("sg_info_msg", "📖 《%s》连载中... 第%d章 / 100章" % [blogger.novel_batch_title, chapter])
         
         # ===== 出版畅销书逻辑 =====
         elif d.name == "出版畅销书":
@@ -500,14 +521,15 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             title = _generate_book_note_title(blogger)
             new_post.title = title
         
-        # ===== 黑客攻防课程授权检查 =====
-        if d.name == "黑客攻防(付费)":
-            blogger.hacker_article_count += 1
-            if blogger.hacker_article_count >= 100:
-                if TaskManager:
-                    TaskManager._on_hacker_course_complete()
-            if blogger.hacker_article_count >= 5 and not blogger.hacker_course_triggered:  # 测试用5篇
-                _try_trigger_course_auth(blogger)
+        # ===== 黑客攻防批次逻辑 =====
+        elif d.name == "黑客攻防(付费)":
+            _handle_hacker_batch(blogger)
+            if blogger.hacker_batch_topic == "":
+                _assign_hacker_topic(blogger)
+            var article_num = blogger.hacker_batch_count
+            title = "%s 第%d篇" % [blogger.hacker_batch_topic, article_num]
+            new_post.title = title
+            emit_signal("sg_info_msg", "💻 《%s》教程连载中... 第%d篇 / 100篇" % [blogger.hacker_batch_topic, article_num])
         
         blogger.posts.append(new_post)
         # blogger.add_post(new_post)  # 已通过 posts.append 添加，无需重复
@@ -523,30 +545,73 @@ func _remove_from_calendar(task_name: String) -> void:
 
 ## 处理小说连载批次逻辑
 func _handle_novel_batch(blogger):
-    # 第一次发布时，随机选择主题
-    if blogger.novel_batch_title == "":
-        _assign_novel_title(blogger)
-    
-    blogger.novel_batch_count += 1
-
-    # 检查是否达到100篇，自动开新批次
+    # 上次批次已达100篇 → 冷确结束后首次发布，开启新批次
     if blogger.novel_batch_count >= 100:
         blogger.novel_batch += 1
         blogger.novel_batch_count = 0
         blogger.novel_batch_ip_triggered = false
-        _assign_novel_title(blogger)  # 分配新主题
+        blogger.novel_batch_ip_target = randi() % 31 + 50
+        _assign_novel_title(blogger)
+    
+    if blogger.novel_batch_title == "":
+        _assign_novel_title(blogger)
+    
+    if blogger.novel_batch_count == 0:
+        blogger.novel_batch_ip_target = randi() % 31 + 50
+    
+    blogger.novel_batch_count += 1
+
+    if blogger.novel_batch_count >= blogger.novel_batch_ip_target and not blogger.novel_batch_ip_triggered:
+        _try_trigger_ip_auth(blogger)
+    
+    # 达到100篇 → 批次完成，设冷确，不重置数据（保留100篇供下次判断）
+    if blogger.novel_batch_count >= 100:
+        var d = Utils.find_category_by_name(Utils.possible_categories, "小说连载(付费)", true)
+        if not d.is_empty():
+            blogger.cooldowns["小说连载(付费)"] = Utils.format_date()
+            d.disabled = true
         if TaskManager:
             TaskManager._on_novel_batch_complete()
-    
-    # 检查是否触发IP授权（>=50篇且未触发过）
-    elif blogger.novel_batch_count >= 5 and not blogger.novel_batch_ip_triggered:  # 测试用5篇
-        _try_trigger_ip_auth(blogger)
 
 ## 为当前批次分配小说主题
 func _assign_novel_title(blogger):
     var title_templates = GDManager.get_title_templates()
     var topics = title_templates.topics.get("小说连载(付费)", ["程序员修仙传"])
     blogger.novel_batch_title = topics[randi() % topics.size()]
+
+## 处理黑客攻防批次逻辑
+func _handle_hacker_batch(blogger):
+    if blogger.hacker_batch_count >= 100:
+        blogger.hacker_batch += 1
+        blogger.hacker_batch_count = 0
+        blogger.hacker_course_triggered = false
+        blogger.hacker_batch_auth_target = randi() % 31 + 50
+        _assign_hacker_topic(blogger)
+    
+    if blogger.hacker_batch_topic == "":
+        _assign_hacker_topic(blogger)
+    
+    if blogger.hacker_batch_count == 0:
+        blogger.hacker_batch_auth_target = randi() % 31 + 50
+    
+    blogger.hacker_batch_count += 1
+
+    if blogger.hacker_batch_count >= blogger.hacker_batch_auth_target and not blogger.hacker_course_triggered:
+        _try_trigger_course_auth(blogger)
+    
+    if blogger.hacker_batch_count >= 100:
+        var d = Utils.find_category_by_name(Utils.possible_categories, "黑客攻防(付费)", true)
+        if not d.is_empty():
+            blogger.cooldowns["黑客攻防(付费)"] = Utils.format_date()
+            d.disabled = true
+        if TaskManager:
+            TaskManager._on_hacker_course_complete()
+
+## 为当前批次分配黑客攻防主题
+func _assign_hacker_topic(blogger):
+    var title_templates = GDManager.get_title_templates()
+    var topics = title_templates.topics.get("黑客攻防(付费)", ["Web渗透测试实战"])
+    blogger.hacker_batch_topic = topics[randi() % topics.size()]
 
 ## 处理出版畅销书批次逻辑
 func _handle_book_publish(blogger):
@@ -693,6 +758,8 @@ func simulate_new_blog_post(category) -> int:
     var d = Utils.find_category_by_name(Utils.possible_categories, category)
     if d.is_empty():
         return 0
+    if d.get("disabled", false):
+        return 0
     var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
 
     if blogger.stamina >= actual_cost and category: ## 如果体力足够,并且当天有写作任务。
@@ -701,6 +768,10 @@ func simulate_new_blog_post(category) -> int:
         # 这里定义了一个博文发布信号量,当有博文成功发布时候触发,将会在res://scripts/task_system/TaskManager.gd中引用信号量
         emit_signal("sg_new_blog_post",category)
 
+        # 设置冷确（仅对非项目型类别，出版畅销书/开源项目由 Manager 自行管理）
+        if not d.has("min_write_days"):
+            _set_post_cooldown(d)
+        
         # 这里可以根据文章的质量和访问量来计算EXP
         blogger.stamina -= actual_cost  # 使用实际消耗
         # 增加写作能力（每次写博客成功都会增加）
@@ -1267,6 +1338,51 @@ func check_cdn_accelerate_progress() -> void:
         if TaskManager:
             TaskManager._on_cdn_accelerate_complete()
         blogger.cdn_accelerate_in_progress = false
+
+## 设置类别冷确
+func _set_post_cooldown(category_data: Dictionary) -> void:
+    var category_name = category_data.get("name", "")
+    if category_name.is_empty():
+        return
+    var cooldown_days = category_data.get("cooldown_days", 0)
+    if cooldown_days <= 0:
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+    var start_date = Utils.format_date()
+    blogger.cooldowns[category_name] = start_date
+    category_data.disabled = true
+
+## 每日检查冷确过期
+func check_cooldowns() -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+    var today = Utils.format_date()
+    var expired: Array[String] = []
+    for category_name in blogger.cooldowns:
+        var start_date = blogger.cooldowns[category_name]
+        var d = Utils.find_category_by_name(Utils.possible_categories, category_name, true)
+        if d.is_empty():
+            expired.append(category_name)
+            continue
+        var cooldown_days = d.get("cooldown_days", 0)
+        if cooldown_days <= 0:
+            expired.append(category_name)
+            continue
+        var days_passed = Utils.calculate_new_game_time_difference(start_date, today)
+        if days_passed >= cooldown_days:
+            expired.append(category_name)
+        else:
+            d.disabled = true
+    for category_name in expired:
+        blogger.cooldowns.erase(category_name)
+        var d = Utils.find_category_by_name(Utils.possible_categories, category_name, true)
+        if not d.is_empty():
+            d.disabled = false
 
 signal signal_comment_maintenance(msg: String)
 func maintain_comment(category: String) -> int:

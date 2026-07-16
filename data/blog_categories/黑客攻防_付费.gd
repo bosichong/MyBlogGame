@@ -17,4 +17,6 @@ var item = {
     "is_money": true,
     "stamina": 60,
     "article_level": 5,
+    "cooldown_days": 100,
+    "min_write_days": 1,
 }

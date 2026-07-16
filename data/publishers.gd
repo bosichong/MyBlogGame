@@ -93,24 +93,21 @@ var publishers = [
 ]
 
 ## 随机选择出版商
-## 根据 writings_days（写作天数）决定可选范围
-## 写作天数越长，越容易获得大出版社合作
+## 根据 write_days（已发布篇数）决定可选范围
+## 写作篇数越多（最多10篇），越容易获得大出版社合作
 func get_random_publisher(write_days: int) -> Dictionary:
 	var available_publishers = []
 	
-	# 写作天数决定可接触的出版社等级
-	if write_days >= 300:        # 写作近一年，大出版社开放
+	if write_days >= 100:
 		available_publishers = publishers
-	elif write_days >= 240:      # 写作8个月左右
+	elif write_days >= 70:
 		available_publishers = publishers.filter(func(p): return p.reputation >= 3)
-	elif write_days >= 168:      # 写作半年（最低要求）
+	elif write_days >= 50:
 		available_publishers = publishers.filter(func(p): return p.reputation >= 2)
 	else:
-		# 未达最低要求，只能选小型出版社
 		available_publishers = publishers.filter(func(p): return p.reputation <= 2)
 	
-	# 随机选择
 	if available_publishers.size() > 0:
 		return available_publishers[randi() % available_publishers.size()]
 	else:
-		return publishers[0]  # 默认返回第一个
+		return publishers[0]

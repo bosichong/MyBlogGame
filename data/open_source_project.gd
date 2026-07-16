@@ -64,6 +64,9 @@ var sponsors = [
         "reward_range": [80000, 150000],
         "reputation": 5000,
         "monthly_base": 200000,
+        "edit_days": 5,
+        "publish_days": 7,
+        "reward_multiplier": 2.0,
         "description": "全球科技巨头，开源生态重要贡献者",
     },
     {
@@ -72,6 +75,9 @@ var sponsors = [
         "reward_range": [70000, 120000],
         "reputation": 4500,
         "monthly_base": 180000,
+        "edit_days": 6,
+        "publish_days": 8,
+        "reward_multiplier": 1.8,
         "description": "产品生态领导者，对优质开源项目青睐有加",
     },
     {
@@ -80,6 +86,9 @@ var sponsors = [
         "reward_range": [60000, 100000],
         "reputation": 4000,
         "monthly_base": 170000,
+        "edit_days": 5,
+        "publish_days": 6,
+        "reward_multiplier": 1.7,
         "description": "GitHub最大客户，开源战略重要推手",
     },
     {
@@ -88,6 +97,9 @@ var sponsors = [
         "reward_range": [50000, 80000],
         "reputation": 3500,
         "monthly_base": 150000,
+        "edit_days": 4,
+        "publish_days": 5,
+        "reward_multiplier": 1.5,
         "description": "国内互联网巨头，技术投资力度大",
     },
     {
@@ -96,6 +108,9 @@ var sponsors = [
         "reward_range": [45000, 75000],
         "reputation": 3000,
         "monthly_base": 140000,
+        "edit_days": 4,
+        "publish_days": 5,
+        "reward_multiplier": 1.4,
         "description": "国内云服务领导者，开源项目活跃",
     },
     {
@@ -104,6 +119,9 @@ var sponsors = [
         "reward_range": [40000, 65000],
         "reputation": 2500,
         "monthly_base": 130000,
+        "edit_days": 3,
+        "publish_days": 5,
+        "reward_multiplier": 1.3,
         "description": "AI和短视频领域领导者，技术氛围浓厚",
     },
     {
@@ -112,6 +130,9 @@ var sponsors = [
         "reward_range": [35000, 60000],
         "reputation": 2500,
         "monthly_base": 120000,
+        "edit_days": 4,
+        "publish_days": 5,
+        "reward_multiplier": 1.2,
         "description": "技术研发实力雄厚，注重基础软件",
     },
     {
@@ -120,6 +141,9 @@ var sponsors = [
         "reward_range": [30000, 50000],
         "reputation": 2000,
         "monthly_base": 110000,
+        "edit_days": 3,
+        "publish_days": 4,
+        "reward_multiplier": 1.1,
         "description": "AI和搜索引擎领导者，对开源项目支持力度大",
     },
     {
@@ -128,6 +152,9 @@ var sponsors = [
         "reward_range": [25000, 45000],
         "reputation": 1800,
         "monthly_base": 100000,
+        "edit_days": 3,
+        "publish_days": 4,
+        "reward_multiplier": 1.0,
         "description": "本地生活巨头，技术投入持续增加",
     },
     {
@@ -136,6 +163,9 @@ var sponsors = [
         "reward_range": [25000, 40000],
         "reputation": 1500,
         "monthly_base": 90000,
+        "edit_days": 3,
+        "publish_days": 4,
+        "reward_multiplier": 0.9,
         "description": "电商巨头，云计算和物流技术领先",
     },
 ]
@@ -200,6 +230,19 @@ func calculate_sponsor_reward(sponsor: Dictionary, project_quality: float) -> in
     var max_reward = sponsor.reward_range[1]
     var reward = min_reward + int((max_reward - min_reward) * project_quality)
     return reward
+
+## 计算月赞助收入
+func calculate_monthly_sponsor(project: Dictionary, sponsor_months: int, monthly_base: int) -> int:
+    var write_quality = project.get("write_quality", 0.5)
+    var peak_income = monthly_base * (0.8 + 0.4 * write_quality)
+    
+    var income = 0.0
+    if sponsor_months < 6:
+        income = peak_income * pow(float(sponsor_months + 1) / 6.0, 1.5)
+    elif sponsor_months < 12:
+        income = peak_income * (0.9 + randf_range(-0.1, 0.1))
+    
+    return int(max(income, 0))
 
 ## 更新所有项目的Star数（每月调用）
 func update_all_projects_stars() -> Dictionary:
