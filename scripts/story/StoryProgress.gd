@@ -65,18 +65,26 @@ var chapter4 = {
 
 ## 第五章：博客重塑期（2020-2025）
 var chapter5 = {
+    # 公共里程碑
     "ai_unlocked": false,              # AI创作解锁
+    "award_2025": false,               # 优秀博客奖项（2025，映射到 fame_let_go）
+    "ending_achieved": false,          # 结局达成
+    # 文学主线
+    "philosophy_glimmer": false,       # 哲理苗头（第4本书）
+    "philosophy_enlightenment": false, # 大彻大悟（第5本书）
+    # 编程主线
+    "ai_consciousness": false,         # AI意识萌芽（第5个开源）
+    "ai_research_complete": false,     # 贾维斯计划完成
+    "wormhole_research_complete": false, # 虫洞算法研究完成
+    # 游戏开发分支
     "game_dev_start": false,           # 游戏开发启动
     "game_dev_complete": false,        # 游戏主体完成
     "game_test": false,                # 游戏测试优化
-    "video_account": false,            # 视频号开通
     "game_trailer": false,             # 游戏预告发布
-    "personal_brand": false,           # 个人品牌建立
     "game_released": false,            # 游戏正式发布
     "game_award": false,               # 游戏获奖
-    "fame_let_go": false,              # 看淡名利（合并奖项与放弃参评）
-    "return_to_roots": false,          # 回归初心（合并自由写作）
-    "ending_achieved": false,          # 结局达成
+    # 旧版兼容（保留key不删除，避免旧档报错）
+    "fame_let_go": false,              # 兼容：看淡名利
 }
 
 ## 设置里程碑完成状态
@@ -279,17 +287,20 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "year_summary_2020": "2020年度总结：挑战与突破的五年",
         # 第五章
         "ai_unlocked": "AI创作解锁：借助AI开启全新的创作模式",
+        "award_2025": "优秀博客奖项（2025）：最后一届大赛，为博客生涯画上句号",
+        "ending_achieved": "结局达成：二十年的博客旅程，在此刻迎来终章",
+        "philosophy_glimmer": "哲理苗头：出版的第四本书中，你开始思考人生的意义",
+        "philosophy_enlightenment": "大彻大悟：第五本书完成，你找到了内心的答案",
+        "ai_consciousness": "AI意识萌芽：第5个开源项目中，AI展现了自我意识",
+        "ai_research_complete": "贾维斯计划完成：经过50天的研发，AI意识核心全面觉醒",
+        "wormhole_research_complete": "虫洞算法突破：跨越维度的算法突破，打开时空之门",
         "game_dev_start": "游戏开发启动：用代码构建心中的世界",
         "game_dev_complete": "游戏主体完成：从零到一，梦想成形",
         "game_test": "游戏测试优化：打磨每一处细节",
-        "video_account": "视频号开通：用影像讲述创作故事",
         "game_trailer": "游戏预告发布：向世界展示你的作品",
-        "personal_brand": "个人品牌建立：从博主到创作者的蜕变",
         "game_released": "游戏正式发布：作品终于与玩家见面",
         "game_award": "游戏获奖：站上领奖台，梦想照进现实",
         "fame_let_go": "看淡名利：奖项也好，排名也罢，唯有成长最珍贵",
-        "return_to_roots": "回归初心：卸下数据焦虑，不为流量，只为表达",
-        "ending_achieved": "结局达成：从今往后，不再有任务，只有热爱",
     }
     return descriptions.get(milestone, "未知里程碑: " + milestone)
 

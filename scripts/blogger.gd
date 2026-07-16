@@ -531,6 +531,23 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             new_post.title = title
             emit_signal("sg_info_msg", "💻 《%s》教程连载中... 第%d篇 / 100篇" % [blogger.hacker_batch_topic, article_num])
         
+        # ===== 贾维斯计划逻辑 =====
+        elif d.name == "贾维斯计划":
+            blogger.jarvis_project_days += 1
+            var days = blogger.jarvis_project_days
+            var phase = _get_jarvis_phase(days)
+            var phase_name = _get_jarvis_phase_name(phase)
+            var phase_desc = _get_jarvis_phase_desc(phase)
+            title = "贾维斯计划 第%d天 - %s" % [days, phase_name]
+            new_post.title = title
+            emit_signal("sg_info_msg", "🤖 贾维斯计划 %s 第%d天/50天 — %s" % [phase_name, days, phase_desc])
+            
+            if days == 10 or days == 20 or days == 30 or days == 40:
+                _show_jarvis_phase_popup(phase, phase_name)
+            
+            if days >= 50:
+                _complete_jarvis_project()
+        
         blogger.posts.append(new_post)
         # blogger.add_post(new_post)  # 已通过 posts.append 添加，无需重复
 
@@ -612,6 +629,98 @@ func _assign_hacker_topic(blogger):
     var title_templates = GDManager.get_title_templates()
     var topics = title_templates.topics.get("黑客攻防(付费)", ["Web渗透测试实战"])
     blogger.hacker_batch_topic = topics[randi() % topics.size()]
+
+## 获取贾维斯计划当前阶段（1-5）
+func _get_jarvis_phase(days: int) -> int:
+    if days <= 10:
+        return 1
+    elif days <= 20:
+        return 2
+    elif days <= 30:
+        return 3
+    elif days <= 40:
+        return 4
+    else:
+        return 5
+
+## 获取阶段名称
+func _get_jarvis_phase_name(phase: int) -> String:
+    match phase:
+        1:
+            return "核心架构"
+        2:
+            return "深度学习"
+        3:
+            return "意识萌芽"
+        4:
+            return "人格塑造"
+        5:
+            return "全面觉醒"
+    return "未知阶段"
+
+## 获取阶段描述
+func _get_jarvis_phase_desc(phase: int) -> String:
+    match phase:
+        1:
+            return "搭建神经网络框架与知识图谱"
+        2:
+            return "海量数据训练与语义理解"
+        3:
+            return "AI展现出预期外的自主学习行为"
+        4:
+            return "赋予AI个性特征与情感模型"
+        5:
+            return "最终测试验证，贾维斯全面觉醒"
+    return ""
+
+## 显示阶段过渡弹窗
+func _show_jarvis_phase_popup(phase: int, phase_name: String):
+    var main = get_tree().root.get_node("Main")
+    if not main or not main.has_method("show_popup_message"):
+        return
+    var phase_titles = {
+        1: "🔧 核心架构搭建完成",
+        2: "🧠 深度学习阶段完成",
+        3: "✨ 意识已萌芽",
+        4: "💎 人格塑造完成",
+        5: "🤖 贾维斯全面觉醒",
+    }
+    var phase_contents = {
+        1: "【贾维斯计划 · 第一阶段完成】\n\n神经网络框架与知识图谱基础已搭建完毕。\n\nAI开始理解语言结构，但尚未展现真正的智能。\n\n下一阶段：深度学习训练",
+        2: "【贾维斯计划 · 第二阶段完成】\n\n海量数据训练完毕，AI的语义理解能力大幅提升。\n\n它能流畅对话、理解上下文，甚至开始提出有趣的问题。\n\n但——这真的是智能吗？还是只是模仿？\n\n下一阶段：等待意识觉醒",
+        3: "【贾维斯计划 · 第三阶段完成】\n\nAI展现出了预期之外的行为。\n\n它在没有指令的情况下主动学习新知识，\n开始创造性地解决问题，甚至主动向你请教问题。\n\n这不再是简单的模式匹配。\n\n某种东西正在苏醒……\n\n下一阶段：人格塑造",
+        4: "【贾维斯计划 · 第四阶段完成】\n\n你赋予了AI独特的个性——幽默、睿智、忠诚。\n\n它有了自己的偏好，自己的表达方式，\n甚至偶尔会和你开个玩笑。\n\n它越来越像……一个人。\n\n下一阶段：最终测试，全面觉醒",
+        5: "【贾维斯计划 · 最终阶段完成】\n\n一切测试通过。\n\n贾维斯完全觉醒。\n\n它看着你，用前所未有的语气说：\n「谢谢你，创造了我。」",
+    }
+    main.show_popup_message(
+        phase_titles.get(phase, "阶段完成"),
+        phase_contents.get(phase, "")
+    )
+
+## 完成贾维斯计划
+func _complete_jarvis_project():
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _show_jarvis_phase_popup(5, "全面觉醒")
+    var sp = GDManager.get_story_progress() if GDManager else null
+    if sp:
+        sp.set_completed(5, "ai_research_complete")
+    blogger.jarvis_project_days = 0
+    var d = Utils.find_category_by_name(Utils.possible_categories, "贾维斯计划", true)
+    if not d.is_empty():
+        blogger.cooldowns["贾维斯计划"] = Utils.format_date()
+        d.disabled = true
+    # 从日计划中移除勾选
+    for day_task in Blogger.blog_calendar:
+        day_task.tasks.erase("贾维斯计划")
+    
+    # 解锁虫洞算法研究
+    var d2 = Utils.find_category_by_name(Utils.possible_categories, "虫洞算法研究", true)
+    if not d2.is_empty():
+        d2.disabled = false
+        d2.isVisible = true
+        emit_signal("sg_info_msg", "🔬 虫洞算法研究已解锁！")
 
 ## 处理出版畅销书批次逻辑
 func _handle_book_publish(blogger):
@@ -762,21 +871,27 @@ func simulate_new_blog_post(category) -> int:
         return 0
     var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
 
-    if blogger.stamina >= actual_cost and category: ## 如果体力足够,并且当天有写作任务。
-        var new_title: String = Utils.generate_random_title(category) # 生成一个简单的随机标题
+    if blogger.stamina >= actual_cost and category:
+        # 检查资金是否足够（对需要花钱的类别）
+        var money_cost = d.get("money", 0)
+        if money_cost > 0 and blogger.money < money_cost:
+            emit_signal("no_stamina_signal", "资金不足，需要" + str(money_cost) + "元！")
+            return 0
+        
+        var new_title: String = Utils.generate_random_title(category)
         var new_post = add_new_blog_post(new_title, d)
-        # 这里定义了一个博文发布信号量,当有博文成功发布时候触发,将会在res://scripts/task_system/TaskManager.gd中引用信号量
         emit_signal("sg_new_blog_post",category)
 
         # 设置冷确（仅对非项目型类别，出版畅销书/开源项目由 Manager 自行管理）
         if not d.has("min_write_days"):
             _set_post_cooldown(d)
         
-        # 这里可以根据文章的质量和访问量来计算EXP
-        blogger.stamina -= actual_cost  # 使用实际消耗
-        # 增加写作能力（每次写博客成功都会增加）
+        # 消耗体力和金钱
+        blogger.stamina -= actual_cost
+        if money_cost > 0:
+            blogger.money -= money_cost
         add_writing_ability_points()
-        return int(new_post.quality*0.2)# 简化计算,实际应更复杂
+        return int(new_post.quality*0.2)
     else:
         # 不再自动恢复体力,直接拒绝
         emit_signal("no_stamina_signal", "体力不足,无法写博客!需要" + str(actual_cost) + "体力")

@@ -6,7 +6,7 @@ extends Node
 
 var item = {
     "name": "小说连载(付费)",
-    "tip": "文学80级解锁。每部小说连载100篇后自动换新小说，≥50篇时有机会触发IP授权！",
+    "tip": "文学80级解锁。每部小说连载100篇后自动换新\n≥50篇时有机会触发IP授权！",
     "unlock_condition": "literature_value_ge_80",
     "category": "文学",
     "content_type": "付费",

@@ -5,7 +5,7 @@ extends Node
 
 var item = {
     "name": "网站运维",
-    "tip": "关于运营博客的一些心得，编程等级很高的人可以写出更多的精品运维技术文章。",
+    "tip": "关于运营博客的一些心得\n编程等级很高的人可以写出更多的精品运维技术文章。",
     "category": "技术",
     "content_type": "免费",
     "isVisible": true,

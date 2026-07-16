@@ -6,7 +6,7 @@ extends Node
 
 var item = {
     "name": "评论管理",
-    "tip": "管理博客评论，良好的互动会增加博客的知名度和访问量。收到第一条评论后解锁。",
+    "tip": "管理博客评论，良好的互动会增加博客的知名度和访问量\n收到第一条评论后解锁。",
     "unlock_condition": "has_first_comment",
     "category": "网站维护",
     "content_type": "互动",

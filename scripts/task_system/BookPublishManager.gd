@@ -217,6 +217,7 @@ func _complete_book_publish(book_state: Dictionary) -> void:
         blogger.money = current_money + final_reward
         blogger.reputation = current_reputation + 1000
         
+        blogger.book_publish_count += 1
         blogger.book_title = ""
         blogger.book_article_count = 0
         blogger.is_writing_book = false

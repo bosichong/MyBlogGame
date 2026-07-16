@@ -6,7 +6,7 @@ extends Node
 
 var item = {
     "name": "IP授权(影视)",
-    "tip": "文学85级+小说连载≥50篇，20%概率触发！一次性收益10万+文学加成，最高20万！",
+    "tip": "文学85级+小说连载≥50篇，20%概率触发！\n一次性收益10万+文学加成，最高20万！",
     "unlock_condition": "novel_batch_ge_50",
     "category": "文学",
     "content_type": "授权",

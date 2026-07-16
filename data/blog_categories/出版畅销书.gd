@@ -6,7 +6,7 @@ extends Node
 
 var item = {
     "name": "出版畅销书",
-    "tip": "文学能力达到90级后解锁（测试版），发布100篇内容后可出版上市！",
+    "tip": "文学能力达到90级后解锁（测试版）\n发布100篇内容后可出版上市！",
     "unlock_condition": "literature_value_ge_90",
     "category": "文学",
     "content_type": "出版",
