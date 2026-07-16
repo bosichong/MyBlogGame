@@ -24,16 +24,16 @@ var attribute_points: int = 0
 # ============================================
 
 ## 写作能力：影响所有文章的质量分
-var writing_ability: float = 90
+var writing_ability: float = 91
 
 ## 技术能力：影响技术类文章质量和网站维护效果
-var technical_ability: float = 90
+var technical_ability: float = 91
 
 ## 编程能力：影响编程教程、黑客攻防等技术文章质量
-var code_ability: float = 90
+var code_ability: float = 91
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 90
+var literature_ability: float = 91
 
 # ============================================
 # 资源
@@ -170,6 +170,14 @@ var calendar: Array[Dictionary] = [
 ]
 
 # ============================================
+# 日程冷确（高强度日程的间隔控制）
+# key: 类别名称, value: 冷确开始日期（format_date 格式 "year-month-week-day"）
+# ============================================
+
+## 日程冷确字典
+var cooldowns: Dictionary = {}
+
+# ============================================
 # 临时变量（用于统计计算）
 # ============================================
 
@@ -198,6 +206,9 @@ var novel_batch_count: int = 0
 ## 当前批次是否已触发过IP授权
 var novel_batch_ip_triggered: bool = false
 
+## 当前批次IP授权触发目标篇数（批次开始时随机50-80）
+var novel_batch_ip_target: int = 0
+
 ## 当前批次小说主题名
 var novel_batch_title: String = ""
 
@@ -208,8 +219,17 @@ var novel_batch_title: String = ""
 ## 课程授权是否已触发过
 var hacker_course_triggered: bool = false
 
-## 黑客攻防文章累计篇数
-var hacker_article_count: int = 0
+## 黑客攻防当前批次号
+var hacker_batch: int = 1
+
+## 黑客攻防当前批次已发布篇数
+var hacker_batch_count: int = 0
+
+## 黑客攻防当前批次课程授权触发目标篇数（50-80随机）
+var hacker_batch_auth_target: int = 0
+
+## 黑客攻防当前批次主题名
+var hacker_batch_topic: String = ""
 
 # ============================================
 # 出版畅销书

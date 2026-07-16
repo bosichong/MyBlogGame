@@ -78,6 +78,7 @@ func _ready() -> void:
     TaskManager.connect("sg_task_info_display_msg",sg_task_info_display_msg)
     TaskManager.connect("schedule_refresh_needed", _on_schedule_refresh_needed)
     TaskManager.connect("sg_task_show_popup_msg",sg_task_show_popup_msg)
+    Blogger.connect("sg_info_msg", sg_task_info_display_msg)
     
     var fl_manager = GDManager.friend_link_manager if GDManager else null
     if fl_manager:

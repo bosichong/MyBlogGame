@@ -228,6 +228,7 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "posts": data.posts,
         "archived_posts": data.archived_posts,
         "calendar": data.calendar,
+        "cooldowns": data.cooldowns,
         "tmp_week": data.tmp_week,
         "tmp_month": data.tmp_month,
         "tmp_year": data.tmp_year,
@@ -248,6 +249,16 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "os_project_name": data.os_project_name,
         "os_article_count": data.os_article_count,
         "is_developing_os": data.is_developing_os,
+        "novel_batch": data.novel_batch,
+        "novel_batch_count": data.novel_batch_count,
+        "novel_batch_ip_triggered": data.novel_batch_ip_triggered,
+        "novel_batch_ip_target": data.novel_batch_ip_target,
+        "novel_batch_title": data.novel_batch_title,
+        "hacker_batch": data.hacker_batch,
+        "hacker_batch_count": data.hacker_batch_count,
+        "hacker_batch_auth_target": data.hacker_batch_auth_target,
+        "hacker_batch_topic": data.hacker_batch_topic,
+        "hacker_course_triggered": data.hacker_course_triggered,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -279,6 +290,7 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.posts = dict.get("posts", [])
     data.archived_posts = dict.get("archived_posts", [])
     data.calendar = dict.get("calendar", [])
+    data.cooldowns = dict.get("cooldowns", {})
     data.tmp_week = dict.get("tmp_week", 1)
     data.tmp_month = dict.get("tmp_month", 1)
     data.tmp_year = dict.get("tmp_year", TimeData.GAME_START_YEAR)
@@ -310,6 +322,16 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.os_project_name = dict.get("os_project_name", "")
     data.os_article_count = dict.get("os_article_count", 0)
     data.is_developing_os = dict.get("is_developing_os", false)
+    data.novel_batch = dict.get("novel_batch", 1)
+    data.novel_batch_count = dict.get("novel_batch_count", 0)
+    data.novel_batch_ip_triggered = dict.get("novel_batch_ip_triggered", false)
+    data.novel_batch_ip_target = dict.get("novel_batch_ip_target", 0)
+    data.novel_batch_title = dict.get("novel_batch_title", "")
+    data.hacker_batch = dict.get("hacker_batch", 1)
+    data.hacker_batch_count = dict.get("hacker_batch_count", 0)
+    data.hacker_batch_auth_target = dict.get("hacker_batch_auth_target", 0)
+    data.hacker_batch_topic = dict.get("hacker_batch_topic", "")
+    data.hacker_course_triggered = dict.get("hacker_course_triggered", false)
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {

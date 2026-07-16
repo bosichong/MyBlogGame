@@ -289,6 +289,7 @@ func refresh_articles() -> void:
     var novel_count = 0
     var book_count = 0
     var os_count = 0
+    var hacker_count = 0
     
     for post in unique_posts:
         var category = post.get("post_category", "未分类")
@@ -304,6 +305,8 @@ func refresh_articles() -> void:
             book_count += 1
         elif category == "开源项目" or category == "开源维护笔记":
             os_count += 1
+        elif category == "黑客攻防(付费)":
+            hacker_count += 1
     
     # 加载所有分类配置
     var categories_config = []
@@ -369,6 +372,12 @@ func refresh_articles() -> void:
             blog_data.get("os_article_count", 0), 
             "项目《%s》，已发布 %d 篇技术文档" % [blog_data.get("os_project_name", "神秘项目"), blog_data.get("os_article_count", 0)])
         articles_list.add_child(os_item)
+    
+    if hacker_count > 0 or blog_data.get("hacker_batch_count", 0) > 0:
+        var hacker_item = _create_special_item("🔒 黑客攻防教程", 
+            blog_data.get("hacker_batch_count", 0), 
+            "第 %d 部教程，已发布 %d 篇" % [blog_data.get("hacker_batch", 1), blog_data.get("hacker_batch_count", 0)])
+        articles_list.add_child(hacker_item)
 
 func _create_category_item(category_name: String, count: int) -> Control:
     var panel = PanelContainer.new()

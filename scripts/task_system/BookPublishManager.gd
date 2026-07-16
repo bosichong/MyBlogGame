@@ -32,6 +32,7 @@ func action_start_book_write() -> void:
         d.isVisible = true
     
     book_state.is_writing = true
+    _update_book_notes_visibility()
     
     emit_info_msg.call("📖 文学能力达到90级，可以开始创作畅销书了！\n\n💡 提示：发布100篇后，将进入出版社审核阶段！")
 
@@ -132,12 +133,13 @@ func _update_book_notes_visibility() -> void:
     
     var book_notes = Utils.find_category_by_name(Utils.possible_categories, "出书笔记", true) if Utils else null
     if book_notes:
-        book_notes.isVisible = true
-        book_notes.disabled = not should_show
-        if book_notes.disabled and Blogger:
-            for day_task in Blogger.blog_calendar:
-                if "出书笔记" in day_task.tasks:
-                    day_task.tasks.erase("出书笔记")
+        book_notes.isVisible = should_show
+        if not should_show:
+            book_notes.disabled = true
+            if Blogger:
+                for day_task in Blogger.blog_calendar:
+                    if "出书笔记" in day_task.tasks:
+                        day_task.tasks.erase("出书笔记")
 
 func update_book_phase() -> void:
     var book_state = _get_or_create_book_state()
@@ -217,8 +219,16 @@ func _complete_book_publish(book_state: Dictionary) -> void:
         
         blogger.book_title = ""
         blogger.book_article_count = 0
+        blogger.is_writing_book = false
     
     _reset_book_state()
+    
+    # 出版后冷确180天
+    if blogger:
+        var d = Utils.find_category_by_name(Utils.possible_categories, "出版畅销书", true)
+        if not d.is_empty():
+            blogger.cooldowns["出版畅销书"] = Utils.format_date()
+            d.disabled = true
     
     _book_publish_instance.published_books.append(book_state.duplicate())
     

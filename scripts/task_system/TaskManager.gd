@@ -238,7 +238,7 @@ func _on_novel_batch_complete() -> void:
     check_tasks_by_trigger("novel_batch_complete", {})
     _remove_task_from_calendar("小说连载(付费)")
     schedule_refresh_needed.emit()
-    sg_task_show_popup_msg.emit("📖 小说连载完成", "你已完成一部小说连载（100章）！\n新小说主题已自动分配，别忘了去日程中重新安排写作！")
+    sg_task_show_popup_msg.emit("📖 小说连载完成", "你已完成一部小说连载（100章）！\n\n新小说主题已自动分配。\n\n📌 100天冷却期内，不妨休息一下，构思新的故事！\n冷却结束后即可开始新一轮连载。")
 
 ## 小说获得IP授权
 func _on_novel_ip_authorized() -> void:
@@ -249,7 +249,7 @@ func _on_hacker_course_complete() -> void:
     check_tasks_by_trigger("hacker_course_complete", {})
     _remove_task_from_calendar("黑客攻防(付费)")
     schedule_refresh_needed.emit()
-    sg_task_show_popup_msg.emit("💻 黑客攻防课程完成", "你已完成黑客攻防教程（100篇）！\n课程已归档，如需继续连载别忘了去日程中重新勾选。")
+    sg_task_show_popup_msg.emit("💻 黑客攻防课程完成", "你已完成一部黑客攻防教程（100篇）！\n\n新教程主题已自动分配。\n\n📌 100天冷却期内，不妨深入研究安全技术！\n冷却结束后即可开始新教程连载。")
 
 ## 黑客攻防获得课程授权
 func _on_hacker_course_authorized() -> void:

@@ -6,7 +6,7 @@ extends Node
 
 var item = {
     "name": "开源项目",
-    "tip": "编程能力达到90级后解锁，发布5篇开源项目文章，有机会获得谷歌、苹果、微软、腾讯、阿里等大厂赞助！",
+    "tip": "编程能力达到90级后解锁，发布100篇开源项目文章，有机会获得谷歌、苹果、微软、腾讯、阿里等大厂赞助！",
     "unlock_condition": "code_value_ge_90",
     "category": "技术",
     "content_type": "开源",
@@ -23,4 +23,5 @@ var item = {
     "publish_days": 7,
     "sponsor_reward": 80000,
     "reputation_reward": 2000,
+    "cooldown_days": 180,
 }
