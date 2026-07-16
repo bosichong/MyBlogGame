@@ -1204,3 +1204,31 @@ func check_income_ge_1000(context: Dictionary) -> bool:
         return false
     var ad = GDManager.get_ad()
     return ad.total_commission >= 1000.0
+
+## 自定义条件检查:出版畅销书累计≥3
+func check_book_publish_ge_3(_context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var blogger = GDManager.get_blogger()
+    return blogger.book_publish_count >= 3
+
+## 自定义条件检查:出版畅销书累计≥5
+func check_book_publish_ge_5(_context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var blogger = GDManager.get_blogger()
+    return blogger.book_publish_count >= 5
+
+## 自定义条件检查:开源项目累计≥3
+func check_open_source_ge_3(_context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var blogger = GDManager.get_blogger()
+    return blogger.open_source_count >= 3
+
+## 自定义条件检查:开源项目累计≥5
+func check_open_source_ge_5(_context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var blogger = GDManager.get_blogger()
+    return blogger.open_source_count >= 5

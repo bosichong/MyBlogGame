@@ -6,7 +6,7 @@ extends Node
 
 var item = {
     "name": "黑客攻防(付费)",
-    "tip": "编程能力达到80级后解锁，技术最高境界，访问量不高但收入很高！",
+    "tip": "编程能力达到80级后解锁\n技术最高境界，访问量不高但收入很高！",
     "unlock_condition": "code_value_ge_80",
     "category": "技术",
     "content_type": "付费",

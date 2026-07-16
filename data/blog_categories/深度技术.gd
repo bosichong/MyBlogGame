@@ -6,7 +6,7 @@ extends Node
 
 var item = {
     "name": "深度技术",
-    "tip": "编程能力达到60级后解锁，深入剖析技术原理与底层机制。",
+    "tip": "编程能力达到60级后解锁\n深入剖析技术原理与底层机制。",
     "unlock_condition": "code_value_ge_60",
     "category": "技术",
     "content_type": "免费",

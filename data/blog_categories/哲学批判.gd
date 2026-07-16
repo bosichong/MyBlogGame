@@ -6,7 +6,7 @@ extends Node
 
 var item = {
     "name": "哲学批判",
-    "tip": "文学能力达到60级后解锁，对社会现象和时事新闻进行哲学视角的深度解读与批判。",
+    "tip": "文学能力达到60级后解锁\n对社会现象和时事新闻进行哲学视角的深度解读与批判。",
     "unlock_condition": "literature_value_ge_60",
     "category": "文学",
     "content_type": "免费",

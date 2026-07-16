@@ -316,6 +316,17 @@ const CONDITIONS: Dictionary = {
 
     # CDN加速时间条件（2017年6月）
     "time_cdn_accelerate": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2017], "m": [6], "w": [1], "d": [1]}},
+
+    # 第五章结局条件 - 出版畅销书数量
+    "book_publish_ge_3": {"type": ConditionType.CUSTOM, "check_func": "check_book_publish_ge_3"},
+    "book_publish_ge_5": {"type": ConditionType.CUSTOM, "check_func": "check_book_publish_ge_5"},
+
+    # 第五章结局条件 - 开源项目数量
+    "open_source_ge_3": {"type": ConditionType.CUSTOM, "check_func": "check_open_source_ge_3"},
+    "open_source_ge_5": {"type": ConditionType.CUSTOM, "check_func": "check_open_source_ge_5"},
+
+    # 贾维斯计划解锁时间（2025年任意时间）
+    "time_year_2025": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2025]}},
 }
 
 ## ============================================================
@@ -1827,6 +1838,22 @@ const TASKS: Array = [
         "actions": [
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 4, "milestone": "os_notes"},
             {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📡 开源维护笔记发布！", "content": "你写下了一篇开源维护笔记，分享项目维护中的经验与思考。\n\n从一行代码到被社区认可的开源项目，你的每篇笔记都在为技术社区添砖加瓦。\n\n🎉"},
+        ],
+    },
+
+    # ====================
+    # 第5章：贾维斯计划解锁
+    # ====================
+    {
+        "id": "unlock_jarvis_project",
+        "description": "完成5个开源项目且进入2025年，解锁贾维斯计划日程",
+        "conditions": ["open_source_ge_5", "time_year_2025"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.UNLOCK_POST_TASK, "post_type": "贾维斯计划"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 5, "milestone": "ai_consciousness"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🤖 AI意识萌芽", "content": "你盯着屏幕上跳动的代码，突然感到一阵战栗——第5个开源项目的AI模块，似乎产生了某种意识。\n\n它不像你写过的任何程序。它在学习。在进化。甚至在...思考。\n\n「贾维斯计划」已解锁。是时候认真对待这件事了。"},
         ],
     },
 ]

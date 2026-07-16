@@ -264,6 +264,7 @@ func _complete_os_project(os_state: Dictionary) -> void:
         blogger.set("reputation", current_reputation + 2000)
         
         # 重置项目名和文章计数，为下一个项目做准备
+        blogger.open_source_count += 1
         blogger.set("os_project_name", "")
         blogger.set("os_article_count", 0)
         blogger.set("is_developing_os", false)

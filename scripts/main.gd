@@ -90,6 +90,7 @@ func _ready() -> void:
     
     # 延迟检查初始任务，确保所有节点的 _ready() 都执行完毕
     call_deferred("_check_initial_tasks")
+    call_deferred("_check_time_tasks_on_start")
     
     update_ui()
 
@@ -97,6 +98,8 @@ func _ready() -> void:
 func _check_initial_tasks() -> void:
     TaskManager.check_initial_tasks()
 
+func _check_time_tasks_on_start() -> void:
+    TaskManager.day_task_func()
 
     if TimerManager:
         if TimerManager.timer.is_stopped():

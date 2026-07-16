@@ -246,9 +246,12 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "book_title": data.book_title,
         "book_article_count": data.book_article_count,
         "is_writing_book": data.is_writing_book,
+        "book_publish_count": data.book_publish_count,
         "os_project_name": data.os_project_name,
         "os_article_count": data.os_article_count,
         "is_developing_os": data.is_developing_os,
+        "open_source_count": data.open_source_count,
+        "jarvis_project_days": data.jarvis_project_days,
         "novel_batch": data.novel_batch,
         "novel_batch_count": data.novel_batch_count,
         "novel_batch_ip_triggered": data.novel_batch_ip_triggered,
@@ -319,9 +322,12 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.book_title = dict.get("book_title", "")
     data.book_article_count = dict.get("book_article_count", 0)
     data.is_writing_book = dict.get("is_writing_book", false)
+    data.book_publish_count = dict.get("book_publish_count", 0)
     data.os_project_name = dict.get("os_project_name", "")
     data.os_article_count = dict.get("os_article_count", 0)
     data.is_developing_os = dict.get("is_developing_os", false)
+    data.open_source_count = dict.get("open_source_count", 0)
+    data.jarvis_project_days = dict.get("jarvis_project_days", 0)
     data.novel_batch = dict.get("novel_batch", 1)
     data.novel_batch_count = dict.get("novel_batch_count", 0)
     data.novel_batch_ip_triggered = dict.get("novel_batch_ip_triggered", false)
