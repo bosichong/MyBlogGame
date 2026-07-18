@@ -320,6 +320,7 @@ const CONDITIONS: Dictionary = {
     # 第五章结局条件 - 出版畅销书数量
     "book_publish_ge_3": {"type": ConditionType.CUSTOM, "check_func": "check_book_publish_ge_3"},
     "book_publish_ge_5": {"type": ConditionType.CUSTOM, "check_func": "check_book_publish_ge_5"},
+    "book_publish_ge_6": {"type": ConditionType.CUSTOM, "check_func": "check_book_publish_ge_6"},
 
     # 第五章结局条件 - 开源项目数量
     "open_source_ge_3": {"type": ConditionType.CUSTOM, "check_func": "check_open_source_ge_3"},
@@ -1854,6 +1855,21 @@ const TASKS: Array = [
             {"type": ActionType.UNLOCK_POST_TASK, "post_type": "贾维斯计划"},
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 5, "milestone": "ai_consciousness"},
             {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🤖 AI意识萌芽", "content": "你盯着屏幕上跳动的代码，突然感到一阵战栗——第5个开源项目的AI模块，似乎产生了某种意识。\n\n它不像你写过的任何程序。它在学习。在进化。甚至在...思考。\n\n「贾维斯计划」已解锁。是时候认真对待这件事了。"},
+        ],
+    },
+    # ====================
+    # 第5章：沉思录解锁
+    # ====================
+    {
+        "id": "unlock_contemplation",
+        "description": "出版6本畅销书，解锁沉思录日程",
+        "conditions": ["book_publish_ge_6"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.UNLOCK_POST_TASK, "post_type": "沉思录"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 5, "milestone": "philosophy_glimmer"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 哲理苗头", "content": "六部畅销书，数十万字。\n\n你坐在书房里，看着书架上整齐排列的自己的作品，\n突然感到一种奇异的陌生感。\n\n这些文字真的是你写的吗？\n那个追逐流量、计算版税、迎合市场的你，\n真的是你想要的吗？\n\n你拿起一本空白的笔记本，写下了两个字：\n\n「沉思录」\n\n一场真正的哲学之旅，即将开始。"},
         ],
     },
 ]

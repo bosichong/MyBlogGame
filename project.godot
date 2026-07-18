@@ -21,6 +21,7 @@ boot_splash/stretch_mode=0
 boot_splash/use_filter=false
 boot_splash/image="uid://yu65bfhg3de"
 config/icon="res://icon.svg"
+config/url="https://www.mybloggame.com/"
 
 [autoload]
 

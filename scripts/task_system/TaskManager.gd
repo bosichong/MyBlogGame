@@ -1219,6 +1219,13 @@ func check_book_publish_ge_5(_context: Dictionary) -> bool:
     var blogger = GDManager.get_blogger()
     return blogger.book_publish_count >= 5
 
+## 自定义条件检查:出版畅销书累计≥6
+func check_book_publish_ge_6(_context: Dictionary) -> bool:
+    if not GDManager:
+        return false
+    var blogger = GDManager.get_blogger()
+    return blogger.book_publish_count >= 6
+
 ## 自定义条件检查:开源项目累计≥3
 func check_open_source_ge_3(_context: Dictionary) -> bool:
     if not GDManager:

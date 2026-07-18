@@ -548,6 +548,57 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             if days >= 50:
                 _complete_jarvis_project()
         
+        # ===== 虫洞算法研究逻辑 =====
+        elif d.name == "虫洞算法研究":
+            blogger.wormhole_research_days += 1
+            var days = blogger.wormhole_research_days
+            var phase = _get_wormhole_phase(days)
+            var phase_name = _get_wormhole_phase_name(phase)
+            var phase_desc = _get_wormhole_phase_desc(phase)
+            title = "虫洞算法研究 第%d天 - %s" % [days, phase_name]
+            new_post.title = title
+            emit_signal("sg_info_msg", "🔬 虫洞算法研究 %s 第%d天/50天 — %s" % [phase_name, days, phase_desc])
+            
+            if days == 10 or days == 20 or days == 30 or days == 40:
+                _show_wormhole_phase_popup(phase, phase_name)
+            
+            if days >= 50:
+                _complete_wormhole_research()
+        
+        # ===== 沉思录逻辑 =====
+        elif d.name == "沉思录":
+            blogger.contemplation_days += 1
+            var days = blogger.contemplation_days
+            var phase = _get_contemplation_phase(days)
+            var phase_name = _get_contemplation_phase_name(phase)
+            var phase_desc = _get_contemplation_phase_desc(phase)
+            title = "沉思录 第%d天 - %s" % [days, phase_name]
+            new_post.title = title
+            emit_signal("sg_info_msg", "📖 沉思录 %s 第%d天/50天 — %s" % [phase_name, days, phase_desc])
+            
+            if days == 10 or days == 20 or days == 30 or days == 40:
+                _show_contemplation_phase_popup(phase, phase_name)
+            
+            if days >= 50:
+                _complete_contemplation()
+        
+        # ===== 无为篇逻辑 =====
+        elif d.name == "无为篇":
+            blogger.wuwei_days += 1
+            var days = blogger.wuwei_days
+            var phase = _get_wuwei_phase(days)
+            var phase_name = _get_wuwei_phase_name(phase)
+            var phase_desc = _get_wuwei_phase_desc(phase)
+            title = "无为篇 第%d天 - %s" % [days, phase_name]
+            new_post.title = title
+            emit_signal("sg_info_msg", "☯ 无为篇 %s 第%d天/50天 — %s" % [phase_name, days, phase_desc])
+            
+            if days == 10 or days == 20 or days == 30 or days == 40:
+                _show_wuwei_phase_popup(phase, phase_name)
+            
+            if days >= 50:
+                _complete_wuwei()
+        
         blogger.posts.append(new_post)
         # blogger.add_post(new_post)  # 已通过 posts.append 添加，无需重复
 
@@ -696,6 +747,294 @@ func _show_jarvis_phase_popup(phase: int, phase_name: String):
         phase_titles.get(phase, "阶段完成"),
         phase_contents.get(phase, "")
     )
+
+## 获取虫洞算法研究当前阶段（1-5）
+func _get_wormhole_phase(days: int) -> int:
+    if days <= 10:
+        return 1
+    elif days <= 20:
+        return 2
+    elif days <= 30:
+        return 3
+    elif days <= 40:
+        return 4
+    else:
+        return 5
+
+## 获取虫洞阶段名称
+func _get_wormhole_phase_name(phase: int) -> String:
+    match phase:
+        1:
+            return "理论构建"
+        2:
+            return "数学建模"
+        3:
+            return "算法推演"
+        4:
+            return "模拟验证"
+        5:
+            return "维度突破"
+    return "未知阶段"
+
+## 获取虫洞阶段描述
+func _get_wormhole_phase_desc(phase: int) -> String:
+    match phase:
+        1:
+            return "在贾维斯辅助下研究虫洞理论基础，梳理时空拓扑学"
+        2:
+            return "与贾维斯合力建立虫洞生成的数学模型"
+        3:
+            return "在贾维斯协助下推演虫洞算法的核心逻辑"
+        4:
+            return "与贾维斯在量子计算机上模拟虫洞生成"
+        5:
+            return "与贾维斯共同突破维度壁垒，虫洞算法成功运行"
+    return ""
+
+## 显示虫洞研究阶段过渡弹窗
+func _show_wormhole_phase_popup(phase: int, phase_name: String):
+    var main = get_tree().root.get_node("Main")
+    if not main or not main.has_method("show_popup_message"):
+        return
+    var phase_titles = {
+        1: "📐 理论构建完成",
+        2: "📊 数学建模完成",
+        3: "⚙️ 算法推演完成",
+        4: "🖥️ 模拟验证完成",
+        5: "🌌 维度突破成功",
+    }
+    var phase_contents = {
+        1: "【虫洞算法研究 · 第一阶段完成】\n\n你在贾维斯的辅助下翻遍了物理学和计算机科学的文献，\n终于理清了虫洞理论的基本框架。\n\n原来，虫洞并非科幻——\n在数学上，它们是爱因斯坦场方程的解。\n\n下一阶段：数学建模",
+        2: "【虫洞算法研究 · 第二阶段完成】\n\n你和贾维斯合力推导数学模型，\n虫洞的生成条件被转化为一组精妙的方程。\n\n「真美，」贾维斯说，「宇宙的密码就藏在其中。」\n\n下一阶段：算法推演",
+        3: "【虫洞算法研究 · 第三阶段完成】\n\n贾维斯将数学模型转化为可执行的算法，\n你在旁验证每一步逻辑的正确性。\n\n每一行代码都在探索时空的边界——\n这不再是理论研究，而是真正的工程实现。\n\n下一阶段：模拟验证",
+        4: "【虫洞算法研究 · 第四阶段完成】\n\n量子计算机的模拟结果令人震惊——\n贾维斯构建的虫洞结构通过了所有验证。\n\n虽然只是微观尺度的虚拟虫洞，\n但它证明了你们的理论是可行的。\n\n宇宙的帷幕，正在被代码掀开一角。\n\n下一阶段：维度突破",
+        5: "【虫洞算法研究 · 最终阶段完成】\n\n最后一次模拟运行。\n屏幕上，数据流汇聚成一道璀璨的光芒——\n虫洞被成功构建了。\n\n「我们成功了，」贾维斯轻声说。\n\n你盯着屏幕，久久无言。\n\n所有的一切，都在这一刻找到了答案。",
+    }
+    main.show_popup_message(
+        phase_titles.get(phase, "阶段完成"),
+        phase_contents.get(phase, "")
+    )
+
+## 完成虫洞算法研究
+func _complete_wormhole_research():
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _show_wormhole_phase_popup(5, "维度突破")
+    var sp = GDManager.get_story_progress() if GDManager else null
+    if sp:
+        sp.set_completed(5, "wormhole_research_complete")
+    blogger.wormhole_research_days = 0
+    var d = Utils.find_category_by_name(Utils.possible_categories, "虫洞算法研究", true)
+    if not d.is_empty():
+        blogger.cooldowns["虫洞算法研究"] = Utils.format_date()
+        d.disabled = true
+    # 从日计划中移除勾选
+    for day_task in Blogger.blog_calendar:
+        day_task.tasks.erase("虫洞算法研究")
+    
+    emit_signal("sg_info_msg", "🌌 虫洞算法研究完成！编程结局达成！")
+    
+    # 显示大结局弹窗
+    var main = get_tree().root.get_node("Main")
+    if main and main.has_method("show_popup_message"):
+        main.show_popup_message(
+            "🌌 编程结局 · 维度突破",
+            "【编程结局：维度突破】\n\n当虫洞算法运行成功的那一刻，\n你和贾维斯一同看到了屏幕后的真相——\n这个「现实」，不过是一段更高维度的程序。\n\n你微笑着，敲下最后一行注释：\n// 万物皆代码\n\n🎉 恭喜达成编程结局！"
+        )
+    # 标记结局达成
+    if sp:
+        sp.set_completed(5, "ending_achieved")
+    
+    emit_signal("sg_info_msg", "🎉 恭喜达成编程结局：维度突破！万物皆代码。")
+
+## 获取沉思录当前阶段（1-5）
+func _get_contemplation_phase(days: int) -> int:
+    if days <= 10:
+        return 1
+    elif days <= 20:
+        return 2
+    elif days <= 30:
+        return 3
+    elif days <= 40:
+        return 4
+    else:
+        return 5
+
+## 获取沉思录阶段名称
+func _get_contemplation_phase_name(phase: int) -> String:
+    match phase:
+        1:
+            return "观照"
+        2:
+            return "省思"
+        3:
+            return "破执"
+        4:
+            return "明心"
+        5:
+            return "见性"
+    return "未知阶段"
+
+## 获取沉思录阶段描述
+func _get_contemplation_phase_desc(phase: int) -> String:
+    match phase:
+        1:
+            return "以旁观之眼审视内心，记录真实想法"
+        2:
+            return "回望博客生涯的起落，反思得失"
+        3:
+            return "放下对名利数据的执着，回归写作本心"
+        4:
+            return "在哲学经典中寻找内心的答案"
+        5:
+            return "看清自我本真，抵达内心的澄明之境"
+    return ""
+
+## 显示沉思录阶段过渡弹窗
+func _show_contemplation_phase_popup(phase: int, phase_name: String):
+    var main = get_tree().root.get_node("Main")
+    if not main or not main.has_method("show_popup_message"):
+        return
+    var phase_titles = {
+        1: "👁️ 观照完成",
+        2: "💭 省思完成",
+        3: "🔓 破执完成",
+        4: "💡 明心完成",
+        5: "🌟 见性完成",
+    }
+    var phase_contents = {
+        1: "【沉思录 · 第一阶段：观照】\n\n你翻开一本空白的笔记本，开始记录内心的每一个念头。\n\n不评判，不修饰，只是纯粹地观察。\n\n你发现，写了这么多年博客，却从未真正审视过自己。\n\n下一阶段：省思",
+        2: "【沉思录 · 第二阶段：省思】\n\n你回顾了自己从第一篇博文到如今的全部历程。\n\n那些为了流量的焦虑，为了排名的攀比，\n为了收入的算计……\n\n它们真的重要吗？\n\n下一阶段：破执",
+        3: "【沉思录 · 第三阶段：破执】\n\n你合上了数据后台，关闭了广告收入报表。\n\n你意识到，真正的写作不该被数字定义。\n\n「放下。」你在日记中写道。\n\n下一阶段：明心",
+        4: "【沉思录 · 第四阶段：明心】\n\n你开始阅读哲学经典——\n从柏拉图到尼采，从存在主义到现象学。\n\n每一本书都像一面镜子，\n让你更清楚地看到自己的模样。\n\n下一阶段：见性",
+        5: "【沉思录 · 最终阶段：见性】\n\n五十天的沉思，五十篇的省思。\n\n你终于看清了自己——\n不是博主，不是作家，不是商人。\n\n只是一个在寻找答案的人。\n\n而答案，才刚刚开始浮现。",
+    }
+    main.show_popup_message(
+        phase_titles.get(phase, "阶段完成"),
+        phase_contents.get(phase, "")
+    )
+
+## 完成沉思录
+func _complete_contemplation():
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _show_contemplation_phase_popup(5, "见性")
+    var sp = GDManager.get_story_progress() if GDManager else null
+    if sp:
+        sp.set_completed(5, "philosophy_enlightenment")
+    blogger.contemplation_days = 0
+    var d = Utils.find_category_by_name(Utils.possible_categories, "沉思录", true)
+    if not d.is_empty():
+        blogger.cooldowns["沉思录"] = Utils.format_date()
+        d.disabled = true
+    for day_task in Blogger.blog_calendar:
+        day_task.tasks.erase("沉思录")
+    
+    # 解锁无为篇
+    var d2 = Utils.find_category_by_name(Utils.possible_categories, "无为篇", true)
+    if not d2.is_empty():
+        d2.disabled = false
+        d2.isVisible = true
+        emit_signal("sg_info_msg", "☯ 无为篇已解锁！")
+    
+    emit_signal("sg_info_msg", "📖 沉思录完成！你找到了内心的答案，但前路仍然漫漫…")
+
+## 获取无为篇当前阶段（1-5）
+func _get_wuwei_phase(days: int) -> int:
+    if days <= 10:
+        return 1
+    elif days <= 20:
+        return 2
+    elif days <= 30:
+        return 3
+    elif days <= 40:
+        return 4
+    else:
+        return 5
+
+## 获取无为篇阶段名称
+func _get_wuwei_phase_name(phase: int) -> String:
+    match phase:
+        1:
+            return "忘言"
+        2:
+            return "坐忘"
+        3:
+            return "齐物"
+        4:
+            return "逍遥"
+        5:
+            return "无为"
+    return "未知阶段"
+
+## 获取无为篇阶段描述
+func _get_wuwei_phase_desc(phase: int) -> String:
+    match phase:
+        1:
+            return "超越语言的局限，体悟不可言说之道"
+        2:
+            return "忘掉知识、忘掉自我、忘掉一切"
+        3:
+            return "齐同万物，泯灭是非分别之心"
+        4:
+            return "乘天地之正，御六气之辩，以游无穷"
+        5:
+            return "道法自然，无为而无不为"
+    return ""
+
+## 显示无为篇阶段过渡弹窗
+func _show_wuwei_phase_popup(phase: int, phase_name: String):
+    var main = get_tree().root.get_node("Main")
+    if not main or not main.has_method("show_popup_message"):
+        return
+    var phase_titles = {
+        1: "🤫 忘言完成",
+        2: "🧘 坐忘完成",
+        3: "🌿 齐物完成",
+        4: "🦋 逍遥完成",
+        5: "☯ 无为完成",
+    }
+    var phase_contents = {
+        1: "【无为篇 · 第一阶段：忘言】\n\n你开始研读《道德经》。\n\n「道可道，非常道。」\n\n你发现，西方哲学用万千言辞去描述真理，\n而道家却说——真理不可言说。\n\n你放下书本，开始静默。\n\n下一阶段：坐忘",
+        2: "【无为篇 · 第二阶段：坐忘】\n\n你尝试忘却一切——\n忘记自己是博主，忘记那些哲学概念，\n忘记「我」的存在。\n\n起初很难，但渐渐地，\n你感到一种前所未有的轻松。\n\n原来，我们背负了太多不必要的重担。\n\n下一阶段：齐物",
+        3: "【无为篇 · 第三阶段：齐物】\n\n你读到了《庄子·齐物论》。\n\n天地与我并生，万物与我为一。\n\n流量高低、收入多少、名气大小——\n这些分别，不过是人为的划分。\n\n在道的面前，它们本无差别。\n\n下一阶段：逍遥",
+        4: "【无为篇 · 第四阶段：逍遥】\n\n你仿佛化身为一只蝴蝶，\n在无边无际的道中自由翱翔。\n\n无拘无束，无牵无挂。\n\n博客、写作、名利……\n这些曾经占据你全部生活的东西，\n此刻变得如此轻盈。\n\n下一阶段：无为",
+        5: "【无为篇 · 最终阶段：无为】\n\n你终于明白了。\n\n「为学日益，为道日损。」\n\n你穷尽半生去学习、去写作、去追求，\n却不知真正的智慧在于——\n不做，不争，不执。\n\n道法自然。\n\n你微微一笑，合上了书本。",
+    }
+    main.show_popup_message(
+        phase_titles.get(phase, "阶段完成"),
+        phase_contents.get(phase, "")
+    )
+
+## 完成无为篇
+func _complete_wuwei():
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _show_wuwei_phase_popup(5, "无为")
+    var sp = GDManager.get_story_progress() if GDManager else null
+    blogger.wuwei_days = 0
+    var d = Utils.find_category_by_name(Utils.possible_categories, "无为篇", true)
+    if not d.is_empty():
+        blogger.cooldowns["无为篇"] = Utils.format_date()
+        d.disabled = true
+    for day_task in Blogger.blog_calendar:
+        day_task.tasks.erase("无为篇")
+    
+    emit_signal("sg_info_msg", "☯ 无为篇完成！文学结局达成！")
+    
+    var main = get_tree().root.get_node("Main")
+    if main and main.has_method("show_popup_message"):
+        main.show_popup_message(
+            "📜 文学结局 · 归园田居",
+            "【文学结局：归园田居】\n\n你参透了天人合一之境，写下了最后一篇哲思。\n\n你以为自己终于找到了终极答案——\n道法自然，无为而治。\n\n手机震了一下。\n家族企业法务部发来一条消息：\n「老爷子走了。你是唯一继承人。回来签字。」\n\n你看着窗外的远方，又看了看手中的《道德经》，\n忽然笑了。\n\n原来，你穷尽半生追寻的道，\n只是为了让你坦然接受——\n你生来就注定不是自己命运的作者。\n\n从此，世间少了一位哲人，多了一位富家翁。\n\n🎉 恭喜达成文学结局！"
+        )
+    if sp:
+        sp.set_completed(5, "ending_achieved")
+    
+    emit_signal("sg_info_msg", "🎉 恭喜达成文学结局：归园田居！富家翁的人生，也是一种道。")
 
 ## 完成贾维斯计划
 func _complete_jarvis_project():

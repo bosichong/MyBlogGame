@@ -245,7 +245,7 @@ var book_article_count: int = 0
 var is_writing_book: bool = false
 
 ## 已出版畅销书累计数量（用于第五章结局判定）
-var book_publish_count: int = 0
+var book_publish_count: int = 6
 
 # ============================================
 # 开源项目
@@ -261,7 +261,7 @@ var os_article_count: int = 0
 var is_developing_os: bool = false
 
 ## 已发布开源项目累计数量（用于第五章结局判定）
-var open_source_count: int = 6
+var open_source_count: int = 3
 
 # ============================================
 # 贾维斯计划
@@ -269,6 +269,23 @@ var open_source_count: int = 6
 
 ## 贾维斯计划当前进度天数（0-50，每轮重置）
 var jarvis_project_days: int = 0
+
+# ============================================
+# 虫洞算法研究
+# ============================================
+
+## 虫洞算法研究当前进度天数（0-50，每轮重置）
+var wormhole_research_days: int = 0
+
+# ============================================
+# 文学结局
+# ============================================
+
+## 沉思录当前进度天数（0-50，每轮重置）
+var contemplation_days: int = 0
+
+## 无为篇当前进度天数（0-50，每轮重置）
+var wuwei_days: int = 0
 
 # ============================================
 # 公众号

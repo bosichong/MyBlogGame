@@ -1,6 +1,7 @@
 extends Node
 
 
+var official_site = "https://www.mybloggame.com/"
 var game_strs = {
     "头衔":[
         '[初入江湖]',
