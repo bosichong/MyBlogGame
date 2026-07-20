@@ -599,6 +599,48 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             if days >= 50:
                 _complete_wuwei()
         
+        # ===== 游戏开发逻辑 =====
+        elif d.name == "游戏开发":
+            blogger.game_dev_days += 1
+            var days = blogger.game_dev_days
+            var phase = _get_game_dev_phase(days)
+            var phase_name = _get_game_dev_phase_name(phase)
+            var phase_desc = _get_game_dev_phase_desc(phase)
+            title = "游戏开发 第%d天 - %s" % [days, phase_name]
+            new_post.title = title
+            emit_signal("sg_info_msg", "🎮 游戏开发 %s 第%d天/50天 — %s" % [phase_name, days, phase_desc])
+            
+            if days == 10 or days == 20 or days == 30 or days == 40:
+                _show_game_dev_phase_popup(phase, phase_name)
+            
+            if days >= 50:
+                _complete_game_dev()
+        
+        # ===== 游戏发布逻辑 =====
+        elif d.name == "游戏发布":
+            blogger.game_release_days += 1
+            var days = blogger.game_release_days
+            var phase = _get_game_release_phase(days)
+            var phase_name = _get_game_release_phase_name(phase)
+            var phase_desc = _get_game_release_phase_desc(phase)
+            title = "游戏发布 第%d天 - %s" % [days, phase_name]
+            new_post.title = title
+            emit_signal("sg_info_msg", "🚀 游戏发布 %s 第%d天/30天 — %s" % [phase_name, days, phase_desc])
+            
+            if days == 10 or days == 20:
+                _show_game_release_phase_popup(phase, phase_name)
+                if days == 10:
+                    var sp = GDManager.get_story_progress() if GDManager else null
+                    if sp:
+                        sp.set_completed(5, "game_test")
+                elif days == 20:
+                    var sp = GDManager.get_story_progress() if GDManager else null
+                    if sp:
+                        sp.set_completed(5, "game_trailer")
+            
+            if days >= 30:
+                _complete_game_release()
+        
         blogger.posts.append(new_post)
         # blogger.add_post(new_post)  # 已通过 posts.append 添加，无需重复
 
@@ -1035,6 +1077,183 @@ func _complete_wuwei():
         sp.set_completed(5, "ending_achieved")
     
     emit_signal("sg_info_msg", "🎉 恭喜达成文学结局：归园田居！富家翁的人生，也是一种道。")
+
+## 获取游戏开发当前阶段（1-5）
+func _get_game_dev_phase(days: int) -> int:
+    if days <= 10:
+        return 1
+    elif days <= 20:
+        return 2
+    elif days <= 30:
+        return 3
+    elif days <= 40:
+        return 4
+    else:
+        return 5
+
+## 获取游戏开发阶段名称
+func _get_game_dev_phase_name(phase: int) -> String:
+    match phase:
+        1:
+            return "原型验证"
+        2:
+            return "核心开发"
+        3:
+            return "资产生产"
+        4:
+            return "内容整合"
+        5:
+            return "发布冲刺"
+    return "未知阶段"
+
+## 获取游戏开发阶段描述
+func _get_game_dev_phase_desc(phase: int) -> String:
+    match phase:
+        1:
+            return "撰写设计文档，搭建核心玩法原型，验证技术可行性"
+        2:
+            return "构建引擎框架，实现游戏核心逻辑与数据系统"
+        3:
+            return "定制美术风格，制作音频资源，打磨界面交互"
+        4:
+            return "系统联调测试，集成关卡内容，调整数值平衡"
+        5:
+            return "全面性能优化，修复兼容问题，准备商店提审材料"
+    return ""
+
+## 显示游戏开发阶段过渡弹窗
+func _show_game_dev_phase_popup(phase: int, phase_name: String):
+    var main = get_tree().root.get_node("Main")
+    if not main or not main.has_method("show_popup_message"):
+        return
+    var phase_titles = {
+        1: "📐 原型验证完成",
+        2: "⚙️ 核心开发完成",
+        3: "🎨 资产生产完成",
+        4: "🔗 内容整合完成",
+        5: "🚀 发布冲刺完成",
+    }
+    var phase_contents = {
+        1: "【游戏开发 · 第一阶段：原型验证】\n\n你在白板上画下了第一张设计草图。\n玩法、机制、系统结构——\n一切都在脑海中逐渐清晰。\n\n可执行原型跑起来的那一刻，\n你知道，这个项目值得做下去。\n\n下一阶段：核心开发",
+        2: "【游戏开发 · 第二阶段：核心开发】\n\n键盘声此起彼伏。\n\n你在引擎中搭建了完整的框架——\n场景管理、状态机、数据持久化。\n\n核心玩法终于可玩了，\n虽然还只是一堆方块在屏幕上移动。\n\n下一阶段：资产生产",
+        3: "【游戏开发 · 第三阶段：资产生产】\n\n代码告一段落，艺术登场。\n\n你花了一周确定像素美术风格，\n又花了一周录制拟音和背景音乐。\n\n当角色第一次在自定义场景中跑动时，\n你看到了它该有的样子。\n\n下一阶段：内容整合",
+        4: "【游戏开发 · 第四阶段：内容整合】\n\n所有零件开始拼装。\n\n美术资源导入引擎，音效绑定事件，\nAI行为树接入关卡逻辑……\n\nBug 一个接一个地修，\n数值一遍又一遍地调。\n\n游戏，开始变得像游戏了。\n\n下一阶段：发布冲刺",
+        5: "【游戏开发 · 最终阶段：发布冲刺】\n\n最后十天，不眠不休。\n\n你跑遍了所有平台的兼容性测试，\n修复了最后一个闪退的 Edge Case，\n写好了商店页面文案和宣传图。\n\n按下「提交审核」按钮的那一刻，\n你靠在椅背上，长出了一口气。\n\n游戏，做好了。\n\n接下来——让它去见玩家吧。",
+    }
+    main.show_popup_message(
+        phase_titles.get(phase, "阶段完成"),
+        phase_contents.get(phase, "")
+    )
+
+## 完成游戏开发
+func _complete_game_dev():
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _show_game_dev_phase_popup(5, "发布冲刺")
+    var sp = GDManager.get_story_progress() if GDManager else null
+    if sp:
+        sp.set_completed(5, "game_dev_complete")
+    blogger.game_dev_days = 0
+    var d = Utils.find_category_by_name(Utils.possible_categories, "游戏开发", true)
+    if not d.is_empty():
+        blogger.cooldowns["游戏开发"] = Utils.format_date()
+        d.disabled = true
+    for day_task in Blogger.blog_calendar:
+        day_task.tasks.erase("游戏开发")
+    
+    # 解锁游戏发布
+    var d2 = Utils.find_category_by_name(Utils.possible_categories, "游戏发布", true)
+    if not d2.is_empty():
+        d2.disabled = false
+        d2.isVisible = true
+        emit_signal("sg_info_msg", "🚀 游戏发布已解锁！")
+    
+    emit_signal("sg_info_msg", "🎮 游戏开发完成！接下来，让你的作品与玩家见面！")
+
+## 获取游戏发布当前阶段（1-3）
+func _get_game_release_phase(days: int) -> int:
+    if days <= 10:
+        return 1
+    elif days <= 20:
+        return 2
+    else:
+        return 3
+
+## 获取游戏发布阶段名称
+func _get_game_release_phase_name(phase: int) -> String:
+    match phase:
+        1:
+            return "测试"
+        2:
+            return "预告发布"
+        3:
+            return "正式发布"
+    return "未知阶段"
+
+## 获取游戏发布阶段描述
+func _get_game_release_phase_desc(phase: int) -> String:
+    match phase:
+        1:
+            return "招募测试玩家，收集反馈，修复关键Bug"
+        2:
+            return "制作预告片，运营社交媒体，预热造势"
+        3:
+            return "全平台同步上线，迎接玩家到来"
+    return ""
+
+## 显示游戏发布阶段过渡弹窗
+func _show_game_release_phase_popup(phase: int, phase_name: String):
+    var main = get_tree().root.get_node("Main")
+    if not main or not main.has_method("show_popup_message"):
+        return
+    var phase_titles = {
+        1: "🐛 测试完成",
+        2: "🎬 预告发布完成",
+        3: "🎉 正式发布完成",
+    }
+    var phase_contents = {
+        1: "【游戏发布 · 第一阶段：测试】\n\n你在玩家社区中招募了一批测试志愿者。\n\nBug 反馈像潮水般涌来——\nUI 重叠、数值失衡、特定机型闪退……\n\n你一条一条地修复，一个版本一个版本地迭代。\n\n十天后，游戏终于稳定了。\n\n下一个目标：让全世界知道这款游戏。",
+        2: "【游戏发布 · 第二阶段：预告发布】\n\n你花了三天剪辑预告片，\n又花了一周运营社交媒体账号。\n\n第一条推文发出时，只有三个人点赞。\n\n但你不在乎。\n\n你知道，只要游戏足够好，玩家会来的。\n\n预告片发布当晚——播放量破万。\n\n评论区满是「期待！」\n\n你看着屏幕，笑了。",
+        3: "【游戏发布 · 最终阶段：正式发布】\n\nSteam、TapTap、App Store……\n你在所有平台上按下了「发布」按钮。\n\n看着审核状态从「审核中」变成「已上架」，\n你突然感到一阵恍惚。\n\n从构思到发布，\n从一行代码到一款完整的游戏，\n你做到了。\n\n下载量开始跳动。\n评论区出现了第一条五星好评。\n\n你靠在椅背上，终于可以休息了。",
+    }
+    main.show_popup_message(
+        phase_titles.get(phase, "阶段完成"),
+        phase_contents.get(phase, "")
+    )
+
+## 完成游戏发布
+func _complete_game_release():
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _show_game_release_phase_popup(3, "正式发布")
+    var sp = GDManager.get_story_progress() if GDManager else null
+    if sp:
+        sp.set_completed(5, "game_test")
+        sp.set_completed(5, "game_trailer")
+        sp.set_completed(5, "game_released")
+        sp.set_completed(5, "game_award")
+    blogger.game_release_days = 0
+    var d = Utils.find_category_by_name(Utils.possible_categories, "游戏发布", true)
+    if not d.is_empty():
+        blogger.cooldowns["游戏发布"] = Utils.format_date()
+        d.disabled = true
+    for day_task in Blogger.blog_calendar:
+        day_task.tasks.erase("游戏发布")
+    
+    emit_signal("sg_info_msg", "🎉 游戏正式发布！游戏结局达成！")
+    
+    var main = get_tree().root.get_node("Main")
+    if main and main.has_method("show_popup_message"):
+        main.show_popup_message(
+            "🏆 游戏结局 · 梦想成真",
+            "【游戏结局：梦想成真】\n\n从一行代码到一款完整的游戏，\n你走过了无数个不眠之夜。\n\n发布当天，游戏冲上了热销榜。\n媒体评价纷至沓来，玩家口碑持续发酵。\n\n在年度游戏颁奖典礼上，\n你的名字出现在了「最佳独立游戏」的提名中。\n\n你站在领奖台上，看着台下的人群，\n想起了那个最初写下第一行代码的下午。\n\n你做到了。\n\n🎉 恭喜达成游戏结局！"
+        )
+    if sp:
+        sp.set_completed(5, "ending_achieved")
+    
+    emit_signal("sg_info_msg", "🎉 恭喜达成游戏结局：梦想成真！从一行代码到一款游戏。")
 
 ## 完成贾维斯计划
 func _complete_jarvis_project():

@@ -255,6 +255,8 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "wormhole_research_days": data.wormhole_research_days,
         "contemplation_days": data.contemplation_days,
         "wuwei_days": data.wuwei_days,
+        "game_dev_days": data.game_dev_days,
+        "game_release_days": data.game_release_days,
         "novel_batch": data.novel_batch,
         "novel_batch_count": data.novel_batch_count,
         "novel_batch_ip_triggered": data.novel_batch_ip_triggered,
@@ -334,6 +336,8 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.wormhole_research_days = dict.get("wormhole_research_days", 0)
     data.contemplation_days = dict.get("contemplation_days", 0)
     data.wuwei_days = dict.get("wuwei_days", 0)
+    data.game_dev_days = dict.get("game_dev_days", 0)
+    data.game_release_days = dict.get("game_release_days", 0)
     data.novel_batch = dict.get("novel_batch", 1)
     data.novel_batch_count = dict.get("novel_batch_count", 0)
     data.novel_batch_ip_triggered = dict.get("novel_batch_ip_triggered", false)

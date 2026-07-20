@@ -328,6 +328,12 @@ const CONDITIONS: Dictionary = {
 
     # 贾维斯计划解锁时间（2025年任意时间）
     "time_year_2025": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2025]}},
+
+    # 默认结局触发时间（2025年12月最后一天）
+    "time_default_ending": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2025], "m": [12], "w": [4], "d": [7]}},
+
+    # 默认结局条件：三线结局均未达成
+    "ending_not_achieved": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 5, "milestone": "ending_achieved", "completed": false},
 }
 
 ## ============================================================
@@ -1870,6 +1876,35 @@ const TASKS: Array = [
             {"type": ActionType.UNLOCK_POST_TASK, "post_type": "沉思录"},
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 5, "milestone": "philosophy_glimmer"},
             {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 哲理苗头", "content": "六部畅销书，数十万字。\n\n你坐在书房里，看着书架上整齐排列的自己的作品，\n突然感到一种奇异的陌生感。\n\n这些文字真的是你写的吗？\n那个追逐流量、计算版税、迎合市场的你，\n真的是你想要的吗？\n\n你拿起一本空白的笔记本，写下了两个字：\n\n「沉思录」\n\n一场真正的哲学之旅，即将开始。"},
+        ],
+    },
+    # ====================
+    # 第5章：游戏开发解锁
+    # ====================
+    {
+        "id": "unlock_game_dev",
+        "description": "出版3本畅销书且完成3个开源项目，解锁游戏开发日程",
+        "conditions": ["book_publish_ge_3", "open_source_ge_3"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.UNLOCK_POST_TASK, "post_type": "游戏开发"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 5, "milestone": "game_dev_start"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🎮 游戏开发启动", "content": "三本书，三个开源项目。\n\n你终于攒够了经验、资金和底气。\n\n你一直想做一款属于自己的游戏。\n\n不是给别人做外包，不是给公司写代码——\n就是纯粹地，做一款你想玩的游戏。\n\n你打开引擎，新建了项目。\n\n在文件名一栏，你敲下了那个想了很久的名字。\n\n「游戏开发」已解锁。"},
+        ],
+    },
+    # ====================
+    # 第5章：默认结局（兜底）
+    # ====================
+    {
+        "id": "default_ending",
+        "description": "2026年1月，三条主线均未达成时触发默认结局",
+        "conditions": ["time_default_ending", "ending_not_achieved"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 5, "milestone": "ending_achieved"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🏛️ 时代见证者", "content": "【默认结局：时代见证者】\n\n二十年的博客生涯悄然走到了尽头。\n\n你没有写出惊世骇俗的畅销书，\n没有创造出改变世界的开源项目，\n也没有做出一鸣惊人的独立游戏。\n\n但是你一直都在。\n\n一字一句地写，一年一年地更。\n\n你的博客被数字文化遗产计划永久收录——\n作为二十一世纪前二十五年中文互联网的民间记忆。\n\n多年后，一个年轻人敲开了你的门：\n「请问，您就是那个时代的博主吗？」\n\n你泡了两杯茶，开始讲那个属于博客年代的故事。\n\n🎉 恭喜达成默认结局！"},
         ],
     },
 ]
