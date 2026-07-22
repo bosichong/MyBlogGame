@@ -150,7 +150,6 @@ func update_ui():
     var bd = Blogger.blog_data
     $ui/bottom/v1/h3/blog_name.text = bd.blog_name
     $ui/bottom/v1/h3/blog_posts.text = "文章数:" + str(len(bd.posts) + len(bd.archived_posts))
-    $ui/bottom/v1/h3/blog_safety.text = "安全指数:" + str(bd.safety_value)
     $ui/bottom/v1/h3/blog_seo.text = "SEO:" + str(bd.seo_value)
     
     $ui/bottom/v1/h4/today_views.text="昨日:"+ str(bd.today_views)
