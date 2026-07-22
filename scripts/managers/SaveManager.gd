@@ -267,6 +267,9 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "hacker_batch_auth_target": data.hacker_batch_auth_target,
         "hacker_batch_topic": data.hacker_batch_topic,
         "hacker_course_triggered": data.hacker_course_triggered,
+        "active_event": data.active_event,
+        "event_cooldown": data.event_cooldown,
+        "resolved_events": data.resolved_events,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -348,6 +351,9 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.hacker_batch_auth_target = dict.get("hacker_batch_auth_target", 0)
     data.hacker_batch_topic = dict.get("hacker_batch_topic", "")
     data.hacker_course_triggered = dict.get("hacker_course_triggered", false)
+    data.active_event = dict.get("active_event", {})
+    data.event_cooldown = dict.get("event_cooldown", 0)
+    data.resolved_events = dict.get("resolved_events", [])
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {

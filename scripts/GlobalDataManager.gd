@@ -11,6 +11,7 @@ var data_configs = {
     "title_templates": "res://data/title_templates.gd",
     "lm_members": "res://data/lm_members.gd",
     "comment_templates": "res://data/comment_templates.gd",
+    "safety_events": "res://data/safety_events.gd",
 }
 
 # ===== 存储所有加载的数据 =====
@@ -77,6 +78,9 @@ func get_recreation():
 
 func get_learning_skills():
     return loaded_data.get("learning_skills")
+
+func get_safety_events():
+    return loaded_data.get("safety_events")
 
 func get_title_templates():
     return loaded_data.get("title_templates")

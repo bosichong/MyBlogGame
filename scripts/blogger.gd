@@ -7,6 +7,9 @@ var views_calculator: ViewsCalculator = null
 
 signal sg_paid_income_settled(msg: String)  # 付费文章收入结算信号
 signal sg_info_msg(msg: String)            # 信息提示面板消息
+signal sg_event_triggered(event_data: Dictionary)  # 安全事件触发信号
+signal sg_event_resolved(event_id: String, reward: Dictionary)  # 安全事件解决信号
+signal sg_event_escalated(event_id: String, escalate_to: String)  # 安全事件升级信号
 
 ## 付费文章月收入累积（按类型分别统计）
 var monthly_paid_income: float = 0
@@ -349,6 +352,7 @@ func gain_exp(amount: int):
 func daily_activities():
     # 模拟每天的活动
     var exp_gained := 0 # 记录本周获得的EXP
+    var did_emergency := false
     var day = TimerManager.current_day-1 #获取当日所属周中几日值。
     # 每天先检查冷确过期（让到期的类别当天可用）
     check_cooldowns()
@@ -377,6 +381,9 @@ func daily_activities():
                 exp_gained += execute_https_upgrade(task)
             if task == "CDN加速":
                 exp_gained += execute_cdn_accelerate(task)
+            if task == "紧急排险":
+                did_emergency = true
+                exp_gained += do_emergency_response(task)
         elif Utils.check_name_exists(Utils.recreation, task):
             if task == "休息":
                 exp_gained += recreation_rest(task) # 休息一天
@@ -388,6 +395,9 @@ func daily_activities():
             if skill.is_empty() or skill.get("disabled", false):
                 continue
             exp_gained += learningToSkills(task)
+
+    # 处理激活的安全事件（先于体力恢复，让紧急排险消耗的体力生效）
+    _process_active_event(did_emergency)
 
     # 每天体力恢复为满值
     var blogger_data = GDManager.get_blogger()
@@ -405,6 +415,9 @@ func daily_activities():
     if TimerManager.current_week == 4 and TimerManager.current_day == 7:
         _archive_old_posts()
         _settle_wechat_monthly_income()
+
+    # 每日末尾检查是否触发新安全事件
+    _check_safety_events()
 
 func week_activites():
     if not GDManager:
@@ -1710,7 +1723,7 @@ func maintain_website_security(category: String) -> int:
 
     blogger.stamina -= actual_cost #消耗体力值(使用实际消耗)
     blogger.money -= d.money
-    blogger.safety_value += Utils.add_property(blogger.safety_value,int(blogger.technical_ability/4))
+    blogger.safety_value = mini(100, blogger.safety_value + int(blogger.technical_ability / 4))
     # 增加技术能力（每次维护成功都会增加）
     add_technical_ability_points()
     emit_signal("signal_website_security","网站的安全值+10")
@@ -2420,3 +2433,218 @@ func _archive_old_posts():
         keep.append(post)
 
     blogger.posts = keep
+
+# ==============================================================================
+# 安全事件系统
+# ==============================================================================
+
+## 执行紧急排险任务
+func do_emergency_response(task_name: String) -> int:
+    if not GDManager:
+        return 0
+    var blogger = GDManager.get_blogger()
+    # 无激活事件时，紧急排险无效
+    if blogger.active_event.is_empty():
+        emit_signal("sg_info_msg", "当前没有需要处理的安全事件，紧急排险无目标")
+        return 0
+    var d = Utils.find_category_by_name(Utils.website_maintenance, task_name)
+    if d.is_empty():
+        return 0
+    var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
+    if blogger.stamina < actual_cost:
+        emit_signal("no_stamina_signal", "体力不足,无法进行紧急排险!需要" + str(actual_cost) + "体力")
+        return 0
+    blogger.stamina -= actual_cost
+    return 10
+
+
+## 根据 event_id 获取配置
+func _get_event_config(event_id: String) -> Dictionary:
+    if not GDManager:
+        return {}
+    var se = GDManager.get_safety_events()
+    if not se:
+        return {}
+    for ev in se.events:
+        if ev.id == event_id:
+            return ev
+    return {}
+
+
+## 处理激活的安全事件（每日结算时调用）
+func _process_active_event(did_emergency: bool) -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+    if blogger.active_event.is_empty():
+        return
+
+    var ev = blogger.active_event
+    var ev_config = _get_event_config(ev.id)
+    if ev_config.is_empty():
+        blogger.active_event = {}
+        return
+
+    if did_emergency:
+        ev.progress += 1
+        ev.escalate_counter = 0
+        emit_signal("sg_info_msg", "🚨 紧急排险进度：%d/%d" % [ev.progress, ev_config.get("total_days", 3)])
+    else:
+        ev.escalate_counter += 1
+        # 应用每日惩罚
+        var dp = ev_config.get("daily_penalty", {})
+        if dp.has("safety_value"):
+            blogger.safety_value = max(0, blogger.safety_value + dp.safety_value)
+        if dp.has("views_loss"):
+            # 每日访问量损失通过降低 seo 值来模拟
+            blogger.seo_value = max(0, blogger.seo_value + int(dp.views_loss / 50))
+        if dp.has("reputation"):
+            blogger.reputation = max(0, blogger.reputation + dp.reputation)
+
+    # 检查是否升级
+    if ev.escalate_counter >= ev_config.get("escalate_days", 5):
+        _escalate_event(ev_config.get("escalate_to", ""))
+        return
+
+    # 检查是否解决
+    if ev.progress >= ev_config.get("total_days", 3):
+        _resolve_event()
+        return
+
+
+## 触发新安全事件
+func _check_safety_events() -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+
+    # 冷却中或已有激活事件，跳过
+    if blogger.event_cooldown > 0:
+        blogger.event_cooldown -= 1
+        return
+    if not blogger.active_event.is_empty():
+        return
+
+    var se = GDManager.get_safety_events()
+    if not se:
+        return
+
+    # 筛选可触发的事件（按严重程度从高到低检测）
+    var safety = blogger.safety_value
+    var tiers = ["critical", "severe", "general"]
+    for tier in tiers:
+        for ev in se.events:
+            if ev.tier != tier:
+                continue
+            if safety > ev.trigger_threshold:
+                continue
+            if randf() < ev.trigger_probability:
+                _trigger_event(ev)
+                return
+
+
+## 激活事件（应用惩罚 + 提示信息）
+func _trigger_event(ev_config: Dictionary) -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+
+    # 应用即时惩罚
+    var penalty = ev_config.get("penalty", {})
+    if penalty.has("safety_value"):
+        blogger.safety_value = max(0, blogger.safety_value + penalty.safety_value)
+    if penalty.has("views_loss"):
+        blogger.seo_value = max(0, blogger.seo_value + int(penalty.views_loss / 50))
+    if penalty.has("reputation"):
+        blogger.reputation = max(0, blogger.reputation + penalty.reputation)
+
+    # 初始化事件状态（默认使用第一个选项）
+    blogger.active_event = {
+        "id": ev_config.id,
+        "progress": 0,
+        "choice": 0,
+        "escalate_counter": 0,
+    }
+
+    # 发送信号，由 main.gd 显示提示信息
+    emit_signal("sg_event_triggered", ev_config)
+
+
+## 解决当前安全事件
+func _resolve_event() -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+    if blogger.active_event.is_empty():
+        return
+
+    var ev_config = _get_event_config(blogger.active_event.id)
+    if ev_config.is_empty():
+        blogger.active_event = {}
+        return
+
+    var reward = ev_config.get("reward", {})
+    if reward.has("safety_value"):
+        blogger.safety_value = mini(100, blogger.safety_value + reward.safety_value)
+    if reward.has("exp"):
+        var dummy_exp = 0
+        dummy_exp += reward.exp
+        gain_exp(dummy_exp)
+    if reward.has("money"):
+        blogger.money += reward.money
+    if reward.has("reputation"):
+        blogger.reputation += reward.reputation
+
+    var resolved_id = blogger.active_event.id
+    blogger.resolved_events.append(resolved_id)
+    # 保持数组不过大
+    if blogger.resolved_events.size() > 20:
+        blogger.resolved_events = blogger.resolved_events.slice(-20)
+
+    # 设置全局冷却
+    blogger.event_cooldown = 30
+
+    var saved_reward = reward.duplicate()
+    blogger.active_event = {}
+
+    emit_signal("sg_event_resolved", resolved_id, saved_reward)
+    emit_signal("sg_info_msg", "🎉 安全事件「%s」已解决！获得奖励" % ev_config.name)
+
+
+## 事件升级
+func _escalate_event(escalate_to_id: String) -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+
+    var old_id = blogger.active_event.get("id", "")
+    blogger.active_event = {}
+
+    if escalate_to_id == "":
+        emit_signal("sg_info_msg", "⚠️ 事件已到最坏情况，无法继续升级")
+        return
+
+    var ev_config = _get_event_config(escalate_to_id)
+    if ev_config.is_empty():
+        emit_signal("sg_info_msg", "⚠️ 事件升级目标不存在")
+        return
+
+    # 应用升级事件的惩罚
+    var penalty = ev_config.get("penalty", {})
+    if penalty.has("safety_value"):
+        blogger.safety_value = max(0, blogger.safety_value + penalty.safety_value)
+    if penalty.has("views_loss"):
+        blogger.seo_value = max(0, blogger.seo_value + int(penalty.views_loss / 50))
+    if penalty.has("reputation"):
+        blogger.reputation = max(0, blogger.reputation + penalty.reputation)
+
+    # 直接激活升级事件（不再弹选择，使用默认第一个选项）
+    blogger.active_event = {
+        "id": ev_config.id,
+        "progress": 0,
+        "choice": 0,
+        "escalate_counter": 0,
+    }
+
+    emit_signal("sg_event_escalated", old_id, escalate_to_id)
+    emit_signal("sg_info_msg", "⚠️ 事件升级：%s → %s！立即安排紧急排险！" % [old_id, escalate_to_id])

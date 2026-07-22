@@ -79,6 +79,9 @@ func _ready() -> void:
     TaskManager.connect("schedule_refresh_needed", _on_schedule_refresh_needed)
     TaskManager.connect("sg_task_show_popup_msg",sg_task_show_popup_msg)
     Blogger.connect("sg_info_msg", sg_task_info_display_msg)
+    Blogger.connect("sg_event_triggered", _on_event_triggered)
+    Blogger.connect("sg_event_resolved", _on_event_resolved)
+    Blogger.connect("sg_event_escalated", _on_event_escalated)
     
     var fl_manager = GDManager.friend_link_manager if GDManager else null
     if fl_manager:
@@ -525,6 +528,29 @@ func _on_skill_learned(skill_name: String, tip: String):
 func sg_task_show_popup_msg(title: String, content: String):
 
     show_popup_message(title, content)
+
+# ===== 安全事件系统 =====
+
+## 安全事件触发弹窗（提示信息）
+func _on_event_triggered(event_data: Dictionary) -> void:
+    show_popup_message(event_data.get("popup_title", "安全事件"), event_data.get("popup_desc", ""))
+
+## 安全事件解决弹窗
+func _on_event_resolved(event_id: String, reward: Dictionary) -> void:
+    var msg = "事件已解决！"
+    if reward.get("exp", 0) > 0:
+        msg += "\n经验 +%d" % reward.exp
+    if reward.get("money", 0) > 0:
+        msg += "\n金钱 +%d" % reward.money
+    if reward.get("safety_value", 0) > 0:
+        msg += "\n安全值 +%d" % reward.safety_value
+    if reward.get("reputation", 0) > 0:
+        msg += "\n声望 +%d" % reward.reputation
+    show_popup_message("✅ 安全事件解除", msg)
+
+## 安全事件升级弹窗
+func _on_event_escalated(old_id: String, new_id: String) -> void:
+    show_popup_message("⚠️ 事件升级", "安全事件已升级！情况变得更加严重。\n请立即安排「紧急排险」任务！")
 
 # ===== 主机域名系统信号处理 =====
 

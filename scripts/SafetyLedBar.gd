@@ -3,9 +3,9 @@ extends VBoxContainer
 var _cells: Array[ColorRect] = []
 var _value_label: Label
 
-const LIT_GREEN := Color(0.2, 0.9, 0.2, 1)
-const LIT_YELLOW := Color(0.9, 0.8, 0.1, 1)
-const LIT_RED := Color(0.9, 0.15, 0.15, 1)
+const LIT_GREEN := Color(0.35, 0.65, 0.35, 1)
+const LIT_YELLOW := Color(0.7, 0.6, 0.2, 1)
+const LIT_RED := Color(0.65, 0.3, 0.3, 1)
 const DIM_BG := Color(0.15, 0.15, 0.15, 1)
 
 func _ready() -> void:

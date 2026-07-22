@@ -98,7 +98,7 @@ var cdn_accelerate_start_date: String = ""
 
 ## 安全值（0-100）
 ## 影响网站被攻击的概率，低于50容易出问题
-var safety_value: int = 100
+var safety_value: int = 70
 
 ## SEO值（0-100）
 ## 影响基础访问量和搜索引擎收录
@@ -321,6 +321,20 @@ var wechat_data: Dictionary = {
 
 ## 已学会的技能列表
 var learned_skills: Array[String] = []
+
+# ============================================
+# 安全事件系统
+# ============================================
+
+## 当前激活的安全事件（无事件时为 {}）
+## { "id": String, "progress": int, "choice": int, "escalate_days": int, "total_days": int }
+var active_event: Dictionary = {}
+
+## 事件冷却天数（触发后递减，0 表示可触发新事件）
+var event_cooldown: int = 0
+
+## 已解决的事件记录（用于 60 天不重复）
+var resolved_events: Array[String] = []
 
 # ============================================
 # 信号
