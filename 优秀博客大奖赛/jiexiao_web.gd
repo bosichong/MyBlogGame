@@ -7,6 +7,7 @@ const YEAR_MAP = {
 }
 
 func _ready() -> void:
+    TimerManager.stop_timer()
     _update_content()
 
 func _play_confetti_if_celebrated(award_result_value: int) -> void:

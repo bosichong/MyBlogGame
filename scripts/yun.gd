@@ -6,6 +6,8 @@ signal server_package_expired(package_name)
 signal blog_suspended(source)
 signal suspend_warning(message)
 signal game_over(suspend_days)
+signal domain_renewal_reminder(days_left: int)
+signal host_renewal_reminder(days_left: int)
 
 # 定义域名费用常量
 const DOMAIN_RENEWAL_COST = 80.0  # 可以根据实际需求修改这个数值
@@ -46,6 +48,10 @@ func day_fs():
     
     # 更新恢复进度（新增）
     update_recovery_progress(today)
+    
+    # 到期前提醒检查
+    _check_domain_reminder(today)
+    _check_host_reminder(today)
 
 func check_domain_expiration(today: String):
     """检查域名是否到期"""
@@ -87,6 +93,9 @@ func renew_domain(duration_years: int = 1) -> Dictionary:
     domain_info.start_time = start_time
     domain_info.end_time = add_years_to_date(end_time, duration_years)
     domain_info.is_active = true
+    
+    # 重置域名提醒标记，明年的到期提醒会重新触发
+    _domain_reminder_active = false
     
     # ===== 恢复惩罚处理 =====
     # 如果之前处于暂停状态，检查是否可以解除暂停
@@ -208,6 +217,10 @@ var is_suspended: bool = false
 var suspend_source: String = ""
 # 游戏是否已结束（避免重复触发 game_over 信号）
 var is_game_over: bool = false
+
+# ===== 到期提醒追踪标记 =====
+var _domain_reminder_active: bool = false
+var _host_reminder_active: bool = false
 
 # ===== 恢复惩罚追踪变量 =====
 # 当前惩罚系数（0.0-1.0，表示访问量损失比例）
@@ -361,6 +374,9 @@ func renew_server_package(duration_years: int = 1) -> Dictionary:
     server_package.end_time = add_years_to_date(end_time, duration_years)
     server_package.is_active = true
     
+    # 重置主机提醒标记，明年的到期提醒会重新触发
+    _host_reminder_active = false
+    
     # ===== 恢复惩罚处理 =====
     # 如果之前处于暂停状态，检查是否可以解除暂停
     if is_suspended and suspend_source in ["host", "both"]:
@@ -463,6 +479,35 @@ func check_network_security_expiration(today: String):
         if days_diff >= 0:  # 防护已到期
             network_security.is_active = false
 
+
+# ===== 到期前提醒检查 =====
+
+func _check_domain_reminder(today: String):
+    if not domain_info.is_active or domain_info.end_time == "":
+        _domain_reminder_active = false
+        return
+    var days_diff = Utils.calculate_new_game_time_difference(domain_info.end_time, today, false)
+    var days_left = -days_diff
+    if 0 < days_left and days_left <= 30:
+        if not _domain_reminder_active:
+            _domain_reminder_active = true
+            emit_signal("domain_renewal_reminder", days_left)
+    else:
+        _domain_reminder_active = false
+
+
+func _check_host_reminder(today: String):
+    if not server_package.is_active or server_package.end_time == "":
+        _host_reminder_active = false
+        return
+    var days_diff = Utils.calculate_new_game_time_difference(server_package.end_time, today, false)
+    var days_left = -days_diff
+    if 0 < days_left and days_left <= 30:
+        if not _host_reminder_active:
+            _host_reminder_active = true
+            emit_signal("host_renewal_reminder", days_left)
+    else:
+        _host_reminder_active = false
 
 
 func renew_data_security(duration_days: int) -> Dictionary:
