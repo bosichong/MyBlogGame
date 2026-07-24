@@ -19,8 +19,8 @@ var chapter1 = {
     "icp_filing_done": true,          # 网站备案完成
     "award_2005": true,              # 优秀博客奖项（结果动态判定）
     "year_summary_2005": true,       # 2005年度总结
-    "obaby_first_visit": false,      # Obaby 首次来访（不速之客）
-    "obaby_tech_response": false,    # 首次事件选②发博文回应
+    "obaby_first_visit": true,      # Obaby 首次来访（不速之客）
+    "obaby_tech_response": true,    # 首次事件选②发博文回应
 }
 
 ## 第二章：博客黄金期（2005-2010）
@@ -31,6 +31,8 @@ var chapter2 = {
     "income_1000": true,             # 累计收益突破千元
     "award_2010": true,              # 优秀博客奖项（2010）
     "year_summary_2010": true,       # 2010年度总结
+    "obaby_comment_spam": false,     # 评论区暗链事件触发
+    "obaby_comment_resolved": false, # 评论区暗链已处理
 }
 
 ## 第三章：博客转型期（2010-2015）
@@ -265,6 +267,8 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "rss_100": "RSS订阅突破百人：拥有了稳定的读者群",
         "income_1000": "累计收益突破千元：商业化迈上新台阶",
         "year_summary_2010": "2010年度总结：黄金五年，收获满满",
+        "obaby_comment_spam": "评论区被灌满暗链垃圾评论，搜索引擎降权",
+        "obaby_comment_resolved": "评论区的暗链已清理完毕",
         # 第三章
         "viral_article": "爆款文章诞生：一篇好文让博客声名远扬",
         "advanced_tutorial": "高级教程发布：技术深度获得了读者认可",

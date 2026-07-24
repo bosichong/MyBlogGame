@@ -427,6 +427,12 @@ func daily_activities():
     # Obaby 无视后续计数
     _check_obaby_ignore()
 
+    # Obaby 评论区暗链检测
+    _check_obaby_comment_spam()
+
+    # Obaby 评论区暗链清理进度（连续 3 天紧急排险）
+    _check_obaby_comment_cleanup(did_emergency)
+
 func week_activites():
     if not GDManager:
         return
@@ -2465,7 +2471,11 @@ func do_emergency_response(task_name: String) -> int:
     var blogger = GDManager.get_blogger()
     # 无激活事件时，紧急排险无效
     if blogger.active_event.is_empty():
-        emit_signal("sg_info_msg", "当前没有需要处理的安全事件，紧急排险无目标")
+        # Obaby 评论区暗链清理中，不显示误导提示
+        var story = GDManager.get_story_progress() if GDManager else null
+        var in_cleanup = story and story.is_completed(2, "obaby_comment_spam") and not story.is_completed(2, "obaby_comment_resolved")
+        if not in_cleanup:
+            emit_signal("sg_info_msg", "当前没有需要处理的安全事件，紧急排险无目标")
         return 0
     var d = Utils.find_category_by_name(Utils.website_maintenance, task_name)
     if d.is_empty():
@@ -2696,3 +2706,93 @@ func _check_obaby_ignore() -> void:
         if not ev_config.is_empty():
             _trigger_event(ev_config)
         blogger.obaby_ignore_days = 0
+
+# ==============================================================================
+# Obaby 评论区暗链检测
+# ==============================================================================
+
+## 累计评论 > 100 时触发评论区暗链事件（第 2 章：2005-2010）
+func _check_obaby_comment_spam() -> void:
+    if not GDManager:
+        return
+    var story = GDManager.get_story_progress()
+    if not story:
+        return
+    if story.is_completed(2, "obaby_comment_spam"):
+        return
+    if TimerManager.current_year < 2005 or (TimerManager.current_year == 2005 and TimerManager.current_month <= 5):
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+    var total = 0
+    for post in blogger.posts + blogger.archived_posts:
+        total += post.get("comments", 0)
+    if total > 100:
+        TaskManager._action_obaby_comment_spam()
+
+# ==============================================================================
+# Obaby 评论区暗链清理进度检测（连续 3 天紧急排险）
+# ==============================================================================
+
+## 每日检查评论区暗链清理进度
+func _check_obaby_comment_cleanup(did_emergency: bool) -> void:
+    if not GDManager:
+        return
+    var story = GDManager.get_story_progress()
+    if not story:
+        return
+    if not story.is_completed(2, "obaby_comment_spam"):
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+
+    # SEO 锁定恢复检测（独立于清理进度）
+    if blogger.obaby_spam_seo_locked:
+        blogger.seo_value = 0
+        var day = TimerManager.current_day - 1
+        var tasks = Blogger.blog_calendar[day].tasks
+        if "紧急排险" in tasks or "SEO优化" in tasks:
+            blogger.obaby_spam_seo_recovery_days += 1
+            if blogger.obaby_spam_seo_recovery_days >= 7:
+                blogger.obaby_spam_seo_locked = false
+                blogger.obaby_spam_seo_recovery_days = 0
+                blogger.obaby_comment_spam_days = 0
+                TaskManager.emit_signal("sg_task_show_popup_msg", "✅ SEO 锁定已解除",
+                    "搜索引擎重新收录了你的站点，\n但权重已归零。\n\n通过安排「SEO 优化」来逐步恢复排名。")
+            else:
+                emit_signal("sg_info_msg", "🔧 SEO 恢复进度：%d/7" % blogger.obaby_spam_seo_recovery_days)
+        else:
+            if blogger.obaby_spam_seo_recovery_days > 0:
+                blogger.obaby_spam_seo_recovery_days = 0
+                emit_signal("sg_info_msg", "❌ SEO 恢复中断：未连续安排紧急排险或 SEO 优化，进度已重置")
+        return  # 锁定状态下不推进清理进度
+
+    if story.is_completed(2, "obaby_comment_resolved"):
+        return
+
+    # 累计未处理天数（无论当天是否排险都 +1）
+    blogger.obaby_comment_spam_days += 1
+
+    if did_emergency:
+        blogger.obaby_comment_cleanup_days += 1
+        if blogger.obaby_comment_cleanup_days >= 3:
+            story.set_completed(2, "obaby_comment_resolved")
+            blogger.obaby_comment_cleanup_days = 0
+            blogger.obaby_comment_spam_days = 0
+            TaskManager.emit_signal("sg_task_show_popup_msg", "✅ 暗链清理完成",
+                "连续 3 天的紧急排险清除了所有暗链评论。\n\n已向搜索引擎提交重新审核，排名将在 7 天后恢复。")
+    else:
+        if blogger.obaby_comment_cleanup_days > 0:
+            blogger.obaby_comment_cleanup_days = 0
+
+    # 10 天以上未完成清理 → 升级：SEO 归零锁定（仅触发一次）
+    if not blogger.obaby_comment_spam_escalated and blogger.obaby_comment_spam_days >= 10:
+        blogger.seo_value = 0
+        blogger.obaby_spam_seo_locked = true
+        blogger.obaby_spam_seo_recovery_days = 0
+        blogger.obaby_comment_spam_days = 99
+        blogger.obaby_comment_spam_escalated = true
+        TaskManager.emit_signal("sg_task_show_popup_msg", "⚠️ 搜索引擎已屏蔽站点",
+            "暗链问题久未处理，搜索引擎已彻底将你的站点降权至零。\n\nSEO 已被锁定为 0\n需要连续安排「紧急排险」或「SEO 优化」\n7 天后才能恢复。")

@@ -1143,8 +1143,42 @@ func _action_obaby_first_visit() -> void:
         choices,
         "obaby_first_visit")
 
-## Obaby 首次来访选择回调（由 main.gd 在玩家选择后调用）
-func on_obaby_choice_selected(choice_id: int) -> void:
+## ============================================================
+## 第二章·评论区的暗链
+## ============================================================
+
+func _action_obaby_comment_spam() -> void:
+    var story = GDManager.get_story_progress() if GDManager else null
+    if not story:
+        return
+    story.set_completed(2, "obaby_comment_spam")
+
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if blogger:
+        blogger.seo_value = max(0, blogger.seo_value - 25)
+
+    var choices = [
+        {"id": 1, "label": "🧹 手动清理", "desc": "逐页翻评论删除，体力 ×3"},
+        {"id": 2, "label": "🔌 装验证码插件", "desc": "花钱 200，自动拦截新垃圾"},
+        {"id": 3, "label": "✍️ 写文章公开此事", "desc": "分享经历，技术 +5，新访客 +200"},
+    ]
+    emit_signal("sg_task_show_choice_event",
+        "⚠️ 评论区的暗链",
+        "搜索引擎发来 Webmaster 通知：你的站点被标记为「可疑站点」。\n\n查发现半年前的评论区被人批量灌入含暗链的垃圾评论——\n每条都指向菠菜站。\n\nSEO 已掉了 25 点。",
+        choices,
+        "obaby_comment_spam")
+
+## Obaby 系列事件选择回调（由 main.gd 在玩家选择后调用）
+func on_obaby_choice_selected(event_id: String, choice_id: int) -> void:
+    match event_id:
+        "obaby_first_visit":
+            _on_obaby_first_visit_choice(choice_id)
+        "obaby_comment_spam":
+            _on_obaby_comment_spam_choice(choice_id)
+        _:
+            push_warning("[TaskManager] Unknown obaby event: %s" % event_id)
+
+func _on_obaby_first_visit_choice(choice_id: int) -> void:
     var blogger = GDManager.get_blogger() if GDManager else null
     var story = GDManager.get_story_progress() if GDManager else null
     if not blogger or not story:
@@ -1168,6 +1202,38 @@ func on_obaby_choice_selected(choice_id: int) -> void:
             blogger.obaby_ignore_days = 1
             emit_signal("sg_task_show_popup_msg", "🙈 你选择了无视",
                 "你关掉了页面，当什么都没发生。\n\n等待你的会是什么？\n\n安全值 -20")
+
+## 第二章·评论区暗链选择回调
+func _on_obaby_comment_spam_choice(choice_id: int) -> void:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    var story = GDManager.get_story_progress() if GDManager else null
+    if not blogger or not story:
+        return
+
+    # 彩蛋：第一章选过发博文回应则多一条提示
+    var ch1_tech = story.is_completed(1, "obaby_tech_response")
+    var bonus = ""
+    if ch1_tech:
+        bonus = "\n\n（你隐约回忆起，当初那篇安全加固文章发布后不久，\n评论区有条不起眼的留言：\n「评论区也是个入口，留意一下。」\n—— 现在想来，后背发凉。）"
+
+    # 所有选择都需要连续 3 天安排「紧急排险」来完成清理
+    blogger.obaby_comment_cleanup_days = 0
+    blogger.obaby_comment_spam_days = 0
+
+    match choice_id:
+        1:
+            emit_signal("sg_task_show_popup_msg", "🧹 手动清理",
+                "逐篇翻查，清除暗链。\n\n连续 3 天安排「紧急排险」\n完成后提交审核，7 天恢复排名。\n\n⚠️ 10 天内未处理完将引发安全事件。%s" % bonus)
+
+        2:
+            blogger.money = max(0, blogger.money - 200)
+            emit_signal("sg_task_show_popup_msg", "🔌 验证码插件已安装",
+                "花了 200 元装验证码，新垃圾被拦截。\n\n旧暗链仍需连续 3 天「紧急排险」清除，\n再提交审核。\n\n⚠️ 10 天内未处理完将引发安全事件。%s" % bonus)
+
+        3:
+            blogger.set_ability("technical", blogger.technical_ability + 5)
+            emit_signal("sg_task_show_popup_msg", "✍️ 博文已发布",
+                "技术能力 +5，新访客 +200\n\n旧暗链仍需连续 3 天「紧急排险」清除，\n再提交审核。\n\n⚠️ 10 天内未处理完将引发安全事件。%s" % bonus)
 
 ## ============================================================
 ## 月结算接口（委托给子模块）

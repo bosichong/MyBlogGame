@@ -329,6 +329,21 @@ var learned_skills: Array[String] = []
 ## 选择无视后经过的天数（0 表示未触发）
 var obaby_ignore_days: int = 0
 
+## Obaby 评论区暗链清理进度（连续安排紧急排险的天数，0 表示未开始）
+var obaby_comment_cleanup_days: int = 0
+
+## Obaby 评论区暗链未处理天数（满 10 天引发安全事件）
+var obaby_comment_spam_days: int = 0
+
+## Obaby 暗链升级：SEO 是否被锁定为 0
+var obaby_spam_seo_locked: bool = false
+
+## Obaby 暗链升级：SEO 恢复天数（7 天紧急排险/SEO优化）
+var obaby_spam_seo_recovery_days: int = 0
+
+## Obaby 暗链是否已升级过（防止恢复后再次触发）
+var obaby_comment_spam_escalated: bool = false
+
 # ============================================
 # 安全事件系统
 # ============================================

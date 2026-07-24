@@ -271,6 +271,11 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "event_cooldown": data.event_cooldown,
         "resolved_events": data.resolved_events,
         "obaby_ignore_days": data.obaby_ignore_days,
+        "obaby_comment_cleanup_days": data.obaby_comment_cleanup_days,
+        "obaby_comment_spam_days": data.obaby_comment_spam_days,
+        "obaby_spam_seo_locked": data.obaby_spam_seo_locked,
+        "obaby_spam_seo_recovery_days": data.obaby_spam_seo_recovery_days,
+        "obaby_comment_spam_escalated": data.obaby_comment_spam_escalated,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -356,6 +361,11 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.event_cooldown = dict.get("event_cooldown", 0)
     data.resolved_events = dict.get("resolved_events", [])
     data.obaby_ignore_days = dict.get("obaby_ignore_days", 0)
+    data.obaby_comment_cleanup_days = dict.get("obaby_comment_cleanup_days", 0)
+    data.obaby_comment_spam_days = dict.get("obaby_comment_spam_days", 0)
+    data.obaby_spam_seo_locked = dict.get("obaby_spam_seo_locked", false)
+    data.obaby_spam_seo_recovery_days = dict.get("obaby_spam_seo_recovery_days", 0)
+    data.obaby_comment_spam_escalated = dict.get("obaby_comment_spam_escalated", false)
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {

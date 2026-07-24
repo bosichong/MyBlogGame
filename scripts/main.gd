@@ -576,8 +576,7 @@ func sg_task_show_choice_event(title: String, content: String, choices: Array, e
         btn.pressed.connect(func():
             dialog.queue_free()
             TimerManager.start_timer()
-            if event_id == "obaby_first_visit":
-                TaskManager.on_obaby_choice_selected(choice_id)
+            TaskManager.on_obaby_choice_selected(event_id, choice_id)
         )
         vbox.add_child(btn)
 
