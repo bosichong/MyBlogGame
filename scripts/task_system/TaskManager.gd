@@ -53,6 +53,7 @@ var pending_scene_params: Dictionary = {}
 signal schedule_refresh_needed
 signal sg_task_info_display_msg(msg)
 signal sg_task_show_popup_msg(title, content)
+signal sg_task_show_choice_event(title, content, choices, event_id)
 
 func _ready():
     # 初始化 TaskConfig 引用（必须在其他初始化之前）
@@ -658,6 +659,8 @@ func _execute_action(action: Dictionary, context: Dictionary = {}) -> void:
             _action_add_archive_event(action)
         TaskConfig_ActionType.CHANGE_SCENE:
             _action_change_scene(action)
+        TaskConfig_ActionType.CUSTOM_ACTION:
+            _action_custom(action, context)
         _:
             push_warning("[TaskManager] Unhandled action type: %s" % action_type)
 
@@ -1103,6 +1106,68 @@ func _set_skill_disabled(name: String, disabled: bool) -> void:
     var d = Utils.find_category_by_name(Utils.learning_skills, name, true)
     if not d.is_empty():
         d["disabled"] = disabled
+
+## ============================================================
+## CUSTOM_ACTION 处理器
+## ============================================================
+
+## 根据 action_func 名称动态调用方法
+func _action_custom(action: Dictionary, context: Dictionary) -> void:
+    var func_name = action.get("action_func", "")
+    if func_name.is_empty():
+        push_error("[TaskManager] CUSTOM_ACTION missing action_func")
+        return
+    if has_method(func_name):
+        call(func_name)
+    else:
+        push_error("[TaskManager] CUSTOM_ACTION method not found: %s" % func_name)
+
+## ============================================================
+## Obaby 首次来访（不速之客）
+## ============================================================
+
+func _action_obaby_first_visit() -> void:
+    var story = GDManager.get_story_progress() if GDManager else null
+    if not story:
+        return
+    story.set_completed(1, "obaby_first_visit")
+
+    var choices = [
+        {"id": 1, "label": "🔍 检查安全维护", "desc": "消耗 1 天体力，补上安全配置"},
+        {"id": 2, "label": "✍️ 发博文回应", "desc": "写一篇「我的博客安全加固记录」"},
+        {"id": 3, "label": "🙈 无视", "desc": "什么都不做"},
+    ]
+    emit_signal("sg_task_show_choice_event",
+        "⚠️ 不速之客",
+        "一天打开博客，首页被换了。白底黑字只有一行：\n\n「你的站，到处都是洞。—— O」\n\n没有数据损失，没有挂马，什么都没动。\n但留言板多了一条匿名留言：\n\n「修好了没？」",
+        choices,
+        "obaby_first_visit")
+
+## Obaby 首次来访选择回调（由 main.gd 在玩家选择后调用）
+func on_obaby_choice_selected(choice_id: int) -> void:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    var story = GDManager.get_story_progress() if GDManager else null
+    if not blogger or not story:
+        return
+
+    match choice_id:
+        1:
+            blogger.safety_value = min(100, blogger.safety_value + 10)
+            emit_signal("sg_task_show_popup_msg", "✅ 安全排查完成",
+                "你花了一天时间检查了博客的安全配置，修补了几个明显的漏洞。\n\n安全值 +10")
+
+        2:
+            blogger.set_ability("technical", blogger.technical_ability + 3)
+            blogger.rss += 5
+            emit_signal("sg_task_show_popup_msg", "✍️ 博文发布",
+                "你写了一篇「我的博客安全加固记录」，详细记录了这次被入侵的经过和修复过程。\n\n文章发布后，吸引了一批技术读者的关注。\n\n技术能力 +3\nRSS +5")
+            story.set_completed(1, "obaby_tech_response")
+
+        3:
+            blogger.safety_value = max(0, blogger.safety_value - 20)
+            blogger.obaby_ignore_days = 1
+            emit_signal("sg_task_show_popup_msg", "🙈 你选择了无视",
+                "你关掉了页面，当什么都没发生。\n\n等待你的会是什么？\n\n安全值 -20")
 
 ## ============================================================
 ## 月结算接口（委托给子模块）

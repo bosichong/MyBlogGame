@@ -19,6 +19,8 @@ var chapter1 = {
     "icp_filing_done": true,          # 网站备案完成
     "award_2005": true,              # 优秀博客奖项（结果动态判定）
     "year_summary_2005": true,       # 2005年度总结
+    "obaby_first_visit": false,      # Obaby 首次来访（不速之客）
+    "obaby_tech_response": false,    # 首次事件选②发博文回应
 }
 
 ## 第二章：博客黄金期（2005-2010）
@@ -255,6 +257,8 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "first_income": "第一笔广告收益：收到了博客的第一笔收入",
         "icp_filing_done": "网站备案完成：迈出了合规运营的一步",
         "year_summary_2005": "2005年度总结：回望这四年，写下成长的足迹",
+        "obaby_first_visit": "一个神秘的访客在你的首页留下了一行字",
+        "obaby_tech_response": "你写了一篇博文回应了那次神秘的来访",
         # 第二章
         "literature_weekly": "文学周刊发布：用文字书写内心世界",
         "code_weekly": "程序员周刊发布：分享技术路上的思考",

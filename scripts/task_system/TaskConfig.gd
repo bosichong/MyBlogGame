@@ -86,6 +86,10 @@ const CONDITIONS: Dictionary = {
     "first_article_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_posted", "completed": false},
     "first_article_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_posted", "completed": true},
 
+    # Obaby 首次来访条件
+    "obaby_first_visit_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "obaby_first_visit", "completed": false},
+    "obaby_first_visit_time": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2002], "m": [2], "w": [2], "d": [1]}},
+
     # 技能数值条件 - 文学（每20能力值一个等级）
     "literature_value_ge_20": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 20},
     "literature_value_ge_40": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 40},
@@ -919,6 +923,20 @@ const TASKS: Array = [
         ],
     },
     
+    # ====================
+    # Obaby 首次来访（不速之客）
+    # ====================
+    {
+        "id": "obaby_first_visit",
+        "description": "某天打开博客，首页被换。白底黑字只有一行——「你的站，到处都是洞。—— O」",
+        "conditions": ["obaby_first_visit_time", "first_article_completed", "obaby_first_visit_not_done"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_obaby_first_visit"},
+        ],
+    },
+
     # ====================
     # 博客联盟解锁任务
     # ====================

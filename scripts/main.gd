@@ -56,6 +56,12 @@ func _ready() -> void:
         Yun.connect("game_over", _on_game_over)
         Yun.connect("suspend_warning", _on_suspend_warning)
         Yun.connect("blog_suspended", _on_blog_suspended)
+        Yun.connect("domain_renewal_reminder", _on_domain_renewal_reminder)
+        Yun.connect("host_renewal_reminder", _on_host_renewal_reminder)
+    
+    if Blogger:
+        Blogger.connect("sg_traffic_warning", _on_traffic_warning)
+        Blogger.connect("sg_traffic_warning_resolved", _on_traffic_warning_resolved)
 
     TimerManager.timer.wait_time = DAY_TIMA
     $ui/bottom.connect("create_blog_passed",_on_bottom_calendar_passed)
@@ -78,6 +84,7 @@ func _ready() -> void:
     TaskManager.connect("sg_task_info_display_msg",sg_task_info_display_msg)
     TaskManager.connect("schedule_refresh_needed", _on_schedule_refresh_needed)
     TaskManager.connect("sg_task_show_popup_msg",sg_task_show_popup_msg)
+    TaskManager.connect("sg_task_show_choice_event", sg_task_show_choice_event)
     Blogger.connect("sg_info_msg", sg_task_info_display_msg)
     Blogger.connect("sg_event_triggered", _on_event_triggered)
     Blogger.connect("sg_event_resolved", _on_event_resolved)
@@ -448,13 +455,10 @@ func _on_chapter_reward(chapter: int, chapter_name: String) -> void:
         "等级 +5",
         "金钱 +1000",
     ]
-    var reward = preload("res://milestones/chapter_reward.tscn").instantiate()
-    reward.setup("🎉 你完成了" + chapter_name + " 的所有章节任务！", rewards)
-    reward.closed.connect(func():
-        TimerManager.start_timer()
-    )
-    add_child(reward)
-    TimerManager.stop_timer()
+    var text = "🎉 你完成了" + chapter_name + " 的所有章节任务！\n\n奖励：\n"
+    for r in rewards:
+        text += "  • " + r + "\n"
+    show_popup_message("章节完成", text)
 
 ## 显示通用弹窗（加入队列，依次弹出）
 func show_popup_message(title: String, content: String) -> void:
@@ -474,7 +478,7 @@ func _show_next_popup() -> void:
     
     $AcceptDialog.title = data.title
     $AcceptDialog.dialog_text = data.content
-    $AcceptDialog.set_size(Vector2i(400,200))
+    $AcceptDialog.set_size(Vector2i(500,300))
     $AcceptDialog.popup_centered()  
     
     TimerManager.stop_timer()
@@ -529,6 +533,56 @@ func sg_task_show_popup_msg(title: String, content: String):
 
     show_popup_message(title, content)
 
+## 显示多选事件弹窗（Obaby 等剧情事件）
+func sg_task_show_choice_event(title: String, content: String, choices: Array, event_id: String) -> void:
+    TimerManager.stop_timer()
+    var dialog = Window.new()
+    dialog.title = title
+    dialog.size = Vector2i(480, 400)
+    dialog.exclusive = true
+    dialog.unresizable = true
+    dialog.popup_window = true
+    add_child(dialog)
+
+    var margin = MarginContainer.new()
+    margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+    margin.add_theme_constant_override("margin_left", 16)
+    margin.add_theme_constant_override("margin_right", 16)
+    margin.add_theme_constant_override("margin_top", 16)
+    margin.add_theme_constant_override("margin_bottom", 16)
+    dialog.add_child(margin)
+
+    var vbox = VBoxContainer.new()
+    vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    margin.add_child(vbox)
+
+    var label = Label.new()
+    label.text = content
+    label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+    label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    vbox.add_child(label)
+
+    vbox.add_child(HSeparator.new())
+
+    for c in choices:
+        var btn = Button.new()
+        btn.text = c.label + "\n" + c.desc
+        btn.flat = false
+        btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        btn.custom_minimum_size = Vector2i(0, 50)
+        var choice_id = c.id
+        btn.pressed.connect(func():
+            dialog.queue_free()
+            TimerManager.start_timer()
+            if event_id == "obaby_first_visit":
+                TaskManager.on_obaby_choice_selected(choice_id)
+        )
+        vbox.add_child(btn)
+
+    dialog.popup_centered()
+
 # ===== 安全事件系统 =====
 
 ## 安全事件触发弹窗（提示信息）
@@ -560,9 +614,8 @@ func _on_blog_suspended(source: String):
     show_popup_message("博客暂停", "您的博客因欠费已暂停运营！\n原因：" + ("域名" if source == "domain" else "主机" if source == "host" else "域名和主机") + "到期未续费\n\n请尽快续费，否则4周后游戏将结束！")
 
 func _on_suspend_warning(message: String):
-    """欠费警告信号处理"""
+    """欠费警告信号处理——仅信息面板显示，弹窗已由到期前提醒取代"""
     info_display.add_message("⚠️ " + message)
-    show_popup_message("欠费警告", message)
 
 func _on_game_over(suspend_days: int):
     """游戏结束信号处理"""
@@ -570,6 +623,21 @@ func _on_game_over(suspend_days: int):
     TimerManager.stop_timer()
     # 显示游戏结束弹窗
     show_popup_message("游戏结束", "您的博客因欠费已永久下线！\n\n欠费天数：%d 天\n\n感谢您的游玩！" % suspend_days)
+
+
+# ===== 主机域名到期提醒 =====
+
+func _on_domain_renewal_reminder(days_left: int):
+    show_popup_message("域名续费提醒", "您的域名 %s 将于 %d 天后到期，请及时续费。" % [Yun.get_domain_name(), days_left])
+
+func _on_host_renewal_reminder(days_left: int):
+    show_popup_message("主机续费提醒", "您的主机套餐「%s」将于 %d 天后到期，请及时续费或升级。" % [Yun.get_server_package_name(), days_left])
+
+func _on_traffic_warning(percent: float):
+    show_popup_message("流量预警", "本月流量已达套餐限额的 %d%%，建议升级套餐或优化缓存。" % [percent])
+
+func _on_traffic_warning_resolved():
+    show_popup_message("流量预警已解除", "流量已回落至安全范围，感谢你的处理。")
 
 
 ## 自动保存游戏（已禁用）

@@ -10,6 +10,8 @@ signal sg_info_msg(msg: String)            # 信息提示面板消息
 signal sg_event_triggered(event_data: Dictionary)  # 安全事件触发信号
 signal sg_event_resolved(event_id: String, reward: Dictionary)  # 安全事件解决信号
 signal sg_event_escalated(event_id: String, escalate_to: String)  # 安全事件升级信号
+signal sg_traffic_warning(percent: float)  # 流量预警信号
+signal sg_traffic_warning_resolved         # 流量预警已解除
 
 ## 付费文章月收入累积（按类型分别统计）
 var monthly_paid_income: float = 0
@@ -19,6 +21,9 @@ var monthly_hacker_income: float = 0      # 黑客攻防(付费)收入
 var last_settle_paid_views: int = 0
 var last_settle_novel_views: int = 0      # 小说连载上次结算访问量
 var last_settle_hacker_views: int = 0    # 黑客攻防(付费)上次结算访问量
+
+## 流量预警标记（true 表示本月已弹过）
+var _traffic_warning_active: bool = false
 
 ## 付费文章订阅配置
 const PAID_SUBSCRIPTION_PRICE: float = 4.9  # 固定订阅价格
@@ -418,6 +423,9 @@ func daily_activities():
 
     # 每日末尾检查是否触发新安全事件
     _check_safety_events()
+
+    # Obaby 无视后续计数
+    _check_obaby_ignore()
 
 func week_activites():
     if not GDManager:
@@ -1645,6 +1653,18 @@ func update_blog_views() -> int:
     else:
         blogger.month_views = blogger.today_views
         tmp_m = TimerManager.current_month
+    
+    # 流量预警检查
+    var traffic_limit = Yun.get_monthly_traffic_limit()
+    if traffic_limit > 0 and blogger.month_views >= traffic_limit * 0.8:
+        if not _traffic_warning_active:
+            _traffic_warning_active = true
+            var pct = float(blogger.month_views) / traffic_limit * 100
+            emit_signal("sg_traffic_warning", pct)
+    else:
+        if _traffic_warning_active:
+            _traffic_warning_active = false
+            emit_signal("sg_traffic_warning_resolved")
 
     if tmp_y == TimerManager.current_year:
         blogger.year_views += blogger.today_views
@@ -2648,3 +2668,31 @@ func _escalate_event(escalate_to_id: String) -> void:
 
     emit_signal("sg_event_escalated", old_id, escalate_to_id)
     emit_signal("sg_info_msg", "⚠️ 事件升级：%s → %s！立即安排紧急排险！" % [old_id, escalate_to_id])
+
+# ==============================================================================
+# Obaby 无视后续处理
+# ==============================================================================
+
+## 每日检查 Obaby 无视计数器，触发后续事件
+func _check_obaby_ignore() -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+    if blogger.obaby_ignore_days <= 0:
+        return
+
+    blogger.obaby_ignore_days += 1
+
+    if blogger.obaby_ignore_days == 21:
+        # 第20天：Obaby 留言提醒
+        emit_signal("sg_event_triggered", {
+            "popup_title": "📝 匿名留言",
+            "popup_desc": "一个月后，留言板出现了一条新留言：\n\n「提醒过了。」\n\n署名仍然是那个 O。",
+        })
+
+    elif blogger.obaby_ignore_days >= 26:
+        # 第25天之后：强制触发安全事件
+        var ev_config = _get_event_config("homepage_defaced")
+        if not ev_config.is_empty():
+            _trigger_event(ev_config)
+        blogger.obaby_ignore_days = 0

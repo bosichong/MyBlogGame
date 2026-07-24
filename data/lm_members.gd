@@ -5,15 +5,15 @@ extends Node
 
 ## 联盟博客类型枚举（与联盟成员 type 字段对应）
 enum LmBlogType {
-	综合 = 1,
-	文学 = 2,
-	编程 = 3,
-	艺术 = 4,
+    综合 = 1,
+    文学 = 2,
+    编程 = 3,
+    艺术 = 4,
 }
 
 var lm_list = [
   {"id": 1, "blog_name": "星光博客", "blog_author": "星语者", "lv": 50, "type": 1, "quality": 50, "url": "starlight.com"},
-  {"id": 2, "blog_name": "极客笔记", "blog_author": "GeekPanda", "lv": 49, "type": 3, "quality": 48, "url": "geeknote.com"},
+  {"id": 2, "blog_name": "Obaby", "blog_author": "Obaby", "lv": 49, "type": 3, "quality": 48, "url": "zhongxiaojie.com", "description": "黑客程序媛 / 逆向工程师 / 人工智能学徒 / 用爱发电的独立开发者", "avatar": "https://gg.lang.bi/avatar/d6ebc088df916bcc9e8b94a09f9b0f604e57be54b04bd520c6db2492740fc563?s=64&d=initials&r=pg&initials=ob", "rss": "https://zhongxiaojie.com/feed/"},
   {"id": 3, "blog_name": "墨染书斋", "blog_author": "墨染", "lv": 48, "type": 2, "quality": 46, "url": "moran.net"},
   {"id": 4, "blog_name": "Web开发", "blog_author": "VisionArt", "lv": 47, "type": 3, "quality": 44, "url": "webdev.com"},
   {"id": 5, "blog_name": "星辰大海", "blog_author": "懒懒", "lv": 43, "type": 1, "quality": 42, "url": "starsea.com"},

@@ -270,6 +270,7 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "active_event": data.active_event,
         "event_cooldown": data.event_cooldown,
         "resolved_events": data.resolved_events,
+        "obaby_ignore_days": data.obaby_ignore_days,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -354,6 +355,7 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.active_event = dict.get("active_event", {})
     data.event_cooldown = dict.get("event_cooldown", 0)
     data.resolved_events = dict.get("resolved_events", [])
+    data.obaby_ignore_days = dict.get("obaby_ignore_days", 0)
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {
