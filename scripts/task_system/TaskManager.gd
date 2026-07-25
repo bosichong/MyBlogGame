@@ -1177,6 +1177,10 @@ func on_obaby_choice_selected(event_id: String, choice_id: int) -> void:
             _on_obaby_comment_spam_choice(choice_id)
         "obaby_redirect_ad":
             _on_obaby_redirect_ad_choice(choice_id)
+        "obaby_ddos":
+            _on_obaby_ddos_choice(choice_id)
+        "obaby_ddos_buy":
+            _on_obaby_ddos_buy_choice(choice_id)
         _:
             push_warning("[TaskManager] Unknown obaby event: %s" % event_id)
 
@@ -1299,6 +1303,84 @@ func _remove_half_friendlinks() -> void:
         var member_id = to_remove[i].get("id", -1)
         if member_id > 0:
             flm.delete_link(member_id)
+
+## ============================================================
+## 第四章·围攻
+## ============================================================
+
+## 触发 DDoS 攻击事件
+func _action_obaby_ddos() -> void:
+    var story = GDManager.get_story_progress() if GDManager else null
+    if not story:
+        return
+    story.set_completed(4, "obaby_ddos")
+
+    var choices = [
+        {"id": 1, "label": "🛡️ 自己处理", "desc": "尝试自行防御，但普通手段对 DDoS 无效"},
+        {"id": 2, "label": "💳 购买安全防护（2000 元）", "desc": "立即生效，7 天后攻击解除"},
+    ]
+    emit_signal("sg_task_show_choice_event",
+        "⚔️ 博客遭受 DDoS 攻击",
+        "出书后流量涨了一波，然后网站突然打不开了。\n\n服务器商发来告警：你的博客正在遭受 DDoS 攻击！\n\n流量骤减为 1/10，SEO 每天 -10，持续 7 天。\n\n技术论坛有人发帖嘲讽。",
+        choices,
+        "obaby_ddos")
+
+## DDoS 初始选择回调
+func _on_obaby_ddos_choice(choice_id: int) -> void:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+
+    match choice_id:
+        1:
+            blogger.obaby_ddos_self_days = 0
+            emit_signal("sg_task_show_popup_msg", "🛡️ 尝试自行防御",
+                "你尝试了各种方法——配置防火墙、调整 Apache、甚至重启了服务器。\n\n但没有任何效果。流量和 SEO 仍在持续下降。\n\n三天后服务器商将给出建议。")
+
+        2:
+            if blogger.money >= 2000:
+                blogger.money -= 2000
+                blogger.obaby_ddos_protection_bought = true
+                blogger.obaby_ddos_protection_days = 0
+                emit_signal("sg_task_show_popup_msg", "💳 安全防护已购买",
+                    "你向服务器商购买了 DDoS 防护服务（2000 元）。\n\n防护已立即生效，7 天后攻击将被彻底阻断。\n\n在此期间，主机正在全力防护中。")
+            else:
+                emit_signal("sg_task_show_popup_msg", "⚠️ 余额不足",
+                    "你只有 %.2f 元，而 DDoS 防护需要 2000 元。\n\n建议安排日程赚些钱再来购买。" % blogger.money)
+
+## 第 3 天自处理无果后弹出购买提示
+func _action_obaby_ddos_buy_prompt() -> void:
+    var choices = [
+        {"id": 1, "label": "💳 购买安全防护（2000 元）", "desc": "立即生效，7 天后攻击解除"},
+        {"id": 2, "label": "⏳ 再等等", "desc": "攻击持续，SEO 和流量继续下降"},
+    ]
+    emit_signal("sg_task_show_choice_event",
+        "⚠️ 自行防御无效",
+        "你已经尝试了三天，DDoS 攻击没有丝毫减弱。\n\n服务器商发来建议：\n「普通手段对分布式攻击是无效的，建议购买专业 DDoS 防护服务。」",
+        choices,
+        "obaby_ddos_buy")
+
+## 购买提示选择回调
+func _on_obaby_ddos_buy_choice(choice_id: int) -> void:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+
+    match choice_id:
+        1:
+            if blogger.money >= 2000:
+                blogger.money -= 2000
+                blogger.obaby_ddos_protection_bought = true
+                blogger.obaby_ddos_protection_days = 0
+                emit_signal("sg_task_show_popup_msg", "💳 安全防护已购买",
+                    "你终于购买了 DDoS 防护服务（2000 元）。\n\n防护已立即生效，主机正在全力防护中。")
+            else:
+                emit_signal("sg_task_show_popup_msg", "⚠️ 余额不足",
+                    "你只有 %.2f 元，而 DDoS 防护需要 2000 元。\n\n建议安排日程赚些钱再来购买。" % blogger.money)
+
+        2:
+            emit_signal("sg_task_show_popup_msg", "⏳ 再等等",
+                "攻击仍在继续。SEO 和流量持续下降。\n\n每天的信息面板会提醒你，博客正在遭受 DDoS 攻击。")
 
 ## ============================================================
 ## 月结算接口（委托给子模块）

@@ -436,6 +436,9 @@ func daily_activities():
     # Obaby 第三方统计代码广告检测
     _check_obaby_redirect_ad()
 
+    # Obaby DDoS 攻击检测
+    _check_obaby_ddos()
+
 func week_activites():
     if not GDManager:
         return
@@ -2842,3 +2845,63 @@ func _check_obaby_redirect_ad() -> void:
         return
 
     TaskManager._action_obaby_redirect_ad()
+
+# ==============================================================================
+# Obaby DDoS 攻击检测
+# ==============================================================================
+
+## 检测 DDoS 攻击事件（触发：年份 ≥ 2017/3 + 已出书 + 未完成）
+func _check_obaby_ddos() -> void:
+    if not GDManager:
+        return
+    var story = GDManager.get_story_progress()
+    if not story:
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+
+    if story.is_completed(4, "obaby_ddos_resolved"):
+        return
+
+    # 事件已触发 → 每日扣减 + 信息提示
+    if story.is_completed(4, "obaby_ddos"):
+        _process_ddos_daily(blogger, story)
+        return
+
+    # 触发条件
+    if TimerManager.current_year < 2017:
+        return
+    if TimerManager.current_year == 2017 and TimerManager.current_month < 3:
+        return
+    if not story.is_completed(4, "book_published"):
+        return
+
+    TaskManager._action_obaby_ddos()
+
+## DDoS 每日处理：扣减 + 提示 + 购买检测
+func _process_ddos_daily(blogger: BloggerData, story: StoryProgress) -> void:
+    # 每日扣减
+    blogger.seo_value = max(0, blogger.seo_value - 10)
+    if blogger.today_views > 0:
+        blogger.today_views = max(1, int(blogger.today_views * 0.1))
+
+    if blogger.obaby_ddos_protection_bought:
+        # 已购买防护
+        emit_signal("sg_info_msg", "主机正在防护中，DDoS 攻击仍在持续。")
+        blogger.obaby_ddos_protection_days += 1
+        if blogger.obaby_ddos_protection_days >= 7:
+            story.set_completed(4, "obaby_ddos_resolved")
+            blogger.obaby_ddos_protection_bought = false
+            blogger.obaby_ddos_protection_days = 0
+            blogger.obaby_ddos_self_days = 0
+            blogger.obaby_ddos_buy_prompted = false
+            TaskManager.emit_signal("sg_task_show_popup_msg", "✅ 危险解除",
+                "DDoS 攻击已被成功阻断！\n\n网站流量和 SEO 开始缓慢回升。\n\n如果你愿意，还可以购买长期 DDoS 防护（月费 1500 元），\n防止未来再次遭遇类似攻击。")
+    else:
+        # 自处理 / 未购买
+        emit_signal("sg_info_msg", "你的博客正在遭受 DDoS 攻击！SEO -10，流量仅剩 1/10。")
+        blogger.obaby_ddos_self_days += 1
+        if blogger.obaby_ddos_self_days >= 3 and not blogger.obaby_ddos_buy_prompted:
+            blogger.obaby_ddos_buy_prompted = true
+            TaskManager._action_obaby_ddos_buy_prompt()

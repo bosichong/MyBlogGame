@@ -277,6 +277,10 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "obaby_spam_seo_recovery_days": data.obaby_spam_seo_recovery_days,
         "obaby_comment_spam_escalated": data.obaby_comment_spam_escalated,
         "obaby_redirect_ad_ignore_days": data.obaby_redirect_ad_ignore_days,
+        "obaby_ddos_protection_bought": data.obaby_ddos_protection_bought,
+        "obaby_ddos_protection_days": data.obaby_ddos_protection_days,
+        "obaby_ddos_self_days": data.obaby_ddos_self_days,
+        "obaby_ddos_buy_prompted": data.obaby_ddos_buy_prompted,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -368,6 +372,10 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.obaby_spam_seo_recovery_days = dict.get("obaby_spam_seo_recovery_days", 0)
     data.obaby_comment_spam_escalated = dict.get("obaby_comment_spam_escalated", false)
     data.obaby_redirect_ad_ignore_days = dict.get("obaby_redirect_ad_ignore_days", 0)
+    data.obaby_ddos_protection_bought = dict.get("obaby_ddos_protection_bought", false)
+    data.obaby_ddos_protection_days = dict.get("obaby_ddos_protection_days", 0)
+    data.obaby_ddos_self_days = dict.get("obaby_ddos_self_days", 0)
+    data.obaby_ddos_buy_prompted = dict.get("obaby_ddos_buy_prompted", false)
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {

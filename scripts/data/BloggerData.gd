@@ -347,6 +347,15 @@ var obaby_comment_spam_escalated: bool = false
 ## Obaby 第三方统计代码广告：选无视后的累计天数
 var obaby_redirect_ad_ignore_days: int = 0
 
+## Obaby DDoS：是否已购买安全防护
+var obaby_ddos_protection_bought: bool = false
+## Obaby DDoS：防护已生效天数
+var obaby_ddos_protection_days: int = 0
+## Obaby DDoS：自处理累计天数
+var obaby_ddos_self_days: int = 0
+## Obaby DDoS：是否已弹过购买提示
+var obaby_ddos_buy_prompted: bool = false
+
 # ============================================
 # 安全事件系统
 # ============================================

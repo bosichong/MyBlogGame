@@ -67,6 +67,8 @@ var chapter4 = {
     "ai_preview": false,              # AI时代预告
     "award_2020": false,              # 优秀博客奖项（2020）
     "year_summary_2020": false,       # 2020年度总结
+    "obaby_ddos": false,              # DDoS攻击事件触发
+    "obaby_ddos_resolved": false,     # DDoS攻击已解除
 }
 
 ## 第五章：博客重塑期（2020-2025）
@@ -297,6 +299,8 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "cdn_enabled": "CDN加速部署：网站访问速度大幅提升",
         "ai_preview": "AI时代预告：新一轮技术变革即将到来",
         "year_summary_2020": "2020年度总结：挑战与突破的五年",
+        "obaby_ddos": "DDoS攻击：博客遭受持续7天的DDoS攻击，流量和SEO急剧下降",
+        "obaby_ddos_resolved": "DDoS攻击已解除：通过购买安全防护，博客恢复正常运行",
         # 第五章
         "ai_unlocked": "AI创作解锁：借助AI开启全新的创作模式",
         "award_2025": "优秀博客奖项（2025）：最后一届大赛，为博客生涯画上句号",
