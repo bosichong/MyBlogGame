@@ -353,8 +353,6 @@ var obaby_ddos_protection_bought: bool = false
 var obaby_ddos_protection_days: int = 0
 ## Obaby DDoS：自处理累计天数
 var obaby_ddos_self_days: int = 0
-## Obaby DDoS：是否已弹过购买提示
-var obaby_ddos_buy_prompted: bool = false
 
 # ============================================
 # 安全事件系统
