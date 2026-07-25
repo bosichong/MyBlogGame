@@ -552,16 +552,19 @@ func sg_task_show_choice_event(title: String, content: String, choices: Array, e
     margin.add_theme_constant_override("margin_bottom", 16)
     dialog.add_child(margin)
 
+    var scroll = ScrollContainer.new()
+    scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    margin.add_child(scroll)
+
     var vbox = VBoxContainer.new()
     vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-    margin.add_child(vbox)
+    scroll.add_child(vbox)
 
     var label = Label.new()
     label.text = content
     label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
     label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    label.size_flags_vertical = Control.SIZE_EXPAND_FILL
     vbox.add_child(label)
 
     vbox.add_child(HSeparator.new())

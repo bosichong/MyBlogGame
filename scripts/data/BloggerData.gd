@@ -344,6 +344,9 @@ var obaby_spam_seo_recovery_days: int = 0
 ## Obaby 暗链是否已升级过（防止恢复后再次触发）
 var obaby_comment_spam_escalated: bool = false
 
+## Obaby 第三方统计代码广告：选无视后的累计天数
+var obaby_redirect_ad_ignore_days: int = 0
+
 # ============================================
 # 安全事件系统
 # ============================================

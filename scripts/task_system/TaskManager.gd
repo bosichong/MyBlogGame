@@ -1164,7 +1164,7 @@ func _action_obaby_comment_spam() -> void:
     ]
     emit_signal("sg_task_show_choice_event",
         "⚠️ 评论区的暗链",
-        "搜索引擎发来 Webmaster 通知：你的站点被标记为「可疑站点」。\n\n查发现半年前的评论区被人批量灌入含暗链的垃圾评论——\n每条都指向菠菜站。\n\nSEO 已掉了 25 点。",
+        "搜索引擎发来 Webmaster 通知：你的站点被标记为「可疑站点」。\n\n排查发现半年前的评论区被人批量灌入含暗链的垃圾评论——\n每条都指向菠菜站。\n\nSEO 已掉了 25 点。",
         choices,
         "obaby_comment_spam")
 
@@ -1175,6 +1175,8 @@ func on_obaby_choice_selected(event_id: String, choice_id: int) -> void:
             _on_obaby_first_visit_choice(choice_id)
         "obaby_comment_spam":
             _on_obaby_comment_spam_choice(choice_id)
+        "obaby_redirect_ad":
+            _on_obaby_redirect_ad_choice(choice_id)
         _:
             push_warning("[TaskManager] Unknown obaby event: %s" % event_id)
 
@@ -1236,10 +1238,71 @@ func _on_obaby_comment_spam_choice(choice_id: int) -> void:
                 "技术能力 +5，新访客 +200\n\n旧暗链仍需连续 3 天「紧急排险」清除，\n再提交审核。\n\n⚠️ 10 天内未处理完将引发安全事件。%s" % bonus)
 
 ## ============================================================
-## 月结算接口（委托给子模块）
+## 第三章·带路党
 ## ============================================================
 
-## 每月结算书籍销售收入
+func _action_obaby_redirect_ad() -> void:
+    var story = GDManager.get_story_progress() if GDManager else null
+    if not story:
+        return
+    story.set_completed(3, "obaby_redirect_ad")
+
+    var choices = [
+        {"id": 1, "label": "🗑 删除统计代码", "desc": "移除脚本，广告消失"},
+        {"id": 2, "label": "✍️ 删除 + 发博文感谢 O", "desc": "技术能力 +5，声誉 +10"},
+        {"id": 3, "label": "🙈 无视", "desc": "一个月后可能引发更严重的安全事件"},
+    ]
+    emit_signal("sg_task_show_choice_event",
+        "⚠️ 半夜弹出的广告",
+        "陆续收到读者反馈，半夜博客会弹出涩情广告窗口。\n时段和 IP 非常随机，友链站长已质询，半数友链断链。\n\n排查所有代码未发现异常。\n\n直到某天后台留言板多了一条：\n———————————————\n「你的第三方统计代码，是不是有问题？—— O」\n———————————————\n\n排查发现早期接入的免费统计脚本被逆向插了广告代码。",
+        choices,
+        "obaby_redirect_ad")
+
+func _on_obaby_redirect_ad_choice(choice_id: int) -> void:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    var story = GDManager.get_story_progress() if GDManager else null
+    if not blogger or not story:
+        return
+
+    match choice_id:
+        1:
+            _remove_half_friendlinks()
+            story.set_completed(3, "obaby_redirect_ad_resolved")
+            emit_signal("sg_task_show_popup_msg", "🗑 统计代码已删除",
+                "移除了第三方统计脚本，广告立即消失。\n\n但半数友链已经断链，需要安排「友链维护」逐步重建。")
+
+        2:
+            _remove_half_friendlinks()
+            blogger.set_ability("technical", blogger.technical_ability + 5)
+            blogger.reputation += 10
+            story.set_completed(3, "obaby_redirect_ad_resolved")
+            emit_signal("sg_task_show_popup_msg", "✍️ 博文已发布",
+                "你发了一篇《第三方代码的安全隐患》，感谢匿名提醒。\n\n技术能力 +5\n声誉 +10\n\n同行纷纷转发，友链重建速度加快。")
+
+        3:
+            blogger.obaby_redirect_ad_ignore_days = 0
+            emit_signal("sg_task_show_popup_msg", "🙈 你选择了无视",
+                "你觉得关掉统计就行了。\n\n但恶意代码并未移除——\n一个月后可能升级为更严重的安全事件。")
+
+func _remove_half_friendlinks() -> void:
+    var flm = GDManager.get_friend_link_manager() if GDManager else null
+    if not flm:
+        return
+    var links = flm.get_active_links()
+    if links.is_empty():
+        return
+    var count = links.size()
+    var remove_count = ceili(count / 2.0)
+    var to_remove = links.duplicate()
+    to_remove.shuffle()
+    for i in range(remove_count):
+        var member_id = to_remove[i].get("id", -1)
+        if member_id > 0:
+            flm.delete_link(member_id)
+
+## ============================================================
+## 月结算接口（委托给子模块）
+## ============================================================
 func settle_monthly_book_sales() -> Dictionary:
     return BookPublishMgr.settle_monthly_book_sales() if BookPublishMgr else {"total_income": 0}
 

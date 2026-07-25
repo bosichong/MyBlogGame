@@ -433,6 +433,9 @@ func daily_activities():
     # Obaby 评论区暗链清理进度（连续 3 天紧急排险）
     _check_obaby_comment_cleanup(did_emergency)
 
+    # Obaby 第三方统计代码广告检测
+    _check_obaby_redirect_ad()
+
 func week_activites():
     if not GDManager:
         return
@@ -2796,3 +2799,46 @@ func _check_obaby_comment_cleanup(did_emergency: bool) -> void:
         blogger.obaby_comment_spam_escalated = true
         TaskManager.emit_signal("sg_task_show_popup_msg", "⚠️ 搜索引擎已屏蔽站点",
             "暗链问题久未处理，搜索引擎已彻底将你的站点降权至零。\n\nSEO 已被锁定为 0\n需要连续安排「紧急排险」或「SEO 优化」\n7 天后才能恢复。")
+
+# ==============================================================================
+# Obaby 第三方统计代码广告检测
+# ==============================================================================
+
+## 检测第三方统计代码被植入恶意广告事件（触发时间：2012年4月3周2天）
+func _check_obaby_redirect_ad() -> void:
+    if not GDManager:
+        return
+    var story = GDManager.get_story_progress()
+    if not story:
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+
+    # 事件已触发但未解决 → 跟踪无视天数
+    if story.is_completed(3, "obaby_redirect_ad") and not story.is_completed(3, "obaby_redirect_ad_resolved"):
+        if blogger.obaby_redirect_ad_ignore_days >= 0:
+            blogger.obaby_redirect_ad_ignore_days += 1
+            if blogger.obaby_redirect_ad_ignore_days >= 30:
+                var ev_config = _get_event_config("malware_injected")
+                if not ev_config.is_empty():
+                    _trigger_event(ev_config)
+                story.set_completed(3, "obaby_redirect_ad_resolved")
+                blogger.obaby_redirect_ad_ignore_days = 0
+        return
+
+    # 触发条件
+    if story.is_completed(3, "obaby_redirect_ad"):
+        return
+    if not story.is_completed(2, "obaby_comment_resolved"):
+        return
+    if TimerManager.current_year < 2012:
+        return
+    if TimerManager.current_year == 2012 and TimerManager.current_month < 4:
+        return
+    if TimerManager.current_year == 2012 and TimerManager.current_month == 4 and TimerManager.current_week < 3:
+        return
+    if TimerManager.current_year == 2012 and TimerManager.current_month == 4 and TimerManager.current_week == 3 and TimerManager.current_day < 2:
+        return
+
+    TaskManager._action_obaby_redirect_ad()

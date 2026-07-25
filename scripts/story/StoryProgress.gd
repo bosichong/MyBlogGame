@@ -53,6 +53,8 @@ var chapter3 = {
     "hacker_course_authorized": true, # 黑客攻防获得课程授权
     "year_summary_2015": true,       # 2015年度总结
     "award_2015": true,              # 优秀博客奖项（2015）
+    "obaby_redirect_ad": false,      # 第三方统计代码被挂广告
+    "obaby_redirect_ad_resolved": false, # 已删除恶意统计代码
 }
 
 ## 第四章：博客挑战期（2015-2020）
@@ -285,6 +287,8 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "hacker_course_complete": "完成黑客攻防课程：一百篇教程，铸就一份完整的课程体系",
         "hacker_course_authorized": "黑客攻防获得课程授权：你的教程被教育机构看中了",
         "year_summary_2015": "2015年度总结：转型路上，初心不改",
+        "obaby_redirect_ad": "第三方统计代码被植入恶意广告，友链损失过半",
+        "obaby_redirect_ad_resolved": "已删除恶意统计代码，博客恢复正常",
         # 第四章
         "book_published": "书籍正式出版：多年的博客精华凝聚成书",
         "open_source_start": "开源项目发布：代码贡献获得社区关注",

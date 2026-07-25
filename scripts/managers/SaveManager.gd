@@ -276,6 +276,7 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "obaby_spam_seo_locked": data.obaby_spam_seo_locked,
         "obaby_spam_seo_recovery_days": data.obaby_spam_seo_recovery_days,
         "obaby_comment_spam_escalated": data.obaby_comment_spam_escalated,
+        "obaby_redirect_ad_ignore_days": data.obaby_redirect_ad_ignore_days,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -366,6 +367,7 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.obaby_spam_seo_locked = dict.get("obaby_spam_seo_locked", false)
     data.obaby_spam_seo_recovery_days = dict.get("obaby_spam_seo_recovery_days", 0)
     data.obaby_comment_spam_escalated = dict.get("obaby_comment_spam_escalated", false)
+    data.obaby_redirect_ad_ignore_days = dict.get("obaby_redirect_ad_ignore_days", 0)
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {
