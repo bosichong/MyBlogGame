@@ -59,7 +59,7 @@ var chapter3 = {
 
 ## 第四章：博客挑战期（2015-2020）
 var chapter4 = {
-    "book_published": false,          # 书籍正式出版
+    "book_published": true,           # 书籍正式出版
     "open_source_start": false,       # 开源项目发布
     "book_notes": false,              # 出书笔记
     "os_notes": false,                # 开源维护笔记
