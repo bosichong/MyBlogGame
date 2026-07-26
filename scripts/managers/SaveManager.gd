@@ -280,6 +280,9 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "obaby_ddos_protection_bought": data.obaby_ddos_protection_bought,
         "obaby_ddos_protection_days": data.obaby_ddos_protection_days,
         "obaby_ddos_self_days": data.obaby_ddos_self_days,
+
+        # Obaby 供应链木马
+        "supply_chain_post_written": data.supply_chain_post_written,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -374,6 +377,8 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.obaby_ddos_protection_bought = dict.get("obaby_ddos_protection_bought", false)
     data.obaby_ddos_protection_days = dict.get("obaby_ddos_protection_days", 0)
     data.obaby_ddos_self_days = dict.get("obaby_ddos_self_days", 0)
+
+    data.supply_chain_post_written = dict.get("supply_chain_post_written", false)
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {

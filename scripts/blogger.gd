@@ -439,6 +439,9 @@ func daily_activities():
     # Obaby DDoS 攻击检测
     _check_obaby_ddos()
 
+    # Obaby 供应链木马（第五章终极章）
+    _check_obaby_supply_chain()
+
 func week_activites():
     if not GDManager:
         return
@@ -2902,3 +2905,71 @@ func _process_ddos_daily(blogger: BloggerData, story: StoryProgress) -> void:
         # 第 3 天起每 3 天弹一次购买提示（避免玩家再无购买入口）
         if blogger.obaby_ddos_self_days >= 3 and (blogger.obaby_ddos_self_days - 3) % 3 == 0:
             TaskManager._action_obaby_ddos_buy_prompt()
+
+# ==============================================================================
+# Obaby 供应链木马（第五章终极章）
+# ==============================================================================
+
+func _check_obaby_supply_chain() -> void:
+    if not GDManager:
+        return
+    var story = GDManager.get_story_progress()
+    if not story:
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+
+    if story.is_completed(5, "obaby_supply_chain_resolved"):
+        return
+
+    # 第 1 天：触发 → 弹窗（发现 + 修复 + 发文 + 猜测）
+    if not story.is_completed(5, "obaby_supply_chain_triggered"):
+        if TimerManager.current_year < 2022:
+            return
+        if TimerManager.current_year == 2022 and TimerManager.current_month < 8:
+            return
+        if not story.is_completed(4, "obaby_ddos_resolved"):
+            return
+
+        story.set_completed(5, "obaby_supply_chain_triggered")
+        emit_signal("sg_event_triggered", {
+            "popup_title": "📡 RSS 阅读器更新",
+            "popup_desc": 'Obaby 的博客发了新文章：《一个被忽视的依赖风险》\n\n你排查发现，博客程序底层依赖库被植入了木马——供应链攻击。\n你按 Obaby 文中的指引更新了依赖，漏洞修复。\n\n你坐在屏幕前，写了一篇博文《从"到处都是洞"到"多谢提醒"》，\n回忆这二十年的安全历程，并猜测那个署名 O 的黑客就是 Obaby。',
+        })
+        return
+
+    # 第 2 天：自动发布博文 + 留言弹窗 + 心理独白
+    if not blogger.supply_chain_post_written:
+        _publish_supply_chain_post(blogger, story)
+
+func _publish_supply_chain_post(blogger: BloggerData, story: StoryProgress) -> void:
+    var post_id = Time.get_ticks_msec() + (randi() % 10000)
+    var new_post = {
+        "id": post_id,
+        "title": '从"到处都是洞"到"多谢提醒"',
+        "post_category": "生活日记",
+        "article_category": "文学",
+        "task_type": "",
+        "content_type": "免费",
+        "views": 0,
+        "comments": 0,
+        "favorites": 0,
+        "is_money": false,
+        "date": Utils.format_date(),
+        "quality": 95,
+        "article_level": 3,
+    }
+    blogger.posts.append(new_post)
+    blogger.supply_chain_post_written = true
+    story.set_completed(5, "obaby_supply_chain_resolved")
+
+    var msg = "那个O不是我。……呵呵。"
+    if story.is_completed(1, "obaby_tech_response"):
+        msg = "呵呵，第一章那篇博文写得不错。"
+
+    emit_signal("sg_info_msg", '📝 博文已发布：《从"到处都是洞"到"多谢提醒"》')
+    emit_signal("sg_event_triggered", {
+        "popup_title": "📝 留言板新留言",
+        "popup_desc": '「' + msg + '」\n\n你盯着屏幕，嘴角微微一扬——更加确信，黑客 O 就是 Obaby。',
+    })

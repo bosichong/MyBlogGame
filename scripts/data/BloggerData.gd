@@ -354,6 +354,9 @@ var obaby_ddos_protection_days: int = 0
 ## Obaby DDoS：自处理累计天数
 var obaby_ddos_self_days: int = 0
 
+## Obaby 供应链木马：是否已发文
+var supply_chain_post_written: bool = false
+
 # ============================================
 # 安全事件系统
 # ============================================

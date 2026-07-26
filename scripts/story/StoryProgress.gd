@@ -67,8 +67,8 @@ var chapter4 = {
     "ai_preview": false,              # AI时代预告
     "award_2020": false,              # 优秀博客奖项（2020）
     "year_summary_2020": false,       # 2020年度总结
-    "obaby_ddos": false,              # DDoS攻击事件触发
-    "obaby_ddos_resolved": false,     # DDoS攻击已解除
+    "obaby_ddos": true,              # DDoS攻击事件触发
+    "obaby_ddos_resolved": true,     # DDoS攻击已解除
 }
 
 ## 第五章：博客重塑期（2020-2025）
@@ -91,6 +91,9 @@ var chapter5 = {
     "game_trailer": false,             # 游戏预告发布
     "game_released": false,            # 游戏正式发布
     "game_award": false,               # 游戏获奖
+    # K 线终章
+    "obaby_supply_chain_triggered": false,  # 供应链木马事件触发
+    "obaby_supply_chain_resolved": false,   # K 线完结
     # 旧版兼容（保留key不删除，避免旧档报错）
     "fame_let_go": false,              # 兼容：看淡名利
 }
@@ -316,6 +319,8 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "game_trailer": "游戏预告发布：向世界展示你的作品",
         "game_released": "游戏正式发布：作品终于与玩家见面",
         "game_award": "游戏获奖：站上领奖台，梦想照进现实",
+        "obaby_supply_chain_triggered": "收到 Obaby 博客提醒：一个底层依赖库被植入木马",
+        "obaby_supply_chain_resolved": "K 线完结：二十年，从「到处都是洞」到「多谢提醒」",
         "fame_let_go": "看淡名利：奖项也好，排名也罢，唯有成长最珍贵",
     }
     return descriptions.get(milestone, "未知里程碑: " + milestone)
