@@ -49,6 +49,9 @@ var pending_scene_after_popup: String = ""
 ## 弹窗跳转场景的参数（如回顾年份范围）
 var pending_scene_params: Dictionary = {}
 
+## 莫比乌斯支线：保存 LOCK 前各天是否勾选了被锁定技能
+var _mobius_saved_schedule: Dictionary = {}
+
 ## 信号定义
 signal schedule_refresh_needed
 signal sg_task_info_display_msg(msg)
@@ -178,6 +181,8 @@ func _add_missing_tasks() -> void:
 
 ## 技能升级信号
 func _on_skill_level_up(skill_type: int, level: float) -> void:
+    if skill_type == Blogger.Skills.LITERATURE:
+        print("[TaskManager] 文学技能升级: level=%s" % level)
     check_tasks_by_trigger("skill_up", {"skill_type": skill_type, "level": level})
 
 ## 玩家升级信号
@@ -573,6 +578,14 @@ func check_sousuo_not_indexed(_context: Dictionary) -> bool:
         var sp = GDManager.get_story_progress()
         if sp:
             return not sp.is_completed(1, "sousuo_indexed")
+    return false
+
+## 检查莫比乌斯 Lv1 是否未完成
+func check_mo_lv1_not_done(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return not blogger.mo_lv1_done
     return false
 
 ## ============================================================
@@ -1123,6 +1136,69 @@ func _action_custom(action: Dictionary, context: Dictionary) -> void:
         push_error("[TaskManager] CUSTOM_ACTION method not found: %s" % func_name)
 
 ## ============================================================
+## 莫比乌斯 Lv1 · 初遇
+## ============================================================
+
+func _action_mobius_lv1() -> void:
+    var skill_name = "文学入门"
+
+    # 1. 保存当前勾选状态（LOCK 前遍历 7 天，记下哪些天勾选了）
+    _mobius_saved_schedule.clear()
+    for day_idx in range(Blogger.blog_calendar.size()):
+        _mobius_saved_schedule[day_idx] = skill_name in Blogger.blog_calendar[day_idx].tasks
+
+    # 2. 锁定技能（隐藏+禁用 + 从日历移除 + 发射刷新信号）
+    _action_skill_lock({"skill_name": skill_name})
+
+    # 3. 弹选择窗口
+    var choices = [
+        {"id": 1, "label": "✍️ 反复琢磨他的话，开始努力学习", "desc": "写作能力 +2"},
+        {"id": 2, "label": "🙈 没太在意，关掉了页面", "desc": "无额外奖励"},
+    ]
+    emit_signal("sg_task_show_choice_event",
+        "💬 莫比乌斯的评论",
+        "文学能力卡在18已经有一阵子了。无论怎么写，总感觉在原地打转。你正有些烦躁地刷新着后台，评论区出现了一个陌生的ID——\n\n「莫比乌斯」留下了一条评论：\n\n「十篇。不多。但都诚实。」\n「诚实是起点。不是终点。」\n「写作不是把日子搬进文字里。是一场自我悖驳的旅程。」\n「现在不懂也没关系。去写些让你自己意外的东西。」\n\n点开他的主页。你往下翻，文章列表很长——他写了很久。\n主页签名栏写着：\n\n🜁｜写作，一场自我悖驳的旅程。\n🜃｜我写自己的生活、也写自己的讣告。\n\n你随手点开几篇，每一篇都在叩问些什么。你关掉页面，脑子里却还在转。",
+        choices,
+        "mobius_lv1")
+
+## 莫比乌斯 Lv1 选择回调
+func _on_mobius_lv1_choice(choice_id: int) -> void:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+
+    var skill_name = "文学入门"
+
+    # 标记完成
+    blogger.mo_lv1_done = true
+
+    # 选项1：注意到差距
+    if choice_id == 1:
+        blogger.mo_noticed_gap = true
+        blogger.set_ability("writing", blogger.writing_ability + 2)
+        emit_signal("sg_task_info_display_msg", "写作能力 +2，你注意到了莫比乌斯话里的矛盾")
+    else:
+        emit_signal("sg_task_info_display_msg", "你关掉了页面，但那些话还在脑子里转")
+
+    # 恢复技能可见
+    _action_skill_unlock({"skill_name": skill_name})
+
+    # 恢复勾选状态
+    for day_idx in range(Blogger.blog_calendar.size()):
+        if _mobius_saved_schedule.get(day_idx, false):
+            if skill_name not in Blogger.blog_calendar[day_idx].tasks:
+                Blogger.blog_calendar[day_idx].tasks.append(skill_name)
+
+    _mobius_saved_schedule.clear()
+
+    emit_signal("schedule_refresh_needed")
+
+    # 弹窗展示莫比乌斯评论内容
+    emit_signal("sg_task_show_popup_msg",
+        "💬 莫比乌斯",
+        "「十篇。不多。但都诚实。」\n「诚实是起点。不是终点。」\n「写作不是把日子搬进文字里。是一场自我悖驳的旅程。」\n「现在不懂也没关系。去写些让你自己意外的东西。」\n\n—— 莫比乌斯")
+
+## ============================================================
 ## Obaby 首次来访（不速之客）
 ## ============================================================
 
@@ -1181,8 +1257,10 @@ func on_obaby_choice_selected(event_id: String, choice_id: int) -> void:
             _on_obaby_ddos_choice(choice_id)
         "obaby_ddos_buy":
             _on_obaby_ddos_buy_choice(choice_id)
+        "mobius_lv1":
+            _on_mobius_lv1_choice(choice_id)
         _:
-            push_warning("[TaskManager] Unknown obaby event: %s" % event_id)
+            push_warning("[TaskManager] Unknown choice event: %s" % event_id)
 
 func _on_obaby_first_visit_choice(choice_id: int) -> void:
     var blogger = GDManager.get_blogger() if GDManager else null

@@ -91,6 +91,7 @@ const CONDITIONS: Dictionary = {
     "obaby_first_visit_time": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2002], "m": [2], "w": [2], "d": [1]}},
 
     # 技能数值条件 - 文学（每20能力值一个等级）
+    "literature_value_ge_18": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 18},
     "literature_value_ge_20": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 20},
     "literature_value_ge_40": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 40},
     "literature_value_ge_60": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 60},
@@ -139,6 +140,9 @@ const CONDITIONS: Dictionary = {
     
     # 开源项目状态条件
     "open_source_project_started": {"type": ConditionType.CUSTOM, "check_func": "check_open_source_project"},
+    
+    # 莫比乌斯支线条件
+    "mo_lv1_not_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv1_not_done"},
     
     # 时间条件（配合 event_date 使用）
     # 注意：游戏起始年份为 2001 年（可通过 TimeData.GAME_START_YEAR 获取）
@@ -372,6 +376,22 @@ const SKILL_PROGRESS_CONFIG: Dictionary = {
 ## ============================================================
 
 const TASKS: Array = [
+    # ====================
+    # 莫比乌斯支线（先于技能进阶，保证执行顺序）
+    # ====================
+    
+    # Lv1 · 初遇（能力值18时触发，打断文学入门学习节奏）
+    {
+        "id": "mobius_lv1_first_meet",
+        "description": "文学能力值达到18，触发莫比乌斯初次相遇",
+        "conditions": ["literature_value_ge_18", "mo_lv1_not_done"],
+        "trigger_type": "skill_up",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv1"},
+        ],
+    },
+    
     # ====================
     # 技能进阶任务（自动生成）
     # ====================

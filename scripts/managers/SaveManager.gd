@@ -283,6 +283,16 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
 
         # Obaby 供应链木马
         "supply_chain_post_written": data.supply_chain_post_written,
+
+        # 莫比乌斯支线状态
+        "mo_lv1_done": data.mo_lv1_done,
+        "mo_noticed_gap": data.mo_noticed_gap,
+        "mo_lv2_done": data.mo_lv2_done,
+        "mo_lv3_done": data.mo_lv3_done,
+        "mo_lv4_done": data.mo_lv4_done,
+        "mo_lv5_done": data.mo_lv5_done,
+        "mo_confession_triggered": data.mo_confession_triggered,
+        "mo_resolved": data.mo_resolved,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -379,6 +389,16 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.obaby_ddos_self_days = dict.get("obaby_ddos_self_days", 0)
 
     data.supply_chain_post_written = dict.get("supply_chain_post_written", false)
+
+    # 莫比乌斯支线状态
+    data.mo_lv1_done = dict.get("mo_lv1_done", false)
+    data.mo_noticed_gap = dict.get("mo_noticed_gap", false)
+    data.mo_lv2_done = dict.get("mo_lv2_done", false)
+    data.mo_lv3_done = dict.get("mo_lv3_done", false)
+    data.mo_lv4_done = dict.get("mo_lv4_done", false)
+    data.mo_lv5_done = dict.get("mo_lv5_done", false)
+    data.mo_confession_triggered = dict.get("mo_confession_triggered", false)
+    data.mo_resolved = dict.get("mo_resolved", false)
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {

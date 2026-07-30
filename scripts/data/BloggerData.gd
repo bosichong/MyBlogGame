@@ -24,16 +24,16 @@ var attribute_points: int = 0
 # ============================================
 
 ## 写作能力：影响所有文章的质量分
-var writing_ability: float = 91
+var writing_ability: float = 17
 
 ## 技术能力：影响技术类文章质量和网站维护效果
-var technical_ability: float = 91
+var technical_ability: float = 17
 
 ## 编程能力：影响编程教程、黑客攻防等技术文章质量
-var code_ability: float = 91
+var code_ability: float = 17
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 91
+var literature_ability: float = 17
 
 # ============================================
 # 资源
@@ -245,7 +245,7 @@ var book_article_count: int = 0
 var is_writing_book: bool = false
 
 ## 已出版畅销书累计数量（用于第五章结局判定）
-var book_publish_count: int = 6
+var book_publish_count: int = 0
 
 # ============================================
 # 开源项目
@@ -261,7 +261,7 @@ var os_article_count: int = 0
 var is_developing_os: bool = false
 
 ## 已发布开源项目累计数量（用于第五章结局判定）
-var open_source_count: int = 3
+var open_source_count: int = 0
 
 # ============================================
 # 贾维斯计划
@@ -356,6 +356,34 @@ var obaby_ddos_self_days: int = 0
 
 ## Obaby 供应链木马：是否已发文
 var supply_chain_post_written: bool = false
+
+# ============================================
+# 莫比乌斯支线状态
+# ============================================
+
+## Lv1 初遇已完成
+var mo_lv1_done: bool = false
+
+## Lv1 选了选项1，玩家注意到莫比乌斯话里的矛盾
+var mo_noticed_gap: bool = false
+
+## Lv2 回访已完成
+var mo_lv2_done: bool = false
+
+## Lv3 深谈已完成
+var mo_lv3_done: bool = false
+
+## Lv4 认可已完成
+var mo_lv4_done: bool = false
+
+## Lv5 告别已完成
+var mo_lv5_done: bool = false
+
+## Lv5 选了隐藏选项3，触发莫比乌斯承认自己写不出
+var mo_confession_triggered: bool = false
+
+## 出版后互文收束完成，莫比乌斯重新执笔
+var mo_resolved: bool = false
 
 # ============================================
 # 安全事件系统
