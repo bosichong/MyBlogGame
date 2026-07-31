@@ -93,6 +93,7 @@ const CONDITIONS: Dictionary = {
     # 技能数值条件 - 文学（每20能力值一个等级）
     "literature_value_ge_18": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 18},
     "literature_value_ge_20": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 20},
+    "literature_value_ge_38": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 38},
     "literature_value_ge_40": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 40},
     "literature_value_ge_60": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 60},
     "literature_value_ge_80": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 80},
@@ -143,6 +144,14 @@ const CONDITIONS: Dictionary = {
     
     # 莫比乌斯支线条件
     "mo_lv1_not_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv1_not_done"},
+    "mo_lv1_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv1_done"},
+    "mo_lv2_not_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv2_not_done"},
+    
+    # 莫比乌斯延迟条件
+    "mo_lv1_delay_inactive": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv1_delay_inactive"},
+    "mo_lv1_delay_expired": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv1_delay_expired"},
+    "mo_lv2_delay_inactive": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv2_delay_inactive"},
+    "mo_lv2_delay_expired": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv2_delay_expired"},
     
     # 时间条件（配合 event_date 使用）
     # 注意：游戏起始年份为 2001 年（可通过 TimeData.GAME_START_YEAR 获取）
@@ -380,15 +389,49 @@ const TASKS: Array = [
     # 莫比乌斯支线（先于技能进阶，保证执行顺序）
     # ====================
     
-    # Lv1 · 初遇（能力值18时触发，打断文学入门学习节奏）
+    # Lv1 · 初遇准备（能力值18时触发，设置延迟）
     {
-        "id": "mobius_lv1_first_meet",
-        "description": "文学能力值达到18，触发莫比乌斯初次相遇",
-        "conditions": ["literature_value_ge_18", "mo_lv1_not_done"],
+        "id": "mobius_lv1_prepare",
+        "description": "文学能力值达到18，莫比乌斯即将到来",
+        "conditions": ["literature_value_ge_18", "mo_lv1_not_done", "mo_lv1_delay_inactive"],
         "trigger_type": "skill_up",
         "is_repeatable": false,
         "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv1_prepare"},
+        ],
+    },
+    # Lv1 · 初遇触发（延迟结束后弹出）
+    {
+        "id": "mobius_lv1_trigger",
+        "description": "延迟结束，触发莫比乌斯初次相遇",
+        "conditions": ["mo_lv1_delay_expired"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
             {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv1"},
+        ],
+    },
+    
+    # Lv2 · 回访准备（能力值38时触发，设置延迟）
+    {
+        "id": "mobius_lv2_prepare",
+        "description": "文学能力值达到38，莫比乌斯回访即将到来",
+        "conditions": ["literature_value_ge_38", "mo_lv1_done", "mo_lv2_not_done", "mo_lv2_delay_inactive"],
+        "trigger_type": "skill_up",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv2_prepare"},
+        ],
+    },
+    # Lv2 · 回访触发（延迟结束后弹出）
+    {
+        "id": "mobius_lv2_trigger",
+        "description": "延迟结束，触发莫比乌斯回访",
+        "conditions": ["mo_lv2_delay_expired"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv2"},
         ],
     },
     

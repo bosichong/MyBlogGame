@@ -293,6 +293,13 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "mo_lv5_done": data.mo_lv5_done,
         "mo_confession_triggered": data.mo_confession_triggered,
         "mo_resolved": data.mo_resolved,
+
+        # 莫比乌斯延迟计数器
+        "mo_lv1_delay_days": data.mo_lv1_delay_days,
+        "mo_lv2_delay_days": data.mo_lv2_delay_days,
+        "mo_lv3_delay_days": data.mo_lv3_delay_days,
+        "mo_lv4_delay_days": data.mo_lv4_delay_days,
+        "mo_lv5_delay_days": data.mo_lv5_delay_days,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -399,6 +406,13 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.mo_lv5_done = dict.get("mo_lv5_done", false)
     data.mo_confession_triggered = dict.get("mo_confession_triggered", false)
     data.mo_resolved = dict.get("mo_resolved", false)
+
+    # 莫比乌斯延迟计数器
+    data.mo_lv1_delay_days = dict.get("mo_lv1_delay_days", -1)
+    data.mo_lv2_delay_days = dict.get("mo_lv2_delay_days", -1)
+    data.mo_lv3_delay_days = dict.get("mo_lv3_delay_days", -1)
+    data.mo_lv4_delay_days = dict.get("mo_lv4_delay_days", -1)
+    data.mo_lv5_delay_days = dict.get("mo_lv5_delay_days", -1)
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {

@@ -7,14 +7,14 @@ class_name BloggerData
 # ============================================
 
 ## 等级（1-100）
-var level: int = 80
+var level: int = 28
 
 ## 经验值
 var exp: int = 0
 
 ## 段位（0-9，每10级提升1段位）
 ## 段位影响访问量加成
-var rank_tier: int = 0
+var rank_tier: int = 2
 
 ## 属性点数（升级获得，用于分配能力值）
 var attribute_points: int = 0
@@ -33,7 +33,7 @@ var technical_ability: float = 17
 var code_ability: float = 17
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 17
+var literature_ability: float = 37
 
 # ============================================
 # 资源
@@ -358,14 +358,24 @@ var obaby_ddos_self_days: int = 0
 var supply_chain_post_written: bool = false
 
 # ============================================
+# 莫比乌斯延迟计数器（天数，-1 表示未激活）
+# ============================================
+
+var mo_lv1_delay_days: int = -1
+var mo_lv2_delay_days: int = -1
+var mo_lv3_delay_days: int = -1
+var mo_lv4_delay_days: int = -1
+var mo_lv5_delay_days: int = -1
+
+# ============================================
 # 莫比乌斯支线状态
 # ============================================
 
 ## Lv1 初遇已完成
-var mo_lv1_done: bool = false
+var mo_lv1_done: bool = true
 
 ## Lv1 选了选项1，玩家注意到莫比乌斯话里的矛盾
-var mo_noticed_gap: bool = false
+var mo_noticed_gap: bool = true
 
 ## Lv2 回访已完成
 var mo_lv2_done: bool = false

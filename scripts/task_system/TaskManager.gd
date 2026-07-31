@@ -263,6 +263,7 @@ func _on_hacker_course_authorized() -> void:
 
 ## 每日任务检查
 func day_task_func() -> void:
+    _tick_mobius_delays()
     check_tasks_by_trigger("time_check", {})
     # 更新书籍阶段进度
     if BookPublishMgr and BookPublishMgr.has_method("update_book_phase"):
@@ -588,6 +589,54 @@ func check_mo_lv1_not_done(_context: Dictionary) -> bool:
             return not blogger.mo_lv1_done
     return false
 
+## 检查莫比乌斯 Lv1 是否已完成
+func check_mo_lv1_done(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.mo_lv1_done
+    return false
+
+## 检查莫比乌斯 Lv2 是否未完成
+func check_mo_lv2_not_done(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return not blogger.mo_lv2_done
+    return false
+
+## 莫比乌斯 Lv1 延迟是否未激活
+func check_mo_lv1_delay_inactive(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.mo_lv1_delay_days < 0
+    return false
+
+## 莫比乌斯 Lv1 延迟是否已耗尽
+func check_mo_lv1_delay_expired(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.mo_lv1_delay_days == 0
+    return false
+
+## 莫比乌斯 Lv2 延迟是否未激活
+func check_mo_lv2_delay_inactive(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.mo_lv2_delay_days < 0
+    return false
+
+## 莫比乌斯 Lv2 延迟是否已耗尽
+func check_mo_lv2_delay_expired(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.mo_lv2_delay_days == 0
+    return false
+
 ## ============================================================
 ## 任务执行
 ## ============================================================
@@ -721,8 +770,27 @@ func _action_skill_unlock(action: Dictionary) -> void:
     d.disabled = false
     emit_signal("sg_task_info_display_msg", d.get("unlock_post_tip", ""))
 
+## 每日递减莫比乌斯延迟计数器
+func _tick_mobius_delays() -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+    if blogger.mo_lv1_delay_days > 0:
+        blogger.mo_lv1_delay_days -= 1
+    if blogger.mo_lv2_delay_days > 0:
+        blogger.mo_lv2_delay_days -= 1
+    if blogger.mo_lv3_delay_days > 0:
+        blogger.mo_lv3_delay_days -= 1
+    if blogger.mo_lv4_delay_days > 0:
+        blogger.mo_lv4_delay_days -= 1
+    if blogger.mo_lv5_delay_days > 0:
+        blogger.mo_lv5_delay_days -= 1
+
 ## 检查时间相关任务
 func _check_time_tasks() -> void:
+    _tick_mobius_delays()
     check_tasks_by_trigger("time_check", {})
 
 ## 动作:解锁博文类型
@@ -1135,22 +1203,59 @@ func _action_custom(action: Dictionary, context: Dictionary) -> void:
     else:
         push_error("[TaskManager] CUSTOM_ACTION method not found: %s" % func_name)
 
+## 检查技能是否已被高阶替代（玩家已进阶，无需恢复旧技能）
+func _is_skill_outgrown(skill_name: String) -> bool:
+    if not Utils:
+        return false
+    var d = Utils.find_category_by_name(Utils.learning_skills, skill_name, true)
+    if d.is_empty():
+        return false
+    var next_name = d.get("next_skill", "")
+    if next_name.is_empty():
+        return false
+    var next_d = Utils.find_category_by_name(Utils.learning_skills, next_name, true)
+    if next_d.is_empty():
+        return false
+    return next_d.get("isVisible", false) and not next_d.get("disabled", true)
+
+## ============================================================
+## 莫比乌斯 Lv1 · 准备（设置随机延迟）
+## ============================================================
+
+func _action_mobius_lv1_prepare() -> void:
+    var skill_name = "文学入门"
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _mobius_saved_schedule.clear()
+    for day_idx in range(Blogger.blog_calendar.size()):
+        _mobius_saved_schedule[day_idx] = skill_name in Blogger.blog_calendar[day_idx].tasks
+    _action_skill_lock({"skill_name": skill_name})
+    blogger.mo_lv1_delay_days = randi() % 6 + 5
+    emit_signal("sg_task_info_display_msg", "你感觉有人在关注你的博客……")
+
+## ============================================================
+## 莫比乌斯 Lv2 · 准备（设置随机延迟）
+## ============================================================
+
+func _action_mobius_lv2_prepare() -> void:
+    var skill_name = "写作新手"
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _mobius_saved_schedule.clear()
+    for day_idx in range(Blogger.blog_calendar.size()):
+        _mobius_saved_schedule[day_idx] = skill_name in Blogger.blog_calendar[day_idx].tasks
+    _action_skill_lock({"skill_name": skill_name})
+    blogger.mo_lv2_delay_days = randi() % 6 + 5
+    emit_signal("sg_task_info_display_msg", "那个熟悉的ID，似乎又快出现了……")
+
 ## ============================================================
 ## 莫比乌斯 Lv1 · 初遇
 ## ============================================================
 
 func _action_mobius_lv1() -> void:
-    var skill_name = "文学入门"
-
-    # 1. 保存当前勾选状态（LOCK 前遍历 7 天，记下哪些天勾选了）
-    _mobius_saved_schedule.clear()
-    for day_idx in range(Blogger.blog_calendar.size()):
-        _mobius_saved_schedule[day_idx] = skill_name in Blogger.blog_calendar[day_idx].tasks
-
-    # 2. 锁定技能（隐藏+禁用 + 从日历移除 + 发射刷新信号）
-    _action_skill_lock({"skill_name": skill_name})
-
-    # 3. 弹选择窗口
+    # 弹选择窗口（技能已在 prepare 时锁定）
     var choices = [
         {"id": 1, "label": "✍️ 反复琢磨他的话，开始努力学习", "desc": "写作能力 +2"},
         {"id": 2, "label": "🙈 没太在意，关掉了页面", "desc": "无额外奖励"},
@@ -1180,23 +1285,64 @@ func _on_mobius_lv1_choice(choice_id: int) -> void:
     else:
         emit_signal("sg_task_info_display_msg", "你关掉了页面，但那些话还在脑子里转")
 
-    # 恢复技能可见
-    _action_skill_unlock({"skill_name": skill_name})
+    # 恢复技能可见（仅当未被高阶技能替代）
+    if not _is_skill_outgrown(skill_name):
+        _action_skill_unlock({"skill_name": skill_name})
 
-    # 恢复勾选状态
-    for day_idx in range(Blogger.blog_calendar.size()):
-        if _mobius_saved_schedule.get(day_idx, false):
-            if skill_name not in Blogger.blog_calendar[day_idx].tasks:
-                Blogger.blog_calendar[day_idx].tasks.append(skill_name)
+        for day_idx in range(Blogger.blog_calendar.size()):
+            if _mobius_saved_schedule.get(day_idx, false):
+                if skill_name not in Blogger.blog_calendar[day_idx].tasks:
+                    Blogger.blog_calendar[day_idx].tasks.append(skill_name)
 
     _mobius_saved_schedule.clear()
 
     emit_signal("schedule_refresh_needed")
 
-    # 弹窗展示莫比乌斯评论内容
-    emit_signal("sg_task_show_popup_msg",
-        "💬 莫比乌斯",
-        "「十篇。不多。但都诚实。」\n「诚实是起点。不是终点。」\n「写作不是把日子搬进文字里。是一场自我悖驳的旅程。」\n「现在不懂也没关系。去写些让你自己意外的东西。」\n\n—— 莫比乌斯")
+## ============================================================
+## 莫比乌斯 Lv2 · 回访
+## ============================================================
+
+func _action_mobius_lv2() -> void:
+    # 弹选择窗口（技能已在 prepare 时锁定）
+    var choices = [
+        {"id": 1, "label": "✍️ 好，或许可以试试写周刊？并发表博文对莫比乌斯表示感谢", "desc": "写作能力 +3"},
+        {"id": 2, "label": "🙈 还没准备好，再看看", "desc": "无额外奖励"},
+    ]
+    emit_signal("sg_task_show_choice_event",
+        "💬 莫比乌斯的回访",
+        "文学能力停留在38已经有一阵子了，无论怎么写，感觉都在原地打转。\n\n某天打开博客，评论区出现那个熟悉的ID。\n\n莫比乌斯：\n\n「每一篇都工整。合上就忘了。」\n「文章如树。单看枝叶都好看。没有主干，风一吹就散。」\n「找个主题。写下去。写成一个系列。」\n「周刊也好，专栏也好。有了骨架，文字才能站立。」",
+        choices,
+        "mobius_lv2")
+
+## 莫比乌斯 Lv2 选择回调
+func _on_mobius_lv2_choice(choice_id: int) -> void:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+
+    var skill_name = "写作新手"
+
+    # 标记完成
+    blogger.mo_lv2_done = true
+
+    # 选项1：试试写周刊
+    if choice_id == 1:
+        blogger.set_ability("writing", blogger.writing_ability + 3)
+        emit_signal("sg_task_info_display_msg", "写作能力 +3，你决定试试写周刊")
+    else:
+        emit_signal("sg_task_info_display_msg", "你关掉了页面，还没准备好")
+
+    # 恢复技能可见（仅当未被高阶技能替代）
+    if not _is_skill_outgrown(skill_name):
+        _action_skill_unlock({"skill_name": skill_name})
+
+        for day_idx in range(Blogger.blog_calendar.size()):
+            if _mobius_saved_schedule.get(day_idx, false):
+                if skill_name not in Blogger.blog_calendar[day_idx].tasks:
+                    Blogger.blog_calendar[day_idx].tasks.append(skill_name)
+
+    _mobius_saved_schedule.clear()
+    emit_signal("schedule_refresh_needed")
 
 ## ============================================================
 ## Obaby 首次来访（不速之客）
@@ -1259,6 +1405,8 @@ func on_obaby_choice_selected(event_id: String, choice_id: int) -> void:
             _on_obaby_ddos_buy_choice(choice_id)
         "mobius_lv1":
             _on_mobius_lv1_choice(choice_id)
+        "mobius_lv2":
+            _on_mobius_lv2_choice(choice_id)
         _:
             push_warning("[TaskManager] Unknown choice event: %s" % event_id)
 
