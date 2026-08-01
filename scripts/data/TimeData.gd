@@ -2,8 +2,8 @@ class_name TimeData
 
 ## 游戏起始时间相关常量（修改此处即可调整游戏起始时间）
 ## 游戏的默认启动时间 2001年12月4周7天
-const GAME_START_YEAR: int = 2022
-const GAME_START_MONTH: int = 8
+const GAME_START_YEAR: int = 2015
+const GAME_START_MONTH: int = 2
 const GAME_START_WEEK: int = 1
 const GAME_START_DAY: int = 1
 
