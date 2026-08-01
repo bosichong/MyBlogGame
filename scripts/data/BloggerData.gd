@@ -33,7 +33,7 @@ var technical_ability: float = 17
 var code_ability: float = 17
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 57
+var literature_ability: float = 77
 
 # ============================================
 # 资源
@@ -381,7 +381,7 @@ var mo_noticed_gap: bool = true
 var mo_lv2_done: bool = true
 
 ## Lv3 深谈已完成
-var mo_lv3_done: bool = false
+var mo_lv3_done: bool = true
 
 ## Lv4 认可已完成
 var mo_lv4_done: bool = false

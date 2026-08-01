@@ -97,6 +97,7 @@ const CONDITIONS: Dictionary = {
     "literature_value_ge_40": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 40},
     "literature_value_ge_58": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 58},
     "literature_value_ge_60": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 60},
+    "literature_value_ge_78": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 78},
     "literature_value_ge_80": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 80},
     "literature_value_ge_90": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 90},
     "literature_value_ge_100": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 100},
@@ -149,6 +150,9 @@ const CONDITIONS: Dictionary = {
     "mo_lv2_not_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv2_not_done"},
     "mo_lv2_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv2_done"},
     "mo_lv3_not_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv3_not_done"},
+    "mo_lv3_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv3_done"},
+    "mo_lv4_not_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv4_not_done"},
+    "mo_lv4_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv4_done"},
     
     # 莫比乌斯延迟条件
     "mo_lv1_delay_inactive": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv1_delay_inactive"},
@@ -157,6 +161,8 @@ const CONDITIONS: Dictionary = {
     "mo_lv2_delay_expired": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv2_delay_expired"},
     "mo_lv3_delay_inactive": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv3_delay_inactive"},
     "mo_lv3_delay_expired": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv3_delay_expired"},
+    "mo_lv4_delay_inactive": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv4_delay_inactive"},
+    "mo_lv4_delay_expired": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv4_delay_expired"},
     
     # 时间条件（配合 event_date 使用）
     # 注意：游戏起始年份为 2001 年（可通过 TimeData.GAME_START_YEAR 获取）
@@ -493,6 +499,40 @@ const TASKS: Array = [
         "is_repeatable": false,
         "actions": [
             {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv3"},
+        ],
+    },
+    
+    # Lv4 · 认可准备（能力值78时触发，设置延迟）
+    {
+        "id": "mobius_lv4_prepare",
+        "description": "文学能力值达到78，莫比乌斯认可即将到来",
+        "conditions": ["literature_value_ge_78", "mo_lv3_done", "mo_lv4_not_done", "mo_lv4_delay_inactive"],
+        "trigger_type": "skill_up",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv4_prepare"},
+        ],
+    },
+    # Lv4 · 认可准备兜底（每日检查，防非学习途径漏触发）
+    {
+        "id": "mobius_lv4_prepare_fallback",
+        "description": "文学能力值达到78，莫比乌斯认可即将到来（每日兜底）",
+        "conditions": ["literature_value_ge_78", "mo_lv3_done", "mo_lv4_not_done", "mo_lv4_delay_inactive"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv4_prepare"},
+        ],
+    },
+    # Lv4 · 认可触发（延迟结束后弹出）
+    {
+        "id": "mobius_lv4_trigger",
+        "description": "延迟结束，触发莫比乌斯认可",
+        "conditions": ["mo_lv4_delay_expired"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv4"},
         ],
     },
     

@@ -653,6 +653,14 @@ func check_mo_lv3_not_done(_context: Dictionary) -> bool:
             return not blogger.mo_lv3_done
     return false
 
+## 检查莫比乌斯 Lv3 是否已完成
+func check_mo_lv3_done(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.mo_lv3_done
+    return false
+
 ## 莫比乌斯 Lv3 延迟是否未激活
 func check_mo_lv3_delay_inactive(_context: Dictionary) -> bool:
     if GDManager:
@@ -667,6 +675,38 @@ func check_mo_lv3_delay_expired(_context: Dictionary) -> bool:
         var blogger = GDManager.get_blogger()
         if blogger:
             return blogger.mo_lv3_delay_days == 0
+    return false
+
+## 检查莫比乌斯 Lv4 是否未完成
+func check_mo_lv4_not_done(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return not blogger.mo_lv4_done
+    return false
+
+## 检查莫比乌斯 Lv4 是否已完成
+func check_mo_lv4_done(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.mo_lv4_done
+    return false
+
+## 莫比乌斯 Lv4 延迟是否未激活
+func check_mo_lv4_delay_inactive(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.mo_lv4_delay_days < 0
+    return false
+
+## 莫比乌斯 Lv4 延迟是否已耗尽
+func check_mo_lv4_delay_expired(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.mo_lv4_delay_days == 0
     return false
 
 ## ============================================================
@@ -1299,6 +1339,22 @@ func _action_mobius_lv3_prepare() -> void:
     emit_signal("sg_task_info_display_msg", "你感觉，隔夜追评的那人，话还没说完……")
 
 ## ============================================================
+## 莫比乌斯 Lv4 · 准备（设置随机延迟）
+## ============================================================
+
+func _action_mobius_lv4_prepare() -> void:
+    var skill_name = "人气作家"
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _mobius_saved_schedule.clear()
+    for day_idx in range(Blogger.blog_calendar.size()):
+        _mobius_saved_schedule[day_idx] = skill_name in Blogger.blog_calendar[day_idx].tasks
+    _action_skill_lock({"skill_name": skill_name})
+    blogger.mo_lv4_delay_days = randi() % 6 + 5
+    emit_signal("sg_task_info_display_msg", "你感觉，那个熟悉的ID，正看着你走到新的瓶颈……")
+
+## ============================================================
 ## 莫比乌斯 Lv1 · 初遇
 ## ============================================================
 
@@ -1399,7 +1455,7 @@ func _on_mobius_lv2_choice(choice_id: int) -> void:
 func _action_mobius_lv3() -> void:
     # 弹选择窗口（技能已在 prepare 时锁定）
     var choices = [
-        {"id": 1, "label": "✍️ 记下这句话，开始尝试写热点爆文和哲学批判类文章", "desc": "写作能力 +5"},
+        {"id": 1, "label": "✍️ 记下这句话，开始准备写热点爆文和哲学批判类文章", "desc": "写作能力 +5"},
         {"id": 2, "label": "🙈 还没想明白，再想想", "desc": "无额外奖励"},
     ]
     emit_signal("sg_task_show_choice_event",
@@ -1436,6 +1492,60 @@ func _on_mobius_lv3_choice(choice_id: int) -> void:
                     Blogger.blog_calendar[day_idx].tasks.append(skill_name)
 
     _mobius_saved_schedule.clear()
+    emit_signal("schedule_refresh_needed")
+
+## ============================================================
+## 莫比乌斯 Lv4 · 认可
+## ============================================================
+
+func _action_mobius_lv4() -> void:
+    # 弹选择窗口（技能已在 prepare 时锁定）
+    var choices = [
+        {"id": 1, "label": "📝 向他致谢，开始准备小说连载", "desc": "写作能力 +5，RSS +10"},
+        {"id": 2, "label": "🙈 默默关掉页面", "desc": "无额外奖励"},
+    ]
+    emit_signal("sg_task_show_choice_event",
+        "💬 莫比乌斯的认可",
+        "博客已经有了些固定读者。你正浏览当天的评论，又看见那个熟悉的ID。\n\n莫比乌斯：\n\n「你不再是那个记录生活的人了。」\n「字里行间有别人的影子了——你读过的书、倾慕过的作者。」\n「模仿是必经之路。」\n「但别忘了，你要成为的，是你自己。」\n\n留言末端附了一行：\n\n「你上一篇，我读了四遍。」",
+        choices,
+        "mobius_lv4")
+
+## 莫比乌斯 Lv4 选择回调
+func _on_mobius_lv4_choice(choice_id: int) -> void:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+
+    var skill_name = "人气作家"
+
+    # 标记完成
+    blogger.mo_lv4_done = true
+
+    # 选项1：向他致谢，尝试小说连载
+    if choice_id == 1:
+        blogger.set_ability("writing", blogger.writing_ability + 5)
+        blogger.rss += 10
+        emit_signal("sg_task_info_display_msg", "写作能力 +5，RSS +10，你决定试试小说连载")
+    else:
+        emit_signal("sg_task_info_display_msg", "你默默关掉了页面，把那条留言记在了心里")
+
+    # 恢复技能可见（仅当未被高阶技能替代）
+    if not _is_skill_outgrown(skill_name):
+        _action_skill_unlock({"skill_name": skill_name})
+
+        for day_idx in range(Blogger.blog_calendar.size()):
+            if _mobius_saved_schedule.get(day_idx, false):
+                if skill_name not in Blogger.blog_calendar[day_idx].tasks:
+                    Blogger.blog_calendar[day_idx].tasks.append(skill_name)
+
+    _mobius_saved_schedule.clear()
+
+    # 彩蛋：Lv1 注意到差距时，额外发现《枯笔》线索
+    if blogger.mo_noticed_gap:
+        emit_signal("sg_task_show_popup_msg",
+            "🪶 枯笔",
+            "你翻回莫比乌斯的主页。他的最后一篇文章停在三个月前。标题是《枯笔》。\n\n你点开。只有一句话：\n\n「我写不下去了。」\n\n你盯着那四个字看了很久。")
+
     emit_signal("schedule_refresh_needed")
 
 ## 莫比乌斯 Lv3 彩蛋（哲学批判解锁时，若玩家注意到莫比乌斯话里的矛盾）
@@ -1514,6 +1624,8 @@ func on_obaby_choice_selected(event_id: String, choice_id: int) -> void:
             _on_mobius_lv2_choice(choice_id)
         "mobius_lv3":
             _on_mobius_lv3_choice(choice_id)
+        "mobius_lv4":
+            _on_mobius_lv4_choice(choice_id)
         _:
             push_warning("[TaskManager] Unknown choice event: %s" % event_id)
 
