@@ -77,8 +77,8 @@ var publishers = [
 		"type": "小型出版社",
 		"reputation": 2,
 		"reward_multiplier": 0.8,
-		"edit_days": 2,
-		"publish_days": 3,
+		"edit_days": 1,     # TODO(测试): 原值2，测试临时改为1
+		"publish_days": 1,  # TODO(测试): 原值3，测试临时改为1
 		"description": "小型独立出版社，审核快但收益较低",
 	},
 	{
@@ -86,8 +86,8 @@ var publishers = [
 		"type": "小型出版社",
 		"reputation": 2,
 		"reward_multiplier": 0.9,
-		"edit_days": 2,
-		"publish_days": 3,
+		"edit_days": 1,     # TODO(测试): 原值2，测试临时改为1
+		"publish_days": 1,  # TODO(测试): 原值3，测试临时改为1
 		"description": "专注网络文学出版，适合网文作者",
 	},
 ]

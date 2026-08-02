@@ -709,6 +709,54 @@ func check_mo_lv4_delay_expired(_context: Dictionary) -> bool:
             return blogger.mo_lv4_delay_days == 0
     return false
 
+## 检查莫比乌斯 Lv5 是否未完成
+func check_mo_lv5_not_done(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return not blogger.mo_lv5_done
+    return false
+
+## 检查莫比乌斯 Lv5 是否已完成
+func check_mo_lv5_done(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.mo_lv5_done
+    return false
+
+## 莫比乌斯 Lv5 延迟是否未激活
+func check_mo_lv5_delay_inactive(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.mo_lv5_delay_days < 0
+    return false
+
+## 莫比乌斯 Lv5 延迟是否已耗尽
+func check_mo_lv5_delay_expired(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.mo_lv5_delay_days == 0
+    return false
+
+## 检查莫比乌斯 Lv6 是否未收束（mo_resolved == false）
+func check_mo_not_resolved(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return not blogger.mo_resolved
+    return false
+
+## 自定义条件检查:出版畅销书累计≥1
+func check_book_publish_ge_1(_context: Dictionary) -> bool:
+    if GDManager:
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            return blogger.book_publish_count >= 1
+    return false
+
 ## ============================================================
 ## 任务执行
 ## ============================================================
@@ -1548,6 +1596,109 @@ func _on_mobius_lv4_choice(choice_id: int) -> void:
 
     emit_signal("schedule_refresh_needed")
 
+## ============================================================
+## 莫比乌斯 Lv5 · 准备（设置随机延迟）
+## ============================================================
+
+func _action_mobius_lv5_prepare() -> void:
+    var skill_name = "哲辩大师"
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _mobius_saved_schedule.clear()
+    for day_idx in range(Blogger.blog_calendar.size()):
+        _mobius_saved_schedule[day_idx] = skill_name in Blogger.blog_calendar[day_idx].tasks
+    _action_skill_lock({"skill_name": skill_name})
+    blogger.mo_lv5_delay_days = 0  # TODO(测试): 原值 randi() % 6 + 5 (5-10天)，测试临时改为0即时触发
+    emit_signal("sg_task_info_display_msg", "深夜，你收到一条站内私信——不是评论，是私信……")
+
+## ============================================================
+## 莫比乌斯 Lv5 · 告别
+## ============================================================
+
+func _action_mobius_lv5() -> void:
+    # 弹选择窗口（技能已在 prepare 时锁定）
+    var choices = [
+        {"id": 1, "label": "✍️ 写一篇《致莫比乌斯》，开始筹备出书", "desc": "写作能力 +10"},
+        {"id": 2, "label": "🙏 什么也不说，默默筹备出书", "desc": "无额外奖励"},
+    ]
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if blogger and blogger.mo_noticed_gap:
+        choices.append({"id": 3, "label": "🔍 你说不出的，我替你写", "desc": "写作能力 +15"})
+    emit_signal("sg_task_show_choice_event",
+        "💬 莫比乌斯的告别",
+        "能力值88的深夜，你收到一条站内私信——不是评论，是私信。\n\n莫比乌斯：\n\n「你走到了我能望见的最远处。」\n「我看着你的文字从记录，到表达，到质问。」\n「你迟早会发现，写作不是为了被理解。」\n「是为了理解自己。」\n「这句话花了我一千多篇。」\n「你比我来得更早。」\n\n停顿了很久。\n\n「我该说的，都说完了。」\n\n又过了很久。你几乎要关掉窗口时，新的一行出现：\n\n「出书的时候，我会再来。」",
+        choices,
+        "mobius_lv5")
+
+## 莫比乌斯 Lv5 选择回调
+func _on_mobius_lv5_choice(choice_id: int) -> void:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+
+    var skill_name = "哲辩大师"
+
+    # 标记完成
+    blogger.mo_lv5_done = true
+
+    # 选项1：写《致莫比乌斯》，筹备出书
+    if choice_id == 1:
+        blogger.set_ability("writing", blogger.writing_ability + 10)
+        emit_signal("sg_task_info_display_msg", "写作能力 +10，你决定写一篇《致莫比乌斯》，开始筹备出书")
+    elif choice_id == 3:
+        blogger.mo_confession_triggered = true
+        blogger.set_ability("writing", blogger.writing_ability + 15)
+        emit_signal("sg_task_info_display_msg", "写作能力 +15，你替他写下了那句说不出口的话")
+    else:
+        emit_signal("sg_task_info_display_msg", "你什么也没说，默默筹备出书")
+
+    # 恢复技能可见（仅当未被高阶技能替代；哲辩大师无后继技能）
+    if not _is_skill_outgrown(skill_name):
+        _action_skill_unlock({"skill_name": skill_name})
+
+        for day_idx in range(Blogger.blog_calendar.size()):
+            if _mobius_saved_schedule.get(day_idx, false):
+                if skill_name not in Blogger.blog_calendar[day_idx].tasks:
+                    Blogger.blog_calendar[day_idx].tasks.append(skill_name)
+
+    _mobius_saved_schedule.clear()
+    emit_signal("schedule_refresh_needed")
+
+## ============================================================
+## 莫比乌斯 Lv6 · 互文收束（出版后的重逢）
+## ============================================================
+
+func _action_mobius_lv6() -> void:
+    var choices = [
+        {"id": 1, "label": "📖 读完并写一篇书评", "desc": "写作能力 +5，声望 +20"},
+        {"id": 2, "label": "🙏 珍藏起来，什么也不说", "desc": "无额外奖励"},
+    ]
+    emit_signal("sg_task_show_choice_event",
+        "📦 无名包裹",
+        "出版后的某天，你收到一个包裹。没有寄件人。\n\n拆开，里面是一本手写稿。封面只有两个字——《悖驳》。\n\n扉页上有一行字：\n\n「你写完了你的。」\n「我终于也写完了我的。」\n「谢谢你，替我走过了那段走不出去的路。」\n\n—— 莫比乌斯",
+        choices,
+        "mobius_lv6")
+
+## 莫比乌斯 Lv6 选择回调
+func _on_mobius_lv6_choice(choice_id: int) -> void:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+
+    blogger.mo_resolved = true
+
+    if choice_id == 1:
+        blogger.set_ability("writing", blogger.writing_ability + 5)
+        blogger.reputation += 20
+        emit_signal("sg_task_show_popup_msg",
+            "📚 书评已发布",
+            "你读完《悖驳》，写了篇书评。\n\n莫比乌斯的小说《悖驳》悄然上架，十余万字。你知道，他终于重新拿起笔了。\n\n写作能力 +5，声望 +20")
+    else:
+        emit_signal("sg_task_show_popup_msg",
+            "🕯 珍藏",
+            "你没有回复他。但你知道，那本手写稿是他给你们的交卷。")
+
 ## 莫比乌斯 Lv3 彩蛋（哲学批判解锁时，若玩家注意到莫比乌斯话里的矛盾）
 func _action_mobius_lv3_easter_egg() -> void:
     var blogger = GDManager.get_blogger() if GDManager else null
@@ -1626,6 +1777,10 @@ func on_obaby_choice_selected(event_id: String, choice_id: int) -> void:
             _on_mobius_lv3_choice(choice_id)
         "mobius_lv4":
             _on_mobius_lv4_choice(choice_id)
+        "mobius_lv5":
+            _on_mobius_lv5_choice(choice_id)
+        "mobius_lv6":
+            _on_mobius_lv6_choice(choice_id)
         _:
             push_warning("[TaskManager] Unknown choice event: %s" % event_id)
 

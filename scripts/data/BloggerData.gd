@@ -384,10 +384,10 @@ var mo_lv2_done: bool = true
 var mo_lv3_done: bool = true
 
 ## Lv4 认可已完成
-var mo_lv4_done: bool = false
+var mo_lv4_done: bool = true  # TODO(测试): 原值false，测试临时改为true
 
 ## Lv5 告别已完成
-var mo_lv5_done: bool = false
+var mo_lv5_done: bool = true  # TODO(测试): 原值false，测试临时改为true
 
 ## Lv5 选了隐藏选项3，触发莫比乌斯承认自己写不出
 var mo_confession_triggered: bool = false
