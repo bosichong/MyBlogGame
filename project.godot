@@ -37,6 +37,7 @@ Bs="*res://scripts/BankSystem.gd"
 Yun="*res://scripts/yun.gd"
 TaskManager="*res://scripts/task_system/TaskManager.gd"
 AwardManager="*res://scripts/managers/AwardManager.gd"
+DialogueManager="*res://scripts/dialogue_manager.gd"
 
 [display]
 

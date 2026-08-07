@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://dxl8o4nqjo8u"]
+
+[ext_resource type="Script" uid="uid://0qi4onkbyqf6" path="res://tests/test_dialogue_scene.gd" id="1_script"]
+
+[node name="TestDialogue" type="Control" unique_id=398038974]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=1420875484]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -80.0
+offset_right = 150.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Panel" unique_id=286721116]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Panel/VBox" unique_id=418186244]
+layout_mode = 2
+text = "对话调试工具"
+horizontal_alignment = 1
+
+[node name="PlayBtn" type="Button" parent="Panel/VBox" unique_id=285936662]
+layout_mode = 2
+text = "播放示例对话"
+
+[node name="PlayIntroBtn" type="Button" parent="Panel/VBox" unique_id=1963135112]
+layout_mode = 2
+text = "播放剧情对白（什么是博客）"
+
+[node name="PlayHackerBtn" type="Button" parent="Panel/VBox" unique_id=1963135113]
+layout_mode = 2
+text = "播放剧情对白（黑客O是谁）"
+
+[node name="PlayThemeBtn" type="Button" parent="Panel/VBox" unique_id=1963135114]
+layout_mode = 2
+text = "播放剧情对白（主题设计）"
+
+[node name="BackBtn" type="Button" parent="Panel/VBox" unique_id=1486175687]
+layout_mode = 2
+text = "返回主菜单"
+
+[connection signal="pressed" from="Panel/VBox/PlayBtn" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Panel/VBox/PlayIntroBtn" to="." method="_on_play_intro_pressed"]
+[connection signal="pressed" from="Panel/VBox/PlayHackerBtn" to="." method="_on_play_hacker_pressed"]
+[connection signal="pressed" from="Panel/VBox/PlayThemeBtn" to="." method="_on_play_theme_pressed"]
+[connection signal="pressed" from="Panel/VBox/BackBtn" to="." method="_on_back_pressed"]
