@@ -70,7 +70,7 @@ func action_book_progress(progress: int) -> void:
         
         emit_info_msg.call("📖 创作《%s》中... 第%d篇 / 100篇" % [book_name, write_days])
         
-        if write_days >= 5:  # TODO(测试): 原值100，测试临时改为5（快速完成写作阶段）
+        if write_days >= 100:
             _check_book_phase_complete(book_state)
 
 func action_book_phase_change(new_phase: int) -> void:

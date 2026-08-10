@@ -49,7 +49,7 @@ var books = [
 		"reputation_reward": 1000,       # 声望奖励
 		
 		# 销售持续收入参数
-		"sales_duration_months": 12,     # 销售周期12个月（1年，测试用）
+		"sales_duration_months": 12,     # 销售周期12个月（1年）
 		"peak_month": 6,                 # 峰值月份（半年）
 		"decline_start_month": 9,        # 开始下降月份（9个月）
 		

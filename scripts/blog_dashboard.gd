@@ -493,6 +493,7 @@ func _create_friendlink_item(link: Dictionary) -> Control:
     delete_btn.text = "×"
     delete_btn.custom_minimum_size = Vector2(24, 24)
     delete_btn.set_meta("member_id", link.get("id"))
+    Sfx.wire(delete_btn)
     delete_btn.pressed.connect(_on_delete_friendlink_pressed.bind(link.get("id")))
     hbox.add_child(delete_btn)
     
@@ -676,6 +677,7 @@ func _show_apply_dialog() -> void:
         member_btn.text = "• %s (lv%d) - 成功率: %s" % [name, level, rate]
         member_btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
         member_btn.set_meta("member_id", member_id)
+        Sfx.wire(member_btn)
         member_btn.pressed.connect(_on_member_button_pressed.bind(member_id, member_btn, dialog, vbox))
         vbox.add_child(member_btn)
     

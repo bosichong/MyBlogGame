@@ -1392,7 +1392,7 @@ func _try_trigger_ip_auth(blogger):
 
     var random_val = randi() % 100
 
-    if random_val < 99:  # 99%概率（测试用）
+    if random_val < 20:  # 20%概率
         # 计算收益
         var literature_value = blogger.literature_ability
         var base_reward = 100000.0
@@ -1425,7 +1425,7 @@ func _try_trigger_course_auth(blogger):
 
     var random_val = randi() % 100
 
-    if random_val < 99:  # 99%概率（测试用）
+    if random_val < 20:  # 20%概率
         var code_value = blogger.code_ability
         var base_reward = 100000.0
         var bonus = base_reward * (code_value / 100.0)
@@ -1671,15 +1671,17 @@ func update_blog_views() -> int:
     
     # 流量预警检查
     var traffic_limit = Yun.get_monthly_traffic_limit()
-    if traffic_limit > 0 and blogger.month_views >= traffic_limit * 0.8:
-        if not _traffic_warning_active:
-            _traffic_warning_active = true
-            var pct = float(blogger.month_views) / traffic_limit * 100
-            emit_signal("sg_traffic_warning", pct)
-    else:
-        if _traffic_warning_active:
-            _traffic_warning_active = false
-            emit_signal("sg_traffic_warning_resolved")
+    if traffic_limit > 0:
+        var limit_count = traffic_limit * 10000
+        if blogger.month_views >= int(limit_count * 0.8):
+            if not _traffic_warning_active:
+                _traffic_warning_active = true
+                var pct = float(blogger.month_views) / limit_count * 100
+                emit_signal("sg_traffic_warning", pct)
+        else:
+            if _traffic_warning_active:
+                _traffic_warning_active = false
+                emit_signal("sg_traffic_warning_resolved")
 
     if tmp_y == TimerManager.current_year:
         blogger.year_views += blogger.today_views
@@ -2323,7 +2325,7 @@ func learningToSkills(category: String) -> int:
     var old_ability = current_ability
     current_ability += add_value
     current_ability = minf(current_ability, float(MAX_SKILL_LEVEL))
-    current_ability = round(current_ability * 10) / 10.0
+    current_ability = round(current_ability * 100) / 100.0
 
     # 更新能力值
     set_ability_by_type(skill_type, current_ability)
@@ -2398,15 +2400,20 @@ func get_skill_type_enum(skill_type: String) -> int:
 
 
 ## 根据当前能力值返回学习增量
+## 分段递减：初级(0-20)约100次，满级(100)累计约2500次
 func get_skill_value(k: float) -> float:
-    if k < 25:
-        return 1.0
-    elif k < 50:
-        return 0.5
-    elif k < 75:
+    if k < 20:
         return 0.2
-    elif k < 100:
+    elif k < 40:
         return 0.1
+    elif k < 60:
+        return 0.05
+    elif k < 80:
+        return 0.04
+    elif k < 90:
+        return 0.025
+    elif k < 100:
+        return 0.011
     return 0.0
 
 

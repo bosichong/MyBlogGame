@@ -7,7 +7,7 @@ class_name BloggerData
 # ============================================
 
 ## 等级（1-100）
-var level: int = 28
+var level: int = 1
 
 ## 经验值
 var exp: int = 0
@@ -24,16 +24,16 @@ var attribute_points: int = 0
 # ============================================
 
 ## 写作能力：影响所有文章的质量分
-var writing_ability: float = 17
+var writing_ability: float = 1
 
 ## 技术能力：影响技术类文章质量和网站维护效果
-var technical_ability: float = 17
+var technical_ability: float = 1
 
 ## 编程能力：影响编程教程、黑客攻防等技术文章质量
-var code_ability: float = 17
+var code_ability: float = 1
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 77
+var literature_ability: float = 1
 
 # ============================================
 # 资源
@@ -47,7 +47,7 @@ var stamina: int = 51
 var money: float = 10000000.0
 
 ## 社交能力：影响文章分享、爆款事件触发概率
-var social_ability: int = 5
+var social_ability: int = 1
 
 ## 声望
 var reputation: int = 0
@@ -104,7 +104,7 @@ var safety_value: int = 70
 ## 影响基础访问量和搜索引擎收录
 ## 新网站SEO效果差，初始值设为50
 ## 通过"SEO优化"任务逐步提升
-var seo_value: int = 10
+var seo_value: int = 1
 
 ## 设计值（0-100）
 ## 影响访问量加成和页面美化效果
@@ -372,22 +372,22 @@ var mo_lv5_delay_days: int = -1
 # ============================================
 
 ## Lv1 初遇已完成
-var mo_lv1_done: bool = true
+var mo_lv1_done: bool = false
 
 ## Lv1 选了选项1，玩家注意到莫比乌斯话里的矛盾
-var mo_noticed_gap: bool = true
+var mo_noticed_gap: bool = false
 
 ## Lv2 回访已完成
-var mo_lv2_done: bool = true
+var mo_lv2_done: bool = false
 
 ## Lv3 深谈已完成
-var mo_lv3_done: bool = true
+var mo_lv3_done: bool = false
 
 ## Lv4 认可已完成
-var mo_lv4_done: bool = true  # TODO(测试): 原值false，测试临时改为true
+var mo_lv4_done: bool = false
 
 ## Lv5 告别已完成
-var mo_lv5_done: bool = true  # TODO(测试): 原值false，测试临时改为true
+var mo_lv5_done: bool = false
 
 ## Lv5 选了隐藏选项3，触发莫比乌斯承认自己写不出
 var mo_confession_triggered: bool = false

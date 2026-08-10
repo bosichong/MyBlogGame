@@ -102,6 +102,9 @@ func _ready() -> void:
     call_deferred("_check_initial_tasks")
     call_deferred("_check_time_tasks_on_start")
     
+    # 全部常驻面板按钮统一接 UI 音效
+    Sfx.wire_tree(self)
+    
     update_ui()
 
 
@@ -475,7 +478,8 @@ func _show_next_popup() -> void:
     _popup_is_showing = true
     var data = _popup_queue.pop_front()
 
-    
+    Sfx.play("popup_open")
+
     $AcceptDialog.title = data.title
     $AcceptDialog.dialog_text = data.content
     $AcceptDialog.set_size(Vector2i(500,300))
@@ -513,6 +517,7 @@ func _on_paid_income_settled(msg):
     info_display.add_message(msg)
 
 func _close_ac():
+    Sfx.play("popup_close")
     _popup_has_pending_scene = false
     if _popup_queue.is_empty():
         TimerManager.timer.start()
@@ -575,6 +580,7 @@ func sg_task_show_choice_event(title: String, content: String, choices: Array, e
         btn.flat = false
         btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
         btn.custom_minimum_size = Vector2i(0, 50)
+        Sfx.wire(btn)
         var choice_id = c.id
         btn.pressed.connect(func():
             dialog.queue_free()

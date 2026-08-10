@@ -238,6 +238,7 @@ func create_single_package_ui(package_type: int, package_name: String,
     var change_button = Button.new()
     change_button.text = "更换套餐"
     change_button.flat = false
+    Sfx.wire(change_button)
     
     # 根据当前套餐状态设置按钮文本和颜色
     if package_type == current_package_type:

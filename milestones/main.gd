@@ -43,6 +43,7 @@ func _init_chapter_progress():
 		btn.toggle_mode = true
 		btn.button_group = group
 		btn.custom_minimum_size = Vector2(0, 36)
+		Sfx.wire(btn)
 		btn.pressed.connect(_on_chapter_btn_pressed.bind(i))
 		chapter_btn_vbox.add_child(btn)
 

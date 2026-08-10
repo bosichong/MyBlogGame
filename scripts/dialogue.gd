@@ -234,6 +234,7 @@ func _show_choices(choices: Array) -> void:
 		var btn := Button.new()
 		btn.text = str(c.get("text", ""))
 		btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		Sfx.wire(btn)
 		btn.pressed.connect(_on_choice.bind(c))
 		choices_box.add_child(btn)
 	choices_box.visible = true

@@ -4,16 +4,9 @@ Godot 4.7 GDScript 博客模拟经营游戏。
 
 ## 关键命令
 
-```bash
-# 运行测试（Godot headless 模式）
-godot --headless -s tests/test_book_publish.gd
-godot --headless -s tests/test_chapter_reward.gd
-godot --headless -s tests/test_dialogue.gd
-
-# 运行游戏（编辑器内按 F5）
-```
-
-> 无 lint/typecheck/codegen 工具链。唯一验证方式是在 Godot 编辑器中运行或执行测试脚本。
+> ⚠️ **不要跑终端测试**（`godot --headless -s tests/*.gd`），本机不支持该测试环境（含 C#/.NET）。验证方式一律改为在 Godot 编辑器中按 F5 运行游戏。`test_chapter_reward.gd` 是 C#(.NET) 脚本，不要尝试执行或修改。
+>
+> 无 lint/typecheck/codegen 工具链。唯一验证方式是在 Godot 编辑器中运行。
 
 ## Autoload 单例（按 project.godot 声明顺序加载）
 

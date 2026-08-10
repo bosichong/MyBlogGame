@@ -29,11 +29,13 @@ func set_title_and_content(new_title: String, new_content: String):
 
 # 显示提示框
 func show_popup():
+    Sfx.play("popup_open")
     background.visible = true
     visible = true
 
 # 隐藏提示框
 func hide_popup(destroy: bool = true):
+    Sfx.play("popup_close")
     background.visible = false
     visible = false
     emit_signal("closed")  # 触发关闭信号

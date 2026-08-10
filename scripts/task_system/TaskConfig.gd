@@ -99,7 +99,7 @@ const CONDITIONS: Dictionary = {
     "literature_value_ge_60": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 60},
     "literature_value_ge_78": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 78},
     "literature_value_ge_80": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 80},
-    "literature_value_ge_88": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 78},  # TODO(测试): 原值88，测试临时改为78（起始文学值77，学一次即触发）
+    "literature_value_ge_88": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 88},
     "literature_value_ge_90": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 90},
     "literature_value_ge_100": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 100},
     

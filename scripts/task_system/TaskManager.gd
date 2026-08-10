@@ -1077,6 +1077,7 @@ func _action_unlock_initial_tasks() -> void:
     
     # 网站维护
     _set_maintenance_disabled("安全维护", false)
+    _set_maintenance_disabled("紧急排险", false)
     _set_maintenance_disabled("SEO优化", false)
     _set_maintenance_disabled("页面美化", false)
     _set_maintenance_disabled("友链维护", false)
@@ -1609,7 +1610,7 @@ func _action_mobius_lv5_prepare() -> void:
     for day_idx in range(Blogger.blog_calendar.size()):
         _mobius_saved_schedule[day_idx] = skill_name in Blogger.blog_calendar[day_idx].tasks
     _action_skill_lock({"skill_name": skill_name})
-    blogger.mo_lv5_delay_days = 0  # TODO(测试): 原值 randi() % 6 + 5 (5-10天)，测试临时改为0即时触发
+    blogger.mo_lv5_delay_days = randi() % 6 + 5
     emit_signal("sg_task_info_display_msg", "深夜，你收到一条站内私信——不是评论，是私信……")
 
 ## ============================================================
