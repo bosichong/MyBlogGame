@@ -339,9 +339,8 @@ func gain_exp(amount: int):
         while blogger.exp >= get_exp_for_next_level() and blogger.level < MAX_LEVEL:
             blogger.exp -= get_exp_for_next_level() # 扣除升级所需EXP
             blogger.level += 1 # 等级提升
-            # 判断是否是10的倍数,并且 level 不等于0(避免刚初始化就触发)
-            if blogger.level % 10 == 0 and blogger.level != 0:
-                emit_signal("s_level", blogger.level)
+            # 每级升级都发信号（UI 弹出横幅提示；任务系统按条件过滤）
+            emit_signal("s_level", blogger.level)
             # 社交能力随等级提升
             if blogger.social_ability < 100:
                 blogger.social_ability += 1
@@ -2281,6 +2280,10 @@ enum Skills {
 signal skill_level_up(type: int, lv: float)
 signal no_stamina_signal(tit: String)
 signal no_money_signal(tit: String)
+## 技能阶段解锁（旧阶段 → 新阶段）
+signal skill_stage_unlocked(old_name: String, new_name: String)
+## 能力值跨整数（技能成长提示）
+signal skill_value_up(skill_name: String, value: float)
 
 ## 学习技能
 func learningToSkills(category: String) -> int:
@@ -2333,6 +2336,11 @@ func learningToSkills(category: String) -> int:
     # 检查并解锁下一级技能
     try_unlock_next_skill(d, current_ability)
 
+    # 能力值跨整数时发送技能成长提示
+    if int(current_ability) > int(old_ability):
+        var display_name = "编程" if skill_type == "code" else "文学"
+        emit_signal("skill_value_up", display_name, current_ability)
+
     # 发送信号,由任务系统处理技能解锁
     emit_signal("skill_level_up", get_skill_type_enum(skill_type), current_ability)
 
@@ -2360,6 +2368,9 @@ func try_unlock_next_skill(current_skill: Dictionary, current_ability: float):
         # 解锁下一级技能
         next_skill.isVisible = true
         next_skill.disabled = false
+
+        # 发送技能阶段升级提示
+        emit_signal("skill_stage_unlocked", str(current_skill.get("name", "")), str(next_skill.get("name", "")))
 
 
 ## 根据技能类型获取能力值
@@ -2438,10 +2449,13 @@ func add_writing_ability_points() -> void:
         return
     var blogger = GDManager.get_blogger()
     if blogger.writing_ability < 100:
-        var increment = get_ability_increment(float(blogger.writing_ability))
+        var old_val = float(blogger.writing_ability)
+        var increment = get_ability_increment(old_val)
         blogger.writing_ability += increment
         blogger.writing_ability = min(float(blogger.writing_ability), 100.0)
         blogger.writing_ability = round(blogger.writing_ability * 10) / 10.0
+        if int(blogger.writing_ability) > int(old_val):
+            emit_signal("skill_value_up", "写作", float(blogger.writing_ability))
 
 ## 增加技术能力（维护网站时调用）
 func add_technical_ability_points() -> void:
@@ -2449,10 +2463,13 @@ func add_technical_ability_points() -> void:
         return
     var blogger = GDManager.get_blogger()
     if blogger.technical_ability < 100:
-        var increment = get_ability_increment(float(blogger.technical_ability))
+        var old_val = float(blogger.technical_ability)
+        var increment = get_ability_increment(old_val)
         blogger.technical_ability += increment
         blogger.technical_ability = min(float(blogger.technical_ability), 100.0)
         blogger.technical_ability = round(blogger.technical_ability * 10) / 10.0
+        if int(blogger.technical_ability) > int(old_val):
+            emit_signal("skill_value_up", "技术", float(blogger.technical_ability))
 
 ## 月末归档：将超过 84 天的文章从 posts 移入 archived_posts
 ## TimeDecayModifier.active_article_years * 336 = 84

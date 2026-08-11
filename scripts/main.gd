@@ -31,6 +31,14 @@ func _ready() -> void:
         # 技能学习信号
         Blogger.skill_learned.connect(_on_skill_learned)
 
+        # 技能阶段解锁/成长提示
+        Blogger.skill_stage_unlocked.connect(_on_skill_stage_unlocked)
+        Blogger.skill_value_up.connect(_on_skill_value_up)
+
+        # 体力/财力不足提示
+        Blogger.no_stamina_signal.connect(_on_resource_warn)
+        Blogger.no_money_signal.connect(_on_resource_warn)
+
         # 网站安全信号
         Blogger.signal_website_security.connect(signal_website_security)
         Blogger.signal_website_security_no_stamina.connect(signal_website_security_no_stamina)
@@ -181,6 +189,11 @@ func update_ui():
     $ui/r_panel/top/codeProgressBar.set_value_no_signal(Blogger.code_ability) 
     $ui/r_panel/top/literatureProgressBar.show_percentage = false
     $ui/r_panel/top/literatureProgressBar.set_value_no_signal(Blogger.literature_ability) 
+
+    $ui/r_panel/top/writingProgressBar/Num.text = _format_ability(Blogger.writing_ability)
+    $ui/r_panel/top/technicalProgressBar/Num.text = _format_ability(Blogger.technical_ability)
+    $ui/r_panel/top/codeProgressBar/Num.text = _format_ability(Blogger.code_ability)
+    $ui/r_panel/top/literatureProgressBar/Num.text = _format_ability(Blogger.literature_ability) 
 
 ## 游戏时间倍数运行控制
 func time_stop_bt():
@@ -497,8 +510,28 @@ func _show_next_popup() -> void:
         $AcceptDialog.canceled.connect(nav_func, CONNECT_ONE_SHOT)
 
 func s_level(l):
-    var tx = Utils.get_rank_title(l,Strs.game_strs.头衔)
-    show_popup_message("等级提升", "恭喜您的等级提升到"+str(l)+"！您的博客段位提升到了："+tx+"。")
+    $Toast.add_toast("等级提升", "恭喜您升级到 Lv.%d！" % l, $Toast.Tone.LEVELUP, "lv%d" % l)
+    var old_title = Utils.get_rank_title(l - 1, Strs.game_strs.头衔)
+    var new_title = Utils.get_rank_title(l, Strs.game_strs.头衔)
+    if old_title != new_title:
+        show_popup_message("头衔晋升", "恭喜您的博客段位提升到了：" + new_title + "！")
+
+## 技能阶段解锁提示
+func _on_skill_stage_unlocked(old_name: String, new_name: String) -> void:
+    $Toast.add_toast("技能进阶", "%s → %s 已解锁！" % [old_name, new_name], $Toast.Tone.SUCCESS, "stage")
+
+## 技能能力值成长提示
+func _on_skill_value_up(skill_name: String, value: float) -> void:
+    $Toast.add_toast("技能成长", "%s能力提升至 %s" % [skill_name, _format_ability(value)], $Toast.Tone.SUCCESS, "grow_" + skill_name)
+
+## 体力/财力不足提示
+func _on_resource_warn(msg: String) -> void:
+    $Toast.add_toast("提示", msg, $Toast.Tone.DANGER, "warn")
+
+## 能力值格式化（去掉整数末尾 .0）
+func _format_ability(v: float) -> String:
+    var s := "%.1f" % v
+    return s.substr(0, s.length() - 2) if s.ends_with(".0") else s
 
 func on_sig_ad_1_day():
     # 从审核界面切换到管理面板，并开始记录广告费用

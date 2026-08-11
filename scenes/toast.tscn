@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://dipmfx2ccbjnk"]
+
+[ext_resource type="Theme" uid="uid://sy5n06opf6op" path="res://our_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://scripts/toast.gd" id="2_script"]
+
+[node name="Toast" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="Box" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_right = 200.0
+offset_top = 46.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

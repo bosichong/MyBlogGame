@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://cjugt1joovfkl" path="res://scenes/ad.tscn" id="12_eb6dy"]
 [ext_resource type="PackedScene" uid="uid://drcoxpxaqfn8r" path="res://milestones/main.tscn" id="12_trceg"]
 [ext_resource type="PackedScene" uid="uid://d3d3b4rpyytcl" path="res://scenes/blog_dashboard.tscn" id="13_blog_dashboard"]
+[ext_resource type="PackedScene" path="res://scenes/toast.tscn" id="14_toast"]
 
 [node name="Main" type="Node2D" unique_id=733496957]
 script = ExtResource("1_85g3d")
@@ -128,3 +129,5 @@ offset_bottom = 480.0
 visible = false
 
 [node name="AcceptDialog" type="AcceptDialog" parent="." unique_id=1869509651]
+
+[node name="Toast" parent="." instance=ExtResource("14_toast")]
