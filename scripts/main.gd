@@ -547,7 +547,15 @@ func s_level(l):
     var old_title = Utils.get_rank_title(l - 1, Strs.game_strs.头衔)
     var new_title = Utils.get_rank_title(l, Strs.game_strs.头衔)
     if old_title != new_title:
-        show_popup_message("头衔晋升", "恭喜您的博客段位提升到了：" + new_title + "！")
+        _play_confetti()
+        show_popup_message("头衔晋升", "🎉 恭喜您的博客段位提升到了：%s！\n\n【头衔晋升的好处】\n• 段位越高，博客访问量加成越高\n• 段位可提升博客影响力与江湖地位\n\n【等级提升的好处】\n• 解锁更多博客分类、日程与玩法\n• 每升一级，博客各项能力随之成长\n\n继续加油，向着更高的段位迈进！" % new_title)
+
+## 播放头衔晋升撒花特效
+func _play_confetti() -> void:
+    var confetti = preload("res://scenes/confetti.tscn").instantiate()
+    confetti.auto_emit = false
+    add_child(confetti)
+    confetti.emit()
 
 ## 技能阶段解锁提示
 func _on_skill_stage_unlocked(old_name: String, new_name: String) -> void:

@@ -1246,7 +1246,7 @@ const TASKS: Array = [
         "is_repeatable": false,
         "trigger_type": "time_check",
         "actions": [
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "博客江湖邀请", "content": "恭喜！您的博客SEO值已达到100！\n\n博客江湖是全球最大的中文独立博客联盟，致力于汇聚天下独立博客。\n\n【加入好处】\n• 认识志同道合的博友\n• 获得友链推荐\n• 参与联盟活动\n• 提升博客影响力\n\n点击确定加入博客江湖！"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "博客江湖邀请", "content": "恭喜！您的博客SEO值已达到100！\n\n博客江湖是全球最大的中文独立博客联盟，致力于汇聚天下独立博客。\n\n【加入好处】\n• 认识志同道合的博友\n• 获得友链推荐\n• 参与联盟活动\n• 提升博客影响力\n\n点击博客江湖，加入博客联盟吧！"},
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "blog_union_joined"},
         ],
     },
