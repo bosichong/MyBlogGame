@@ -641,15 +641,6 @@ func _show_apply_dialog() -> void:
         dialog.popup_centered()
         return
     
-    var blogger = GDManager.get_blogger()
-    if blogger and blogger.stamina < 5:
-        var dialog = AcceptDialog.new()
-        dialog.title = "申请友链"
-        dialog.dialog_text = "体力不足，需要5点体力才能申请友链"
-        add_child(dialog)
-        dialog.popup_centered()
-        return
-    
     var dialog = ConfirmationDialog.new()
     dialog.title = "申请友链"
     dialog.ok_button_text = "申请"

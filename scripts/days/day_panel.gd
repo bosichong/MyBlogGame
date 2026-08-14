@@ -79,6 +79,7 @@ func _update_schedule_preview() -> void:
 func _create_stamina_display() -> void:
     # 获取当前体力信息
     var blogger = GDManager.get_blogger()
+    var current_stamina = blogger.stamina
     var max_stamina = Utils.get_max_stamina(blogger.level)
     var tasks = Blogger.blog_calendar[KEY].tasks
     var used_stamina = Utils.calculate_day_stamina(tasks)
@@ -86,11 +87,11 @@ func _create_stamina_display() -> void:
 
     # 创建体力显示Label
     stamina_label = Label.new()
-    stamina_label.text = "体力：%d / %d  (剩余: %d)" % [max_stamina, max_stamina, remaining]
+    stamina_label.text = "体力：%d / %d  (剩余: %d)" % [current_stamina, max_stamina, remaining]
     stamina_label.add_theme_color_override("font_color", Color(0.2, 0.8, 0.2, 1))  # 绿色
 
     if remaining < 0:
-        stamina_label.text = "体力：%d / %d  (超出: %d)" % [max_stamina, max_stamina, -remaining]
+        stamina_label.text = "体力：%d / %d  (超出: %d)" % [current_stamina, max_stamina, -remaining]
         stamina_label.add_theme_color_override("font_color", Color(1, 0.2, 0.2, 1))  # 红色
 
     add_child(stamina_label)
@@ -140,15 +141,16 @@ func _restore_checkbox_state(option: String) -> void:
 
 func _update_stamina_display() -> void:
     var blogger = GDManager.get_blogger()
+    var current_stamina = blogger.stamina
     var max_stamina = Utils.get_max_stamina(blogger.level)
     var tasks = Blogger.blog_calendar[KEY].tasks
     var used_stamina = Utils.calculate_day_stamina(tasks)
     var remaining = max_stamina - used_stamina
 
     if stamina_label:
-        stamina_label.text = "体力：%d / %d  (剩余: %d)" % [max_stamina, max_stamina, remaining]
+        stamina_label.text = "体力：%d / %d  (剩余: %d)" % [current_stamina, max_stamina, remaining]
         stamina_label.add_theme_color_override("font_color", Color(0.2, 0.8, 0.2, 1))
 
         if remaining < 0:
-            stamina_label.text = "体力：%d / %d  (超出: %d)" % [max_stamina, max_stamina, -remaining]
+            stamina_label.text = "体力：%d / %d  (超出: %d)" % [current_stamina, max_stamina, -remaining]
             stamina_label.add_theme_color_override("font_color", Color(1, 0.2, 0.2, 1))

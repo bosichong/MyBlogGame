@@ -10,6 +10,7 @@ const UI_SOUNDS := {
     "popup_open": preload("res://assets/sound/400 Sounds Pack/UI/pop_2.wav"),
     "popup_close": preload("res://assets/sound/400 Sounds Pack/UI/pop_1.wav"),
     "error": preload("res://assets/sound/400 Sounds Pack/UI/sci_fi_error.wav"),
+    "main_complete": preload("res://assets/sound/400 Sounds Pack/UI/synth_process_complete.wav"),
 }
 
 const PLAYER_COUNT := 6

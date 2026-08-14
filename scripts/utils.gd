@@ -233,6 +233,9 @@ func calculate_day_stamina(tasks: Array) -> int:
 
 ## 获取任务类型的体力消耗
 func get_task_stamina_cost(task_name: String) -> int:
+    # 休闲任务运行时恢复体力而非消耗，计为0
+    if check_name_exists(recreation, task_name):
+        return 0
     return GameBalanceConfig.get_task_stamina_cost(task_name)
 
 
@@ -249,16 +252,6 @@ func get_remaining_stamina(tasks: Array) -> int:
     var blogger = GDManager.get_blogger()
     var max_stamina = get_max_stamina(blogger.level)
     return max_stamina - calculate_day_stamina(tasks)
-
-
-## 获取每日自然恢复量（按等级）
-func get_daily_stamina_recovery(level: int) -> int:
-    if level <= 10:
-        return 5   # 新手:5点/天
-    elif level <= 30:
-        return 8   # 中期:8点/天
-    else:
-        return 10  # 后期:10点/天
 
 
 ## 获取打游戏花费（按等级增加）

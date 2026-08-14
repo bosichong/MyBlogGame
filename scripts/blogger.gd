@@ -302,16 +302,6 @@ func _ready():
 
 
 
-## 每日自然恢复体力
-func daily_stamina_recovery():
-    if not GDManager:
-        return
-
-    var blogger = GDManager.get_blogger()
-    var recovery = Utils.get_daily_stamina_recovery(blogger.level)
-    blogger.stamina += Utils.add_property(blogger.stamina, recovery, blogger.level)
-
-
 ## 获取升级到下一级所需的EXP
 func get_exp_for_next_level() -> int:
     # 等级1-4: 每级需要100 * level EXP
@@ -2433,15 +2423,15 @@ func get_skill_value(k: float) -> float:
 ## ============================================
 
 ## 计算能力增长分值（指数衰减公式）
-## 每次增加 = 0.3 × e^(-当前值/50) + 0.01
-## 5年约1400次操作可达到100分
+## 每次增加 = 0.1 × e^(-当前值/50) + 0.005
+## 约2700次操作达到100分（按每周约5次相关操作，约10年满级）
 func get_ability_increment(current_value: float) -> float:
-    var base = 0.3
+    var base = 0.1
     var decay = exp(-current_value / 50.0)
-    var minimum = 0.01
+    var minimum = 0.005
     var increment = base * decay + minimum
-    # 保留一位小数
-    return round(increment * 10) / 10.0
+    # 保留两位小数（一位小数会让后期增量被舍成 0 或恒定值）
+    return round(increment * 100) / 100.0
 
 ## 增加写作能力（写博客时调用）
 func add_writing_ability_points() -> void:
@@ -2453,7 +2443,7 @@ func add_writing_ability_points() -> void:
         var increment = get_ability_increment(old_val)
         blogger.writing_ability += increment
         blogger.writing_ability = min(float(blogger.writing_ability), 100.0)
-        blogger.writing_ability = round(blogger.writing_ability * 10) / 10.0
+        blogger.writing_ability = round(blogger.writing_ability * 100) / 100.0
         if int(blogger.writing_ability) > int(old_val):
             emit_signal("skill_value_up", "写作", float(blogger.writing_ability))
 
@@ -2467,7 +2457,7 @@ func add_technical_ability_points() -> void:
         var increment = get_ability_increment(old_val)
         blogger.technical_ability += increment
         blogger.technical_ability = min(float(blogger.technical_ability), 100.0)
-        blogger.technical_ability = round(blogger.technical_ability * 10) / 10.0
+        blogger.technical_ability = round(blogger.technical_ability * 100) / 100.0
         if int(blogger.technical_ability) > int(old_val):
             emit_signal("skill_value_up", "技术", float(blogger.technical_ability))
 

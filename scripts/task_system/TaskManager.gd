@@ -52,10 +52,14 @@ var pending_scene_params: Dictionary = {}
 ## 莫比乌斯支线：保存 LOCK 前各天是否勾选了被锁定技能
 var _mobius_saved_schedule: Dictionary = {}
 
+## 当前正在执行的任务等级（main/side/minor），用于弹窗差异化
+var _current_tier: String = "side"
+
 ## 信号定义
 signal schedule_refresh_needed
 signal sg_task_info_display_msg(msg)
 signal sg_task_show_popup_msg(title, content)
+signal sg_task_show_main_popup_msg(title, content)
 signal sg_task_show_choice_event(title, content, choices, event_id)
 
 func _ready():
@@ -113,6 +117,108 @@ func _force_check_skill_tasks() -> void:
 ## 公开方法:供 main.gd 在连接信号后调用,检查初始任务
 func check_initial_tasks() -> void:
     _force_check_skill_tasks()
+
+## ============================================================
+## 主线目标 HUD 支持
+## ============================================================
+
+## 获取当前主线目标（HUD 展示用）
+## 返回：{"chapter", "milestone", "guide", "progress_text"} 或空字典
+func get_current_goal() -> Dictionary:
+    if not GDManager:
+        return {}
+    var sp = GDManager.get_story_progress()
+    if not sp:
+        return {}
+
+    var quest = get_task_config().get_main_quest()
+    for goal in quest:
+        var chapter = goal.get("chapter", 1)
+        var milestone = goal.get("milestone", "")
+        if not sp.is_completed(chapter, milestone):
+            var result = {
+                "chapter": chapter,
+                "milestone": milestone,
+                "guide": goal.get("guide", ""),
+            }
+            var progress = goal.get("progress", {})
+            if not progress.is_empty():
+                var cur = _get_progress_value(progress.get("getter", ""))
+                if cur >= 0:
+                    result["progress_text"] = "%d/%d" % [cur, progress.get("target", 0)]
+            return result
+
+    # 全部主线目标已完成
+    return {}
+
+## 获取当前章主线完成度（HUD 进度条展示用）
+## 以当前章（第一个未完成目标所在章）的主线目标条数为分母
+## 返回：{"chapter", "completed", "total", "percent"} 或空字典
+func get_main_quest_progress() -> Dictionary:
+    if not GDManager:
+        return {}
+    var sp = GDManager.get_story_progress()
+    if not sp:
+        return {}
+
+    var quest = get_task_config().get_main_quest()
+    if quest.is_empty():
+        return {}
+
+    # 找到第一个未完成目标所在章
+    var current_chapter := 0
+    for goal in quest:
+        var ch = goal.get("chapter", 1)
+        if not sp.is_completed(ch, goal.get("milestone", "")):
+            current_chapter = ch
+            break
+    if current_chapter == 0:
+        # 全部完成，以最后一章为准
+        current_chapter = quest[quest.size() - 1].get("chapter", 1)
+
+    # 统计当前章的目标条数与完成数
+    var total := 0
+    var completed := 0
+    for goal in quest:
+        if goal.get("chapter", 1) != current_chapter:
+            continue
+        total += 1
+        if sp.is_completed(current_chapter, goal.get("milestone", "")):
+            completed += 1
+
+    var percent := 0.0
+    if total > 0:
+        percent = float(completed) / float(total) * 100.0
+
+    return {
+        "chapter": current_chapter,
+        "completed": completed,
+        "total": total,
+        "percent": percent,
+    }
+
+## 获取进度值（-1 表示读取失败）
+func _get_progress_value(getter_name: String) -> int:
+    if getter_name.is_empty() or not has_method(getter_name):
+        return -1
+    return call(getter_name)
+
+## 进度取值：RSS 订阅数
+func get_rss_count() -> int:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    return blogger.rss if blogger else 0
+
+## 进度取值：公众号粉丝数
+func get_wechat_followers() -> int:
+    var blogger = GDManager.get_blogger() if GDManager else null
+    return blogger.wechat_data.get("followers", 0) if blogger else 0
+
+## 进度取值：累计广告收益
+func get_total_income() -> int:
+    if not GDManager:
+        return 0
+    var ad = GDManager.get_ad()
+    return int(ad.total_commission) if ad else 0
 
 ## 重建 trigger_type 索引
 func _rebuild_trigger_index() -> void:
@@ -769,6 +875,7 @@ func _execute_task_at(index: int, context: Dictionary) -> void:
 
     var task = task_states[index]
     var task_id = task.get("id", "")
+    _current_tier = task.get("tier", "side")
 
     # 标记完成(非长期任务)
     if not task.get("duration_days", false):
@@ -1134,7 +1241,10 @@ func _action_show_popup_notification(action: Dictionary, context: Dictionary = {
             "notification_ordinal": action.get("notification_ordinal", 1),
         }
 
-        emit_signal("sg_task_show_popup_msg", title, content)
+        if _current_tier == "main":
+            emit_signal("sg_task_show_main_popup_msg", title, content)
+        else:
+            emit_signal("sg_task_show_popup_msg", title, content)
 
 ## 渲染弹窗模板
 func _render_popup_template(template_name: String, default_title: String, context: Dictionary) -> Dictionary:

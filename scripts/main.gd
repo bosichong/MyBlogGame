@@ -92,6 +92,7 @@ func _ready() -> void:
     TaskManager.connect("sg_task_info_display_msg",sg_task_info_display_msg)
     TaskManager.connect("schedule_refresh_needed", _on_schedule_refresh_needed)
     TaskManager.connect("sg_task_show_popup_msg",sg_task_show_popup_msg)
+    TaskManager.connect("sg_task_show_main_popup_msg",sg_task_show_main_popup_msg)
     TaskManager.connect("sg_task_show_choice_event", sg_task_show_choice_event)
     Blogger.connect("sg_info_msg", sg_task_info_display_msg)
     Blogger.connect("sg_event_triggered", _on_event_triggered)
@@ -158,7 +159,7 @@ func update_ui():
     $ui/top/h1/blog_level.text = "等级:"+str(Blogger.level) + "级"
     var tx = Utils.get_rank_title(Blogger.level,Strs.game_strs.头衔)
     $ui/top/h1/头衔.text = tx
-    $ui/top/h1/blog_stamina.text = "体力:"+str(Blogger.stamina)
+    $ui/top/h1/blog_stamina.text = "体力:%d/%d" % [Blogger.stamina, Utils.get_max_stamina(Blogger.level)]
     $ui/top/h1/blog_money.text = "钱:%.2f" % Blogger.money
     $ui/top/h1/date.text = Utils.get_time_string(TimerManager.current_year, TimerManager.current_month, TimerManager.current_week, TimerManager.current_day,TimerManager.current_quarter)
     
@@ -194,6 +195,41 @@ func update_ui():
     $ui/r_panel/top/technicalProgressBar/Num.text = _format_ability(Blogger.technical_ability)
     $ui/r_panel/top/codeProgressBar/Num.text = _format_ability(Blogger.code_ability)
     $ui/r_panel/top/literatureProgressBar/Num.text = _format_ability(Blogger.literature_ability) 
+
+    _update_main_goal_hud()
+    _update_main_quest_progress()
+
+## 刷新顶部主线目标 HUD
+func _update_main_goal_hud() -> void:
+    var goal_label = $ui/top/chapter_goal
+    if not goal_label:
+        return
+    var goal = TaskManager.get_current_goal() if TaskManager else {}
+    if goal.is_empty():
+        goal_label.text = ""
+        return
+    var chapter_name = "第%d章" % goal.get("chapter", 1)
+    var text = "%s · 当前目标：%s" % [chapter_name, goal.get("guide", "")]
+    if goal.has("progress_text") and not goal.progress_text.is_empty():
+        text += "（%s）" % goal.progress_text
+    goal_label.text = text
+
+## 刷新主线任务完成度进度条（按当前章目标条数）
+func _update_main_quest_progress() -> void:
+    var bar = $ui/top/h3/Panel/ProgressBar
+    if not bar:
+        return
+    var prog = TaskManager.get_main_quest_progress() if TaskManager else {}
+    if prog.is_empty():
+        bar.max_value = 100
+        bar.value = 0
+        return
+    bar.max_value = 100
+    bar.value = prog.get("percent", 0.0)
+    var percent_label = $ui/top/h3/Panel/ProgressBar/quest_percent
+    if percent_label:
+        percent_label.text = "%.0f%%" % prog.get("percent", 0.0)
+    bar.tooltip_text = "第%d章主线进度：%d/%d" % [prog.get("chapter", 1), prog.get("completed", 0), prog.get("total", 0)]
 
 ## 游戏时间倍数运行控制
 func time_stop_bt():
@@ -302,9 +338,6 @@ func _on_day_ended():
         Blogger.views_calculator.daily_update()
     
     Blogger.daily_activities()
-    
-    # 每日自然恢复体力
-    Blogger.daily_stamina_recovery()
     
     # 友链申请结果检查
     _check_friendlink_applies()
@@ -570,6 +603,14 @@ func _on_skill_learned(skill_name: String, tip: String):
 func sg_task_show_popup_msg(title: String, content: String):
 
     show_popup_message(title, content)
+
+## 主线里程碑弹窗：差异化强调（专属音效 + 顶部横幅 + 弹窗）
+func sg_task_show_main_popup_msg(title: String, content: String):
+    Sfx.play("main_complete")
+    $Toast.add_toast("📌 主线里程碑", "你完成了主线目标！", $Toast.Tone.TITLE, "main_goal")
+    show_popup_message("📌 主线 · " + title, content)
+    _update_main_goal_hud()
+    _update_main_quest_progress()
 
 ## 显示多选事件弹窗（Obaby 等剧情事件）
 func sg_task_show_choice_event(title: String, content: String, choices: Array, event_id: String) -> void:

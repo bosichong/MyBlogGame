@@ -399,6 +399,60 @@ const SKILL_PROGRESS_CONFIG: Dictionary = {
 }
 
 ## ============================================================
+## 主线目标链（用于顶部 HUD 常驻指引与节奏感）
+## 每个目标：chapter=所属章节, milestone=对应里程碑, guide=引导文案
+## progress 可选：{target, getter} getter 为 TaskManager 上的读取函数名，用于显示 x/target
+## ============================================================
+
+const MAIN_QUEST: Array = [
+    # ---------- 第一章：博客启蒙期（2002-2005） ----------
+    {"chapter": 1, "milestone": "first_article_posted", "guide": "发表你的第一篇博文"},
+    {"chapter": 1, "milestone": "sousuo_indexed", "guide": "累计发布10篇文章，等待搜索引擎收录"},
+    {"chapter": 1, "milestone": "blog_union_joined", "guide": "提升SEO到100，加入博客江湖联盟"},
+    {"chapter": 1, "milestone": "first_friend_link", "guide": "在博客江湖中结识第一位友链"},
+    {"chapter": 1, "milestone": "rss_enabled", "guide": "开通RSS订阅，迎来第一批订阅者"},
+    {"chapter": 1, "milestone": "first_article_favorited", "guide": "写出值得收藏的文章，获得第一次收藏"},
+    {"chapter": 1, "milestone": "first_income", "guide": "加入广告联盟，收获第一笔广告收益"},
+    {"chapter": 1, "milestone": "icp_filing_done", "guide": "完成网站ICP备案"},
+    {"chapter": 1, "milestone": "year_summary_2005", "guide": "发布2005年度总结，完成四年回顾"},
+
+    # ---------- 第二章：博客黄金期（2005-2010） ----------
+    {"chapter": 2, "milestone": "literature_weekly", "guide": "发布文学周刊，深耕文字创作"},
+    {"chapter": 2, "milestone": "code_weekly", "guide": "发布程序员周刊，分享技术思考"},
+    {"chapter": 2, "milestone": "rss_100", "guide": "让RSS订阅突破100人",
+     "progress": {"target": 100, "getter": "get_rss_count"}},
+    {"chapter": 2, "milestone": "income_1000", "guide": "让累计广告收益突破1000元",
+     "progress": {"target": 1000, "getter": "get_total_income"}},
+    {"chapter": 2, "milestone": "year_summary_2010", "guide": "发布2010年度总结，完成五年回顾"},
+
+    # ---------- 第三章：博客转型期（2010-2015） ----------
+    {"chapter": 3, "milestone": "mobile_adapted", "guide": "完成网站移动端适配"},
+    {"chapter": 3, "milestone": "viral_article", "guide": "创作一篇爆款网文，让博客声名远扬"},
+    {"chapter": 3, "milestone": "geek_frontier", "guide": "发布极客前沿，紧跟技术浪潮"},
+    {"chapter": 3, "milestone": "wechat_public", "guide": "开通公众号，开拓新内容阵地"},
+    {"chapter": 3, "milestone": "followers_1000", "guide": "让公众号粉丝突破1000",
+     "progress": {"target": 1000, "getter": "get_wechat_followers"}},
+    {"chapter": 3, "milestone": "https_upgraded", "guide": "完成HTTPS安全升级"},
+    {"chapter": 3, "milestone": "novel_first_post", "guide": "发布第一篇小说连载，开启长篇创作"},
+    {"chapter": 3, "milestone": "novel_ip_authorized", "guide": "让小说获得IP授权"},
+    {"chapter": 3, "milestone": "hacker_first_post", "guide": "发布第一篇黑客攻防教程"},
+    {"chapter": 3, "milestone": "hacker_course_authorized", "guide": "让黑客攻防教程获得课程授权"},
+    {"chapter": 3, "milestone": "year_summary_2015", "guide": "发布2015年度总结，完成五年回顾"},
+
+    # ---------- 第四章：博客挑战期（2015-2020） ----------
+    {"chapter": 4, "milestone": "book_published", "guide": "出版你的第一本畅销书"},
+    {"chapter": 4, "milestone": "open_source_start", "guide": "发布你的第一个开源项目"},
+    {"chapter": 4, "milestone": "cdn_enabled", "guide": "部署CDN加速，提升全球访问速度"},
+    {"chapter": 4, "milestone": "ai_preview", "guide": "迎接AI时代的到来"},
+    {"chapter": 4, "milestone": "year_summary_2020", "guide": "发布2020年度总结，完成五年回顾"},
+
+    # ---------- 第五章：博客重塑期（2020-2025） ----------
+    {"chapter": 5, "milestone": "ai_consciousness", "guide": "完成5个开源项目，解锁贾维斯计划"},
+    {"chapter": 5, "milestone": "philosophy_glimmer", "guide": "出版6本畅销书，开启沉思录"},
+    {"chapter": 5, "milestone": "game_dev_start", "guide": "出版3本书并完成3个开源项目，启动游戏开发"},
+]
+
+## ============================================================
 ## 任务定义
 ## ============================================================
 
@@ -608,6 +662,7 @@ const TASKS: Array = [
     {
         "id": "literature_unlock_20",
         "description": "文学能力值达到20，解锁文学2级技能",
+        "tier": "minor",
         "conditions": ["literature_value_ge_20"],
         "trigger_type": "skill_up",
         "is_repeatable": false,
@@ -666,6 +721,7 @@ const TASKS: Array = [
     {
         "id": "literature_post_unlock_20",
         "description": "文学能力值达到20，解锁散文随笔文章类型",
+        "tier": "minor",
         "conditions": ["literature_value_ge_20"],
         "trigger_type": "skill_up",
         "is_repeatable": false,
@@ -686,6 +742,7 @@ const TASKS: Array = [
     {
         "id": "literature_weekly_milestone",
         "description": "发布文学周刊，获得奖励并标记第二章里程碑",
+        "tier": "main",
         "conditions": ["literature_weekly_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "文学周刊",
@@ -869,6 +926,7 @@ const TASKS: Array = [
     {
         "id": "code_weekly_milestone",
         "description": "发布程序员周刊，获得奖励并标记第二章里程碑",
+        "tier": "main",
         "conditions": ["code_weekly_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "程序员周刊",
@@ -882,6 +940,7 @@ const TASKS: Array = [
     {
         "id": "rss_100_milestone",
         "description": "RSS订阅突破百人，标记第二章里程碑",
+        "tier": "main",
         "conditions": ["rss_ge_100", "rss_100_not_completed"],
         "trigger_type": "time_check",
         "is_repeatable": false,
@@ -893,6 +952,7 @@ const TASKS: Array = [
     {
         "id": "income_1000_milestone",
         "description": "累计收益突破千元，标记第二章里程碑",
+        "tier": "main",
         "conditions": ["income_ge_1000", "income_1000_not_completed"],
         "trigger_type": "time_check",
         "is_repeatable": false,
@@ -907,6 +967,7 @@ const TASKS: Array = [
     {
         "id": "viral_article_milestone",
         "description": "发布爆款网文，标记第3章里程碑",
+        "tier": "main",
         "conditions": ["viral_article_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "爆款网文",
@@ -922,6 +983,7 @@ const TASKS: Array = [
     {
         "id": "advanced_tutorial_milestone",
         "description": "发布深度技术文章，标记第3章里程碑",
+        "tier": "main",
         "conditions": ["advanced_tutorial_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "深度技术",
@@ -937,6 +999,7 @@ const TASKS: Array = [
     {
         "id": "philosophy_critique_milestone",
         "description": "发布哲学批判文章，标记第3章里程碑",
+        "tier": "main",
         "conditions": ["philosophy_critique_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "哲学批判",
@@ -952,6 +1015,7 @@ const TASKS: Array = [
     {
         "id": "geek_frontier_milestone",
         "description": "发布极客前沿文章，标记第3章里程碑",
+        "tier": "main",
         "conditions": ["geek_frontier_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "极客前沿",
@@ -967,6 +1031,7 @@ const TASKS: Array = [
     {
         "id": "novel_first_post_milestone",
         "description": "发布第一篇小说连载，标记第三章里程碑",
+        "tier": "main",
         "conditions": ["novel_first_post_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "小说连载(付费)",
@@ -998,6 +1063,7 @@ const TASKS: Array = [
     {
         "id": "novel_ip_authorized_milestone",
         "description": "小说获得IP授权，标记第三章里程碑",
+        "tier": "main",
         "conditions": ["novel_ip_authorized_not_completed"],
         "trigger_type": "novel_ip_authorized",
         "is_repeatable": false,
@@ -1013,6 +1079,7 @@ const TASKS: Array = [
     {
         "id": "hacker_first_post_milestone",
         "description": "发布第一篇黑客攻防，标记第三章里程碑",
+        "tier": "main",
         "conditions": ["hacker_first_post_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "黑客攻防(付费)",
@@ -1044,6 +1111,7 @@ const TASKS: Array = [
     {
         "id": "hacker_course_authorized_milestone",
         "description": "黑客攻防获得课程授权，标记第三章里程碑",
+        "tier": "main",
         "conditions": ["hacker_course_authorized_not_completed"],
         "trigger_type": "hacker_course_authorized",
         "is_repeatable": false,
@@ -1126,6 +1194,7 @@ const TASKS: Array = [
     {
         "id": "unlock_blogging_start",
         "description": "第一篇博文发布成功，博客运营正式开始！",
+        "tier": "main",
         "conditions": ["first_post_eq_1", "first_article_not_done"],
         "is_repeatable": false,
         "trigger_type": "post_event",
@@ -1172,6 +1241,7 @@ const TASKS: Array = [
     {
         "id": "blog_union_unlock",
         "description": "SEO值达到100，解锁博客联盟",
+        "tier": "main",
         "conditions": ["seo_value_eq_100", "blog_union_not_joined"],
         "is_repeatable": false,
         "trigger_type": "time_check",
@@ -1183,6 +1253,7 @@ const TASKS: Array = [
     {
         "id": "first_friend_link",
         "description": "获得第一个友情链接",
+        "tier": "main",
         "conditions": ["first_friend_link_not_done", "friend_link_added"],
         "is_repeatable": false,
         "trigger_type": "friendlink_added",
@@ -1196,6 +1267,7 @@ const TASKS: Array = [
     {
         "id": "first_ad_income",
         "description": "加入广告联盟并收到第一笔广告收益",
+        "tier": "main",
         "conditions": ["first_ad_income_not_done"],
         "is_repeatable": false,
         "trigger_type": "ad_income_paid",
@@ -1209,6 +1281,7 @@ const TASKS: Array = [
     {
         "id": "rss_enabled",
         "description": "开通RSS订阅：获得第一批订阅者",
+        "tier": "main",
         "conditions": ["rss_enabled_not_done"],
         "is_repeatable": false,
         "trigger_type": "rss_subscribe",
@@ -1222,6 +1295,7 @@ const TASKS: Array = [
     {
         "id": "first_article_favorited",
         "description": "第一次文章收藏：获得第一篇文章收藏",
+        "tier": "main",
         "conditions": ["first_article_favorited_not_done"],
         "is_repeatable": false,
         "trigger_type": "article_favorited",
@@ -1248,6 +1322,7 @@ const TASKS: Array = [
     {
         "id": "icp_filing_complete",
         "description": "ICP备案完成：获得备案号",
+        "tier": "main",
         "conditions": ["icp_filing_in_progress"],
         "is_repeatable": false,
         "trigger_type": "icp_filing_complete",
@@ -1297,6 +1372,7 @@ const TASKS: Array = [
     {
         "id": "chapter1_end_2005_review",
         "description": "2005年度总结发布，完成四年回顾，第一章结束",
+        "tier": "main",
         "conditions": ["year_summary_2005_posted"],
         "trigger_type": "post_event",
         "post_type_filter": "年度总结",
@@ -1328,6 +1404,7 @@ const TASKS: Array = [
     {
         "id": "chapter2_end_2010_review",
         "description": "2010年度总结发布，完成五年回顾，第二章结束",
+        "tier": "main",
         "conditions": ["year_summary_2010_posted"],
         "trigger_type": "post_event",
         "post_type_filter": "年度总结",
@@ -1359,6 +1436,7 @@ const TASKS: Array = [
     {
         "id": "chapter3_end_2015_review",
         "description": "2015年度总结发布，完成五年回顾，第三章结束",
+        "tier": "main",
         "conditions": ["year_summary_2015_posted"],
         "trigger_type": "post_event",
         "post_type_filter": "年度总结",
@@ -1390,6 +1468,7 @@ const TASKS: Array = [
     {
         "id": "chapter4_end_2020_review",
         "description": "2020年度总结发布，完成五年回顾，第四章结束",
+        "tier": "main",
         "conditions": ["year_summary_2020_posted"],
         "trigger_type": "post_event",
         "post_type_filter": "年度总结",
@@ -1653,6 +1732,7 @@ const TASKS: Array = [
     {
         "id": "seo_indexed_notification",
         "description": "博客文章被搜索引擎收录，提醒玩家SEO的重要性",
+        "tier": "main",
         "conditions": ["article_count_ge_10", "sousuo_not_indexed"],
         "trigger_type": "post_event",
         "is_repeatable": false,
@@ -1905,6 +1985,7 @@ const TASKS: Array = [
     {
         "id": "followers_1000_milestone",
         "description": "公众号粉丝突破1000，标记第三章里程碑",
+        "tier": "main",
         "conditions": ["followers_ge_1000", "followers_1000_not_completed"],
         "trigger_type": "time_check",
         "is_repeatable": false,
@@ -2041,6 +2122,7 @@ const TASKS: Array = [
     {
         "id": "book_publish_complete",
         "description": "出版畅销书完成全部流程，标记第4章里程碑",
+        "tier": "main",
         "conditions": ["book_published_not_completed"],
         "trigger_type": "book_publish_complete",
         "is_repeatable": false,
@@ -2055,6 +2137,7 @@ const TASKS: Array = [
     {
         "id": "open_source_complete",
         "description": "开源项目获得厂商赞助，标记第4章里程碑",
+        "tier": "main",
         "conditions": ["open_source_start_not_completed"],
         "trigger_type": "open_source_complete",
         "is_repeatable": false,
@@ -2069,6 +2152,7 @@ const TASKS: Array = [
     {
         "id": "book_notes_milestone",
         "description": "发布出书笔记，标记第4章里程碑",
+        "tier": "main",
         "conditions": ["book_notes_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "出书笔记",
@@ -2085,6 +2169,7 @@ const TASKS: Array = [
     {
         "id": "os_notes_milestone",
         "description": "发布开源维护笔记，标记第4章里程碑",
+        "tier": "main",
         "conditions": ["os_notes_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "开源维护笔记",
@@ -2101,6 +2186,7 @@ const TASKS: Array = [
     {
         "id": "unlock_jarvis_project",
         "description": "完成5个开源项目且进入2025年，解锁贾维斯计划日程",
+        "tier": "main",
         "conditions": ["open_source_ge_5", "time_year_2025"],
         "trigger_type": "time_check",
         "is_repeatable": false,
@@ -2116,6 +2202,7 @@ const TASKS: Array = [
     {
         "id": "unlock_contemplation",
         "description": "出版6本畅销书，解锁沉思录日程",
+        "tier": "main",
         "conditions": ["book_publish_ge_6"],
         "trigger_type": "time_check",
         "is_repeatable": false,
@@ -2131,6 +2218,7 @@ const TASKS: Array = [
     {
         "id": "unlock_game_dev",
         "description": "出版3本畅销书且完成3个开源项目，解锁游戏开发日程",
+        "tier": "main",
         "conditions": ["book_publish_ge_3", "open_source_ge_3"],
         "trigger_type": "time_check",
         "is_repeatable": false,
@@ -2166,3 +2254,7 @@ static func get_skill_progress(skill_name: String) -> Dictionary:
 ## 获取条件配置
 static func get_condition(cond_id: String) -> Dictionary:
     return CONDITIONS.get(cond_id, {})
+
+## 获取主线目标链
+static func get_main_quest() -> Array:
+    return MAIN_QUEST
