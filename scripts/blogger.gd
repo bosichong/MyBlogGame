@@ -1439,7 +1439,10 @@ signal sg_new_blog_post(category: String)
 func simulate_new_blog_post(category) -> int:
     # ===== 欠费暂停检查 =====
     if Yun.is_blog_suspended():
-        emit_signal("no_stamina_signal", "博客因欠费暂停运营,请先续费域名或主机!")
+        if Yun.is_provider_runaway_active():
+            emit_signal("no_stamina_signal", "服务商跑路失联,网站无法访问,请尽快更换服务商!")
+        else:
+            emit_signal("no_stamina_signal", "博客因欠费暂停运营,请先续费域名或主机!")
         return 0
 
     # 这里可以根据作者的写作、技术能力来决定文章的质量,体力决定是否能发布文章。

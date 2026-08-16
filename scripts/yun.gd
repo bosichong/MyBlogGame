@@ -8,6 +8,15 @@ signal suspend_warning(message)
 signal game_over(suspend_days)
 signal domain_renewal_reminder(days_left: int)
 signal host_renewal_reminder(days_left: int)
+# 厂商系统信号
+signal provider_appeared(provider_name: String)
+signal provider_runaway(provider_name: String)
+signal provider_runaway_active(provider_name: String)
+signal runaway_warning(message: String)
+signal runaway_seo_wiped(provider_name: String)
+
+# 默认服务商
+const DEFAULT_PROVIDER_ID = "yunqi"
 
 # 定义域名费用常量
 const DOMAIN_RENEWAL_COST = 80.0  # 可以根据实际需求修改这个数值
@@ -22,10 +31,252 @@ var domain_info = {
 func _ready():
     # 初始化系统 - 赠送一年免费套餐
     initialize_free_package()
+    # 预掷小公司随机日程
+    _roll_provider_schedules()
     # 游戏启动时检查一次状态
     var today = Utils.format_date()
     check_domain_expiration(today)
     check_server_package_expiration(today)
+
+######################
+# 服务商选择系统
+######################
+
+# 厂商状态枚举
+enum ProviderStatus {
+    LOCKED = 0,
+    ACTIVE = 1,
+    RUNAWAY = 2,
+}
+
+# 当前选中的服务商
+var provider_id: String = DEFAULT_PROVIDER_ID
+# 小公司随机日程：id -> {appear_date, runaway_date, appeared, runaway}
+var _provider_schedule: Dictionary = {}
+# 大公司上线播报标记（避免重复弹窗）
+var _provider_big_announced: Dictionary = {}
+# 正在使用的厂商跑路失联
+var runaway_provider_id: String = ""
+var runaway_start_date: String = ""
+# SEO 清零是否已触发
+var _runaway_seo_wiped: bool = false
+
+## 获取厂商列表
+func get_providers() -> Array:
+    var inst = GDManager.get_yun_providers()
+    if inst:
+        return inst.providers
+    return []
+
+## 按 id 获取厂商字典
+func get_provider_by_id(pid: String) -> Dictionary:
+    for p in get_providers():
+        if p.get("id") == pid:
+            return p
+    return {}
+
+## 获取当前厂商
+func get_current_provider() -> Dictionary:
+    return get_provider_by_id(provider_id)
+
+## 预掷小公司出现/跑路日程
+func _roll_provider_schedules():
+    _provider_schedule = {}
+    _provider_big_announced = {}
+    _runaway_seo_wiped = false
+    for p in get_providers():
+        if p.get("is_small", false):
+            var appear_range: Array = p.get("appear_year_range", [])
+            var lifespan_range: Array = p.get("lifespan_months_range", [])
+            var appear_year = randi_range(int(appear_range[0]), int(appear_range[1]))
+            var appear_month = randi_range(1, 12)
+            var appear_week = randi_range(1, 4)
+            var appear_day = randi_range(1, 7)
+            var appear_date = "%d-%d-%d-%d" % [appear_year, appear_month, appear_week, appear_day]
+            var lifespan_months = randi_range(int(lifespan_range[0]), int(lifespan_range[1]))
+            var runaway_date = add_months_to_date(appear_date, lifespan_months)
+            _provider_schedule[p.get("id")] = {
+                "appear_date": appear_date,
+                "runaway_date": runaway_date,
+                "appeared": false,
+                "runaway": false,
+            }
+
+## 给日期增加月份（游戏月份统一 4 周）
+func add_months_to_date(date_str: String, months: int) -> String:
+    var parts = date_str.split("-")
+    var total_months = int(parts[1]) - 1 + months
+    var year = int(parts[0]) + int(total_months / 12)
+    var month = total_months % 12 + 1
+    return "%d-%d-%d-%d" % [year, month, int(parts[2]), int(parts[3])]
+
+## 判断年份月份是否已到达
+func _is_year_month_reached(year: int, month: int) -> bool:
+    return TimerManager.current_year > year or (TimerManager.current_year == year and TimerManager.current_month >= month)
+
+## 获取厂商状态
+func get_provider_status(pid: String) -> Dictionary:
+    var p = get_provider_by_id(pid)
+    if p.is_empty():
+        return {"status": ProviderStatus.LOCKED, "info": ""}
+    if p.get("is_small", false):
+        var sch = _provider_schedule.get(pid, {})
+        if sch.get("runaway", false):
+            return {"status": ProviderStatus.RUNAWAY, "info": "已跑路失联"}
+        if not sch.get("appeared", false):
+            return {"status": ProviderStatus.LOCKED, "info": "上线时间未知"}
+        return {"status": ProviderStatus.ACTIVE, "info": "营业中"}
+    var launch_year = int(p.get("launch_year", 2001))
+    var launch_month = int(p.get("launch_month", 1))
+    if not _is_year_month_reached(launch_year, launch_month):
+        return {"status": ProviderStatus.LOCKED, "info": "%d年%d月上线" % [launch_year, launch_month]}
+    return {"status": ProviderStatus.ACTIVE, "info": "营业中"}
+
+## 厂商是否可选
+func is_provider_available(pid: String) -> bool:
+    return get_provider_status(pid).status == ProviderStatus.ACTIVE
+
+## 切换服务商，返回是否成功
+func set_provider(pid: String) -> bool:
+    if not is_provider_available(pid):
+        return false
+    provider_id = pid
+    # 如果离开的是失联中的厂商，恢复正常
+    if is_provider_runaway_active() or (runaway_provider_id != "" and provider_id != runaway_provider_id):
+        _clear_runaway()
+    return true
+
+## 获取指定服务商的域名价格
+func get_provider_domain_price(pid: String) -> float:
+    var p = get_provider_by_id(pid)
+    return float(p.get("domain_price", DOMAIN_RENEWAL_COST))
+
+## 获取指定服务商的指定套餐年费
+func get_provider_package_cost(pid: String, package_type: PackageType) -> float:
+    var base_cost = 0.0
+    if PACKAGE_DEFINITIONS.has(package_type):
+        base_cost = PACKAGE_DEFINITIONS[package_type]["cost"]
+    var p = get_provider_by_id(pid)
+    var mult = float(p.get("host_multiplier", 1.0))
+    return round(base_cost * mult * 100.0) / 100.0
+
+## 更换服务商：域名与主机按新服务商价格重新续费一年，原有剩余时间作废
+func switch_provider(pid: String) -> Dictionary:
+    var p = get_provider_by_id(pid)
+    if p.is_empty():
+        return {"success": false, "message": "服务商不存在", "error_code": "NOT_FOUND"}
+    if not is_provider_available(pid):
+        return {"success": false, "message": "该服务商当前不可用", "error_code": "NOT_AVAILABLE"}
+    if pid == provider_id:
+        return {"success": false, "message": "当前已是该服务商", "error_code": "SAME_PROVIDER"}
+    var domain_cost = get_provider_domain_price(pid)
+    var host_cost = get_provider_package_cost(pid, server_package.type)
+    var total_cost = domain_cost + host_cost
+    if Blogger.money < total_cost:
+        return {
+            "success": false,
+            "message": "余额不足，更换服务商需 %.2f 元（域名 %.2f 元 + 主机 %.2f 元）" % [total_cost, domain_cost, host_cost],
+            "error_code": "INSUFFICIENT_FUNDS",
+            "total_cost": total_cost
+        }
+    Blogger.money -= total_cost
+    var current_date = Utils.format_date()
+    # 域名重新续费一年，原有剩余时间作废
+    domain_info.start_time = current_date
+    domain_info.end_time = add_years_to_date(current_date, 1)
+    domain_info.is_active = true
+    _domain_reminder_active = false
+    # 主机重新续费一年，原有剩余时间作废
+    server_package.start_time = current_date
+    server_package.end_time = add_years_to_date(current_date, 1)
+    server_package.is_active = true
+    _host_reminder_active = false
+    # 域名主机均已续费，如有欠费暂停则解除
+    if is_suspended:
+        var penalty_info = calculate_suspend_penalty()
+        if not penalty_info.is_game_over:
+            start_recovery(penalty_info.views_penalty, penalty_info.recovery_days, current_date)
+            clear_suspend_status()
+    # 切换服务商
+    provider_id = pid
+    if is_provider_runaway_active() or (runaway_provider_id != "" and provider_id != runaway_provider_id):
+        _clear_runaway()
+    return {
+        "success": true,
+        "message": "更换服务商成功",
+        "provider_name": p.get("name"),
+        "domain_cost": domain_cost,
+        "host_cost": host_cost,
+        "total_cost": total_cost,
+        "remaining_balance": Blogger.money,
+        "new_end_time": domain_info.end_time
+    }
+
+## 是否处于厂商跑路失联状态
+func is_provider_runaway_active() -> bool:
+    return runaway_provider_id != "" and provider_id == runaway_provider_id
+
+## 清除跑路失联状态
+func _clear_runaway():
+    runaway_provider_id = ""
+    runaway_start_date = ""
+    _runaway_seo_wiped = false
+
+## 当前厂商域名续费价格
+func get_domain_renewal_cost() -> float:
+    var p = get_current_provider()
+    return float(p.get("domain_price", DOMAIN_RENEWAL_COST))
+
+## 每日检查厂商上线/跑路
+func _check_provider_appearance(today: String):
+    for p in get_providers():
+        var pid: String = p.get("id")
+        var pname: String = p.get("name")
+        if p.get("is_small", false):
+            if not _provider_schedule.has(pid):
+                continue
+            var sch = _provider_schedule[pid]
+            if not sch.appeared:
+                if Utils.calculate_new_game_time_difference(sch.appear_date, today, false) >= 1:
+                    sch.appeared = true
+                    # 若出现的同时跑路日期也已到达（存档加载时点已过），不重复播报上线
+                    if Utils.calculate_new_game_time_difference(sch.runaway_date, today, false) < 1:
+                        emit_signal("provider_appeared", pname)
+            if sch.appeared and not sch.runaway:
+                if Utils.calculate_new_game_time_difference(sch.runaway_date, today, false) >= 1:
+                    sch.runaway = true
+                    emit_signal("provider_runaway", pname)
+                    if provider_id == pid:
+                        runaway_provider_id = pid
+                        runaway_start_date = today
+                        _runaway_seo_wiped = false
+                        emit_signal("provider_runaway_active", pname)
+        else:
+            var launch_year = int(p.get("launch_year", 2001))
+            var launch_month = int(p.get("launch_month", 1))
+            if _is_year_month_reached(launch_year, launch_month) and not _provider_big_announced.has(pid):
+                _provider_big_announced[pid] = true
+                # 仅在刚到达上线月份时提示，避免存档加载后重复播报
+                if TimerManager.current_year == launch_year and TimerManager.current_month == launch_month:
+                    emit_signal("provider_appeared", pname)
+
+## 每日检查跑路失联倒计时
+func _check_runaway(today: String):
+    if runaway_provider_id == "":
+        return
+    if provider_id != runaway_provider_id:
+        _clear_runaway()
+        return
+    var pname: String = get_provider_by_id(runaway_provider_id).get("name", runaway_provider_id)
+    var days = Utils.calculate_new_game_time_difference(runaway_start_date, today, false)
+    if days == 5:
+        emit_signal("runaway_warning", "服务商「%s」已失联%d天，还剩2天必须更换服务商，否则SEO将清零！" % [pname, days])
+    if days >= 7 and not _runaway_seo_wiped:
+        _runaway_seo_wiped = true
+        var blogger = GDManager.get_blogger()
+        if blogger:
+            blogger.seo_value = 0
+        emit_signal("runaway_seo_wiped", pname)
 
 func day_fs():
     """每日检查域名状态"""
@@ -52,6 +303,10 @@ func day_fs():
     # 到期前提醒检查
     _check_domain_reminder(today)
     _check_host_reminder(today)
+    
+    # 服务商上线/跑路检查
+    _check_provider_appearance(today)
+    _check_runaway(today)
 
 func check_domain_expiration(today: String):
     """检查域名是否到期"""
@@ -66,8 +321,9 @@ func check_domain_expiration(today: String):
 
 func renew_domain(duration_years: int = 1) -> Dictionary:
     """续费域名，返回续费结果信息"""
+    var domain_cost = get_domain_renewal_cost()
     # 检查账户余额是否足够
-    if Blogger.money < DOMAIN_RENEWAL_COST:
+    if Blogger.money < domain_cost:
         return {
             "success": false,
             "message": "账户余额不足，无法续费域名",
@@ -83,7 +339,7 @@ func renew_domain(duration_years: int = 1) -> Dictionary:
         }
     
     # 扣除费用
-    Blogger.money -= DOMAIN_RENEWAL_COST
+    Blogger.money -= domain_cost
     
     # 更新域名信息
     var current_date = Utils.format_date()
@@ -401,10 +657,13 @@ func renew_server_package(duration_years: int = 1) -> Dictionary:
     }
 
 func get_package_cost(package_type: PackageType) -> float:
-    """获取套餐费用"""
+    """获取套餐费用（按当前服务商价格系数换算）"""
+    var base_cost = 0.0
     if PACKAGE_DEFINITIONS.has(package_type):
-        return PACKAGE_DEFINITIONS[package_type]["cost"]
-    return PACKAGE_DEFINITIONS[PackageType.FREE]["cost"]
+        base_cost = PACKAGE_DEFINITIONS[package_type]["cost"]
+    var p = get_current_provider()
+    var mult = float(p.get("host_multiplier", 1.0))
+    return round(base_cost * mult * 100.0) / 100.0
 
 func get_server_package_status() -> Dictionary:
     """获取服务器套餐状态"""
@@ -666,8 +925,8 @@ func check_suspend_status(today: String):
 
 func is_blog_suspended() -> bool:
     """判断博客是否暂停"""
-    # 域名或主机任一项欠费 → 博客暂停
-    return is_suspended or not domain_info.is_active or not server_package.is_active
+    # 域名或主机任一项欠费 → 博客暂停；服务商跑路失联同样暂停
+    return is_suspended or not domain_info.is_active or not server_package.is_active or is_provider_runaway_active()
 
 func calculate_suspend_penalty() -> Dictionary:
     """根据欠费天数计算惩罚梯度"""

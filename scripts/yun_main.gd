@@ -5,6 +5,7 @@ var server_package = Yun.server_package
 var data_security = Yun.data_security
 var network_security = Yun.network_security
 @onready var jh_label = $"bg/选项组/sc1/VBoxContainer/Label2" #域名主机服务商简介
+@onready var jh_title_label = $"bg/选项组/sc1/VBoxContainer/Label" #域名主机服务商标题
 @onready var domain_label = $"bg/选项组/sc2/VBoxContainer/Label2" #域名信息展示
 @onready var server_label = $"bg/选项组/sc2/VBoxContainer/Label4" #服务器信息展示
 @onready var gc = $"bg/选项组/sc2/VBoxContainer/GridContainer" #
@@ -18,7 +19,19 @@ var network_security = Yun.network_security
     $"bg/选项组/sc5",
     $"bg/选项组/sc6",
     $"bg/选项组/sc7",
+    $"bg/选项组/sc8",
 ] 
+
+@onready var provider_list_box = $"bg/选项组/sc8/d8/provider_list"
+@onready var provider_name_label = $"bg/选项组/sc8/d8/provider_detail/detail_vb/provider_name"
+@onready var provider_price_label = $"bg/选项组/sc8/d8/provider_detail/detail_vb/provider_price"
+@onready var provider_status_label = $"bg/选项组/sc8/d8/provider_detail/detail_vb/provider_status"
+@onready var provider_desc_label = $"bg/选项组/sc8/d8/provider_detail/detail_vb/provider_desc" 
+
+var _pending_provider_id := ""
+var _selected_provider_id := ""
+var _cancel_btn: Button = null 
+@onready var switch_btn = $"bg/选项组/sc8/d8/switch_btn"
 
 @onready var buttons: Array[Button] = [
     $"bg/按钮组/vb/mc1/b1",
@@ -28,36 +41,50 @@ var network_security = Yun.network_security
     $"bg/按钮组/vb/mc5/b5",
     $"bg/按钮组/vb/mc6/b6",
     $"bg/按钮组/vb/mc7/b7",
+    $"bg/按钮组/vb/mc8/b8",
 ]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+    $AcceptDialog.confirmed.connect(_on_accept_dialog_confirmed)
+    $AcceptDialog.custom_action.connect(_on_accept_dialog_custom_action)
+    switch_btn.pressed.connect(_on_switch_btn_pressed)
     on_show_panel()
     
 
 
     
 func on_show_panel():
-    jh_label.text = Strs.yun.云起网络域名简介
-    jh_label.set_autowrap_mode(TextServer.AUTOWRAP_WORD_SMART)
+    _selected_provider_id = Yun.provider_id
     $"bg/选项组/sc3/VBoxContainer/Label2".text = Strs.yun.数据安全简介
     $"bg/选项组/sc3/VBoxContainer/Label2".set_autowrap_mode(TextServer.AUTOWRAP_WORD_SMART)
     $"bg/选项组/sc3/VBoxContainer/Label5".text = Strs.yun.网络安全简介
     $"bg/选项组/sc3/VBoxContainer/Label5".set_autowrap_mode(TextServer.AUTOWRAP_WORD_SMART)
     create_package_list_ui(gc)
-    
-    # ===== 显示暂停状态 =====
+    create_provider_list_ui()
+    refresh_provider_detail()
+    update_renew_buttons()
+    _update_provider_labels()
+
+func _update_provider_labels():
+    """根据当前服务商刷新域名主机面板数据（sc1简介/sc2域名主机信息）"""
+    var p = Yun.get_current_provider()
+    if p.is_empty():
+        return
+    jh_title_label.text = p.get("name") + "域名"
+    jh_label.text = "【%s——域名主机服务商】\n%s" % [p.get("name"), p.get("desc", "")]
+    jh_label.set_autowrap_mode(TextServer.AUTOWRAP_WORD_SMART)
     var suspend_info = Yun.get_suspend_info()
     var suspend_status_text = ""
     if suspend_info.is_suspended:
         suspend_status_text = "\n⚠️ [暂停中] 已欠费 %d 天，请尽快续费！" % suspend_info.suspend_days
     
-    domain_label.text = "域名: " + domain_info.name + "  " + \
+    domain_label.text = "服务商: " + p.get("name") + "  域名: " + domain_info.name + "  " + \
                    "开始时间: " + domain_info.start_time + "  " + \
                    "结束时间: " + domain_info.end_time + "  " + \
                    "状态: " + ("正常" if domain_info.is_active else "❌ 过期") + suspend_status_text
                 
-    server_label.text = "主机: " + server_package.name + "  " + \
+    server_label.text = "服务商: " + p.get("name") + "  主机: " + server_package.name + "  " + \
                    "开始时间: " + server_package.start_time + "  " + \
                    "结束时间: " + server_package.end_time + "  " + \
                    "状态: " + ("正常" if server_package.is_active else "❌ 过期") + "  " + \
@@ -112,6 +139,11 @@ func _on_b_6_pressed() -> void:
 func _on_b_7_pressed() -> void:
     show_scroll_container(6)
     set_button_pressed(6)
+
+
+func _on_b_8_pressed() -> void:
+    show_scroll_container(7)
+    set_button_pressed(7)
 
 
 # 控制显示的方法
@@ -191,7 +223,7 @@ func create_package_list_ui(gc: GridContainer):
         create_single_package_ui(
             package_type, 
             package_info["name"],
-            package_info["cost"], 
+            Yun.get_package_cost(package_type), 
             package_info["traffic_limit"]
         )
 
@@ -283,6 +315,145 @@ func _on_change_package_pressed(package_type: int):
 func _on_refresh_ui():
     """刷新UI界面"""
     create_package_list_ui(gc)
+
+# ===== 服务商选择 UI =====
+
+func get_star_string(stars: int) -> String:
+    """根据星级生成 ★ 字符串"""
+    var text = ""
+    for i in range(5):
+        text += "★" if i < stars else "☆"
+    return text
+
+func create_provider_list_ui():
+    """创建服务商单选列表"""
+    for child in provider_list_box.get_children():
+        child.queue_free()
+    var group = ButtonGroup.new()
+    group.allow_unpress = false
+    var providers = Yun.get_providers()
+    for p in providers:
+        var pid: String = p.get("id")
+        var pname: String = p.get("name")
+        var status = Yun.get_provider_status(pid)
+        if status.status == Yun.ProviderStatus.LOCKED:
+            continue
+        var btn = CheckBox.new()
+        btn.button_group = group
+        btn.focus_mode = Control.FOCUS_NONE
+        match status.status:
+            Yun.ProviderStatus.ACTIVE:
+                btn.text = pname + "（营业中）"
+                if pid == Yun.provider_id:
+                    btn.button_pressed = true
+                btn.toggled.connect(_on_provider_toggled.bind(pid))
+            Yun.ProviderStatus.RUNAWAY:
+                btn.text = pname + "（已跑路）"
+                btn.disabled = true
+                btn.modulate = Color(0.6, 0.6, 0.6)
+                if pid == Yun.provider_id:
+                    btn.button_pressed = true
+        provider_list_box.add_child(btn)
+
+func _on_provider_toggled(checked: bool, pid: String):
+    if not checked:
+        return
+    _selected_provider_id = pid
+    refresh_provider_detail()
+
+func _on_switch_btn_pressed():
+    if _selected_provider_id == "" or _selected_provider_id == Yun.provider_id:
+        show_popup_message("提示", "已是当前服务商，无需更换")
+        return
+    _open_switch_confirm(_selected_provider_id)
+
+func _open_switch_confirm(pid: String):
+    _pending_provider_id = pid
+    var p = Yun.get_provider_by_id(pid)
+    if p.is_empty():
+        return
+    var domain_cost = Yun.get_provider_domain_price(pid)
+    var host_cost = Yun.get_provider_package_cost(pid, Yun.get_server_package_type())
+    var dlg = $AcceptDialog
+    dlg.title = "更换服务商"
+    dlg.dialog_text = "更换服务商为【%s】？\n\n将按新服务商价格重新续费：\n  域名一年：%.2f元\n  主机一年：%.2f元\n  合计：%.2f元\n\n原有剩余时间将作废，是否确认更换？" % [p.get("name"), domain_cost, host_cost, domain_cost + host_cost]
+    dlg.ok_button_text = "确认更换"
+    if _cancel_btn == null:
+        _cancel_btn = dlg.add_button("取消", true, "cancel")
+    else:
+        _cancel_btn.visible = true
+    dlg.set_size(Vector2i(480, 260))
+    dlg.popup_centered()
+
+func _on_accept_dialog_confirmed():
+    if _pending_provider_id == "":
+        return
+    var rst = Yun.switch_provider(_pending_provider_id)
+    _pending_provider_id = ""
+    if _cancel_btn != null:
+        _cancel_btn.visible = false
+    $AcceptDialog.ok_button_text = "确定"
+    if rst.success:
+        _selected_provider_id = Yun.provider_id
+        create_provider_list_ui()
+        refresh_provider_detail()
+        create_package_list_ui(gc)
+        update_renew_buttons()
+        _update_provider_labels()
+        show_popup_message("更换成功", "已切换至【%s】\n扣除费用：%.2f元（域名%.2f + 主机%.2f）\n域名/主机到期：%s\n剩余余额：%.2f元" % [rst.provider_name, rst.total_cost, rst.domain_cost, rst.host_cost, rst.new_end_time, rst.remaining_balance])
+    else:
+        _selected_provider_id = Yun.provider_id
+        create_provider_list_ui()
+        refresh_provider_detail()
+        show_popup_message("更换失败", rst.message)
+
+func _on_accept_dialog_custom_action(action: String):
+    if action == "cancel":
+        _pending_provider_id = ""
+        if _cancel_btn != null:
+            _cancel_btn.visible = false
+        $AcceptDialog.hide()
+        _selected_provider_id = Yun.provider_id
+        create_provider_list_ui()
+        refresh_provider_detail()
+
+func refresh_provider_detail():
+    """刷新服务商详情面板（显示当前选中服务商）"""
+    var pid = _selected_provider_id
+    if pid == "":
+        pid = Yun.provider_id
+    var p = Yun.get_provider_by_id(pid)
+    if p.is_empty():
+        return
+    provider_name_label.text = p.get("name") + "  " + get_star_string(int(p.get("stars", 0)))
+    var domain_cost = Yun.get_provider_domain_price(pid)
+    var all_packages = Yun.get_all_package_info()
+    var txt = "域名续费：%.2f元/年\n" % domain_cost
+    txt += "主机套餐年费：\n"
+    for package_type in range(6):
+        var pinfo = all_packages[package_type]
+        var cost = Yun.get_provider_package_cost(pid, package_type)
+        var limit_txt = "无限制" if pinfo["traffic_limit"] == -1 else str(pinfo["traffic_limit"]) + "万次/月"
+        txt += "  %s：%.2f元/年（月访问 %s）\n" % [pinfo["name"], cost, limit_txt]
+    provider_price_label.text = txt
+    provider_desc_label.text = p.get("desc", "")
+    provider_desc_label.set_autowrap_mode(TextServer.AUTOWRAP_WORD_SMART)
+    var status = Yun.get_provider_status(pid)
+    if pid == Yun.provider_id and Yun.is_provider_runaway_active():
+        provider_status_label.text = "❌ 当前服务商已跑路失联！网站无法访问，请立即更换其他服务商！"
+    elif status.status == Yun.ProviderStatus.RUNAWAY:
+        provider_status_label.text = "❌ 该服务商已跑路失联，不可使用"
+    elif p.get("is_small", false):
+        provider_status_label.text = "⚠️ 小型服务商，价格便宜但服务可能不稳定，随时可能跑路，请谨慎！"
+    else:
+        provider_status_label.text = ""
+
+func update_renew_buttons():
+    """更新续费按钮价格文案"""
+    var domain_cost = Yun.get_domain_renewal_cost()
+    $"bg/选项组/sc2/VBoxContainer/xfbut".text = "续费域名一年时间（%.0f元）" % domain_cost
+    var pkg_cost = Yun.get_package_cost(Yun.get_server_package_type())
+    $"bg/选项组/sc2/VBoxContainer/xfzj".text = "续费主机一年使用时间（%.0f元）" % pkg_cost
 
 
 

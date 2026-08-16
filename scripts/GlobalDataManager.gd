@@ -13,6 +13,7 @@ var data_configs = {
     "comment_templates": "res://data/comment_templates.gd",
     "safety_events": "res://data/safety_events.gd",
     "dialogue_characters": "res://data/dialogue_characters.gd",
+    "yun_providers": "res://data/yun_providers.gd",
 }
 
 # ===== 存储所有加载的数据 =====
@@ -98,6 +99,10 @@ func get_lm_members():
 ## 获取对话角色表
 func get_dialogue_characters():
     return loaded_data.get("dialogue_characters")
+
+## 获取域名主机服务商配置
+func get_yun_providers():
+    return loaded_data.get("yun_providers")
 
 ## 加载一部对白数据（路径 res://data/dialogue/xxx.gd）
 func load_dialogue(id: String, path: String) -> bool:

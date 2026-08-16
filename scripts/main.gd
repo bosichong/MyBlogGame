@@ -66,6 +66,11 @@ func _ready() -> void:
         Yun.connect("blog_suspended", _on_blog_suspended)
         Yun.connect("domain_renewal_reminder", _on_domain_renewal_reminder)
         Yun.connect("host_renewal_reminder", _on_host_renewal_reminder)
+        Yun.connect("provider_appeared", _on_provider_appeared)
+        Yun.connect("provider_runaway", _on_provider_runaway)
+        Yun.connect("provider_runaway_active", _on_provider_runaway_active)
+        Yun.connect("runaway_warning", _on_suspend_warning)
+        Yun.connect("runaway_seo_wiped", _on_runaway_seo_wiped)
     
     if Blogger:
         Blogger.connect("sg_traffic_warning", _on_traffic_warning)
@@ -294,6 +299,7 @@ func _on_close_lm():
 
 func _on_open_yun():
     $yun_main.visible = true
+    $yun_main.on_show_panel()
     TimerManager.stop_timer()
     
 func _on_close_yun():
@@ -722,6 +728,28 @@ func _on_domain_renewal_reminder(days_left: int):
 
 func _on_host_renewal_reminder(days_left: int):
     show_popup_message("主机续费提醒", "您的主机套餐「%s」将于 %d 天后到期，请及时续费或升级。" % [Yun.get_server_package_name(), days_left])
+
+# ===== 服务商系统信号处理 =====
+
+func _on_provider_appeared(provider_name: String):
+    """新服务商上线"""
+    info_display.add_message("📢 新服务商「%s」已上线，可前往厂商选择页选择。" % provider_name)
+    show_popup_message("新服务商上线", "新服务商「%s」已上线！\n\n可前往「厂商选择」页选择，不同厂商的续费价格不同。" % provider_name)
+
+func _on_provider_runaway(provider_name: String):
+    """服务商跑路（非当前使用）"""
+    info_display.add_message("⚠️ 服务商「%s」已跑路失联，该服务商不再可用。" % provider_name)
+    show_popup_message("服务商跑路", "服务商「%s」已跑路失联，无法再提供服务。\n若您正在使用该服务商，请尽快更换！" % provider_name)
+
+func _on_provider_runaway_active(provider_name: String):
+    """正在使用的服务商跑路失联"""
+    info_display.add_message("❌ 服务商「%s」跑路失联！网站已无法访问，请一周内更换服务商，否则SEO将清零！" % provider_name)
+    show_popup_message("⚠️ 服务商跑路失联", "您正在使用的服务商「%s」已跑路失联！\n\n网站已无法访问，没有任何流量。\n请在一周内前往「厂商选择」页更换服务商，\n否则 SEO 将清零！" % provider_name)
+
+func _on_runaway_seo_wiped(provider_name: String):
+    """超期未更换，SEO 清零"""
+    info_display.add_message("💥 服务商「%s」失联超过一周，SEO 已被清零！请立即更换服务商！" % provider_name)
+    show_popup_message("⚠️ SEO 已清零", "服务商「%s」失联超过一周，您的 SEO 已被清零！\n\n请立即前往「厂商选择」页更换服务商，否则网站将持续无法访问。" % provider_name)
 
 func _on_traffic_warning(percent: float):
     show_popup_message("流量预警", "本月流量已达套餐限额的 %d%%，建议升级套餐或优化缓存。" % [percent])
