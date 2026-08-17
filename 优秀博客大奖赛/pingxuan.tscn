@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://b3821qpvaflph" path="res://优秀博客大奖赛/images/tmpx/element_30.png" id="7_x0l5a"]
 [ext_resource type="Texture2D" uid="uid://dkmtrr7nfw6kp" path="res://优秀博客大奖赛/images/tmpx/element_40.png" id="8_x0l5a"]
 [ext_resource type="Texture2D" uid="uid://betc13nvrtgjx" path="res://优秀博客大奖赛/images/tmpx/element_43.png" id="10_esr7c"]
-[ext_resource type="AudioStream" uid="uid://onf67wjp3dsn" path="res://assets/audio/bgm/vntrack13.mp3" id="12_lhryu"]
+[ext_resource type="AudioStream" uid="uid://67sgqdcw2mso" path="res://assets/audio/bgm/vntrack13.mp3" id="12_lhryu"]
 
 [sub_resource type="Animation" id="Animation_8d3v2"]
 length = 0.001

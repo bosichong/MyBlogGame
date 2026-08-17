@@ -21,7 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://d4mfgyba6fm1x" path="res://scenes/s003/露西动画.tscn" id="12_in50r"]
 [ext_resource type="Texture2D" uid="uid://bncvq361062po" path="res://assets/scens/s003/论坛背景.png" id="13_oilfm"]
 [ext_resource type="PackedScene" uid="uid://cywfir3cb3y3t" path="res://scenes/s003/luxibeiying.tscn" id="21_6sj5u"]
-[ext_resource type="AudioStream" uid="uid://de1pxe518mxb0" path="res://assets/audio/bgm/vntrack12.mp3" id="22_yef37"]
+[ext_resource type="AudioStream" uid="uid://dkybo38u1epby" path="res://assets/audio/bgm/vntrack12.mp3" id="22_yef37"]
 
 [sub_resource type="Animation" id="Animation_heusd"]
 length = 0.001
