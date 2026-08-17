@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://b0177vyh8abvq" path="res://assets/狗垫子.png" id="6_h54i7"]
 [ext_resource type="PackedScene" uid="uid://crnhhkwncis5q" path="res://scenes/s004/s_004_01.tscn" id="8_5puuk"]
 [ext_resource type="PackedScene" uid="uid://d4mfgyba6fm1x" path="res://scenes/s003/露西动画.tscn" id="8_l24yl"]
-[ext_resource type="AudioStream" uid="uid://ghp6cxnknsh3" path="res://assets/sound/vnmusicternox/dream/vntrack20.mp3" id="10_8gcve"]
+[ext_resource type="AudioStream" uid="uid://ghp6cxnknsh3" path="res://assets/audio/bgm/vntrack20.mp3" id="10_8gcve"]
 
 [node name="s_004" type="Node2D" unique_id=1459484344]
 script = ExtResource("1_l24yl")

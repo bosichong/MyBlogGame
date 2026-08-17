@@ -5,7 +5,7 @@
 [ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="3_uig6n"]
 [ext_resource type="Texture2D" uid="uid://bn02govqswnuy" path="res://assets/scens/s003/email3.png" id="4_qcxtt"]
 [ext_resource type="Texture2D" uid="uid://cu65sg6tpyng7" path="res://assets/scens/s003/email.png" id="5_psf2q"]
-[ext_resource type="AudioStream" uid="uid://bhyx6afp8spc" path="res://assets/sound/vnmusicternox/dream/vntrack04.mp3" id="6_u7d0b"]
+[ext_resource type="AudioStream" uid="uid://bhyx6afp8spc" path="res://assets/audio/bgm/vntrack04.mp3" id="6_u7d0b"]
 
 [sub_resource type="Animation" id="Animation_gu5nn"]
 length = 0.001

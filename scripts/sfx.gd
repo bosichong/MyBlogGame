@@ -4,13 +4,13 @@ extends Node
 ## 使用：Sfx.play("click") / Sfx.wire(btn) / Sfx.wire_tree(root)
 
 const UI_SOUNDS := {
-    "click": preload("res://assets/sound/400 Sounds Pack/UI/select_1.wav"),
-    "hover": preload("res://assets/sound/400 Sounds Pack/UI/sci_fi_hover.wav"),
-    "cancel": preload("res://assets/sound/400 Sounds Pack/UI/sci_fi_cancel.wav"),
-    "popup_open": preload("res://assets/sound/400 Sounds Pack/UI/pop_2.wav"),
-    "popup_close": preload("res://assets/sound/400 Sounds Pack/UI/pop_1.wav"),
-    "error": preload("res://assets/sound/400 Sounds Pack/UI/sci_fi_error.wav"),
-    "main_complete": preload("res://assets/sound/400 Sounds Pack/UI/synth_process_complete.wav"),
+    "click": preload("res://assets/audio/ui/select_1.wav"),
+    "hover": preload("res://assets/audio/ui/sci_fi_hover.wav"),
+    "cancel": preload("res://assets/audio/ui/sci_fi_cancel.wav"),
+    "popup_open": preload("res://assets/audio/ui/pop_2.wav"),
+    "popup_close": preload("res://assets/audio/ui/pop_1.wav"),
+    "error": preload("res://assets/audio/ui/sci_fi_error.wav"),
+    "main_complete": preload("res://assets/audio/ui/synth_process_complete.wav"),
 }
 
 const PLAYER_COUNT := 6
