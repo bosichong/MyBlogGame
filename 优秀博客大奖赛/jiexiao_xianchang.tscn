@@ -35,8 +35,8 @@
 [ext_resource type="PackedScene" uid="uid://o5pwx81lxv6n" path="res://优秀博客大奖赛/口号.tscn" id="34_sgj02"]
 [ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="35_egiwf"]
 [ext_resource type="PackedScene" uid="uid://c5vofwg6gyggr" path="res://优秀博客大奖赛/灯光组.tscn" id="35_sgj02"]
-[ext_resource type="AudioStream" uid="uid://cun7xjdu3q4bj" path="res://assets/sound/banjiang.mp3" id="36_egiwf"]
-[ext_resource type="AudioStream" uid="uid://ba3gxfxfyyq1" path="res://assets/sound/guzhang.mp3" id="37_rv6ej"]
+[ext_resource type="AudioStream" uid="uid://dopfw6w6dlvcx" path="res://assets/audio/bgm/banjiang.mp3" id="36_egiwf"]
+[ext_resource type="AudioStream" uid="uid://k436ogirkoho" path="res://assets/audio/bgm/guzhang.mp3" id="37_rv6ej"]
 [ext_resource type="PackedScene" uid="uid://boh4ck8vvyl2g" path="res://scenes/confetti.tscn" id="38_14ewv"]
 
 [sub_resource type="Animation" id="Animation_sgj02"]
