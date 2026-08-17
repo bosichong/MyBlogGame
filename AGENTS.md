@@ -4,15 +4,9 @@ Godot 4.7 GDScript 博客模拟经营游戏。
 
 ## 关键命令
 
-```bash
-# 运行测试（Godot headless 模式）
-godot --headless -s tests/test_book_publish.gd
-godot --headless -s tests/test_chapter_reward.gd
-
-# 运行游戏（编辑器内按 F5）
-```
-
-> 无 lint/typecheck/codegen 工具链。唯一验证方式是在 Godot 编辑器中运行或执行测试脚本。
+> ⚠️ **不要跑终端测试**（`godot --headless -s tests/*.gd`），本机不支持该测试环境（含 C#/.NET）。验证方式一律改为在 Godot 编辑器中按 F5 运行游戏。`test_chapter_reward.gd` 是 C#(.NET) 脚本，不要尝试执行或修改。
+>
+> 无 lint/typecheck/codegen 工具链。唯一验证方式是在 Godot 编辑器中运行。
 
 ## Autoload 单例（按 project.godot 声明顺序加载）
 
@@ -30,6 +24,7 @@ godot --headless -s tests/test_chapter_reward.gd
 | Yun | `scripts/yun.gd` | 主机/域名/备案 |
 | TaskManager | `scripts/task_system/TaskManager.gd` | 任务系统入口（数据驱动） |
 | AwardManager | `scripts/managers/AwardManager.gd` | 优秀博客大赛奖项判定 |
+| DialogueManager | `scripts/dialogue_manager.gd` | 多人对话播放入口 + 结束信号 |
 
 > `Utils._init()` 在 `GDManager._init()` 之后执行（autoload 顺序保证）。
 
@@ -112,6 +107,17 @@ data/*.gd ──→ GDManager._load_all_data() ──→ loaded_data 字典
 以及子模块委托：`START_BOOK_WRITE`→`BookPublishMgr`、`TRIGGER_IP_AUTH` / `IP_MONTHLY_INCOME`→`IPAuthMgr`、`START_OPEN_SOURCE_PROJECT`→`OpenSourceMgr`
 
 > `TRIGGER_ANIME_IP_AUTH` 枚举已定义但 `_execute_action()` 无对应分支。
+
+## 多人对话系统
+
+- 入口：`DialogueManager.play(id)` → `res://scenes/dialogue.tscn`
+- 数据：`data/dialogue_characters.gd`（角色表）+ `data/dialogue/*.gd`（每个对白一个文件，含 `dialogue` 字典）
+- 角色头像：有 `avatar` 用图，无（现状）用角色 `color` 色块 + 名字首字
+- 布局：玩家（`side=="right"` 或 `speaker=="player"`）在右侧，NPC 在左侧，中央对白框
+- 推进：普通行整句直接显示 → 默认时间（`auto_interval`/行 `duration`）自动跳转，空格/点击提前；带 `choices` 行不自动跳，须选择（`next` 指向 `label`）；分支末行用 `end`/`goto` 收尾避免掉进其他分支
+- 结束：`after_finish` 非空跳场景；否则发 `dialogue_finished(id)` 信号（`from_test` 时回调试面板）
+- 调试场景：`res://tests/test_dialogue_scene.tscn`（F5 一进即自动播放示例；Esc 可中断）
+- 逻辑细节见 `开发笔记/多人对话系统开发文档.md`
 
 ## 新增功能原则
 

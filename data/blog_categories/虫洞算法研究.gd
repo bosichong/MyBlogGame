@@ -18,5 +18,5 @@ var item = {
     "stamina": 90,
     "article_level": 5,
     "cooldown_days": 100,
-    "min_write_days": 30,
+    "min_write_days": 50,
 }

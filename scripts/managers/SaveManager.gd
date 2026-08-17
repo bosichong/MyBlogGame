@@ -252,6 +252,11 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "is_developing_os": data.is_developing_os,
         "open_source_count": data.open_source_count,
         "jarvis_project_days": data.jarvis_project_days,
+        "wormhole_research_days": data.wormhole_research_days,
+        "contemplation_days": data.contemplation_days,
+        "wuwei_days": data.wuwei_days,
+        "game_dev_days": data.game_dev_days,
+        "game_release_days": data.game_release_days,
         "novel_batch": data.novel_batch,
         "novel_batch_count": data.novel_batch_count,
         "novel_batch_ip_triggered": data.novel_batch_ip_triggered,
@@ -262,6 +267,39 @@ func serialize_blogger_data(data: BloggerData) -> Dictionary:
         "hacker_batch_auth_target": data.hacker_batch_auth_target,
         "hacker_batch_topic": data.hacker_batch_topic,
         "hacker_course_triggered": data.hacker_course_triggered,
+        "active_event": data.active_event,
+        "event_cooldown": data.event_cooldown,
+        "resolved_events": data.resolved_events,
+        "obaby_ignore_days": data.obaby_ignore_days,
+        "obaby_comment_cleanup_days": data.obaby_comment_cleanup_days,
+        "obaby_comment_spam_days": data.obaby_comment_spam_days,
+        "obaby_spam_seo_locked": data.obaby_spam_seo_locked,
+        "obaby_spam_seo_recovery_days": data.obaby_spam_seo_recovery_days,
+        "obaby_comment_spam_escalated": data.obaby_comment_spam_escalated,
+        "obaby_redirect_ad_ignore_days": data.obaby_redirect_ad_ignore_days,
+        "obaby_ddos_protection_bought": data.obaby_ddos_protection_bought,
+        "obaby_ddos_protection_days": data.obaby_ddos_protection_days,
+        "obaby_ddos_self_days": data.obaby_ddos_self_days,
+
+        # Obaby 供应链木马
+        "supply_chain_post_written": data.supply_chain_post_written,
+
+        # 莫比乌斯支线状态
+        "mo_lv1_done": data.mo_lv1_done,
+        "mo_noticed_gap": data.mo_noticed_gap,
+        "mo_lv2_done": data.mo_lv2_done,
+        "mo_lv3_done": data.mo_lv3_done,
+        "mo_lv4_done": data.mo_lv4_done,
+        "mo_lv5_done": data.mo_lv5_done,
+        "mo_confession_triggered": data.mo_confession_triggered,
+        "mo_resolved": data.mo_resolved,
+
+        # 莫比乌斯延迟计数器
+        "mo_lv1_delay_days": data.mo_lv1_delay_days,
+        "mo_lv2_delay_days": data.mo_lv2_delay_days,
+        "mo_lv3_delay_days": data.mo_lv3_delay_days,
+        "mo_lv4_delay_days": data.mo_lv4_delay_days,
+        "mo_lv5_delay_days": data.mo_lv5_delay_days,
     }
 
 func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
@@ -328,6 +366,11 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.is_developing_os = dict.get("is_developing_os", false)
     data.open_source_count = dict.get("open_source_count", 0)
     data.jarvis_project_days = dict.get("jarvis_project_days", 0)
+    data.wormhole_research_days = dict.get("wormhole_research_days", 0)
+    data.contemplation_days = dict.get("contemplation_days", 0)
+    data.wuwei_days = dict.get("wuwei_days", 0)
+    data.game_dev_days = dict.get("game_dev_days", 0)
+    data.game_release_days = dict.get("game_release_days", 0)
     data.novel_batch = dict.get("novel_batch", 1)
     data.novel_batch_count = dict.get("novel_batch_count", 0)
     data.novel_batch_ip_triggered = dict.get("novel_batch_ip_triggered", false)
@@ -338,6 +381,38 @@ func deserialize_blogger_data(data: BloggerData, dict: Dictionary):
     data.hacker_batch_auth_target = dict.get("hacker_batch_auth_target", 0)
     data.hacker_batch_topic = dict.get("hacker_batch_topic", "")
     data.hacker_course_triggered = dict.get("hacker_course_triggered", false)
+    data.active_event = dict.get("active_event", {})
+    data.event_cooldown = dict.get("event_cooldown", 0)
+    data.resolved_events = dict.get("resolved_events", [])
+    data.obaby_ignore_days = dict.get("obaby_ignore_days", 0)
+    data.obaby_comment_cleanup_days = dict.get("obaby_comment_cleanup_days", 0)
+    data.obaby_comment_spam_days = dict.get("obaby_comment_spam_days", 0)
+    data.obaby_spam_seo_locked = dict.get("obaby_spam_seo_locked", false)
+    data.obaby_spam_seo_recovery_days = dict.get("obaby_spam_seo_recovery_days", 0)
+    data.obaby_comment_spam_escalated = dict.get("obaby_comment_spam_escalated", false)
+    data.obaby_redirect_ad_ignore_days = dict.get("obaby_redirect_ad_ignore_days", 0)
+    data.obaby_ddos_protection_bought = dict.get("obaby_ddos_protection_bought", false)
+    data.obaby_ddos_protection_days = dict.get("obaby_ddos_protection_days", 0)
+    data.obaby_ddos_self_days = dict.get("obaby_ddos_self_days", 0)
+
+    data.supply_chain_post_written = dict.get("supply_chain_post_written", false)
+
+    # 莫比乌斯支线状态
+    data.mo_lv1_done = dict.get("mo_lv1_done", false)
+    data.mo_noticed_gap = dict.get("mo_noticed_gap", false)
+    data.mo_lv2_done = dict.get("mo_lv2_done", false)
+    data.mo_lv3_done = dict.get("mo_lv3_done", false)
+    data.mo_lv4_done = dict.get("mo_lv4_done", false)
+    data.mo_lv5_done = dict.get("mo_lv5_done", false)
+    data.mo_confession_triggered = dict.get("mo_confession_triggered", false)
+    data.mo_resolved = dict.get("mo_resolved", false)
+
+    # 莫比乌斯延迟计数器
+    data.mo_lv1_delay_days = dict.get("mo_lv1_delay_days", -1)
+    data.mo_lv2_delay_days = dict.get("mo_lv2_delay_days", -1)
+    data.mo_lv3_delay_days = dict.get("mo_lv3_delay_days", -1)
+    data.mo_lv4_delay_days = dict.get("mo_lv4_delay_days", -1)
+    data.mo_lv5_delay_days = dict.get("mo_lv5_delay_days", -1)
 
 func serialize_time_data(data: TimeData) -> Dictionary:
     return {

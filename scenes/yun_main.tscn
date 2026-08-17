@@ -117,6 +117,16 @@ layout_mode = 2
 toggle_mode = true
 text = "周日"
 
+[node name="mc8" type="MarginContainer" parent="bg/按钮组/vb" unique_id=729538180]
+layout_mode = 2
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="b8" type="Button" parent="bg/按钮组/vb/mc8" unique_id=16367728]
+layout_mode = 2
+toggle_mode = true
+text = "厂商选择"
+
 [node name="选项组" type="Panel" parent="bg" unique_id=487171687]
 layout_mode = 1
 anchors_preset = 15
@@ -277,6 +287,52 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="sc8" type="ScrollContainer" parent="bg/选项组" unique_id=1532552799]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="d8" type="VBoxContainer" parent="bg/选项组/sc8" unique_id=128354620]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="provider_title" type="Label" parent="bg/选项组/sc8/d8" unique_id=998877661]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.0784314, 0.564706, 0.682353, 1)
+text = "服务商选择（续费价格按所选服务商计费）"
+autowrap_mode = 3
+
+[node name="provider_list" type="FlowContainer" parent="bg/选项组/sc8/d8" unique_id=998877662]
+layout_mode = 2
+
+[node name="provider_detail" type="PanelContainer" parent="bg/选项组/sc8/d8" unique_id=998877663]
+layout_mode = 2
+
+[node name="detail_vb" type="VBoxContainer" parent="bg/选项组/sc8/d8/provider_detail" unique_id=998877664]
+layout_mode = 2
+
+[node name="provider_name" type="Label" parent="bg/选项组/sc8/d8/provider_detail/detail_vb" unique_id=998877665]
+layout_mode = 2
+
+[node name="provider_price" type="Label" parent="bg/选项组/sc8/d8/provider_detail/detail_vb" unique_id=998877666]
+layout_mode = 2
+
+[node name="provider_status" type="Label" parent="bg/选项组/sc8/d8/provider_detail/detail_vb" unique_id=998877667]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.929412, 0.2, 0.2, 1)
+
+[node name="provider_desc" type="Label" parent="bg/选项组/sc8/d8/provider_detail/detail_vb" unique_id=998877668]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="switch_btn" type="Button" parent="bg/选项组/sc8/d8" unique_id=998877669]
+layout_mode = 2
+text = "更换服务商"
+
 [node name="close_btn" type="Button" parent="bg" unique_id=1536617386]
 layout_mode = 1
 anchors_preset = 1
@@ -296,6 +352,7 @@ text = "X"
 [connection signal="pressed" from="bg/按钮组/vb/mc2/b2" to="." method="_on_b_2_pressed"]
 [connection signal="pressed" from="bg/按钮组/vb/mc3/b3" to="." method="_on_b_3_pressed"]
 [connection signal="pressed" from="bg/按钮组/vb/mc4/b4" to="." method="_on_b_4_pressed"]
+[connection signal="pressed" from="bg/按钮组/vb/mc8/b8" to="." method="_on_b_8_pressed"]
 [connection signal="pressed" from="bg/选项组/sc2/VBoxContainer/xfbut" to="." method="_on_xfbut_pressed"]
 [connection signal="pressed" from="bg/选项组/sc2/VBoxContainer/xfzj" to="." method="_on_xfzj_pressed"]
 [connection signal="pressed" from="bg/选项组/sc3/VBoxContainer/ds_Button" to="." method="_on_ds_button_pressed"]

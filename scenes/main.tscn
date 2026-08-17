@@ -5,6 +5,7 @@
 [ext_resource type="Theme" uid="uid://cp1t7xqq6k8jr" path="res://scenes/程菜单.tres" id="4_85g3d"]
 [ext_resource type="PackedScene" uid="uid://cydvv2l4ek4v8" path="res://scenes/top.tscn" id="5_85g3d"]
 [ext_resource type="PackedScene" uid="uid://bpdy78cdcnwkj" path="res://scenes/bottom.tscn" id="6_choun"]
+[ext_resource type="PackedScene" uid="uid://dq2l7phjphldk" path="res://scenes/safety_led_bar.tscn" id="7_a8y0u"]
 [ext_resource type="PackedScene" uid="uid://w8c2ddi66hy1" path="res://scenes/r_panel.tscn" id="7_ya4ey"]
 [ext_resource type="PackedScene" uid="uid://cptfk2fj0xonm" path="res://scenes/日程.tscn" id="9_85g3d"]
 [ext_resource type="PackedScene" uid="uid://1n7kcvrjb6l0" path="res://scenes/lm.tscn" id="9_choun"]
@@ -13,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://cjugt1joovfkl" path="res://scenes/ad.tscn" id="12_eb6dy"]
 [ext_resource type="PackedScene" uid="uid://drcoxpxaqfn8r" path="res://milestones/main.tscn" id="12_trceg"]
 [ext_resource type="PackedScene" uid="uid://d3d3b4rpyytcl" path="res://scenes/blog_dashboard.tscn" id="13_blog_dashboard"]
+[ext_resource type="PackedScene" path="res://scenes/toast.tscn" id="14_toast"]
 
 [node name="Main" type="Node2D" unique_id=733496957]
 script = ExtResource("1_85g3d")
@@ -63,6 +65,13 @@ offset_top = 53.0
 offset_right = 713.0
 offset_bottom = 53.0
 max_messages = 25
+
+[node name="SafetyLedBar" parent="ui" unique_id=442851128 instance=ExtResource("7_a8y0u")]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 369.0
+offset_right = 226.0
+offset_bottom = 393.0
 
 [node name="日程" parent="." unique_id=2093642315 instance=ExtResource("9_85g3d")]
 visible = false
@@ -120,3 +129,5 @@ offset_bottom = 480.0
 visible = false
 
 [node name="AcceptDialog" type="AcceptDialog" parent="." unique_id=1869509651]
+
+[node name="Toast" parent="." instance=ExtResource("14_toast")]

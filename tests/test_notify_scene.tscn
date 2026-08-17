@@ -1,0 +1,302 @@
+[gd_scene format=3 uid="uid://b2hntstsn0scn"]
+
+[ext_resource type="Theme" uid="uid://sy5n06opf6op" path="res://our_theme.tres" id="1_theme"]
+[ext_resource type="Script" path="res://tests/test_notify_scene.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/toast.tscn" id="3_toast"]
+[ext_resource type="FontFile" uid="uid://c1kx1oe5ap0bh" path="res://assets/OPPOSans-M.ttf" id="4_font"]
+
+[node name="TestNotify" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="BG" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.078, 0.09, 0.11, 1)
+
+[node name="Toast" parent="." instance=ExtResource("3_toast")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Intro" type="Label" parent="."]
+layout_mode = 1
+offset_left = 14.0
+offset_top = 14.0
+offset_right = 276.0
+offset_bottom = 100.0
+text = "提示系统预览
+
+点击左侧按钮触发对应横幅；「自动演示」按真实时序依次弹出。
+停留 3 秒自动淡出，不会暂停游戏计时器。"
+autowrap_mode = 3
+
+[node name="MenuPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = -360.0
+offset_right = 460.0
+grow_vertical = 0
+
+[node name="VBox" type="VBoxContainer" parent="MenuPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MenuTitle" type="Label" parent="MenuPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "触发按钮"
+horizontal_alignment = 1
+
+[node name="LevelBtn" type="Button" parent="MenuPanel/VBox"]
+layout_mode = 2
+text = "触发：等级提升（Lv.57）"
+
+[node name="TitleBtn" type="Button" parent="MenuPanel/VBox"]
+layout_mode = 2
+text = "触发：头衔晋升"
+
+[node name="SkillItemBtn" type="Button" parent="MenuPanel/VBox"]
+layout_mode = 2
+text = "触发：技能阶段进阶"
+
+[node name="SkillValueBtn" type="Button" parent="MenuPanel/VBox"]
+layout_mode = 2
+text = "触发：技能成长（跨整数）"
+
+[node name="NoStaminaBtn" type="Button" parent="MenuPanel/VBox"]
+layout_mode = 2
+text = "触发：体力不足（警示）"
+
+[node name="InfoBtn" type="Button" parent="MenuPanel/VBox"]
+layout_mode = 2
+text = "触发：普通系统通知"
+
+[node name="BurstBtn" type="Button" parent="MenuPanel/VBox"]
+layout_mode = 2
+text = "触发：连发 4 条（堆叠/合并）"
+
+[node name="AutoBtn" type="Button" parent="MenuPanel/VBox"]
+layout_mode = 2
+text = "自动演示：按真实时序"
+
+[node name="ResetBtn" type="Button" parent="MenuPanel/VBox"]
+layout_mode = 2
+text = "清空当前横幅"
+
+[node name="SkillPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -340.0
+offset_top = -260.0
+offset_right = -14.0
+offset_bottom = -160.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="SkillTitle" type="Label" parent="SkillPanel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = 8.0
+offset_right = -12.0
+offset_bottom = 30.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 13
+text = "技能条数值（条内居中数字）"
+horizontal_alignment = 1
+
+[node name="Grid" type="VBoxContainer" parent="SkillPanel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 34.0
+offset_right = -12.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 6
+
+[node name="Skill1" type="HBoxContainer" parent="SkillPanel/Grid"]
+layout_mode = 2
+
+[node name="Name1" type="Label" parent="SkillPanel/Grid/Skill1"]
+layout_mode = 2
+custom_minimum_size = Vector2(40, 0)
+theme_override_font_sizes/font_size = 12
+text = "写作"
+
+[node name="Bar" type="ProgressBar" parent="SkillPanel/Grid/Skill1"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+show_percentage = false
+
+[node name="Num" type="Label" parent="SkillPanel/Grid/Skill1/Bar"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -40.0
+offset_top = -8.0
+offset_right = 40.0
+offset_bottom = 8.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 11
+text = "35"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Skill2" type="HBoxContainer" parent="SkillPanel/Grid"]
+layout_mode = 2
+
+[node name="Name2" type="Label" parent="SkillPanel/Grid/Skill2"]
+layout_mode = 2
+custom_minimum_size = Vector2(40, 0)
+theme_override_font_sizes/font_size = 12
+text = "技术"
+
+[node name="Bar" type="ProgressBar" parent="SkillPanel/Grid/Skill2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+show_percentage = false
+
+[node name="Num" type="Label" parent="SkillPanel/Grid/Skill2/Bar"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -40.0
+offset_top = -8.0
+offset_right = 40.0
+offset_bottom = 8.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 11
+text = "58"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Skill3" type="HBoxContainer" parent="SkillPanel/Grid"]
+layout_mode = 2
+
+[node name="Name3" type="Label" parent="SkillPanel/Grid/Skill3"]
+layout_mode = 2
+custom_minimum_size = Vector2(40, 0)
+theme_override_font_sizes/font_size = 12
+text = "编程"
+
+[node name="Bar" type="ProgressBar" parent="SkillPanel/Grid/Skill3"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+show_percentage = false
+
+[node name="Num" type="Label" parent="SkillPanel/Grid/Skill3/Bar"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -40.0
+offset_top = -8.0
+offset_right = 40.0
+offset_bottom = 8.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 11
+text = "62.4"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Skill4" type="HBoxContainer" parent="SkillPanel/Grid"]
+layout_mode = 2
+
+[node name="Name4" type="Label" parent="SkillPanel/Grid/Skill4"]
+layout_mode = 2
+custom_minimum_size = Vector2(40, 0)
+theme_override_font_sizes/font_size = 12
+text = "文学"
+
+[node name="Bar" type="ProgressBar" parent="SkillPanel/Grid/Skill4"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+show_percentage = false
+
+[node name="Num" type="Label" parent="SkillPanel/Grid/Skill4/Bar"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -40.0
+offset_top = -8.0
+offset_right = 40.0
+offset_bottom = 8.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 11
+text = "80"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Skill5" type="HBoxContainer" parent="SkillPanel/Grid"]
+layout_mode = 2
+visible = false
+
+[node name="Name5" type="Label" parent="SkillPanel/Grid/Skill5"]
+layout_mode = 2
+custom_minimum_size = Vector2(40, 0)
+theme_override_font_sizes/font_size = 12
+text = "绘画"
+
+[node name="Bar" type="ProgressBar" parent="SkillPanel/Grid/Skill5"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 11
+show_percentage = false
+
+[node name="Num" type="Label" parent="SkillPanel/Grid/Skill5/Bar"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -40.0
+offset_top = -8.0
+offset_right = 40.0
+offset_bottom = 8.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 11
+text = "12"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="MenuPanel/VBox/LevelBtn" to="." method="_on_level_btn"]
+[connection signal="pressed" from="MenuPanel/VBox/TitleBtn" to="." method="_on_title_btn"]
+[connection signal="pressed" from="MenuPanel/VBox/SkillItemBtn" to="." method="_on_skill_item_btn"]
+[connection signal="pressed" from="MenuPanel/VBox/SkillValueBtn" to="." method="_on_skill_value_btn"]
+[connection signal="pressed" from="MenuPanel/VBox/NoStaminaBtn" to="." method="_on_no_stamina_btn"]
+[connection signal="pressed" from="MenuPanel/VBox/InfoBtn" to="." method="_on_info_btn"]
+[connection signal="pressed" from="MenuPanel/VBox/BurstBtn" to="." method="_on_burst_btn"]
+[connection signal="pressed" from="MenuPanel/VBox/AutoBtn" to="." method="_on_auto_btn"]
+[connection signal="pressed" from="MenuPanel/VBox/ResetBtn" to="." method="_on_reset_btn"]

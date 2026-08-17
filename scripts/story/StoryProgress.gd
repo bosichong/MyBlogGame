@@ -8,52 +8,58 @@ var _emitted_chapters: Array[int] = []
 
 ## 第一章：博客启蒙期（2001-2005）
 var chapter1 = {
-    "blog_online": true,              # 博客正式上线
-    "first_article_posted": true,     # 第一篇博文发布
-    "sousuo_indexed": true,           # 搜索引擎首次收录
-    "blog_union_joined": true,        # 加入博客联盟
-    "first_friend_link": true,        # 第一个友链
-    "rss_enabled": true,              # 开通RSS订阅
-    "first_article_favorited": true,  # 第一次文章收藏
-    "first_income": true,             # 第一笔广告收益
-    "icp_filing_done": true,          # 网站备案完成
-    "award_2005": true,              # 优秀博客奖项（结果动态判定）
-    "year_summary_2005": true,       # 2005年度总结
+    "blog_online": false,              # 博客正式上线
+    "first_article_posted": false,     # 第一篇博文发布
+    "sousuo_indexed": false,           # 搜索引擎首次收录
+    "blog_union_joined": false,        # 加入博客联盟
+    "first_friend_link": false,        # 第一个友链
+    "rss_enabled": false,              # 开通RSS订阅
+    "first_article_favorited": false,  # 第一次文章收藏
+    "first_income": false,             # 第一笔广告收益
+    "icp_filing_done": false,          # 网站备案完成
+    "award_2005": false,              # 优秀博客奖项（结果动态判定）
+    "year_summary_2005": false,       # 2005年度总结
+    "obaby_first_visit": false,      # Obaby 首次来访（不速之客）
+    "obaby_tech_response": false,    # 首次事件选②发博文回应
 }
 
 ## 第二章：博客黄金期（2005-2010）
 var chapter2 = {
-    "literature_weekly": true,       # 文学周刊发布
-    "code_weekly": true,             # 程序员周刊发布
-    "rss_100": true,                 # RSS订阅突破百人
-    "income_1000": true,             # 累计收益突破千元
-    "award_2010": true,              # 优秀博客奖项（2010）
-    "year_summary_2010": true,       # 2010年度总结
+    "literature_weekly": false,       # 文学周刊发布
+    "code_weekly": false,             # 程序员周刊发布
+    "rss_100": false,                 # RSS订阅突破百人
+    "income_1000": false,             # 累计收益突破千元
+    "award_2010": false,              # 优秀博客奖项（2010）
+    "year_summary_2010": false,       # 2010年度总结
+    "obaby_comment_spam": false,     # 评论区暗链事件触发
+    "obaby_comment_resolved": false, # 评论区暗链已处理
 }
 
 ## 第三章：博客转型期（2010-2015）
 var chapter3 = {
-    "viral_article": true,           # 爆款文章诞生
-    "advanced_tutorial": true,       # 高级教程发布
-    "philosophy_critique": true,     # 哲学批判
-    "geek_frontier": true,           # 极客前沿
-    "wechat_public": true,           # 公众号开通
-    "followers_1000": true,          # 公众号粉丝达到1000
-    "mobile_adapted": true,          # 网站移动端适配
-    "https_upgraded": true,          # HTTPS升级
-    "novel_first_post": true,         # 发布第一篇小说连载
-    "novel_batch_complete": true,     # 完成一部小说连载（100章）
-    "novel_ip_authorized": true,      # 小说获得IP授权
-    "hacker_first_post": true,        # 发布第一篇黑客攻防
-    "hacker_course_complete": true,   # 完成黑客攻防课程（100篇）
-    "hacker_course_authorized": true, # 黑客攻防获得课程授权
-    "year_summary_2015": true,       # 2015年度总结
-    "award_2015": true,              # 优秀博客奖项（2015）
+    "viral_article": false,           # 爆款文章诞生
+    "advanced_tutorial": false,       # 高级教程发布
+    "philosophy_critique": false,     # 哲学批判
+    "geek_frontier": false,           # 极客前沿
+    "wechat_public": false,           # 公众号开通
+    "followers_1000": false,          # 公众号粉丝达到1000
+    "mobile_adapted": false,          # 网站移动端适配
+    "https_upgraded": false,          # HTTPS升级
+    "novel_first_post": false,         # 发布第一篇小说连载
+    "novel_batch_complete": false,     # 完成一部小说连载（100章）
+    "novel_ip_authorized": false,      # 小说获得IP授权
+    "hacker_first_post": false,        # 发布第一篇黑客攻防
+    "hacker_course_complete": false,   # 完成黑客攻防课程（100篇）
+    "hacker_course_authorized": false, # 黑客攻防获得课程授权
+    "year_summary_2015": false,       # 2015年度总结
+    "award_2015": false,              # 优秀博客奖项（2015）
+    "obaby_redirect_ad": false,      # 第三方统计代码被挂广告
+    "obaby_redirect_ad_resolved": false, # 已删除恶意统计代码
 }
 
 ## 第四章：博客挑战期（2015-2020）
 var chapter4 = {
-    "book_published": false,          # 书籍正式出版
+    "book_published": false,           # 书籍正式出版
     "open_source_start": false,       # 开源项目发布
     "book_notes": false,              # 出书笔记
     "os_notes": false,                # 开源维护笔记
@@ -61,6 +67,8 @@ var chapter4 = {
     "ai_preview": false,              # AI时代预告
     "award_2020": false,              # 优秀博客奖项（2020）
     "year_summary_2020": false,       # 2020年度总结
+    "obaby_ddos": false,              # DDoS攻击事件触发
+    "obaby_ddos_resolved": false,     # DDoS攻击已解除
 }
 
 ## 第五章：博客重塑期（2020-2025）
@@ -83,6 +91,9 @@ var chapter5 = {
     "game_trailer": false,             # 游戏预告发布
     "game_released": false,            # 游戏正式发布
     "game_award": false,               # 游戏获奖
+    # K 线终章
+    "obaby_supply_chain_triggered": false,  # 供应链木马事件触发
+    "obaby_supply_chain_resolved": false,   # K 线完结
     # 旧版兼容（保留key不删除，避免旧档报错）
     "fame_let_go": false,              # 兼容：看淡名利
 }
@@ -255,12 +266,16 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "first_income": "第一笔广告收益：收到了博客的第一笔收入",
         "icp_filing_done": "网站备案完成：迈出了合规运营的一步",
         "year_summary_2005": "2005年度总结：回望这四年，写下成长的足迹",
+        "obaby_first_visit": "一个神秘的访客在你的首页留下了一行字",
+        "obaby_tech_response": "你写了一篇博文回应了那次神秘的来访",
         # 第二章
         "literature_weekly": "文学周刊发布：用文字书写内心世界",
         "code_weekly": "程序员周刊发布：分享技术路上的思考",
         "rss_100": "RSS订阅突破百人：拥有了稳定的读者群",
         "income_1000": "累计收益突破千元：商业化迈上新台阶",
         "year_summary_2010": "2010年度总结：黄金五年，收获满满",
+        "obaby_comment_spam": "评论区被灌满暗链垃圾评论，搜索引擎降权",
+        "obaby_comment_resolved": "评论区的暗链已清理完毕",
         # 第三章
         "viral_article": "爆款文章诞生：一篇好文让博客声名远扬",
         "advanced_tutorial": "高级教程发布：技术深度获得了读者认可",
@@ -277,6 +292,8 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "hacker_course_complete": "完成黑客攻防课程：一百篇教程，铸就一份完整的课程体系",
         "hacker_course_authorized": "黑客攻防获得课程授权：你的教程被教育机构看中了",
         "year_summary_2015": "2015年度总结：转型路上，初心不改",
+        "obaby_redirect_ad": "第三方统计代码被植入恶意广告，友链损失过半",
+        "obaby_redirect_ad_resolved": "已删除恶意统计代码，博客恢复正常",
         # 第四章
         "book_published": "书籍正式出版：多年的博客精华凝聚成书",
         "open_source_start": "开源项目发布：代码贡献获得社区关注",
@@ -285,6 +302,8 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "cdn_enabled": "CDN加速部署：网站访问速度大幅提升",
         "ai_preview": "AI时代预告：新一轮技术变革即将到来",
         "year_summary_2020": "2020年度总结：挑战与突破的五年",
+        "obaby_ddos": "DDoS攻击：博客遭受持续7天的DDoS攻击，流量和SEO急剧下降",
+        "obaby_ddos_resolved": "DDoS攻击已解除：通过购买安全防护，博客恢复正常运行",
         # 第五章
         "ai_unlocked": "AI创作解锁：借助AI开启全新的创作模式",
         "award_2025": "优秀博客奖项（2025）：最后一届大赛，为博客生涯画上句号",
@@ -300,6 +319,8 @@ func get_milestone_description(chapter: int, milestone: String) -> String:
         "game_trailer": "游戏预告发布：向世界展示你的作品",
         "game_released": "游戏正式发布：作品终于与玩家见面",
         "game_award": "游戏获奖：站上领奖台，梦想照进现实",
+        "obaby_supply_chain_triggered": "收到 Obaby 博客提醒：一个底层依赖库被植入木马",
+        "obaby_supply_chain_resolved": "K 线完结：二十年，从「到处都是洞」到「多谢提醒」",
         "fame_let_go": "看淡名利：奖项也好，排名也罢，唯有成长最珍贵",
     }
     return descriptions.get(milestone, "未知里程碑: " + milestone)

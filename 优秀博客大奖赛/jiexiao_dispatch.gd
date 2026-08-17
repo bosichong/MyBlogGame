@@ -8,6 +8,7 @@ const SCENE_WEB = "res://优秀博客大奖赛/jiexiao_web.tscn"
 const SCENE_XIANCHANG = "res://优秀博客大奖赛/jiexiao_xianchang.tscn"
 
 func _ready() -> void:
+    TimerManager.stop_timer()
     var ordinal = 1
     if TaskManager and TaskManager.pending_scene_params.has("notification_ordinal"):
         ordinal = TaskManager.pending_scene_params.notification_ordinal

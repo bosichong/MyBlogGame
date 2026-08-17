@@ -7,14 +7,14 @@ class_name BloggerData
 # ============================================
 
 ## 等级（1-100）
-var level: int = 80
+var level: int = 1
 
 ## 经验值
 var exp: int = 0
 
 ## 段位（0-9，每10级提升1段位）
 ## 段位影响访问量加成
-var rank_tier: int = 0
+var rank_tier: int = 2
 
 ## 属性点数（升级获得，用于分配能力值）
 var attribute_points: int = 0
@@ -24,30 +24,30 @@ var attribute_points: int = 0
 # ============================================
 
 ## 写作能力：影响所有文章的质量分
-var writing_ability: float = 91
+var writing_ability: float = 1
 
 ## 技术能力：影响技术类文章质量和网站维护效果
-var technical_ability: float = 91
+var technical_ability: float = 1
 
 ## 编程能力：影响编程教程、黑客攻防等技术文章质量
-var code_ability: float = 91
+var code_ability: float = 1
 
 ## 文学能力：影响文学类文章质量（年度总结、生活日记、散文等）
-var literature_ability: float = 91
+var literature_ability: float = 1
 
 # ============================================
 # 资源
 # ============================================
 
 ## 体力（写文章、维护网站消耗体力）
-var stamina: int = 51
+var stamina: int = 32
 
 ## 金钱（单位：元）
 ## 初始10万，用于购买主机、域名、安全服务等
 var money: float = 10000000.0
 
 ## 社交能力：影响文章分享、爆款事件触发概率
-var social_ability: int = 5
+var social_ability: int = 1
 
 ## 声望
 var reputation: int = 0
@@ -98,13 +98,13 @@ var cdn_accelerate_start_date: String = ""
 
 ## 安全值（0-100）
 ## 影响网站被攻击的概率，低于50容易出问题
-var safety_value: int = 100
+var safety_value: int = 70
 
 ## SEO值（0-100）
 ## 影响基础访问量和搜索引擎收录
 ## 新网站SEO效果差，初始值设为50
 ## 通过"SEO优化"任务逐步提升
-var seo_value: int = 10
+var seo_value: int = 1
 
 ## 设计值（0-100）
 ## 影响访问量加成和页面美化效果
@@ -261,7 +261,7 @@ var os_article_count: int = 0
 var is_developing_os: bool = false
 
 ## 已发布开源项目累计数量（用于第五章结局判定）
-var open_source_count: int = 6
+var open_source_count: int = 0
 
 # ============================================
 # 贾维斯计划
@@ -269,6 +269,33 @@ var open_source_count: int = 6
 
 ## 贾维斯计划当前进度天数（0-50，每轮重置）
 var jarvis_project_days: int = 0
+
+# ============================================
+# 虫洞算法研究
+# ============================================
+
+## 虫洞算法研究当前进度天数（0-50，每轮重置）
+var wormhole_research_days: int = 0
+
+# ============================================
+# 文学结局
+# ============================================
+
+## 沉思录当前进度天数（0-50，每轮重置）
+var contemplation_days: int = 0
+
+## 无为篇当前进度天数（0-50，每轮重置）
+var wuwei_days: int = 0
+
+# ============================================
+# 游戏结局
+# ============================================
+
+## 游戏开发当前进度天数（0-50，每轮重置）
+var game_dev_days: int = 0
+
+## 游戏发布当前进度天数（0-30，每轮重置）
+var game_release_days: int = 0
 
 # ============================================
 # 公众号
@@ -294,6 +321,93 @@ var wechat_data: Dictionary = {
 
 ## 已学会的技能列表
 var learned_skills: Array[String] = []
+
+# ============================================
+# Obaby 无视后续计数器（选择无视后计数天数）
+# ============================================
+
+## 选择无视后经过的天数（0 表示未触发）
+var obaby_ignore_days: int = 0
+
+## Obaby 评论区暗链清理进度（连续安排紧急排险的天数，0 表示未开始）
+var obaby_comment_cleanup_days: int = 0
+
+## Obaby 评论区暗链未处理天数（满 10 天引发安全事件）
+var obaby_comment_spam_days: int = 0
+
+## Obaby 暗链升级：SEO 是否被锁定为 0
+var obaby_spam_seo_locked: bool = false
+
+## Obaby 暗链升级：SEO 恢复天数（7 天紧急排险/SEO优化）
+var obaby_spam_seo_recovery_days: int = 0
+
+## Obaby 暗链是否已升级过（防止恢复后再次触发）
+var obaby_comment_spam_escalated: bool = false
+
+## Obaby 第三方统计代码广告：选无视后的累计天数
+var obaby_redirect_ad_ignore_days: int = 0
+
+## Obaby DDoS：是否已购买安全防护
+var obaby_ddos_protection_bought: bool = false
+## Obaby DDoS：防护已生效天数
+var obaby_ddos_protection_days: int = 0
+## Obaby DDoS：自处理累计天数
+var obaby_ddos_self_days: int = 0
+
+## Obaby 供应链木马：是否已发文
+var supply_chain_post_written: bool = false
+
+# ============================================
+# 莫比乌斯延迟计数器（天数，-1 表示未激活）
+# ============================================
+
+var mo_lv1_delay_days: int = -1
+var mo_lv2_delay_days: int = -1
+var mo_lv3_delay_days: int = -1
+var mo_lv4_delay_days: int = -1
+var mo_lv5_delay_days: int = -1
+
+# ============================================
+# 莫比乌斯支线状态
+# ============================================
+
+## Lv1 初遇已完成
+var mo_lv1_done: bool = false
+
+## Lv1 选了选项1，玩家注意到莫比乌斯话里的矛盾
+var mo_noticed_gap: bool = false
+
+## Lv2 回访已完成
+var mo_lv2_done: bool = false
+
+## Lv3 深谈已完成
+var mo_lv3_done: bool = false
+
+## Lv4 认可已完成
+var mo_lv4_done: bool = false
+
+## Lv5 告别已完成
+var mo_lv5_done: bool = false
+
+## Lv5 选了隐藏选项3，触发莫比乌斯承认自己写不出
+var mo_confession_triggered: bool = false
+
+## 出版后互文收束完成，莫比乌斯重新执笔
+var mo_resolved: bool = false
+
+# ============================================
+# 安全事件系统
+# ============================================
+
+## 当前激活的安全事件（无事件时为 {}）
+## { "id": String, "progress": int, "choice": int, "escalate_days": int, "total_days": int }
+var active_event: Dictionary = {}
+
+## 事件冷却天数（触发后递减，0 表示可触发新事件）
+var event_cooldown: int = 0
+
+## 已解决的事件记录（用于 60 天不重复）
+var resolved_events: Array[String] = []
 
 # ============================================
 # 信号

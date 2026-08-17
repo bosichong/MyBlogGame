@@ -20,6 +20,7 @@ const EDITION_DATA = {
 
 
 func _ready() -> void:
+    TimerManager.stop_timer()
     var ordinal = 1
     if TaskManager and TaskManager.pending_scene_params.has("notification_ordinal"):
         ordinal = TaskManager.pending_scene_params.notification_ordinal

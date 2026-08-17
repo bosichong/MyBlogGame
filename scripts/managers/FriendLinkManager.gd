@@ -40,19 +40,12 @@ func delete_link(member_id: int) -> bool:
     return false
 
 func apply_for_link(member_id: int) -> Dictionary:
-    var blogger = GDManager.get_blogger()
-
-    if blogger.stamina < 5:
-        return {"success": false, "reason": "体力不足，需要5点体力"}
-
     if _data.has_link(member_id):
         return {"success": false, "reason": "已经是友链"}
 
     for req in _data.pending_requests:
         if req.get("member_id") == member_id:
             return {"success": false, "reason": "已有待处理申请"}
-
-    blogger.stamina -= 5
 
     var wait_days = randi_range(3, 7)
     var game_time = GDManager.get_time()
@@ -83,13 +76,6 @@ func set_auto_settings(settings: Dictionary) -> void:
     _data.set_auto_settings(settings)
 
 func do_maintenance() -> Dictionary:
-    var blogger = GDManager.get_blogger()
-
-    if blogger.stamina < 5:
-        return {"success": false, "reason": "体力不足"}
-
-    blogger.stamina -= 5
-
     var result = {
         "success": true,
         "processed_requests": 0,
@@ -188,6 +174,8 @@ func get_available_members() -> Array[Dictionary]:
 
     for member in league.lm_members:
         var id = int(member.get("id"))
+        if id == 888:
+            continue
         if id not in active_ids and id not in pending_ids:
             available.append(member)
 
@@ -304,6 +292,8 @@ func add_passive_requests() -> Array[Dictionary]:
     var eligible_members: Array[Dictionary] = []
     for member in league.lm_members:
         var member_id = member.get("id")
+        if member_id == 888:
+            continue
         if _data.has_link(member_id):
             continue
         if _data.has_pending_request(member_id):

@@ -32,12 +32,6 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "文章：0"
 
-[node name="blog_safety" type="Label" parent="v1/h3" unique_id=1848410581]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-text = "safety"
-
 [node name="blog_seo" type="Label" parent="v1/h3" unique_id=842911623]
 layout_mode = 2
 size_flags_horizontal = 0

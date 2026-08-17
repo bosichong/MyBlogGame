@@ -31,6 +31,14 @@ func _ready() -> void:
         # 技能学习信号
         Blogger.skill_learned.connect(_on_skill_learned)
 
+        # 技能阶段解锁/成长提示
+        Blogger.skill_stage_unlocked.connect(_on_skill_stage_unlocked)
+        Blogger.skill_value_up.connect(_on_skill_value_up)
+
+        # 体力/财力不足提示
+        Blogger.no_stamina_signal.connect(_on_resource_warn)
+        Blogger.no_money_signal.connect(_on_resource_warn)
+
         # 网站安全信号
         Blogger.signal_website_security.connect(signal_website_security)
         Blogger.signal_website_security_no_stamina.connect(signal_website_security_no_stamina)
@@ -56,6 +64,17 @@ func _ready() -> void:
         Yun.connect("game_over", _on_game_over)
         Yun.connect("suspend_warning", _on_suspend_warning)
         Yun.connect("blog_suspended", _on_blog_suspended)
+        Yun.connect("domain_renewal_reminder", _on_domain_renewal_reminder)
+        Yun.connect("host_renewal_reminder", _on_host_renewal_reminder)
+        Yun.connect("provider_appeared", _on_provider_appeared)
+        Yun.connect("provider_runaway", _on_provider_runaway)
+        Yun.connect("provider_runaway_active", _on_provider_runaway_active)
+        Yun.connect("runaway_warning", _on_suspend_warning)
+        Yun.connect("runaway_seo_wiped", _on_runaway_seo_wiped)
+    
+    if Blogger:
+        Blogger.connect("sg_traffic_warning", _on_traffic_warning)
+        Blogger.connect("sg_traffic_warning_resolved", _on_traffic_warning_resolved)
 
     TimerManager.timer.wait_time = DAY_TIMA
     $ui/bottom.connect("create_blog_passed",_on_bottom_calendar_passed)
@@ -78,7 +97,12 @@ func _ready() -> void:
     TaskManager.connect("sg_task_info_display_msg",sg_task_info_display_msg)
     TaskManager.connect("schedule_refresh_needed", _on_schedule_refresh_needed)
     TaskManager.connect("sg_task_show_popup_msg",sg_task_show_popup_msg)
+    TaskManager.connect("sg_task_show_main_popup_msg",sg_task_show_main_popup_msg)
+    TaskManager.connect("sg_task_show_choice_event", sg_task_show_choice_event)
     Blogger.connect("sg_info_msg", sg_task_info_display_msg)
+    Blogger.connect("sg_event_triggered", _on_event_triggered)
+    Blogger.connect("sg_event_resolved", _on_event_resolved)
+    Blogger.connect("sg_event_escalated", _on_event_escalated)
     
     var fl_manager = GDManager.friend_link_manager if GDManager else null
     if fl_manager:
@@ -91,6 +115,9 @@ func _ready() -> void:
     # 延迟检查初始任务，确保所有节点的 _ready() 都执行完毕
     call_deferred("_check_initial_tasks")
     call_deferred("_check_time_tasks_on_start")
+    
+    # 全部常驻面板按钮统一接 UI 音效
+    Sfx.wire_tree(self)
     
     update_ui()
 
@@ -137,7 +164,7 @@ func update_ui():
     $ui/top/h1/blog_level.text = "等级:"+str(Blogger.level) + "级"
     var tx = Utils.get_rank_title(Blogger.level,Strs.game_strs.头衔)
     $ui/top/h1/头衔.text = tx
-    $ui/top/h1/blog_stamina.text = "体力:"+str(Blogger.stamina)
+    $ui/top/h1/blog_stamina.text = "体力:%d/%d" % [Blogger.stamina, Utils.get_max_stamina(Blogger.level)]
     $ui/top/h1/blog_money.text = "钱:%.2f" % Blogger.money
     $ui/top/h1/date.text = Utils.get_time_string(TimerManager.current_year, TimerManager.current_month, TimerManager.current_week, TimerManager.current_day,TimerManager.current_quarter)
     
@@ -150,7 +177,6 @@ func update_ui():
     var bd = Blogger.blog_data
     $ui/bottom/v1/h3/blog_name.text = bd.blog_name
     $ui/bottom/v1/h3/blog_posts.text = "文章数:" + str(len(bd.posts) + len(bd.archived_posts))
-    $ui/bottom/v1/h3/blog_safety.text = "安全指数:" + str(bd.safety_value)
     $ui/bottom/v1/h3/blog_seo.text = "SEO:" + str(bd.seo_value)
     
     $ui/bottom/v1/h4/today_views.text="昨日:"+ str(bd.today_views)
@@ -169,6 +195,46 @@ func update_ui():
     $ui/r_panel/top/codeProgressBar.set_value_no_signal(Blogger.code_ability) 
     $ui/r_panel/top/literatureProgressBar.show_percentage = false
     $ui/r_panel/top/literatureProgressBar.set_value_no_signal(Blogger.literature_ability) 
+
+    $ui/r_panel/top/writingProgressBar/Num.text = _format_ability(Blogger.writing_ability)
+    $ui/r_panel/top/technicalProgressBar/Num.text = _format_ability(Blogger.technical_ability)
+    $ui/r_panel/top/codeProgressBar/Num.text = _format_ability(Blogger.code_ability)
+    $ui/r_panel/top/literatureProgressBar/Num.text = _format_ability(Blogger.literature_ability) 
+
+    _update_main_goal_hud()
+    _update_main_quest_progress()
+
+## 刷新顶部主线目标 HUD
+func _update_main_goal_hud() -> void:
+    var goal_label = $ui/top/chapter_goal
+    if not goal_label:
+        return
+    var goal = TaskManager.get_current_goal() if TaskManager else {}
+    if goal.is_empty():
+        goal_label.text = ""
+        return
+    var chapter_name = "第%d章" % goal.get("chapter", 1)
+    var text = "%s · 当前目标：%s" % [chapter_name, goal.get("guide", "")]
+    if goal.has("progress_text") and not goal.progress_text.is_empty():
+        text += "（%s）" % goal.progress_text
+    goal_label.text = text
+
+## 刷新主线任务完成度进度条（按当前章目标条数）
+func _update_main_quest_progress() -> void:
+    var bar = $ui/top/h3/Panel/ProgressBar
+    if not bar:
+        return
+    var prog = TaskManager.get_main_quest_progress() if TaskManager else {}
+    if prog.is_empty():
+        bar.max_value = 100
+        bar.value = 0
+        return
+    bar.max_value = 100
+    bar.value = prog.get("percent", 0.0)
+    var percent_label = $ui/top/h3/Panel/ProgressBar/quest_percent
+    if percent_label:
+        percent_label.text = "%.0f%%" % prog.get("percent", 0.0)
+    bar.tooltip_text = "第%d章主线进度：%d/%d" % [prog.get("chapter", 1), prog.get("completed", 0), prog.get("total", 0)]
 
 ## 游戏时间倍数运行控制
 func time_stop_bt():
@@ -233,6 +299,7 @@ func _on_close_lm():
 
 func _on_open_yun():
     $yun_main.visible = true
+    $yun_main.on_show_panel()
     TimerManager.stop_timer()
     
 func _on_close_yun():
@@ -277,9 +344,6 @@ func _on_day_ended():
         Blogger.views_calculator.daily_update()
     
     Blogger.daily_activities()
-    
-    # 每日自然恢复体力
-    Blogger.daily_stamina_recovery()
     
     # 友链申请结果检查
     _check_friendlink_applies()
@@ -446,13 +510,10 @@ func _on_chapter_reward(chapter: int, chapter_name: String) -> void:
         "等级 +5",
         "金钱 +1000",
     ]
-    var reward = preload("res://milestones/chapter_reward.tscn").instantiate()
-    reward.setup("🎉 你完成了" + chapter_name + " 的所有章节任务！", rewards)
-    reward.closed.connect(func():
-        TimerManager.start_timer()
-    )
-    add_child(reward)
-    TimerManager.stop_timer()
+    var text = "🎉 你完成了" + chapter_name + " 的所有章节任务！\n\n奖励：\n"
+    for r in rewards:
+        text += "  • " + r + "\n"
+    show_popup_message("章节完成", text)
 
 ## 显示通用弹窗（加入队列，依次弹出）
 func show_popup_message(title: String, content: String) -> void:
@@ -469,10 +530,11 @@ func _show_next_popup() -> void:
     _popup_is_showing = true
     var data = _popup_queue.pop_front()
 
-    
+    Sfx.play("popup_open")
+
     $AcceptDialog.title = data.title
     $AcceptDialog.dialog_text = data.content
-    $AcceptDialog.set_size(Vector2i(400,200))
+    $AcceptDialog.set_size(Vector2i(500,300))
     $AcceptDialog.popup_centered()  
     
     TimerManager.stop_timer()
@@ -487,8 +549,36 @@ func _show_next_popup() -> void:
         $AcceptDialog.canceled.connect(nav_func, CONNECT_ONE_SHOT)
 
 func s_level(l):
-    var tx = Utils.get_rank_title(l,Strs.game_strs.头衔)
-    show_popup_message("等级提升", "恭喜您的等级提升到"+str(l)+"！您的博客段位提升到了："+tx+"。")
+    $Toast.add_toast("等级提升", "恭喜您升级到 Lv.%d！" % l, $Toast.Tone.LEVELUP, "lv%d" % l)
+    var old_title = Utils.get_rank_title(l - 1, Strs.game_strs.头衔)
+    var new_title = Utils.get_rank_title(l, Strs.game_strs.头衔)
+    if old_title != new_title:
+        _play_confetti()
+        show_popup_message("头衔晋升", "🎉 恭喜您的博客段位提升到了：%s！\n\n【头衔晋升的好处】\n• 段位越高，博客访问量加成越高\n• 段位可提升博客影响力与江湖地位\n\n【等级提升的好处】\n• 解锁更多博客分类、日程与玩法\n• 每升一级，博客各项能力随之成长\n\n继续加油，向着更高的段位迈进！" % new_title)
+
+## 播放头衔晋升撒花特效
+func _play_confetti() -> void:
+    var confetti = preload("res://scenes/confetti.tscn").instantiate()
+    confetti.auto_emit = false
+    add_child(confetti)
+    confetti.emit()
+
+## 技能阶段解锁提示
+func _on_skill_stage_unlocked(old_name: String, new_name: String) -> void:
+    $Toast.add_toast("技能进阶", "%s → %s 已解锁！" % [old_name, new_name], $Toast.Tone.SUCCESS, "stage")
+
+## 技能能力值成长提示
+func _on_skill_value_up(skill_name: String, value: float) -> void:
+    $Toast.add_toast("技能成长", "%s能力提升至 %s" % [skill_name, _format_ability(value)], $Toast.Tone.SUCCESS, "grow_" + skill_name)
+
+## 体力/财力不足提示
+func _on_resource_warn(msg: String) -> void:
+    $Toast.add_toast("提示", msg, $Toast.Tone.DANGER, "warn")
+
+## 能力值格式化（去掉整数末尾 .0）
+func _format_ability(v: float) -> String:
+    var s := "%.1f" % v
+    return s.substr(0, s.length() - 2) if s.ends_with(".0") else s
 
 func on_sig_ad_1_day():
     # 从审核界面切换到管理面板，并开始记录广告费用
@@ -507,6 +597,7 @@ func _on_paid_income_settled(msg):
     info_display.add_message(msg)
 
 func _close_ac():
+    Sfx.play("popup_close")
     _popup_has_pending_scene = false
     if _popup_queue.is_empty():
         TimerManager.timer.start()
@@ -527,6 +618,90 @@ func sg_task_show_popup_msg(title: String, content: String):
 
     show_popup_message(title, content)
 
+## 主线里程碑弹窗：差异化强调（专属音效 + 顶部横幅 + 弹窗）
+func sg_task_show_main_popup_msg(title: String, content: String):
+    Sfx.play("main_complete")
+    $Toast.add_toast("📌 主线里程碑", "你完成了主线目标！", $Toast.Tone.TITLE, "main_goal")
+    show_popup_message("📌 主线 · " + title, content)
+    _update_main_goal_hud()
+    _update_main_quest_progress()
+
+## 显示多选事件弹窗（Obaby 等剧情事件）
+func sg_task_show_choice_event(title: String, content: String, choices: Array, event_id: String) -> void:
+    TimerManager.stop_timer()
+    var dialog = Window.new()
+    dialog.title = title
+    dialog.size = Vector2i(480, 400)
+    dialog.exclusive = true
+    dialog.unresizable = true
+    dialog.popup_window = true
+    add_child(dialog)
+
+    var margin = MarginContainer.new()
+    margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+    margin.add_theme_constant_override("margin_left", 16)
+    margin.add_theme_constant_override("margin_right", 16)
+    margin.add_theme_constant_override("margin_top", 16)
+    margin.add_theme_constant_override("margin_bottom", 16)
+    dialog.add_child(margin)
+
+    var scroll = ScrollContainer.new()
+    scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    margin.add_child(scroll)
+
+    var vbox = VBoxContainer.new()
+    vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    scroll.add_child(vbox)
+
+    var label = Label.new()
+    label.text = content
+    label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+    label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    vbox.add_child(label)
+
+    vbox.add_child(HSeparator.new())
+
+    for c in choices:
+        var btn = Button.new()
+        btn.text = c.label + "\n" + c.desc
+        btn.flat = false
+        btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        btn.custom_minimum_size = Vector2i(0, 50)
+        Sfx.wire(btn)
+        var choice_id = c.id
+        btn.pressed.connect(func():
+            dialog.queue_free()
+            TimerManager.start_timer()
+            TaskManager.on_obaby_choice_selected(event_id, choice_id)
+        )
+        vbox.add_child(btn)
+
+    dialog.popup_centered()
+
+# ===== 安全事件系统 =====
+
+## 安全事件触发弹窗（提示信息）
+func _on_event_triggered(event_data: Dictionary) -> void:
+    show_popup_message(event_data.get("popup_title", "安全事件"), event_data.get("popup_desc", ""))
+
+## 安全事件解决弹窗
+func _on_event_resolved(event_id: String, reward: Dictionary) -> void:
+    var msg = "事件已解决！"
+    if reward.get("exp", 0) > 0:
+        msg += "\n经验 +%d" % reward.exp
+    if reward.get("money", 0) > 0:
+        msg += "\n金钱 +%d" % reward.money
+    if reward.get("safety_value", 0) > 0:
+        msg += "\n安全值 +%d" % reward.safety_value
+    if reward.get("reputation", 0) > 0:
+        msg += "\n声望 +%d" % reward.reputation
+    show_popup_message("✅ 安全事件解除", msg)
+
+## 安全事件升级弹窗
+func _on_event_escalated(old_id: String, new_id: String) -> void:
+    show_popup_message("⚠️ 事件升级", "安全事件已升级！情况变得更加严重。\n请立即安排「紧急排险」任务！")
+
 # ===== 主机域名系统信号处理 =====
 
 func _on_blog_suspended(source: String):
@@ -535,9 +710,8 @@ func _on_blog_suspended(source: String):
     show_popup_message("博客暂停", "您的博客因欠费已暂停运营！\n原因：" + ("域名" if source == "domain" else "主机" if source == "host" else "域名和主机") + "到期未续费\n\n请尽快续费，否则4周后游戏将结束！")
 
 func _on_suspend_warning(message: String):
-    """欠费警告信号处理"""
+    """欠费警告信号处理——仅信息面板显示，弹窗已由到期前提醒取代"""
     info_display.add_message("⚠️ " + message)
-    show_popup_message("欠费警告", message)
 
 func _on_game_over(suspend_days: int):
     """游戏结束信号处理"""
@@ -545,6 +719,43 @@ func _on_game_over(suspend_days: int):
     TimerManager.stop_timer()
     # 显示游戏结束弹窗
     show_popup_message("游戏结束", "您的博客因欠费已永久下线！\n\n欠费天数：%d 天\n\n感谢您的游玩！" % suspend_days)
+
+
+# ===== 主机域名到期提醒 =====
+
+func _on_domain_renewal_reminder(days_left: int):
+    show_popup_message("域名续费提醒", "您的域名 %s 将于 %d 天后到期，请及时续费。" % [Yun.get_domain_name(), days_left])
+
+func _on_host_renewal_reminder(days_left: int):
+    show_popup_message("主机续费提醒", "您的主机套餐「%s」将于 %d 天后到期，请及时续费或升级。" % [Yun.get_server_package_name(), days_left])
+
+# ===== 服务商系统信号处理 =====
+
+func _on_provider_appeared(provider_name: String):
+    """新服务商上线"""
+    info_display.add_message("📢 新服务商「%s」已上线，可前往厂商选择页选择。" % provider_name)
+    show_popup_message("新服务商上线", "新服务商「%s」已上线！\n\n可前往「厂商选择」页选择，不同厂商的续费价格不同。" % provider_name)
+
+func _on_provider_runaway(provider_name: String):
+    """服务商跑路（非当前使用）"""
+    info_display.add_message("⚠️ 服务商「%s」已跑路失联，该服务商不再可用。" % provider_name)
+    show_popup_message("服务商跑路", "服务商「%s」已跑路失联，无法再提供服务。\n若您正在使用该服务商，请尽快更换！" % provider_name)
+
+func _on_provider_runaway_active(provider_name: String):
+    """正在使用的服务商跑路失联"""
+    info_display.add_message("❌ 服务商「%s」跑路失联！网站已无法访问，请一周内更换服务商，否则SEO将清零！" % provider_name)
+    show_popup_message("⚠️ 服务商跑路失联", "您正在使用的服务商「%s」已跑路失联！\n\n网站已无法访问，没有任何流量。\n请在一周内前往「厂商选择」页更换服务商，\n否则 SEO 将清零！" % provider_name)
+
+func _on_runaway_seo_wiped(provider_name: String):
+    """超期未更换，SEO 清零"""
+    info_display.add_message("💥 服务商「%s」失联超过一周，SEO 已被清零！请立即更换服务商！" % provider_name)
+    show_popup_message("⚠️ SEO 已清零", "服务商「%s」失联超过一周，您的 SEO 已被清零！\n\n请立即前往「厂商选择」页更换服务商，否则网站将持续无法访问。" % provider_name)
+
+func _on_traffic_warning(percent: float):
+    show_popup_message("流量预警", "本月流量已达套餐限额的 %d%%，建议升级套餐或优化缓存。" % [percent])
+
+func _on_traffic_warning_resolved():
+    show_popup_message("流量预警已解除", "流量已回落至安全范围，感谢你的处理。")
 
 
 ## 自动保存游戏（已禁用）

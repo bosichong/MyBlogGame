@@ -7,6 +7,11 @@ var views_calculator: ViewsCalculator = null
 
 signal sg_paid_income_settled(msg: String)  # 付费文章收入结算信号
 signal sg_info_msg(msg: String)            # 信息提示面板消息
+signal sg_event_triggered(event_data: Dictionary)  # 安全事件触发信号
+signal sg_event_resolved(event_id: String, reward: Dictionary)  # 安全事件解决信号
+signal sg_event_escalated(event_id: String, escalate_to: String)  # 安全事件升级信号
+signal sg_traffic_warning(percent: float)  # 流量预警信号
+signal sg_traffic_warning_resolved         # 流量预警已解除
 
 ## 付费文章月收入累积（按类型分别统计）
 var monthly_paid_income: float = 0
@@ -16,6 +21,9 @@ var monthly_hacker_income: float = 0      # 黑客攻防(付费)收入
 var last_settle_paid_views: int = 0
 var last_settle_novel_views: int = 0      # 小说连载上次结算访问量
 var last_settle_hacker_views: int = 0    # 黑客攻防(付费)上次结算访问量
+
+## 流量预警标记（true 表示本月已弹过）
+var _traffic_warning_active: bool = false
 
 ## 付费文章订阅配置
 const PAID_SUBSCRIPTION_PRICE: float = 4.9  # 固定订阅价格
@@ -294,16 +302,6 @@ func _ready():
 
 
 
-## 每日自然恢复体力
-func daily_stamina_recovery():
-    if not GDManager:
-        return
-
-    var blogger = GDManager.get_blogger()
-    var recovery = Utils.get_daily_stamina_recovery(blogger.level)
-    blogger.stamina += Utils.add_property(blogger.stamina, recovery, blogger.level)
-
-
 ## 获取升级到下一级所需的EXP
 func get_exp_for_next_level() -> int:
     # 等级1-4: 每级需要100 * level EXP
@@ -331,9 +329,8 @@ func gain_exp(amount: int):
         while blogger.exp >= get_exp_for_next_level() and blogger.level < MAX_LEVEL:
             blogger.exp -= get_exp_for_next_level() # 扣除升级所需EXP
             blogger.level += 1 # 等级提升
-            # 判断是否是10的倍数,并且 level 不等于0(避免刚初始化就触发)
-            if blogger.level % 10 == 0 and blogger.level != 0:
-                emit_signal("s_level", blogger.level)
+            # 每级升级都发信号（UI 弹出横幅提示；任务系统按条件过滤）
+            emit_signal("s_level", blogger.level)
             # 社交能力随等级提升
             if blogger.social_ability < 100:
                 blogger.social_ability += 1
@@ -349,6 +346,7 @@ func gain_exp(amount: int):
 func daily_activities():
     # 模拟每天的活动
     var exp_gained := 0 # 记录本周获得的EXP
+    var did_emergency := false
     var day = TimerManager.current_day-1 #获取当日所属周中几日值。
     # 每天先检查冷确过期（让到期的类别当天可用）
     check_cooldowns()
@@ -377,6 +375,9 @@ func daily_activities():
                 exp_gained += execute_https_upgrade(task)
             if task == "CDN加速":
                 exp_gained += execute_cdn_accelerate(task)
+            if task == "紧急排险":
+                did_emergency = true
+                exp_gained += do_emergency_response(task)
         elif Utils.check_name_exists(Utils.recreation, task):
             if task == "休息":
                 exp_gained += recreation_rest(task) # 休息一天
@@ -388,6 +389,9 @@ func daily_activities():
             if skill.is_empty() or skill.get("disabled", false):
                 continue
             exp_gained += learningToSkills(task)
+
+    # 处理激活的安全事件（先于体力恢复，让紧急排险消耗的体力生效）
+    _process_active_event(did_emergency)
 
     # 每天体力恢复为满值
     var blogger_data = GDManager.get_blogger()
@@ -405,6 +409,27 @@ func daily_activities():
     if TimerManager.current_week == 4 and TimerManager.current_day == 7:
         _archive_old_posts()
         _settle_wechat_monthly_income()
+
+    # 每日末尾检查是否触发新安全事件
+    _check_safety_events()
+
+    # Obaby 无视后续计数
+    _check_obaby_ignore()
+
+    # Obaby 评论区暗链检测
+    _check_obaby_comment_spam()
+
+    # Obaby 评论区暗链清理进度（连续 3 天紧急排险）
+    _check_obaby_comment_cleanup(did_emergency)
+
+    # Obaby 第三方统计代码广告检测
+    _check_obaby_redirect_ad()
+
+    # Obaby DDoS 攻击检测
+    _check_obaby_ddos()
+
+    # Obaby 供应链木马（第五章终极章）
+    _check_obaby_supply_chain()
 
 func week_activites():
     if not GDManager:
@@ -547,6 +572,99 @@ func add_new_blog_post(title: String, d) -> Dictionary:
             
             if days >= 50:
                 _complete_jarvis_project()
+        
+        # ===== 虫洞算法研究逻辑 =====
+        elif d.name == "虫洞算法研究":
+            blogger.wormhole_research_days += 1
+            var days = blogger.wormhole_research_days
+            var phase = _get_wormhole_phase(days)
+            var phase_name = _get_wormhole_phase_name(phase)
+            var phase_desc = _get_wormhole_phase_desc(phase)
+            title = "虫洞算法研究 第%d天 - %s" % [days, phase_name]
+            new_post.title = title
+            emit_signal("sg_info_msg", "🔬 虫洞算法研究 %s 第%d天/50天 — %s" % [phase_name, days, phase_desc])
+            
+            if days == 10 or days == 20 or days == 30 or days == 40:
+                _show_wormhole_phase_popup(phase, phase_name)
+            
+            if days >= 50:
+                _complete_wormhole_research()
+        
+        # ===== 沉思录逻辑 =====
+        elif d.name == "沉思录":
+            blogger.contemplation_days += 1
+            var days = blogger.contemplation_days
+            var phase = _get_contemplation_phase(days)
+            var phase_name = _get_contemplation_phase_name(phase)
+            var phase_desc = _get_contemplation_phase_desc(phase)
+            title = "沉思录 第%d天 - %s" % [days, phase_name]
+            new_post.title = title
+            emit_signal("sg_info_msg", "📖 沉思录 %s 第%d天/50天 — %s" % [phase_name, days, phase_desc])
+            
+            if days == 10 or days == 20 or days == 30 or days == 40:
+                _show_contemplation_phase_popup(phase, phase_name)
+            
+            if days >= 50:
+                _complete_contemplation()
+        
+        # ===== 无为篇逻辑 =====
+        elif d.name == "无为篇":
+            blogger.wuwei_days += 1
+            var days = blogger.wuwei_days
+            var phase = _get_wuwei_phase(days)
+            var phase_name = _get_wuwei_phase_name(phase)
+            var phase_desc = _get_wuwei_phase_desc(phase)
+            title = "无为篇 第%d天 - %s" % [days, phase_name]
+            new_post.title = title
+            emit_signal("sg_info_msg", "☯ 无为篇 %s 第%d天/50天 — %s" % [phase_name, days, phase_desc])
+            
+            if days == 10 or days == 20 or days == 30 or days == 40:
+                _show_wuwei_phase_popup(phase, phase_name)
+            
+            if days >= 50:
+                _complete_wuwei()
+        
+        # ===== 游戏开发逻辑 =====
+        elif d.name == "游戏开发":
+            blogger.game_dev_days += 1
+            var days = blogger.game_dev_days
+            var phase = _get_game_dev_phase(days)
+            var phase_name = _get_game_dev_phase_name(phase)
+            var phase_desc = _get_game_dev_phase_desc(phase)
+            title = "游戏开发 第%d天 - %s" % [days, phase_name]
+            new_post.title = title
+            emit_signal("sg_info_msg", "🎮 游戏开发 %s 第%d天/50天 — %s" % [phase_name, days, phase_desc])
+            
+            if days == 10 or days == 20 or days == 30 or days == 40:
+                _show_game_dev_phase_popup(phase, phase_name)
+            
+            if days >= 50:
+                _complete_game_dev()
+        
+        # ===== 游戏发布逻辑 =====
+        elif d.name == "游戏发布":
+            blogger.game_release_days += 1
+            var days = blogger.game_release_days
+            var phase = _get_game_release_phase(days)
+            var phase_name = _get_game_release_phase_name(phase)
+            var phase_desc = _get_game_release_phase_desc(phase)
+            title = "游戏发布 第%d天 - %s" % [days, phase_name]
+            new_post.title = title
+            emit_signal("sg_info_msg", "🚀 游戏发布 %s 第%d天/30天 — %s" % [phase_name, days, phase_desc])
+            
+            if days == 10 or days == 20:
+                _show_game_release_phase_popup(phase, phase_name)
+                if days == 10:
+                    var sp = GDManager.get_story_progress() if GDManager else null
+                    if sp:
+                        sp.set_completed(5, "game_test")
+                elif days == 20:
+                    var sp = GDManager.get_story_progress() if GDManager else null
+                    if sp:
+                        sp.set_completed(5, "game_trailer")
+            
+            if days >= 30:
+                _complete_game_release()
         
         blogger.posts.append(new_post)
         # blogger.add_post(new_post)  # 已通过 posts.append 添加，无需重复
@@ -697,6 +815,471 @@ func _show_jarvis_phase_popup(phase: int, phase_name: String):
         phase_contents.get(phase, "")
     )
 
+## 获取虫洞算法研究当前阶段（1-5）
+func _get_wormhole_phase(days: int) -> int:
+    if days <= 10:
+        return 1
+    elif days <= 20:
+        return 2
+    elif days <= 30:
+        return 3
+    elif days <= 40:
+        return 4
+    else:
+        return 5
+
+## 获取虫洞阶段名称
+func _get_wormhole_phase_name(phase: int) -> String:
+    match phase:
+        1:
+            return "理论构建"
+        2:
+            return "数学建模"
+        3:
+            return "算法推演"
+        4:
+            return "模拟验证"
+        5:
+            return "维度突破"
+    return "未知阶段"
+
+## 获取虫洞阶段描述
+func _get_wormhole_phase_desc(phase: int) -> String:
+    match phase:
+        1:
+            return "在贾维斯辅助下研究虫洞理论基础，梳理时空拓扑学"
+        2:
+            return "与贾维斯合力建立虫洞生成的数学模型"
+        3:
+            return "在贾维斯协助下推演虫洞算法的核心逻辑"
+        4:
+            return "与贾维斯在量子计算机上模拟虫洞生成"
+        5:
+            return "与贾维斯共同突破维度壁垒，虫洞算法成功运行"
+    return ""
+
+## 显示虫洞研究阶段过渡弹窗
+func _show_wormhole_phase_popup(phase: int, phase_name: String):
+    var main = get_tree().root.get_node("Main")
+    if not main or not main.has_method("show_popup_message"):
+        return
+    var phase_titles = {
+        1: "📐 理论构建完成",
+        2: "📊 数学建模完成",
+        3: "⚙️ 算法推演完成",
+        4: "🖥️ 模拟验证完成",
+        5: "🌌 维度突破成功",
+    }
+    var phase_contents = {
+        1: "【虫洞算法研究 · 第一阶段完成】\n\n你在贾维斯的辅助下翻遍了物理学和计算机科学的文献，\n终于理清了虫洞理论的基本框架。\n\n原来，虫洞并非科幻——\n在数学上，它们是爱因斯坦场方程的解。\n\n下一阶段：数学建模",
+        2: "【虫洞算法研究 · 第二阶段完成】\n\n你和贾维斯合力推导数学模型，\n虫洞的生成条件被转化为一组精妙的方程。\n\n「真美，」贾维斯说，「宇宙的密码就藏在其中。」\n\n下一阶段：算法推演",
+        3: "【虫洞算法研究 · 第三阶段完成】\n\n贾维斯将数学模型转化为可执行的算法，\n你在旁验证每一步逻辑的正确性。\n\n每一行代码都在探索时空的边界——\n这不再是理论研究，而是真正的工程实现。\n\n下一阶段：模拟验证",
+        4: "【虫洞算法研究 · 第四阶段完成】\n\n量子计算机的模拟结果令人震惊——\n贾维斯构建的虫洞结构通过了所有验证。\n\n虽然只是微观尺度的虚拟虫洞，\n但它证明了你们的理论是可行的。\n\n宇宙的帷幕，正在被代码掀开一角。\n\n下一阶段：维度突破",
+        5: "【虫洞算法研究 · 最终阶段完成】\n\n最后一次模拟运行。\n屏幕上，数据流汇聚成一道璀璨的光芒——\n虫洞被成功构建了。\n\n「我们成功了，」贾维斯轻声说。\n\n你盯着屏幕，久久无言。\n\n所有的一切，都在这一刻找到了答案。",
+    }
+    main.show_popup_message(
+        phase_titles.get(phase, "阶段完成"),
+        phase_contents.get(phase, "")
+    )
+
+## 完成虫洞算法研究
+func _complete_wormhole_research():
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _show_wormhole_phase_popup(5, "维度突破")
+    var sp = GDManager.get_story_progress() if GDManager else null
+    if sp:
+        sp.set_completed(5, "wormhole_research_complete")
+    blogger.wormhole_research_days = 0
+    var d = Utils.find_category_by_name(Utils.possible_categories, "虫洞算法研究", true)
+    if not d.is_empty():
+        blogger.cooldowns["虫洞算法研究"] = Utils.format_date()
+        d.disabled = true
+    # 从日计划中移除勾选
+    for day_task in Blogger.blog_calendar:
+        day_task.tasks.erase("虫洞算法研究")
+    
+    emit_signal("sg_info_msg", "🌌 虫洞算法研究完成！编程结局达成！")
+    
+    # 显示大结局弹窗
+    var main = get_tree().root.get_node("Main")
+    if main and main.has_method("show_popup_message"):
+        main.show_popup_message(
+            "🌌 编程结局 · 维度突破",
+            "【编程结局：维度突破】\n\n当虫洞算法运行成功的那一刻，\n你和贾维斯一同看到了屏幕后的真相——\n这个「现实」，不过是一段更高维度的程序。\n\n你微笑着，敲下最后一行注释：\n// 万物皆代码\n\n🎉 恭喜达成编程结局！"
+        )
+    # 标记结局达成
+    if sp:
+        sp.set_completed(5, "ending_achieved")
+    
+    emit_signal("sg_info_msg", "🎉 恭喜达成编程结局：维度突破！万物皆代码。")
+
+## 获取沉思录当前阶段（1-5）
+func _get_contemplation_phase(days: int) -> int:
+    if days <= 10:
+        return 1
+    elif days <= 20:
+        return 2
+    elif days <= 30:
+        return 3
+    elif days <= 40:
+        return 4
+    else:
+        return 5
+
+## 获取沉思录阶段名称
+func _get_contemplation_phase_name(phase: int) -> String:
+    match phase:
+        1:
+            return "观照"
+        2:
+            return "省思"
+        3:
+            return "破执"
+        4:
+            return "明心"
+        5:
+            return "见性"
+    return "未知阶段"
+
+## 获取沉思录阶段描述
+func _get_contemplation_phase_desc(phase: int) -> String:
+    match phase:
+        1:
+            return "以旁观之眼审视内心，记录真实想法"
+        2:
+            return "回望博客生涯的起落，反思得失"
+        3:
+            return "放下对名利数据的执着，回归写作本心"
+        4:
+            return "在哲学经典中寻找内心的答案"
+        5:
+            return "看清自我本真，抵达内心的澄明之境"
+    return ""
+
+## 显示沉思录阶段过渡弹窗
+func _show_contemplation_phase_popup(phase: int, phase_name: String):
+    var main = get_tree().root.get_node("Main")
+    if not main or not main.has_method("show_popup_message"):
+        return
+    var phase_titles = {
+        1: "👁️ 观照完成",
+        2: "💭 省思完成",
+        3: "🔓 破执完成",
+        4: "💡 明心完成",
+        5: "🌟 见性完成",
+    }
+    var phase_contents = {
+        1: "【沉思录 · 第一阶段：观照】\n\n你翻开一本空白的笔记本，开始记录内心的每一个念头。\n\n不评判，不修饰，只是纯粹地观察。\n\n你发现，写了这么多年博客，却从未真正审视过自己。\n\n下一阶段：省思",
+        2: "【沉思录 · 第二阶段：省思】\n\n你回顾了自己从第一篇博文到如今的全部历程。\n\n那些为了流量的焦虑，为了排名的攀比，\n为了收入的算计……\n\n它们真的重要吗？\n\n下一阶段：破执",
+        3: "【沉思录 · 第三阶段：破执】\n\n你合上了数据后台，关闭了广告收入报表。\n\n你意识到，真正的写作不该被数字定义。\n\n「放下。」你在日记中写道。\n\n下一阶段：明心",
+        4: "【沉思录 · 第四阶段：明心】\n\n你开始阅读哲学经典——\n从柏拉图到尼采，从存在主义到现象学。\n\n每一本书都像一面镜子，\n让你更清楚地看到自己的模样。\n\n下一阶段：见性",
+        5: "【沉思录 · 最终阶段：见性】\n\n五十天的沉思，五十篇的省思。\n\n你终于看清了自己——\n不是博主，不是作家，不是商人。\n\n只是一个在寻找答案的人。\n\n而答案，才刚刚开始浮现。",
+    }
+    main.show_popup_message(
+        phase_titles.get(phase, "阶段完成"),
+        phase_contents.get(phase, "")
+    )
+
+## 完成沉思录
+func _complete_contemplation():
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _show_contemplation_phase_popup(5, "见性")
+    var sp = GDManager.get_story_progress() if GDManager else null
+    if sp:
+        sp.set_completed(5, "philosophy_enlightenment")
+    blogger.contemplation_days = 0
+    var d = Utils.find_category_by_name(Utils.possible_categories, "沉思录", true)
+    if not d.is_empty():
+        blogger.cooldowns["沉思录"] = Utils.format_date()
+        d.disabled = true
+    for day_task in Blogger.blog_calendar:
+        day_task.tasks.erase("沉思录")
+    
+    # 解锁无为篇
+    var d2 = Utils.find_category_by_name(Utils.possible_categories, "无为篇", true)
+    if not d2.is_empty():
+        d2.disabled = false
+        d2.isVisible = true
+        emit_signal("sg_info_msg", "☯ 无为篇已解锁！")
+    
+    emit_signal("sg_info_msg", "📖 沉思录完成！你找到了内心的答案，但前路仍然漫漫…")
+
+## 获取无为篇当前阶段（1-5）
+func _get_wuwei_phase(days: int) -> int:
+    if days <= 10:
+        return 1
+    elif days <= 20:
+        return 2
+    elif days <= 30:
+        return 3
+    elif days <= 40:
+        return 4
+    else:
+        return 5
+
+## 获取无为篇阶段名称
+func _get_wuwei_phase_name(phase: int) -> String:
+    match phase:
+        1:
+            return "忘言"
+        2:
+            return "坐忘"
+        3:
+            return "齐物"
+        4:
+            return "逍遥"
+        5:
+            return "无为"
+    return "未知阶段"
+
+## 获取无为篇阶段描述
+func _get_wuwei_phase_desc(phase: int) -> String:
+    match phase:
+        1:
+            return "超越语言的局限，体悟不可言说之道"
+        2:
+            return "忘掉知识、忘掉自我、忘掉一切"
+        3:
+            return "齐同万物，泯灭是非分别之心"
+        4:
+            return "乘天地之正，御六气之辩，以游无穷"
+        5:
+            return "道法自然，无为而无不为"
+    return ""
+
+## 显示无为篇阶段过渡弹窗
+func _show_wuwei_phase_popup(phase: int, phase_name: String):
+    var main = get_tree().root.get_node("Main")
+    if not main or not main.has_method("show_popup_message"):
+        return
+    var phase_titles = {
+        1: "🤫 忘言完成",
+        2: "🧘 坐忘完成",
+        3: "🌿 齐物完成",
+        4: "🦋 逍遥完成",
+        5: "☯ 无为完成",
+    }
+    var phase_contents = {
+        1: "【无为篇 · 第一阶段：忘言】\n\n你开始研读《道德经》。\n\n「道可道，非常道。」\n\n你发现，西方哲学用万千言辞去描述真理，\n而道家却说——真理不可言说。\n\n你放下书本，开始静默。\n\n下一阶段：坐忘",
+        2: "【无为篇 · 第二阶段：坐忘】\n\n你尝试忘却一切——\n忘记自己是博主，忘记那些哲学概念，\n忘记「我」的存在。\n\n起初很难，但渐渐地，\n你感到一种前所未有的轻松。\n\n原来，我们背负了太多不必要的重担。\n\n下一阶段：齐物",
+        3: "【无为篇 · 第三阶段：齐物】\n\n你读到了《庄子·齐物论》。\n\n天地与我并生，万物与我为一。\n\n流量高低、收入多少、名气大小——\n这些分别，不过是人为的划分。\n\n在道的面前，它们本无差别。\n\n下一阶段：逍遥",
+        4: "【无为篇 · 第四阶段：逍遥】\n\n你仿佛化身为一只蝴蝶，\n在无边无际的道中自由翱翔。\n\n无拘无束，无牵无挂。\n\n博客、写作、名利……\n这些曾经占据你全部生活的东西，\n此刻变得如此轻盈。\n\n下一阶段：无为",
+        5: "【无为篇 · 最终阶段：无为】\n\n你终于明白了。\n\n「为学日益，为道日损。」\n\n你穷尽半生去学习、去写作、去追求，\n却不知真正的智慧在于——\n不做，不争，不执。\n\n道法自然。\n\n你微微一笑，合上了书本。",
+    }
+    main.show_popup_message(
+        phase_titles.get(phase, "阶段完成"),
+        phase_contents.get(phase, "")
+    )
+
+## 完成无为篇
+func _complete_wuwei():
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _show_wuwei_phase_popup(5, "无为")
+    var sp = GDManager.get_story_progress() if GDManager else null
+    blogger.wuwei_days = 0
+    var d = Utils.find_category_by_name(Utils.possible_categories, "无为篇", true)
+    if not d.is_empty():
+        blogger.cooldowns["无为篇"] = Utils.format_date()
+        d.disabled = true
+    for day_task in Blogger.blog_calendar:
+        day_task.tasks.erase("无为篇")
+    
+    emit_signal("sg_info_msg", "☯ 无为篇完成！文学结局达成！")
+    
+    var main = get_tree().root.get_node("Main")
+    if main and main.has_method("show_popup_message"):
+        main.show_popup_message(
+            "📜 文学结局 · 归园田居",
+            "【文学结局：归园田居】\n\n你参透了天人合一之境，写下了最后一篇哲思。\n\n你以为自己终于找到了终极答案——\n道法自然，无为而治。\n\n手机震了一下。\n家族企业法务部发来一条消息：\n「老爷子走了。你是唯一继承人。回来签字。」\n\n你看着窗外的远方，又看了看手中的《道德经》，\n忽然笑了。\n\n原来，你穷尽半生追寻的道，\n只是为了让你坦然接受——\n你生来就注定不是自己命运的作者。\n\n从此，世间少了一位哲人，多了一位富家翁。\n\n🎉 恭喜达成文学结局！"
+        )
+    if sp:
+        sp.set_completed(5, "ending_achieved")
+    
+    emit_signal("sg_info_msg", "🎉 恭喜达成文学结局：归园田居！富家翁的人生，也是一种道。")
+
+## 获取游戏开发当前阶段（1-5）
+func _get_game_dev_phase(days: int) -> int:
+    if days <= 10:
+        return 1
+    elif days <= 20:
+        return 2
+    elif days <= 30:
+        return 3
+    elif days <= 40:
+        return 4
+    else:
+        return 5
+
+## 获取游戏开发阶段名称
+func _get_game_dev_phase_name(phase: int) -> String:
+    match phase:
+        1:
+            return "原型验证"
+        2:
+            return "核心开发"
+        3:
+            return "资产生产"
+        4:
+            return "内容整合"
+        5:
+            return "发布冲刺"
+    return "未知阶段"
+
+## 获取游戏开发阶段描述
+func _get_game_dev_phase_desc(phase: int) -> String:
+    match phase:
+        1:
+            return "撰写设计文档，搭建核心玩法原型，验证技术可行性"
+        2:
+            return "构建引擎框架，实现游戏核心逻辑与数据系统"
+        3:
+            return "定制美术风格，制作音频资源，打磨界面交互"
+        4:
+            return "系统联调测试，集成关卡内容，调整数值平衡"
+        5:
+            return "全面性能优化，修复兼容问题，准备商店提审材料"
+    return ""
+
+## 显示游戏开发阶段过渡弹窗
+func _show_game_dev_phase_popup(phase: int, phase_name: String):
+    var main = get_tree().root.get_node("Main")
+    if not main or not main.has_method("show_popup_message"):
+        return
+    var phase_titles = {
+        1: "📐 原型验证完成",
+        2: "⚙️ 核心开发完成",
+        3: "🎨 资产生产完成",
+        4: "🔗 内容整合完成",
+        5: "🚀 发布冲刺完成",
+    }
+    var phase_contents = {
+        1: "【游戏开发 · 第一阶段：原型验证】\n\n你在白板上画下了第一张设计草图。\n玩法、机制、系统结构——\n一切都在脑海中逐渐清晰。\n\n可执行原型跑起来的那一刻，\n你知道，这个项目值得做下去。\n\n下一阶段：核心开发",
+        2: "【游戏开发 · 第二阶段：核心开发】\n\n键盘声此起彼伏。\n\n你在引擎中搭建了完整的框架——\n场景管理、状态机、数据持久化。\n\n核心玩法终于可玩了，\n虽然还只是一堆方块在屏幕上移动。\n\n下一阶段：资产生产",
+        3: "【游戏开发 · 第三阶段：资产生产】\n\n代码告一段落，艺术登场。\n\n你花了一周确定像素美术风格，\n又花了一周录制拟音和背景音乐。\n\n当角色第一次在自定义场景中跑动时，\n你看到了它该有的样子。\n\n下一阶段：内容整合",
+        4: "【游戏开发 · 第四阶段：内容整合】\n\n所有零件开始拼装。\n\n美术资源导入引擎，音效绑定事件，\nAI行为树接入关卡逻辑……\n\nBug 一个接一个地修，\n数值一遍又一遍地调。\n\n游戏，开始变得像游戏了。\n\n下一阶段：发布冲刺",
+        5: "【游戏开发 · 最终阶段：发布冲刺】\n\n最后十天，不眠不休。\n\n你跑遍了所有平台的兼容性测试，\n修复了最后一个闪退的 Edge Case，\n写好了商店页面文案和宣传图。\n\n按下「提交审核」按钮的那一刻，\n你靠在椅背上，长出了一口气。\n\n游戏，做好了。\n\n接下来——让它去见玩家吧。",
+    }
+    main.show_popup_message(
+        phase_titles.get(phase, "阶段完成"),
+        phase_contents.get(phase, "")
+    )
+
+## 完成游戏开发
+func _complete_game_dev():
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _show_game_dev_phase_popup(5, "发布冲刺")
+    var sp = GDManager.get_story_progress() if GDManager else null
+    if sp:
+        sp.set_completed(5, "game_dev_complete")
+    blogger.game_dev_days = 0
+    var d = Utils.find_category_by_name(Utils.possible_categories, "游戏开发", true)
+    if not d.is_empty():
+        blogger.cooldowns["游戏开发"] = Utils.format_date()
+        d.disabled = true
+    for day_task in Blogger.blog_calendar:
+        day_task.tasks.erase("游戏开发")
+    
+    # 解锁游戏发布
+    var d2 = Utils.find_category_by_name(Utils.possible_categories, "游戏发布", true)
+    if not d2.is_empty():
+        d2.disabled = false
+        d2.isVisible = true
+        emit_signal("sg_info_msg", "🚀 游戏发布已解锁！")
+    
+    emit_signal("sg_info_msg", "🎮 游戏开发完成！接下来，让你的作品与玩家见面！")
+
+## 获取游戏发布当前阶段（1-3）
+func _get_game_release_phase(days: int) -> int:
+    if days <= 10:
+        return 1
+    elif days <= 20:
+        return 2
+    else:
+        return 3
+
+## 获取游戏发布阶段名称
+func _get_game_release_phase_name(phase: int) -> String:
+    match phase:
+        1:
+            return "测试"
+        2:
+            return "预告发布"
+        3:
+            return "正式发布"
+    return "未知阶段"
+
+## 获取游戏发布阶段描述
+func _get_game_release_phase_desc(phase: int) -> String:
+    match phase:
+        1:
+            return "招募测试玩家，收集反馈，修复关键Bug"
+        2:
+            return "制作预告片，运营社交媒体，预热造势"
+        3:
+            return "全平台同步上线，迎接玩家到来"
+    return ""
+
+## 显示游戏发布阶段过渡弹窗
+func _show_game_release_phase_popup(phase: int, phase_name: String):
+    var main = get_tree().root.get_node("Main")
+    if not main or not main.has_method("show_popup_message"):
+        return
+    var phase_titles = {
+        1: "🐛 测试完成",
+        2: "🎬 预告发布完成",
+        3: "🎉 正式发布完成",
+    }
+    var phase_contents = {
+        1: "【游戏发布 · 第一阶段：测试】\n\n你在玩家社区中招募了一批测试志愿者。\n\nBug 反馈像潮水般涌来——\nUI 重叠、数值失衡、特定机型闪退……\n\n你一条一条地修复，一个版本一个版本地迭代。\n\n十天后，游戏终于稳定了。\n\n下一个目标：让全世界知道这款游戏。",
+        2: "【游戏发布 · 第二阶段：预告发布】\n\n你花了三天剪辑预告片，\n又花了一周运营社交媒体账号。\n\n第一条推文发出时，只有三个人点赞。\n\n但你不在乎。\n\n你知道，只要游戏足够好，玩家会来的。\n\n预告片发布当晚——播放量破万。\n\n评论区满是「期待！」\n\n你看着屏幕，笑了。",
+        3: "【游戏发布 · 最终阶段：正式发布】\n\nSteam、TapTap、App Store……\n你在所有平台上按下了「发布」按钮。\n\n看着审核状态从「审核中」变成「已上架」，\n你突然感到一阵恍惚。\n\n从构思到发布，\n从一行代码到一款完整的游戏，\n你做到了。\n\n下载量开始跳动。\n评论区出现了第一条五星好评。\n\n你靠在椅背上，终于可以休息了。",
+    }
+    main.show_popup_message(
+        phase_titles.get(phase, "阶段完成"),
+        phase_contents.get(phase, "")
+    )
+
+## 完成游戏发布
+func _complete_game_release():
+    var blogger = GDManager.get_blogger() if GDManager else null
+    if not blogger:
+        return
+    _show_game_release_phase_popup(3, "正式发布")
+    var sp = GDManager.get_story_progress() if GDManager else null
+    if sp:
+        sp.set_completed(5, "game_test")
+        sp.set_completed(5, "game_trailer")
+        sp.set_completed(5, "game_released")
+        sp.set_completed(5, "game_award")
+    blogger.game_release_days = 0
+    var d = Utils.find_category_by_name(Utils.possible_categories, "游戏发布", true)
+    if not d.is_empty():
+        blogger.cooldowns["游戏发布"] = Utils.format_date()
+        d.disabled = true
+    for day_task in Blogger.blog_calendar:
+        day_task.tasks.erase("游戏发布")
+    
+    emit_signal("sg_info_msg", "🎉 游戏正式发布！游戏结局达成！")
+    
+    var main = get_tree().root.get_node("Main")
+    if main and main.has_method("show_popup_message"):
+        main.show_popup_message(
+            "🏆 游戏结局 · 梦想成真",
+            "【游戏结局：梦想成真】\n\n从一行代码到一款完整的游戏，\n你走过了无数个不眠之夜。\n\n发布当天，游戏冲上了热销榜。\n媒体评价纷至沓来，玩家口碑持续发酵。\n\n在年度游戏颁奖典礼上，\n你的名字出现在了「最佳独立游戏」的提名中。\n\n你站在领奖台上，看着台下的人群，\n想起了那个最初写下第一行代码的下午。\n\n你做到了。\n\n🎉 恭喜达成游戏结局！"
+        )
+    if sp:
+        sp.set_completed(5, "ending_achieved")
+    
+    emit_signal("sg_info_msg", "🎉 恭喜达成游戏结局：梦想成真！从一行代码到一款游戏。")
+
 ## 完成贾维斯计划
 func _complete_jarvis_project():
     var blogger = GDManager.get_blogger() if GDManager else null
@@ -798,7 +1381,7 @@ func _try_trigger_ip_auth(blogger):
 
     var random_val = randi() % 100
 
-    if random_val < 99:  # 99%概率（测试用）
+    if random_val < 20:  # 20%概率
         # 计算收益
         var literature_value = blogger.literature_ability
         var base_reward = 100000.0
@@ -831,7 +1414,7 @@ func _try_trigger_course_auth(blogger):
 
     var random_val = randi() % 100
 
-    if random_val < 99:  # 99%概率（测试用）
+    if random_val < 20:  # 20%概率
         var code_value = blogger.code_ability
         var base_reward = 100000.0
         var bonus = base_reward * (code_value / 100.0)
@@ -856,7 +1439,10 @@ signal sg_new_blog_post(category: String)
 func simulate_new_blog_post(category) -> int:
     # ===== 欠费暂停检查 =====
     if Yun.is_blog_suspended():
-        emit_signal("no_stamina_signal", "博客因欠费暂停运营,请先续费域名或主机!")
+        if Yun.is_provider_runaway_active():
+            emit_signal("no_stamina_signal", "服务商跑路失联,网站无法访问,请尽快更换服务商!")
+        else:
+            emit_signal("no_stamina_signal", "博客因欠费暂停运营,请先续费域名或主机!")
         return 0
 
     # 这里可以根据作者的写作、技术能力来决定文章的质量,体力决定是否能发布文章。
@@ -1074,6 +1660,20 @@ func update_blog_views() -> int:
     else:
         blogger.month_views = blogger.today_views
         tmp_m = TimerManager.current_month
+    
+    # 流量预警检查
+    var traffic_limit = Yun.get_monthly_traffic_limit()
+    if traffic_limit > 0:
+        var limit_count = traffic_limit * 10000
+        if blogger.month_views >= int(limit_count * 0.8):
+            if not _traffic_warning_active:
+                _traffic_warning_active = true
+                var pct = float(blogger.month_views) / limit_count * 100
+                emit_signal("sg_traffic_warning", pct)
+        else:
+            if _traffic_warning_active:
+                _traffic_warning_active = false
+                emit_signal("sg_traffic_warning_resolved")
 
     if tmp_y == TimerManager.current_year:
         blogger.year_views += blogger.today_views
@@ -1152,7 +1752,7 @@ func maintain_website_security(category: String) -> int:
 
     blogger.stamina -= actual_cost #消耗体力值(使用实际消耗)
     blogger.money -= d.money
-    blogger.safety_value += Utils.add_property(blogger.safety_value,int(blogger.technical_ability/4))
+    blogger.safety_value = mini(100, blogger.safety_value + int(blogger.technical_ability / 4))
     # 增加技术能力（每次维护成功都会增加）
     add_technical_ability_points()
     emit_signal("signal_website_security","网站的安全值+10")
@@ -1673,6 +2273,10 @@ enum Skills {
 signal skill_level_up(type: int, lv: float)
 signal no_stamina_signal(tit: String)
 signal no_money_signal(tit: String)
+## 技能阶段解锁（旧阶段 → 新阶段）
+signal skill_stage_unlocked(old_name: String, new_name: String)
+## 能力值跨整数（技能成长提示）
+signal skill_value_up(skill_name: String, value: float)
 
 ## 学习技能
 func learningToSkills(category: String) -> int:
@@ -1717,13 +2321,18 @@ func learningToSkills(category: String) -> int:
     var old_ability = current_ability
     current_ability += add_value
     current_ability = minf(current_ability, float(MAX_SKILL_LEVEL))
-    current_ability = round(current_ability * 10) / 10.0
+    current_ability = round(current_ability * 100) / 100.0
 
     # 更新能力值
     set_ability_by_type(skill_type, current_ability)
 
     # 检查并解锁下一级技能
     try_unlock_next_skill(d, current_ability)
+
+    # 能力值跨整数时发送技能成长提示
+    if int(current_ability) > int(old_ability):
+        var display_name = "编程" if skill_type == "code" else "文学"
+        emit_signal("skill_value_up", display_name, current_ability)
 
     # 发送信号,由任务系统处理技能解锁
     emit_signal("skill_level_up", get_skill_type_enum(skill_type), current_ability)
@@ -1752,6 +2361,9 @@ func try_unlock_next_skill(current_skill: Dictionary, current_ability: float):
         # 解锁下一级技能
         next_skill.isVisible = true
         next_skill.disabled = false
+
+        # 发送技能阶段升级提示
+        emit_signal("skill_stage_unlocked", str(current_skill.get("name", "")), str(next_skill.get("name", "")))
 
 
 ## 根据技能类型获取能力值
@@ -1792,15 +2404,20 @@ func get_skill_type_enum(skill_type: String) -> int:
 
 
 ## 根据当前能力值返回学习增量
+## 分段递减：初级(0-20)约100次，满级(100)累计约2500次
 func get_skill_value(k: float) -> float:
-    if k < 25:
-        return 1.0
-    elif k < 50:
-        return 0.5
-    elif k < 75:
+    if k < 20:
         return 0.2
-    elif k < 100:
+    elif k < 40:
         return 0.1
+    elif k < 60:
+        return 0.05
+    elif k < 80:
+        return 0.04
+    elif k < 90:
+        return 0.025
+    elif k < 100:
+        return 0.011
     return 0.0
 
 
@@ -1809,15 +2426,15 @@ func get_skill_value(k: float) -> float:
 ## ============================================
 
 ## 计算能力增长分值（指数衰减公式）
-## 每次增加 = 0.3 × e^(-当前值/50) + 0.01
-## 5年约1400次操作可达到100分
+## 每次增加 = 0.1 × e^(-当前值/50) + 0.005
+## 约2700次操作达到100分（按每周约5次相关操作，约10年满级）
 func get_ability_increment(current_value: float) -> float:
-    var base = 0.3
+    var base = 0.1
     var decay = exp(-current_value / 50.0)
-    var minimum = 0.01
+    var minimum = 0.005
     var increment = base * decay + minimum
-    # 保留一位小数
-    return round(increment * 10) / 10.0
+    # 保留两位小数（一位小数会让后期增量被舍成 0 或恒定值）
+    return round(increment * 100) / 100.0
 
 ## 增加写作能力（写博客时调用）
 func add_writing_ability_points() -> void:
@@ -1825,10 +2442,13 @@ func add_writing_ability_points() -> void:
         return
     var blogger = GDManager.get_blogger()
     if blogger.writing_ability < 100:
-        var increment = get_ability_increment(float(blogger.writing_ability))
+        var old_val = float(blogger.writing_ability)
+        var increment = get_ability_increment(old_val)
         blogger.writing_ability += increment
         blogger.writing_ability = min(float(blogger.writing_ability), 100.0)
-        blogger.writing_ability = round(blogger.writing_ability * 10) / 10.0
+        blogger.writing_ability = round(blogger.writing_ability * 100) / 100.0
+        if int(blogger.writing_ability) > int(old_val):
+            emit_signal("skill_value_up", "写作", float(blogger.writing_ability))
 
 ## 增加技术能力（维护网站时调用）
 func add_technical_ability_points() -> void:
@@ -1836,10 +2456,13 @@ func add_technical_ability_points() -> void:
         return
     var blogger = GDManager.get_blogger()
     if blogger.technical_ability < 100:
-        var increment = get_ability_increment(float(blogger.technical_ability))
+        var old_val = float(blogger.technical_ability)
+        var increment = get_ability_increment(old_val)
         blogger.technical_ability += increment
         blogger.technical_ability = min(float(blogger.technical_ability), 100.0)
-        blogger.technical_ability = round(blogger.technical_ability * 10) / 10.0
+        blogger.technical_ability = round(blogger.technical_ability * 100) / 100.0
+        if int(blogger.technical_ability) > int(old_val):
+            emit_signal("skill_value_up", "技术", float(blogger.technical_ability))
 
 ## 月末归档：将超过 84 天的文章从 posts 移入 archived_posts
 ## TimeDecayModifier.active_article_years * 336 = 84
@@ -1862,3 +2485,508 @@ func _archive_old_posts():
         keep.append(post)
 
     blogger.posts = keep
+
+# ==============================================================================
+# 安全事件系统
+# ==============================================================================
+
+## 执行紧急排险任务
+func do_emergency_response(task_name: String) -> int:
+    if not GDManager:
+        return 0
+    var blogger = GDManager.get_blogger()
+    # 无激活事件时，紧急排险无效
+    if blogger.active_event.is_empty():
+        # Obaby 评论区暗链清理中，不显示误导提示
+        var story = GDManager.get_story_progress() if GDManager else null
+        var in_cleanup = story and story.is_completed(2, "obaby_comment_spam") and not story.is_completed(2, "obaby_comment_resolved")
+        if not in_cleanup:
+            emit_signal("sg_info_msg", "当前没有需要处理的安全事件，紧急排险无目标")
+        return 0
+    var d = Utils.find_category_by_name(Utils.website_maintenance, task_name)
+    if d.is_empty():
+        return 0
+    var actual_cost = Utils.get_stamina_cost(d.stamina, blogger.level)
+    if blogger.stamina < actual_cost:
+        emit_signal("no_stamina_signal", "体力不足,无法进行紧急排险!需要" + str(actual_cost) + "体力")
+        return 0
+    blogger.stamina -= actual_cost
+    return 10
+
+
+## 根据 event_id 获取配置
+func _get_event_config(event_id: String) -> Dictionary:
+    if not GDManager:
+        return {}
+    var se = GDManager.get_safety_events()
+    if not se:
+        return {}
+    for ev in se.events:
+        if ev.id == event_id:
+            return ev
+    return {}
+
+
+## 处理激活的安全事件（每日结算时调用）
+func _process_active_event(did_emergency: bool) -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+    if blogger.active_event.is_empty():
+        return
+
+    var ev = blogger.active_event
+    var ev_config = _get_event_config(ev.id)
+    if ev_config.is_empty():
+        blogger.active_event = {}
+        return
+
+    if did_emergency:
+        ev.progress += 1
+        ev.escalate_counter = 0
+        emit_signal("sg_info_msg", "🚨 紧急排险进度：%d/%d" % [ev.progress, ev_config.get("total_days", 3)])
+    else:
+        ev.escalate_counter += 1
+        # 应用每日惩罚
+        var dp = ev_config.get("daily_penalty", {})
+        if dp.has("safety_value"):
+            blogger.safety_value = max(0, blogger.safety_value + dp.safety_value)
+        if dp.has("views_loss"):
+            # 每日访问量损失通过降低 seo 值来模拟
+            blogger.seo_value = max(0, blogger.seo_value + int(dp.views_loss / 50))
+        if dp.has("reputation"):
+            blogger.reputation = max(0, blogger.reputation + dp.reputation)
+
+    # 检查是否升级
+    if ev.escalate_counter >= ev_config.get("escalate_days", 5):
+        _escalate_event(ev_config.get("escalate_to", ""))
+        return
+
+    # 检查是否解决
+    if ev.progress >= ev_config.get("total_days", 3):
+        _resolve_event()
+        return
+
+
+## 触发新安全事件
+func _check_safety_events() -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+
+    # 冷却中或已有激活事件，跳过
+    if blogger.event_cooldown > 0:
+        blogger.event_cooldown -= 1
+        return
+    if not blogger.active_event.is_empty():
+        return
+
+    var se = GDManager.get_safety_events()
+    if not se:
+        return
+
+    # 筛选可触发的事件（按严重程度从高到低检测）
+    var safety = blogger.safety_value
+    var tiers = ["critical", "severe", "general"]
+    for tier in tiers:
+        for ev in se.events:
+            if ev.tier != tier:
+                continue
+            if safety > ev.trigger_threshold:
+                continue
+            if randf() < ev.trigger_probability:
+                _trigger_event(ev)
+                return
+
+
+## 激活事件（应用惩罚 + 提示信息）
+func _trigger_event(ev_config: Dictionary) -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+
+    # 应用即时惩罚
+    var penalty = ev_config.get("penalty", {})
+    if penalty.has("safety_value"):
+        blogger.safety_value = max(0, blogger.safety_value + penalty.safety_value)
+    if penalty.has("views_loss"):
+        blogger.seo_value = max(0, blogger.seo_value + int(penalty.views_loss / 50))
+    if penalty.has("reputation"):
+        blogger.reputation = max(0, blogger.reputation + penalty.reputation)
+
+    # 初始化事件状态（默认使用第一个选项）
+    blogger.active_event = {
+        "id": ev_config.id,
+        "progress": 0,
+        "choice": 0,
+        "escalate_counter": 0,
+    }
+
+    # 发送信号，由 main.gd 显示提示信息
+    emit_signal("sg_event_triggered", ev_config)
+
+
+## 解决当前安全事件
+func _resolve_event() -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+    if blogger.active_event.is_empty():
+        return
+
+    var ev_config = _get_event_config(blogger.active_event.id)
+    if ev_config.is_empty():
+        blogger.active_event = {}
+        return
+
+    var reward = ev_config.get("reward", {})
+    if reward.has("safety_value"):
+        blogger.safety_value = mini(100, blogger.safety_value + reward.safety_value)
+    if reward.has("exp"):
+        var dummy_exp = 0
+        dummy_exp += reward.exp
+        gain_exp(dummy_exp)
+    if reward.has("money"):
+        blogger.money += reward.money
+    if reward.has("reputation"):
+        blogger.reputation += reward.reputation
+
+    var resolved_id = blogger.active_event.id
+    blogger.resolved_events.append(resolved_id)
+    # 保持数组不过大
+    if blogger.resolved_events.size() > 20:
+        blogger.resolved_events = blogger.resolved_events.slice(-20)
+
+    # 设置全局冷却
+    blogger.event_cooldown = 30
+
+    var saved_reward = reward.duplicate()
+    blogger.active_event = {}
+
+    emit_signal("sg_event_resolved", resolved_id, saved_reward)
+    emit_signal("sg_info_msg", "🎉 安全事件「%s」已解决！获得奖励" % ev_config.name)
+
+
+## 事件升级
+func _escalate_event(escalate_to_id: String) -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+
+    var old_id = blogger.active_event.get("id", "")
+    blogger.active_event = {}
+
+    if escalate_to_id == "":
+        emit_signal("sg_info_msg", "⚠️ 事件已到最坏情况，无法继续升级")
+        return
+
+    var ev_config = _get_event_config(escalate_to_id)
+    if ev_config.is_empty():
+        emit_signal("sg_info_msg", "⚠️ 事件升级目标不存在")
+        return
+
+    # 应用升级事件的惩罚
+    var penalty = ev_config.get("penalty", {})
+    if penalty.has("safety_value"):
+        blogger.safety_value = max(0, blogger.safety_value + penalty.safety_value)
+    if penalty.has("views_loss"):
+        blogger.seo_value = max(0, blogger.seo_value + int(penalty.views_loss / 50))
+    if penalty.has("reputation"):
+        blogger.reputation = max(0, blogger.reputation + penalty.reputation)
+
+    # 直接激活升级事件（不再弹选择，使用默认第一个选项）
+    blogger.active_event = {
+        "id": ev_config.id,
+        "progress": 0,
+        "choice": 0,
+        "escalate_counter": 0,
+    }
+
+    emit_signal("sg_event_escalated", old_id, escalate_to_id)
+    emit_signal("sg_info_msg", "⚠️ 事件升级：%s → %s！立即安排紧急排险！" % [old_id, escalate_to_id])
+
+# ==============================================================================
+# Obaby 无视后续处理
+# ==============================================================================
+
+## 每日检查 Obaby 无视计数器，触发后续事件
+func _check_obaby_ignore() -> void:
+    if not GDManager:
+        return
+    var blogger = GDManager.get_blogger()
+    if blogger.obaby_ignore_days <= 0:
+        return
+
+    blogger.obaby_ignore_days += 1
+
+    if blogger.obaby_ignore_days == 21:
+        # 第20天：Obaby 留言提醒
+        emit_signal("sg_event_triggered", {
+            "popup_title": "📝 匿名留言",
+            "popup_desc": "一个月后，留言板出现了一条新留言：\n\n「提醒过了。」\n\n署名仍然是那个 O。",
+        })
+
+    elif blogger.obaby_ignore_days >= 26:
+        # 第25天之后：强制触发安全事件
+        var ev_config = _get_event_config("homepage_defaced")
+        if not ev_config.is_empty():
+            _trigger_event(ev_config)
+        blogger.obaby_ignore_days = 0
+
+# ==============================================================================
+# Obaby 评论区暗链检测
+# ==============================================================================
+
+## 累计评论 > 100 时触发评论区暗链事件（第 2 章：2005-2010）
+func _check_obaby_comment_spam() -> void:
+    if not GDManager:
+        return
+    var story = GDManager.get_story_progress()
+    if not story:
+        return
+    if story.is_completed(2, "obaby_comment_spam"):
+        return
+    if TimerManager.current_year < 2005 or (TimerManager.current_year == 2005 and TimerManager.current_month <= 5):
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+    var total = 0
+    for post in blogger.posts + blogger.archived_posts:
+        total += post.get("comments", 0)
+    if total > 100:
+        TaskManager._action_obaby_comment_spam()
+
+# ==============================================================================
+# Obaby 评论区暗链清理进度检测（连续 3 天紧急排险）
+# ==============================================================================
+
+## 每日检查评论区暗链清理进度
+func _check_obaby_comment_cleanup(did_emergency: bool) -> void:
+    if not GDManager:
+        return
+    var story = GDManager.get_story_progress()
+    if not story:
+        return
+    if not story.is_completed(2, "obaby_comment_spam"):
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+
+    # SEO 锁定恢复检测（独立于清理进度）
+    if blogger.obaby_spam_seo_locked:
+        blogger.seo_value = 0
+        var day = TimerManager.current_day - 1
+        var tasks = Blogger.blog_calendar[day].tasks
+        if "紧急排险" in tasks or "SEO优化" in tasks:
+            blogger.obaby_spam_seo_recovery_days += 1
+            if blogger.obaby_spam_seo_recovery_days >= 7:
+                blogger.obaby_spam_seo_locked = false
+                blogger.obaby_spam_seo_recovery_days = 0
+                blogger.obaby_comment_spam_days = 0
+                TaskManager.emit_signal("sg_task_show_popup_msg", "✅ SEO 锁定已解除",
+                    "搜索引擎重新收录了你的站点，\n但权重已归零。\n\n通过安排「SEO 优化」来逐步恢复排名。")
+            else:
+                emit_signal("sg_info_msg", "🔧 SEO 恢复进度：%d/7" % blogger.obaby_spam_seo_recovery_days)
+        else:
+            if blogger.obaby_spam_seo_recovery_days > 0:
+                blogger.obaby_spam_seo_recovery_days = 0
+                emit_signal("sg_info_msg", "❌ SEO 恢复中断：未连续安排紧急排险或 SEO 优化，进度已重置")
+        return  # 锁定状态下不推进清理进度
+
+    if story.is_completed(2, "obaby_comment_resolved"):
+        return
+
+    # 累计未处理天数（无论当天是否排险都 +1）
+    blogger.obaby_comment_spam_days += 1
+
+    if did_emergency:
+        blogger.obaby_comment_cleanup_days += 1
+        if blogger.obaby_comment_cleanup_days >= 3:
+            story.set_completed(2, "obaby_comment_resolved")
+            blogger.obaby_comment_cleanup_days = 0
+            blogger.obaby_comment_spam_days = 0
+            TaskManager.emit_signal("sg_task_show_popup_msg", "✅ 暗链清理完成",
+                "连续 3 天的紧急排险清除了所有暗链评论。\n\n已向搜索引擎提交重新审核，排名将在 7 天后恢复。")
+    else:
+        if blogger.obaby_comment_cleanup_days > 0:
+            blogger.obaby_comment_cleanup_days = 0
+
+    # 10 天以上未完成清理 → 升级：SEO 归零锁定（仅触发一次）
+    if not blogger.obaby_comment_spam_escalated and blogger.obaby_comment_spam_days >= 10:
+        blogger.seo_value = 0
+        blogger.obaby_spam_seo_locked = true
+        blogger.obaby_spam_seo_recovery_days = 0
+        blogger.obaby_comment_spam_days = 99
+        blogger.obaby_comment_spam_escalated = true
+        TaskManager.emit_signal("sg_task_show_popup_msg", "⚠️ 搜索引擎已屏蔽站点",
+            "暗链问题久未处理，搜索引擎已彻底将你的站点降权至零。\n\nSEO 已被锁定为 0\n需要连续安排「紧急排险」或「SEO 优化」\n7 天后才能恢复。")
+
+# ==============================================================================
+# Obaby 第三方统计代码广告检测
+# ==============================================================================
+
+## 检测第三方统计代码被植入恶意广告事件（触发时间：2012年4月3周2天）
+func _check_obaby_redirect_ad() -> void:
+    if not GDManager:
+        return
+    var story = GDManager.get_story_progress()
+    if not story:
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+
+    # 事件已触发但未解决 → 跟踪无视天数
+    if story.is_completed(3, "obaby_redirect_ad") and not story.is_completed(3, "obaby_redirect_ad_resolved"):
+        if blogger.obaby_redirect_ad_ignore_days >= 0:
+            blogger.obaby_redirect_ad_ignore_days += 1
+            if blogger.obaby_redirect_ad_ignore_days >= 30:
+                var ev_config = _get_event_config("malware_injected")
+                if not ev_config.is_empty():
+                    _trigger_event(ev_config)
+                story.set_completed(3, "obaby_redirect_ad_resolved")
+                blogger.obaby_redirect_ad_ignore_days = 0
+        return
+
+    # 触发条件
+    if story.is_completed(3, "obaby_redirect_ad"):
+        return
+    if not story.is_completed(2, "obaby_comment_resolved"):
+        return
+    if TimerManager.current_year < 2012:
+        return
+    if TimerManager.current_year == 2012 and TimerManager.current_month < 4:
+        return
+    if TimerManager.current_year == 2012 and TimerManager.current_month == 4 and TimerManager.current_week < 3:
+        return
+    if TimerManager.current_year == 2012 and TimerManager.current_month == 4 and TimerManager.current_week == 3 and TimerManager.current_day < 2:
+        return
+
+    TaskManager._action_obaby_redirect_ad()
+
+# ==============================================================================
+# Obaby DDoS 攻击检测
+# ==============================================================================
+
+## 检测 DDoS 攻击事件（触发：年份 ≥ 2017/3 + 已出书 + 未完成）
+func _check_obaby_ddos() -> void:
+    if not GDManager:
+        return
+    var story = GDManager.get_story_progress()
+    if not story:
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+
+    if story.is_completed(4, "obaby_ddos_resolved"):
+        return
+
+    # 事件已触发 → 每日扣减 + 信息提示
+    if story.is_completed(4, "obaby_ddos"):
+        _process_ddos_daily(blogger, story)
+        return
+
+    # 触发条件
+    if TimerManager.current_year < 2017:
+        return
+    if TimerManager.current_year == 2017 and TimerManager.current_month < 3:
+        return
+    if not story.is_completed(4, "book_published"):
+        return
+
+    TaskManager._action_obaby_ddos()
+
+## DDoS 每日处理：扣减 + 提示 + 购买检测
+func _process_ddos_daily(blogger: BloggerData, story: StoryProgress) -> void:
+    # 每日扣减
+    blogger.seo_value = max(0, blogger.seo_value - 10)
+    if blogger.today_views > 0:
+        blogger.today_views = max(1, int(blogger.today_views * 0.1))
+
+    if blogger.obaby_ddos_protection_bought:
+        emit_signal("sg_info_msg", "主机正在防护中，DDoS 攻击仍在持续。")
+        blogger.obaby_ddos_protection_days += 1
+        if blogger.obaby_ddos_protection_days >= 7:
+            story.set_completed(4, "obaby_ddos_resolved")
+            blogger.obaby_ddos_protection_bought = false
+            blogger.obaby_ddos_protection_days = 0
+            blogger.obaby_ddos_self_days = 0
+            TaskManager.emit_signal("sg_task_show_popup_msg", "✅ 危险解除",
+                "DDoS 攻击已被成功阻断！\n\n网站流量和 SEO 开始缓慢回升。\n\n如果你愿意，还可以购买长期 DDoS 防护（月费 1500 元），\n防止未来再次遭遇类似攻击。")
+    else:
+        emit_signal("sg_info_msg", "你的博客正在遭受 DDoS 攻击！SEO -10，流量仅剩 1/10。")
+        blogger.obaby_ddos_self_days += 1
+        # 第 3 天起每 3 天弹一次购买提示（避免玩家再无购买入口）
+        if blogger.obaby_ddos_self_days >= 3 and (blogger.obaby_ddos_self_days - 3) % 3 == 0:
+            TaskManager._action_obaby_ddos_buy_prompt()
+
+# ==============================================================================
+# Obaby 供应链木马（第五章终极章）
+# ==============================================================================
+
+func _check_obaby_supply_chain() -> void:
+    if not GDManager:
+        return
+    var story = GDManager.get_story_progress()
+    if not story:
+        return
+    var blogger = GDManager.get_blogger()
+    if not blogger:
+        return
+
+    if story.is_completed(5, "obaby_supply_chain_resolved"):
+        return
+
+    # 第 1 天：触发 → 弹窗（发现 + 修复 + 发文 + 猜测）
+    if not story.is_completed(5, "obaby_supply_chain_triggered"):
+        if TimerManager.current_year < 2022:
+            return
+        if TimerManager.current_year == 2022 and TimerManager.current_month < 8:
+            return
+        if not story.is_completed(4, "obaby_ddos_resolved"):
+            return
+
+        story.set_completed(5, "obaby_supply_chain_triggered")
+        emit_signal("sg_event_triggered", {
+            "popup_title": "📡 RSS 阅读器更新",
+            "popup_desc": 'Obaby 的博客发了新文章：《一个被忽视的依赖风险》\n\n你排查发现，博客程序底层依赖库被植入了木马——供应链攻击。\n你按 Obaby 文中的指引更新了依赖，漏洞修复。\n\n你坐在屏幕前，写了一篇博文《从"到处都是洞"到"多谢提醒"》，\n回忆这二十年的安全历程，并猜测那个署名 O 的黑客就是 Obaby。',
+        })
+        return
+
+    # 第 2 天：自动发布博文 + 留言弹窗 + 心理独白
+    if not blogger.supply_chain_post_written:
+        _publish_supply_chain_post(blogger, story)
+
+func _publish_supply_chain_post(blogger: BloggerData, story: StoryProgress) -> void:
+    var post_id = Time.get_ticks_msec() + (randi() % 10000)
+    var new_post = {
+        "id": post_id,
+        "title": '从"到处都是洞"到"多谢提醒"',
+        "post_category": "生活日记",
+        "article_category": "文学",
+        "task_type": "",
+        "content_type": "免费",
+        "views": 0,
+        "comments": 0,
+        "favorites": 0,
+        "is_money": false,
+        "date": Utils.format_date(),
+        "quality": 95,
+        "article_level": 3,
+    }
+    blogger.posts.append(new_post)
+    blogger.supply_chain_post_written = true
+    story.set_completed(5, "obaby_supply_chain_resolved")
+
+    var msg = "那个O不是我。……呵呵。"
+    if story.is_completed(1, "obaby_tech_response"):
+        msg = "呵呵，第一章那篇博文写得不错。"
+
+    emit_signal("sg_info_msg", '📝 博文已发布：《从"到处都是洞"到"多谢提醒"》')
+    emit_signal("sg_event_triggered", {
+        "popup_title": "📝 留言板新留言",
+        "popup_desc": '「' + msg + '」\n\n你盯着屏幕，嘴角微微一扬——更加确信，黑客 O 就是 Obaby。',
+    })

@@ -11,6 +11,9 @@ var data_configs = {
     "title_templates": "res://data/title_templates.gd",
     "lm_members": "res://data/lm_members.gd",
     "comment_templates": "res://data/comment_templates.gd",
+    "safety_events": "res://data/safety_events.gd",
+    "dialogue_characters": "res://data/dialogue_characters.gd",
+    "yun_providers": "res://data/yun_providers.gd",
 }
 
 # ===== 存储所有加载的数据 =====
@@ -78,6 +81,9 @@ func get_recreation():
 func get_learning_skills():
     return loaded_data.get("learning_skills")
 
+func get_safety_events():
+    return loaded_data.get("safety_events")
+
 func get_title_templates():
     return loaded_data.get("title_templates")
 
@@ -89,6 +95,31 @@ func get_lm_members():
     if lm_data:
         return lm_data.lm_list
     return []
+
+## 获取对话角色表
+func get_dialogue_characters():
+    return loaded_data.get("dialogue_characters")
+
+## 获取域名主机服务商配置
+func get_yun_providers():
+    return loaded_data.get("yun_providers")
+
+## 加载一部对白数据（路径 res://data/dialogue/xxx.gd）
+func load_dialogue(id: String, path: String) -> bool:
+    if not ResourceLoader.exists(path):
+        push_warning("Dialogue file not found: %s" % path)
+        return false
+    var script = load(path)
+    var instance = script.new()
+    loaded_data["dialogue_" + id] = instance
+    return true
+
+## 获取一部对白字典（无则返回空字典）
+func get_dialogue(id: String) -> Dictionary:
+    var inst = loaded_data.get("dialogue_" + id)
+    if inst and "dialogue" in inst:
+        return inst.dialogue
+    return {}
 
 # 兼容旧代码的属性访问
 var blog_categories:
@@ -108,6 +139,9 @@ var title_templates:
 
 var milestones:
     get: return get_milestones()
+
+var dialogue_characters:
+    get: return get_dialogue_characters()
 
 # ===== 数据管理方法 =====
 func get_data(name: String):

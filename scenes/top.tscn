@@ -65,6 +65,7 @@ text = "1倍速"
 
 [node name="h2" type="HBoxContainer" parent="." unique_id=1864074987]
 layout_mode = 2
+custom_minimum_size = Vector2(0, 14)
 
 [node name="Panel" type="Panel" parent="h2" unique_id=237448821]
 layout_mode = 2
@@ -94,6 +95,48 @@ grow_horizontal = 2
 text = "100"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="h3" type="HBoxContainer" parent="." unique_id=1599999999]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 14)
+
+[node name="Panel" type="Panel" parent="h3" unique_id=237448822]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="ProgressBar" type="ProgressBar" parent="h3/Panel" unique_id=93809340]
+self_modulate = Color(0, 0.4, 0.28, 1)
+layout_mode = 0
+offset_top = -1.0
+offset_right = 960.0
+offset_bottom = 13.0
+tooltip_text = "主线任务完成度"
+theme_override_fonts/font = ExtResource("2_hug1f")
+theme_override_font_sizes/font_size = 6
+show_percentage = false
+
+[node name="quest_percent" type="Label" parent="h3/Panel/ProgressBar" unique_id=557115681]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -11.0
+offset_top = -3.0
+offset_right = 13.0
+offset_bottom = 14.0
+grow_horizontal = 2
+text = "0%"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="chapter_goal" type="Label" parent="." unique_id=1987654321]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 18)
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0, 0.4, 0.28, 1)
+text = ""
+horizontal_alignment = 0
 
 [connection signal="pressed" from="h1/time_stop" to="." method="_on_time_stop_pressed"]
 [connection signal="pressed" from="h1/time_x" to="." method="_on_time_x_pressed"]

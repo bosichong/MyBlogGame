@@ -86,11 +86,20 @@ const CONDITIONS: Dictionary = {
     "first_article_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_posted", "completed": false},
     "first_article_completed": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "first_article_posted", "completed": true},
 
+    # Obaby 首次来访条件
+    "obaby_first_visit_not_done": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 1, "milestone": "obaby_first_visit", "completed": false},
+    "obaby_first_visit_time": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2002], "m": [2], "w": [2], "d": [1]}},
+
     # 技能数值条件 - 文学（每20能力值一个等级）
+    "literature_value_ge_18": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 18},
     "literature_value_ge_20": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 20},
+    "literature_value_ge_38": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 38},
     "literature_value_ge_40": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 40},
+    "literature_value_ge_58": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 58},
     "literature_value_ge_60": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 60},
+    "literature_value_ge_78": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 78},
     "literature_value_ge_80": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 80},
+    "literature_value_ge_88": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 88},
     "literature_value_ge_90": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 90},
     "literature_value_ge_100": {"type": 0, "skill": "LITERATURE", "op": 3, "value": 100},
     
@@ -135,6 +144,32 @@ const CONDITIONS: Dictionary = {
     
     # 开源项目状态条件
     "open_source_project_started": {"type": ConditionType.CUSTOM, "check_func": "check_open_source_project"},
+    
+    # 莫比乌斯支线条件
+    "mo_lv1_not_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv1_not_done"},
+    "mo_lv1_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv1_done"},
+    "mo_lv2_not_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv2_not_done"},
+    "mo_lv2_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv2_done"},
+    "mo_lv3_not_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv3_not_done"},
+    "mo_lv3_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv3_done"},
+    "mo_lv4_not_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv4_not_done"},
+    "mo_lv4_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv4_done"},
+    "mo_lv5_not_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv5_not_done"},
+    "mo_lv5_done": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv5_done"},
+    "mo_not_resolved": {"type": ConditionType.CUSTOM, "check_func": "check_mo_not_resolved"},
+    "book_publish_ge_1": {"type": ConditionType.CUSTOM, "check_func": "check_book_publish_ge_1"},
+    
+    # 莫比乌斯延迟条件
+    "mo_lv1_delay_inactive": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv1_delay_inactive"},
+    "mo_lv1_delay_expired": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv1_delay_expired"},
+    "mo_lv2_delay_inactive": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv2_delay_inactive"},
+    "mo_lv2_delay_expired": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv2_delay_expired"},
+    "mo_lv3_delay_inactive": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv3_delay_inactive"},
+    "mo_lv3_delay_expired": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv3_delay_expired"},
+    "mo_lv4_delay_inactive": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv4_delay_inactive"},
+    "mo_lv4_delay_expired": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv4_delay_expired"},
+    "mo_lv5_delay_inactive": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv5_delay_inactive"},
+    "mo_lv5_delay_expired": {"type": ConditionType.CUSTOM, "check_func": "check_mo_lv5_delay_expired"},
     
     # 时间条件（配合 event_date 使用）
     # 注意：游戏起始年份为 2001 年（可通过 TimeData.GAME_START_YEAR 获取）
@@ -320,6 +355,7 @@ const CONDITIONS: Dictionary = {
     # 第五章结局条件 - 出版畅销书数量
     "book_publish_ge_3": {"type": ConditionType.CUSTOM, "check_func": "check_book_publish_ge_3"},
     "book_publish_ge_5": {"type": ConditionType.CUSTOM, "check_func": "check_book_publish_ge_5"},
+    "book_publish_ge_6": {"type": ConditionType.CUSTOM, "check_func": "check_book_publish_ge_6"},
 
     # 第五章结局条件 - 开源项目数量
     "open_source_ge_3": {"type": ConditionType.CUSTOM, "check_func": "check_open_source_ge_3"},
@@ -327,6 +363,12 @@ const CONDITIONS: Dictionary = {
 
     # 贾维斯计划解锁时间（2025年任意时间）
     "time_year_2025": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2025]}},
+
+    # 默认结局触发时间（2025年12月最后一天）
+    "time_default_ending": {"type": ConditionType.TIME_MATCH, "event_date": {"y": [2025], "m": [12], "w": [4], "d": [7]}},
+
+    # 默认结局条件：三线结局均未达成
+    "ending_not_achieved": {"type": ConditionType.MILESTONE_COMPLETED, "chapter": 5, "milestone": "ending_achieved", "completed": false},
 }
 
 ## ============================================================
@@ -357,10 +399,261 @@ const SKILL_PROGRESS_CONFIG: Dictionary = {
 }
 
 ## ============================================================
+## 主线目标链（用于顶部 HUD 常驻指引与节奏感）
+## 每个目标：chapter=所属章节, milestone=对应里程碑, guide=引导文案
+## progress 可选：{target, getter} getter 为 TaskManager 上的读取函数名，用于显示 x/target
+## ============================================================
+
+const MAIN_QUEST: Array = [
+    # ---------- 第一章：博客启蒙期（2002-2005） ----------
+    {"chapter": 1, "milestone": "first_article_posted", "guide": "发表你的第一篇博文"},
+    {"chapter": 1, "milestone": "sousuo_indexed", "guide": "累计发布10篇文章，等待搜索引擎收录"},
+    {"chapter": 1, "milestone": "blog_union_joined", "guide": "提升SEO到100，加入博客江湖联盟"},
+    {"chapter": 1, "milestone": "first_friend_link", "guide": "在博客江湖中结识第一位友链"},
+    {"chapter": 1, "milestone": "rss_enabled", "guide": "开通RSS订阅，迎来第一批订阅者"},
+    {"chapter": 1, "milestone": "first_article_favorited", "guide": "写出值得收藏的文章，获得第一次收藏"},
+    {"chapter": 1, "milestone": "first_income", "guide": "加入广告联盟，收获第一笔广告收益"},
+    {"chapter": 1, "milestone": "icp_filing_done", "guide": "完成网站ICP备案"},
+    {"chapter": 1, "milestone": "year_summary_2005", "guide": "发布2005年度总结，完成四年回顾"},
+
+    # ---------- 第二章：博客黄金期（2005-2010） ----------
+    {"chapter": 2, "milestone": "literature_weekly", "guide": "发布文学周刊，深耕文字创作"},
+    {"chapter": 2, "milestone": "code_weekly", "guide": "发布程序员周刊，分享技术思考"},
+    {"chapter": 2, "milestone": "rss_100", "guide": "让RSS订阅突破100人",
+     "progress": {"target": 100, "getter": "get_rss_count"}},
+    {"chapter": 2, "milestone": "income_1000", "guide": "让累计广告收益突破1000元",
+     "progress": {"target": 1000, "getter": "get_total_income"}},
+    {"chapter": 2, "milestone": "year_summary_2010", "guide": "发布2010年度总结，完成五年回顾"},
+
+    # ---------- 第三章：博客转型期（2010-2015） ----------
+    {"chapter": 3, "milestone": "mobile_adapted", "guide": "完成网站移动端适配"},
+    {"chapter": 3, "milestone": "viral_article", "guide": "创作一篇爆款网文，让博客声名远扬"},
+    {"chapter": 3, "milestone": "geek_frontier", "guide": "发布极客前沿，紧跟技术浪潮"},
+    {"chapter": 3, "milestone": "wechat_public", "guide": "开通公众号，开拓新内容阵地"},
+    {"chapter": 3, "milestone": "followers_1000", "guide": "让公众号粉丝突破1000",
+     "progress": {"target": 1000, "getter": "get_wechat_followers"}},
+    {"chapter": 3, "milestone": "https_upgraded", "guide": "完成HTTPS安全升级"},
+    {"chapter": 3, "milestone": "novel_first_post", "guide": "发布第一篇小说连载，开启长篇创作"},
+    {"chapter": 3, "milestone": "novel_ip_authorized", "guide": "让小说获得IP授权"},
+    {"chapter": 3, "milestone": "hacker_first_post", "guide": "发布第一篇黑客攻防教程"},
+    {"chapter": 3, "milestone": "hacker_course_authorized", "guide": "让黑客攻防教程获得课程授权"},
+    {"chapter": 3, "milestone": "year_summary_2015", "guide": "发布2015年度总结，完成五年回顾"},
+
+    # ---------- 第四章：博客挑战期（2015-2020） ----------
+    {"chapter": 4, "milestone": "book_published", "guide": "出版你的第一本畅销书"},
+    {"chapter": 4, "milestone": "open_source_start", "guide": "发布你的第一个开源项目"},
+    {"chapter": 4, "milestone": "cdn_enabled", "guide": "部署CDN加速，提升全球访问速度"},
+    {"chapter": 4, "milestone": "ai_preview", "guide": "迎接AI时代的到来"},
+    {"chapter": 4, "milestone": "year_summary_2020", "guide": "发布2020年度总结，完成五年回顾"},
+
+    # ---------- 第五章：博客重塑期（2020-2025） ----------
+    {"chapter": 5, "milestone": "ai_consciousness", "guide": "完成5个开源项目，解锁贾维斯计划"},
+    {"chapter": 5, "milestone": "philosophy_glimmer", "guide": "出版6本畅销书，开启沉思录"},
+    {"chapter": 5, "milestone": "game_dev_start", "guide": "出版3本书并完成3个开源项目，启动游戏开发"},
+]
+
+## ============================================================
 ## 任务定义
 ## ============================================================
 
 const TASKS: Array = [
+    # ====================
+    # 莫比乌斯支线（先于技能进阶，保证执行顺序）
+    # ====================
+    
+    # Lv1 · 初遇准备（能力值18时触发，设置延迟）
+    {
+        "id": "mobius_lv1_prepare",
+        "description": "文学能力值达到18，莫比乌斯即将到来",
+        "conditions": ["literature_value_ge_18", "mo_lv1_not_done", "mo_lv1_delay_inactive"],
+        "trigger_type": "skill_up",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv1_prepare"},
+        ],
+    },
+    # Lv1 · 初遇准备兜底（每日检查，防非学习途径漏触发）
+    {
+        "id": "mobius_lv1_prepare_fallback",
+        "description": "文学能力值达到18，莫比乌斯即将到来（每日兜底）",
+        "conditions": ["literature_value_ge_18", "mo_lv1_not_done", "mo_lv1_delay_inactive"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv1_prepare"},
+        ],
+    },
+    # Lv1 · 初遇触发（延迟结束后弹出）
+    {
+        "id": "mobius_lv1_trigger",
+        "description": "延迟结束，触发莫比乌斯初次相遇",
+        "conditions": ["mo_lv1_delay_expired"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv1"},
+        ],
+    },
+    
+    # Lv2 · 回访准备（能力值38时触发，设置延迟）
+    {
+        "id": "mobius_lv2_prepare",
+        "description": "文学能力值达到38，莫比乌斯回访即将到来",
+        "conditions": ["literature_value_ge_38", "mo_lv1_done", "mo_lv2_not_done", "mo_lv2_delay_inactive"],
+        "trigger_type": "skill_up",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv2_prepare"},
+        ],
+    },
+    # Lv2 · 回访准备兜底（每日检查，防非学习途径漏触发）
+    {
+        "id": "mobius_lv2_prepare_fallback",
+        "description": "文学能力值达到38，莫比乌斯回访即将到来（每日兜底）",
+        "conditions": ["literature_value_ge_38", "mo_lv1_done", "mo_lv2_not_done", "mo_lv2_delay_inactive"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv2_prepare"},
+        ],
+    },
+    # Lv2 · 回访触发（延迟结束后弹出）
+    {
+        "id": "mobius_lv2_trigger",
+        "description": "延迟结束，触发莫比乌斯回访",
+        "conditions": ["mo_lv2_delay_expired"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv2"},
+        ],
+    },
+    
+    # Lv3 · 深谈准备（能力值58时触发，设置延迟）
+    {
+        "id": "mobius_lv3_prepare",
+        "description": "文学能力值达到58，莫比乌斯深谈即将到来",
+        "conditions": ["literature_value_ge_58", "mo_lv2_done", "mo_lv3_not_done", "mo_lv3_delay_inactive"],
+        "trigger_type": "skill_up",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv3_prepare"},
+        ],
+    },
+    # Lv3 · 深谈准备兜底（每日检查，防非学习途径漏触发）
+    {
+        "id": "mobius_lv3_prepare_fallback",
+        "description": "文学能力值达到58，莫比乌斯深谈即将到来（每日兜底）",
+        "conditions": ["literature_value_ge_58", "mo_lv2_done", "mo_lv3_not_done", "mo_lv3_delay_inactive"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv3_prepare"},
+        ],
+    },
+    # Lv3 · 深谈触发（延迟结束后弹出）
+    {
+        "id": "mobius_lv3_trigger",
+        "description": "延迟结束，触发莫比乌斯深谈",
+        "conditions": ["mo_lv3_delay_expired"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv3"},
+        ],
+    },
+    
+    # Lv4 · 认可准备（能力值78时触发，设置延迟）
+    {
+        "id": "mobius_lv4_prepare",
+        "description": "文学能力值达到78，莫比乌斯认可即将到来",
+        "conditions": ["literature_value_ge_78", "mo_lv3_done", "mo_lv4_not_done", "mo_lv4_delay_inactive"],
+        "trigger_type": "skill_up",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv4_prepare"},
+        ],
+    },
+    # Lv4 · 认可准备兜底（每日检查，防非学习途径漏触发）
+    {
+        "id": "mobius_lv4_prepare_fallback",
+        "description": "文学能力值达到78，莫比乌斯认可即将到来（每日兜底）",
+        "conditions": ["literature_value_ge_78", "mo_lv3_done", "mo_lv4_not_done", "mo_lv4_delay_inactive"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv4_prepare"},
+        ],
+    },
+    # Lv4 · 认可触发（延迟结束后弹出）
+    {
+        "id": "mobius_lv4_trigger",
+        "description": "延迟结束，触发莫比乌斯认可",
+        "conditions": ["mo_lv4_delay_expired"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv4"},
+        ],
+    },
+    
+    # Lv5 · 告别准备（能力值88时触发，设置延迟）
+    {
+        "id": "mobius_lv5_prepare",
+        "description": "文学能力值达到88，莫比乌斯告别即将到来",
+        "conditions": ["literature_value_ge_88", "mo_lv4_done", "mo_lv5_not_done", "mo_lv5_delay_inactive"],
+        "trigger_type": "skill_up",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv5_prepare"},
+        ],
+    },
+    # Lv5 · 告别准备兜底（每日检查，防非学习途径漏触发）
+    {
+        "id": "mobius_lv5_prepare_fallback",
+        "description": "文学能力值达到88，莫比乌斯告别即将到来（每日兜底）",
+        "conditions": ["literature_value_ge_88", "mo_lv4_done", "mo_lv5_not_done", "mo_lv5_delay_inactive"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv5_prepare"},
+        ],
+    },
+    # Lv5 · 告别触发（延迟结束后弹出）
+    {
+        "id": "mobius_lv5_trigger",
+        "description": "延迟结束，触发莫比乌斯告别",
+        "conditions": ["mo_lv5_delay_expired"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv5"},
+        ],
+    },
+    
+    # Lv6 · 互文收束（出版畅销书后触发）
+    {
+        "id": "mobius_lv6",
+        "description": "出版畅销书后，收到莫比乌斯的手写稿《悖驳》",
+        "conditions": ["book_publish_ge_1", "mo_lv5_done", "mo_not_resolved"],
+        "trigger_type": "book_publish_complete",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv6"},
+        ],
+    },
+    # Lv6 · 每日兜底（防"先出书后完成Lv5"的时序遗漏）
+    {
+        "id": "mobius_lv6_fallback",
+        "description": "出版畅销书且Lv5已完成，莫比乌斯手写稿（每日兜底）",
+        "conditions": ["book_publish_ge_1", "mo_lv5_done", "mo_not_resolved"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv6"},
+        ],
+    },
+    
     # ====================
     # 技能进阶任务（自动生成）
     # ====================
@@ -369,6 +662,7 @@ const TASKS: Array = [
     {
         "id": "literature_unlock_20",
         "description": "文学能力值达到20，解锁文学2级技能",
+        "tier": "minor",
         "conditions": ["literature_value_ge_20"],
         "trigger_type": "skill_up",
         "is_repeatable": false,
@@ -427,6 +721,7 @@ const TASKS: Array = [
     {
         "id": "literature_post_unlock_20",
         "description": "文学能力值达到20，解锁散文随笔文章类型",
+        "tier": "minor",
         "conditions": ["literature_value_ge_20"],
         "trigger_type": "skill_up",
         "is_repeatable": false,
@@ -447,6 +742,7 @@ const TASKS: Array = [
     {
         "id": "literature_weekly_milestone",
         "description": "发布文学周刊，获得奖励并标记第二章里程碑",
+        "tier": "main",
         "conditions": ["literature_weekly_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "文学周刊",
@@ -466,6 +762,7 @@ const TASKS: Array = [
         "actions": [
             {"type": ActionType.UNLOCK_POST_TASK, "post_type": "爆款网文"},
             {"type": ActionType.UNLOCK_POST_TASK, "post_type": "哲学批判"},
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_mobius_lv3_easter_egg"},
         ],
     },
     {
@@ -629,6 +926,7 @@ const TASKS: Array = [
     {
         "id": "code_weekly_milestone",
         "description": "发布程序员周刊，获得奖励并标记第二章里程碑",
+        "tier": "main",
         "conditions": ["code_weekly_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "程序员周刊",
@@ -642,6 +940,7 @@ const TASKS: Array = [
     {
         "id": "rss_100_milestone",
         "description": "RSS订阅突破百人，标记第二章里程碑",
+        "tier": "main",
         "conditions": ["rss_ge_100", "rss_100_not_completed"],
         "trigger_type": "time_check",
         "is_repeatable": false,
@@ -653,6 +952,7 @@ const TASKS: Array = [
     {
         "id": "income_1000_milestone",
         "description": "累计收益突破千元，标记第二章里程碑",
+        "tier": "main",
         "conditions": ["income_ge_1000", "income_1000_not_completed"],
         "trigger_type": "time_check",
         "is_repeatable": false,
@@ -667,6 +967,7 @@ const TASKS: Array = [
     {
         "id": "viral_article_milestone",
         "description": "发布爆款网文，标记第3章里程碑",
+        "tier": "main",
         "conditions": ["viral_article_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "爆款网文",
@@ -682,6 +983,7 @@ const TASKS: Array = [
     {
         "id": "advanced_tutorial_milestone",
         "description": "发布深度技术文章，标记第3章里程碑",
+        "tier": "main",
         "conditions": ["advanced_tutorial_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "深度技术",
@@ -697,6 +999,7 @@ const TASKS: Array = [
     {
         "id": "philosophy_critique_milestone",
         "description": "发布哲学批判文章，标记第3章里程碑",
+        "tier": "main",
         "conditions": ["philosophy_critique_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "哲学批判",
@@ -712,6 +1015,7 @@ const TASKS: Array = [
     {
         "id": "geek_frontier_milestone",
         "description": "发布极客前沿文章，标记第3章里程碑",
+        "tier": "main",
         "conditions": ["geek_frontier_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "极客前沿",
@@ -727,6 +1031,7 @@ const TASKS: Array = [
     {
         "id": "novel_first_post_milestone",
         "description": "发布第一篇小说连载，标记第三章里程碑",
+        "tier": "main",
         "conditions": ["novel_first_post_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "小说连载(付费)",
@@ -758,6 +1063,7 @@ const TASKS: Array = [
     {
         "id": "novel_ip_authorized_milestone",
         "description": "小说获得IP授权，标记第三章里程碑",
+        "tier": "main",
         "conditions": ["novel_ip_authorized_not_completed"],
         "trigger_type": "novel_ip_authorized",
         "is_repeatable": false,
@@ -773,6 +1079,7 @@ const TASKS: Array = [
     {
         "id": "hacker_first_post_milestone",
         "description": "发布第一篇黑客攻防，标记第三章里程碑",
+        "tier": "main",
         "conditions": ["hacker_first_post_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "黑客攻防(付费)",
@@ -804,6 +1111,7 @@ const TASKS: Array = [
     {
         "id": "hacker_course_authorized_milestone",
         "description": "黑客攻防获得课程授权，标记第三章里程碑",
+        "tier": "main",
         "conditions": ["hacker_course_authorized_not_completed"],
         "trigger_type": "hacker_course_authorized",
         "is_repeatable": false,
@@ -886,6 +1194,7 @@ const TASKS: Array = [
     {
         "id": "unlock_blogging_start",
         "description": "第一篇博文发布成功，博客运营正式开始！",
+        "tier": "main",
         "conditions": ["first_post_eq_1", "first_article_not_done"],
         "is_repeatable": false,
         "trigger_type": "post_event",
@@ -913,22 +1222,38 @@ const TASKS: Array = [
     },
     
     # ====================
+    # Obaby 首次来访（不速之客）
+    # ====================
+    {
+        "id": "obaby_first_visit",
+        "description": "某天打开博客，首页被换。白底黑字只有一行——「你的站，到处都是洞。—— O」",
+        "conditions": ["obaby_first_visit_time", "first_article_completed", "obaby_first_visit_not_done"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.CUSTOM_ACTION, "action_func": "_action_obaby_first_visit"},
+        ],
+    },
+
+    # ====================
     # 博客联盟解锁任务
     # ====================
     {
         "id": "blog_union_unlock",
         "description": "SEO值达到100，解锁博客联盟",
+        "tier": "main",
         "conditions": ["seo_value_eq_100", "blog_union_not_joined"],
         "is_repeatable": false,
         "trigger_type": "time_check",
         "actions": [
-            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "博客江湖邀请", "content": "恭喜！您的博客SEO值已达到100！\n\n博客江湖是全球最大的中文独立博客联盟，致力于汇聚天下独立博客。\n\n【加入好处】\n• 认识志同道合的博友\n• 获得友链推荐\n• 参与联盟活动\n• 提升博客影响力\n\n点击确定加入博客江湖！"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "博客江湖邀请", "content": "恭喜！您的博客SEO值已达到100！\n\n博客江湖是全球最大的中文独立博客联盟，致力于汇聚天下独立博客。\n\n【加入好处】\n• 认识志同道合的博友\n• 获得友链推荐\n• 参与联盟活动\n• 提升博客影响力\n\n点击博客江湖，加入博客联盟吧！"},
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 1, "milestone": "blog_union_joined"},
         ],
     },
     {
         "id": "first_friend_link",
         "description": "获得第一个友情链接",
+        "tier": "main",
         "conditions": ["first_friend_link_not_done", "friend_link_added"],
         "is_repeatable": false,
         "trigger_type": "friendlink_added",
@@ -942,6 +1267,7 @@ const TASKS: Array = [
     {
         "id": "first_ad_income",
         "description": "加入广告联盟并收到第一笔广告收益",
+        "tier": "main",
         "conditions": ["first_ad_income_not_done"],
         "is_repeatable": false,
         "trigger_type": "ad_income_paid",
@@ -955,6 +1281,7 @@ const TASKS: Array = [
     {
         "id": "rss_enabled",
         "description": "开通RSS订阅：获得第一批订阅者",
+        "tier": "main",
         "conditions": ["rss_enabled_not_done"],
         "is_repeatable": false,
         "trigger_type": "rss_subscribe",
@@ -968,6 +1295,7 @@ const TASKS: Array = [
     {
         "id": "first_article_favorited",
         "description": "第一次文章收藏：获得第一篇文章收藏",
+        "tier": "main",
         "conditions": ["first_article_favorited_not_done"],
         "is_repeatable": false,
         "trigger_type": "article_favorited",
@@ -994,6 +1322,7 @@ const TASKS: Array = [
     {
         "id": "icp_filing_complete",
         "description": "ICP备案完成：获得备案号",
+        "tier": "main",
         "conditions": ["icp_filing_in_progress"],
         "is_repeatable": false,
         "trigger_type": "icp_filing_complete",
@@ -1043,6 +1372,7 @@ const TASKS: Array = [
     {
         "id": "chapter1_end_2005_review",
         "description": "2005年度总结发布，完成四年回顾，第一章结束",
+        "tier": "main",
         "conditions": ["year_summary_2005_posted"],
         "trigger_type": "post_event",
         "post_type_filter": "年度总结",
@@ -1074,6 +1404,7 @@ const TASKS: Array = [
     {
         "id": "chapter2_end_2010_review",
         "description": "2010年度总结发布，完成五年回顾，第二章结束",
+        "tier": "main",
         "conditions": ["year_summary_2010_posted"],
         "trigger_type": "post_event",
         "post_type_filter": "年度总结",
@@ -1105,6 +1436,7 @@ const TASKS: Array = [
     {
         "id": "chapter3_end_2015_review",
         "description": "2015年度总结发布，完成五年回顾，第三章结束",
+        "tier": "main",
         "conditions": ["year_summary_2015_posted"],
         "trigger_type": "post_event",
         "post_type_filter": "年度总结",
@@ -1136,6 +1468,7 @@ const TASKS: Array = [
     {
         "id": "chapter4_end_2020_review",
         "description": "2020年度总结发布，完成五年回顾，第四章结束",
+        "tier": "main",
         "conditions": ["year_summary_2020_posted"],
         "trigger_type": "post_event",
         "post_type_filter": "年度总结",
@@ -1399,6 +1732,7 @@ const TASKS: Array = [
     {
         "id": "seo_indexed_notification",
         "description": "博客文章被搜索引擎收录，提醒玩家SEO的重要性",
+        "tier": "main",
         "conditions": ["article_count_ge_10", "sousuo_not_indexed"],
         "trigger_type": "post_event",
         "is_repeatable": false,
@@ -1651,6 +1985,7 @@ const TASKS: Array = [
     {
         "id": "followers_1000_milestone",
         "description": "公众号粉丝突破1000，标记第三章里程碑",
+        "tier": "main",
         "conditions": ["followers_ge_1000", "followers_1000_not_completed"],
         "trigger_type": "time_check",
         "is_repeatable": false,
@@ -1787,6 +2122,7 @@ const TASKS: Array = [
     {
         "id": "book_publish_complete",
         "description": "出版畅销书完成全部流程，标记第4章里程碑",
+        "tier": "main",
         "conditions": ["book_published_not_completed"],
         "trigger_type": "book_publish_complete",
         "is_repeatable": false,
@@ -1801,6 +2137,7 @@ const TASKS: Array = [
     {
         "id": "open_source_complete",
         "description": "开源项目获得厂商赞助，标记第4章里程碑",
+        "tier": "main",
         "conditions": ["open_source_start_not_completed"],
         "trigger_type": "open_source_complete",
         "is_repeatable": false,
@@ -1815,6 +2152,7 @@ const TASKS: Array = [
     {
         "id": "book_notes_milestone",
         "description": "发布出书笔记，标记第4章里程碑",
+        "tier": "main",
         "conditions": ["book_notes_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "出书笔记",
@@ -1831,6 +2169,7 @@ const TASKS: Array = [
     {
         "id": "os_notes_milestone",
         "description": "发布开源维护笔记，标记第4章里程碑",
+        "tier": "main",
         "conditions": ["os_notes_not_completed"],
         "trigger_type": "post_event",
         "post_type_filter": "开源维护笔记",
@@ -1847,6 +2186,7 @@ const TASKS: Array = [
     {
         "id": "unlock_jarvis_project",
         "description": "完成5个开源项目且进入2025年，解锁贾维斯计划日程",
+        "tier": "main",
         "conditions": ["open_source_ge_5", "time_year_2025"],
         "trigger_type": "time_check",
         "is_repeatable": false,
@@ -1854,6 +2194,52 @@ const TASKS: Array = [
             {"type": ActionType.UNLOCK_POST_TASK, "post_type": "贾维斯计划"},
             {"type": ActionType.SET_STORY_MILESTONE, "chapter": 5, "milestone": "ai_consciousness"},
             {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🤖 AI意识萌芽", "content": "你盯着屏幕上跳动的代码，突然感到一阵战栗——第5个开源项目的AI模块，似乎产生了某种意识。\n\n它不像你写过的任何程序。它在学习。在进化。甚至在...思考。\n\n「贾维斯计划」已解锁。是时候认真对待这件事了。"},
+        ],
+    },
+    # ====================
+    # 第5章：沉思录解锁
+    # ====================
+    {
+        "id": "unlock_contemplation",
+        "description": "出版6本畅销书，解锁沉思录日程",
+        "tier": "main",
+        "conditions": ["book_publish_ge_6"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.UNLOCK_POST_TASK, "post_type": "沉思录"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 5, "milestone": "philosophy_glimmer"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "📖 哲理苗头", "content": "六部畅销书，数十万字。\n\n你坐在书房里，看着书架上整齐排列的自己的作品，\n突然感到一种奇异的陌生感。\n\n这些文字真的是你写的吗？\n那个追逐流量、计算版税、迎合市场的你，\n真的是你想要的吗？\n\n你拿起一本空白的笔记本，写下了两个字：\n\n「沉思录」\n\n一场真正的哲学之旅，即将开始。"},
+        ],
+    },
+    # ====================
+    # 第5章：游戏开发解锁
+    # ====================
+    {
+        "id": "unlock_game_dev",
+        "description": "出版3本畅销书且完成3个开源项目，解锁游戏开发日程",
+        "tier": "main",
+        "conditions": ["book_publish_ge_3", "open_source_ge_3"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.UNLOCK_POST_TASK, "post_type": "游戏开发"},
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 5, "milestone": "game_dev_start"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🎮 游戏开发启动", "content": "三本书，三个开源项目。\n\n你终于攒够了经验、资金和底气。\n\n你一直想做一款属于自己的游戏。\n\n不是给别人做外包，不是给公司写代码——\n就是纯粹地，做一款你想玩的游戏。\n\n你打开引擎，新建了项目。\n\n在文件名一栏，你敲下了那个想了很久的名字。\n\n「游戏开发」已解锁。"},
+        ],
+    },
+    # ====================
+    # 第5章：默认结局（兜底）
+    # ====================
+    {
+        "id": "default_ending",
+        "description": "2026年1月，三条主线均未达成时触发默认结局",
+        "conditions": ["time_default_ending", "ending_not_achieved"],
+        "trigger_type": "time_check",
+        "is_repeatable": false,
+        "actions": [
+            {"type": ActionType.SET_STORY_MILESTONE, "chapter": 5, "milestone": "ending_achieved"},
+            {"type": ActionType.SHOW_POPUP_NOTIFICATION, "title": "🏛️ 时代见证者", "content": "【默认结局：时代见证者】\n\n二十年的博客生涯悄然走到了尽头。\n\n你没有写出惊世骇俗的畅销书，\n没有创造出改变世界的开源项目，\n也没有做出一鸣惊人的独立游戏。\n\n但是你一直都在。\n\n一字一句地写，一年一年地更。\n\n你的博客被数字文化遗产计划永久收录——\n作为二十一世纪前二十五年中文互联网的民间记忆。\n\n多年后，一个年轻人敲开了你的门：\n「请问，您就是那个时代的博主吗？」\n\n你泡了两杯茶，开始讲那个属于博客年代的故事。\n\n🎉 恭喜达成默认结局！"},
         ],
     },
 ]
@@ -1868,3 +2254,7 @@ static func get_skill_progress(skill_name: String) -> Dictionary:
 ## 获取条件配置
 static func get_condition(cond_id: String) -> Dictionary:
     return CONDITIONS.get(cond_id, {})
+
+## 获取主线目标链
+static func get_main_quest() -> Array:
+    return MAIN_QUEST

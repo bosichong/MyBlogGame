@@ -5,16 +5,16 @@ extends Node
 
 ## 联盟博客类型枚举（与联盟成员 type 字段对应）
 enum LmBlogType {
-	综合 = 1,
-	文学 = 2,
-	编程 = 3,
-	艺术 = 4,
+    综合 = 1,
+    文学 = 2,
+    编程 = 3,
+    艺术 = 4,
 }
 
 var lm_list = [
-  {"id": 1, "blog_name": "星光博客", "blog_author": "星语者", "lv": 50, "type": 1, "quality": 50, "url": "starlight.com"},
-  {"id": 2, "blog_name": "极客笔记", "blog_author": "GeekPanda", "lv": 49, "type": 3, "quality": 48, "url": "geeknote.com"},
-  {"id": 3, "blog_name": "墨染书斋", "blog_author": "墨染", "lv": 48, "type": 2, "quality": 46, "url": "moran.net"},
+  {"id": 1, "blog_name": "莫比乌斯", "blog_author": "莫比乌斯", "lv": 50, "type": 2, "quality": 50, "url": "https://mobius.blog","description": "写作，一场自我悖驳的旅程。我写自己的生活、也写自己的讣告。", "avatar": "res://assets/npc_tm/莫比乌斯.png", "rss": "https://mobius.blog/feed/"},
+  {"id": 2, "blog_name": "Obaby", "blog_author": "黑客O", "lv": 49, "type": 3, "quality": 48, "url": "zhongxiaojie.com", "description": "黑客程序媛 / 逆向工程师 / 人工智能学徒 / 用爱发电的独立开发者", "avatar": "res://assets/npc_tm/obaby.png", "rss": "https://zhongxiaojie.com/feed/"},
+  {"id": 3, "blog_name": "孤斗", "blog_author": "孤斗", "lv": 48, "type": 4, "quality": 46, "url": "https://d-d.design","description": "很酷的博客，分享设计、前端、生活、读书、思考等内容。", "avatar": "res://assets/npc_tm/孤斗.png", "rss": "https://d-d.design/wp/feed/"},
   {"id": 4, "blog_name": "Web开发", "blog_author": "VisionArt", "lv": 47, "type": 3, "quality": 44, "url": "webdev.com"},
   {"id": 5, "blog_name": "星辰大海", "blog_author": "懒懒", "lv": 43, "type": 1, "quality": 42, "url": "starsea.com"},
   {"id": 6, "blog_name": "万象集", "blog_author": "老万", "lv": 43, "type": 1, "quality": 44, "url": "wanxiang.net"},
